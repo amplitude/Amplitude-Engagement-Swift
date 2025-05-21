@@ -31,9 +31,9 @@ let package = Package(
             name: "AmplitudeEngagementTarget",
             dependencies: [
                 .targetItem(name: "AmplitudeEngagementSwift", condition: nil),
-               .targetItem(name: "AmplitudeSwift", condition: nil),
+                .targetItem(name: "AmplitudeSwift", condition: nil),
                 .targetItem(name: "AmplitudeCore", condition: nil),
-              .targetItem(name: "AnalyticsConnector", condition: nil)
+                .targetItem(name: "AnalyticsConnector", condition: nil)
             ],
             path: "Sources/Wrapper"
         )
