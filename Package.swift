@@ -11,29 +11,18 @@ let package = Package(
     products: [
       .library(name: "AmplitudeEngagementSwift", targets: ["AmplitudeEngagementTarget"])
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/amplitude/AmplitudeCore-Swift.git", from: "1.0.12"),
+    ],
     targets: [
         .binaryTarget(
             name: "AmplitudeEngagementSwift",
             path: "Sources/AmplitudeEngagementSwift.xcframework"),
-       .binaryTarget(
-           name: "AmplitudeSwift",
-           path: "Sources/AmplitudeSwift.xcframework"),
-        .binaryTarget(
-            name: "AmplitudeCore",
-            path: "Sources/AmplitudeCore.xcframework"),
-        .binaryTarget(
-            name: "AnalyticsConnector",
-            path: "Sources/AnalyticsConnector.xcframework"),
-        // Wrapper target that depends on both the binary framework and its dependencies
-        // needed because you can't specify dependencies 
         .target(
             name: "AmplitudeEngagementTarget",
             dependencies: [
-                .targetItem(name: "AmplitudeEngagementSwift", condition: nil),
-                .targetItem(name: "AmplitudeSwift", condition: nil),
-                .targetItem(name: "AmplitudeCore", condition: nil),
-                .targetItem(name: "AnalyticsConnector", condition: nil)
+                .product(name: "AmplitudeCoreFramework", package: "AmplitudeCore-Swift"),
+                .target(name: "AmplitudeEngagementSwift"),
             ],
             path: "Sources/Wrapper"
         )

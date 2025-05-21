@@ -15,13 +15,9 @@ Pod::Spec.new do |s|
   # s.ios.resource_bundle    = { 'AmplitudeEngagement': ['Sources/AmplitudeEngagement/Resources/engagement.js'] }
   s.ios.vendored_frameworks = [
     'Sources/AmplitudeEngagementSwift.xcframework',
-    'Sources/AmplitudeSwift.xcframework',
-    'Sources/AmplitudeCore.xcframework',
-    'Sources/AnalyticsConnector.xcframework'
   ]
 
-  # s.dependency 'AnalyticsConnector', '~> 1.3.0'
-  # s.dependency 'AmplitudeCore', '>=1.0.12', '<2.0.0'
+  s.dependency 'AmplitudeCore', '>=1.0.12', '<2.0.0'
 
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
 end

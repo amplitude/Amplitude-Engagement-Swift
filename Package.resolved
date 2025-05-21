@@ -1,0 +1,15 @@
+{
+  "originHash" : "3815676f9b1feb9def89a95c2d5264fa2d659e265c4dbe12df58605f2f2a5381",
+  "pins" : [
+    {
+      "identity" : "amplitudecore-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/amplitude/AmplitudeCore-Swift.git",
+      "state" : {
+        "revision" : "93ccfd42e174e78f9440eda6fc5c78eddf299dee",
+        "version" : "1.0.12"
+      }
+    }
+  ],
+  "version" : 3
+}

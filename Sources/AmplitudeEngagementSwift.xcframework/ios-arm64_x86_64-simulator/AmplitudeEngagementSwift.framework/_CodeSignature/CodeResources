@@ -12,49 +12,9 @@
 		<data>
 		x3OsT0KMa4YaFeKGtn1D9TuSoB8=
 		</data>
-		<key>Frameworks/AmplitudeCore.framework/AmplitudeCore</key>
-		<data>
-		RJ/AxVx3THa/RMbzD5bahjeRwLo=
-		</data>
-		<key>Frameworks/AmplitudeCore.framework/Info.plist</key>
-		<data>
-		+Jjj8gNrLGRutSG79cybsgWaGVw=
-		</data>
-		<key>Frameworks/AmplitudeCore.framework/_CodeSignature/CodeResources</key>
-		<data>
-		wpKH8zwCP7O1qJKSvyFrD/3xZv0=
-		</data>
-		<key>Frameworks/AmplitudeSwift.framework/AmplitudeSwift</key>
-		<data>
-		dJl6IVokFOLGI0pPJhVUXg80sD0=
-		</data>
-		<key>Frameworks/AmplitudeSwift.framework/Info.plist</key>
-		<data>
-		zUO3+88FE1K6zqob/910SJAaHqA=
-		</data>
-		<key>Frameworks/AmplitudeSwift.framework/PrivacyInfo.xcprivacy</key>
-		<data>
-		r/xUZ1tgNDSZKnMLPHc/d0VvMyY=
-		</data>
-		<key>Frameworks/AmplitudeSwift.framework/_CodeSignature/CodeResources</key>
-		<data>
-		swVr2W0S/a4gJVCbd75FMobJNGg=
-		</data>
-		<key>Frameworks/AnalyticsConnector.framework/AnalyticsConnector</key>
-		<data>
-		tSsDvLmg3VAzx6xWhr7QuNxyNok=
-		</data>
-		<key>Frameworks/AnalyticsConnector.framework/Info.plist</key>
-		<data>
-		cteB+MhvgaIAlU5ccRx5/mI2hkE=
-		</data>
-		<key>Frameworks/AnalyticsConnector.framework/_CodeSignature/CodeResources</key>
-		<data>
-		t/c2kdw3deCu9q4o04TScZJmugk=
-		</data>
 		<key>Frameworks/CQuickJS.framework/CQuickJS</key>
 		<data>
-		iFj2h/q0iH35rb1bm61CCLOnb2s=
+		ycwQeQ0+sk22XPWZKfVD1/H/fZo=
 		</data>
 		<key>Frameworks/CQuickJS.framework/Info.plist</key>
 		<data>
@@ -74,43 +34,43 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		34mhPJmykQaGI4SBu0SWWV8Tycg=
+		iC81Mup4YB9NRGG1GccEaYPwq9k=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		iQPr5LeawfTijJy5gNzC4OJKaBE=
+		hx+8HOnJ+iahWDuSMhVTxU9LDZY=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		Ioc1mc91/mSjX+I68gMQwDqUWLg=
+		/MvYP3fC0FlqMoYMxLBRG/IXBNQ=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		iQPr5LeawfTijJy5gNzC4OJKaBE=
+		hx+8HOnJ+iahWDuSMhVTxU9LDZY=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		fOiANNCLvsuN2Z7vGabXUvZELx4=
+		3WHCzAdBWQ7/0pRcjQ+33S2bUlM=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		34mhPJmykQaGI4SBu0SWWV8Tycg=
+		iC81Mup4YB9NRGG1GccEaYPwq9k=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		YJpwW1xX/P6bIy/SjNVsHEdoyeo=
+		0Z0NN1uYWgrMhON+/kb92JzJMjE=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		2wRca/NK8f52lthYOOCKiqHWhn0=
+		MVFPIfDiw8oZJdvM+4E4kw1CgDc=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		YJpwW1xX/P6bIy/SjNVsHEdoyeo=
+		0Z0NN1uYWgrMhON+/kb92JzJMjE=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		cdHcH1fkxDziDbA8y223JG6maCU=
+		98WcO2XcTd4oA69g7qMFVzcGM3M=
 		</data>
 		<key>Roboto-Black.ttf</key>
 		<data>
@@ -205,81 +165,11 @@
 			pbNkaSUJMzyE7a6XHwwq47oL6paDRVK2gW3J8ltsZW0=
 			</data>
 		</dict>
-		<key>Frameworks/AmplitudeCore.framework/AmplitudeCore</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			/aSa8sTWpUxRnDiDRk5U50bWGh4tk6WYQVqRbMcTp70=
-			</data>
-		</dict>
-		<key>Frameworks/AmplitudeCore.framework/Info.plist</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			nNXJuP+YFseIBGe/2Lp5S8XHETQvRRhhqL4qZTGG/sY=
-			</data>
-		</dict>
-		<key>Frameworks/AmplitudeCore.framework/_CodeSignature/CodeResources</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			p3lptRAdMKMVbz0t7Fhax+7Ctfr2p/O26YFejq5BtWA=
-			</data>
-		</dict>
-		<key>Frameworks/AmplitudeSwift.framework/AmplitudeSwift</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			kw6l7aCdjmQPpChKh9yuv+1oGkV7Z299KiQq/v6sNBk=
-			</data>
-		</dict>
-		<key>Frameworks/AmplitudeSwift.framework/Info.plist</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			DB929gIHE9szQbx7lRIoTtBg4aq5vfbeYVQolVFvkcU=
-			</data>
-		</dict>
-		<key>Frameworks/AmplitudeSwift.framework/PrivacyInfo.xcprivacy</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			SQqAm0F4r8tQGqLJKF2kEVUWzEm8lz/hcklVd0o5fyE=
-			</data>
-		</dict>
-		<key>Frameworks/AmplitudeSwift.framework/_CodeSignature/CodeResources</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			Le74WdDhgpdZubT1fnE78kg+PwtlAVti7LXWLSLYXRo=
-			</data>
-		</dict>
-		<key>Frameworks/AnalyticsConnector.framework/AnalyticsConnector</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			sKU+/N3udXjiG6Ud38K7ADANAZOuiIS9XBOO3trj+zk=
-			</data>
-		</dict>
-		<key>Frameworks/AnalyticsConnector.framework/Info.plist</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			g8IysQNBMre1JweyyYH3Jum+DhoaUkQBpBRkWPQTj2w=
-			</data>
-		</dict>
-		<key>Frameworks/AnalyticsConnector.framework/_CodeSignature/CodeResources</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			BejQBIOg4W7GTJ0lUs1N/25bht1auRSRJV7Ni4/lgqk=
-			</data>
-		</dict>
 		<key>Frameworks/CQuickJS.framework/CQuickJS</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			wGdYqLhA+faH33bYgKPdxdLYIUeI0RNdqAyw45Qg3gM=
+			1SrfWDMPZA7rxgPgsdexgeB1ImocysCS3iuXDZPaQmo=
 			</data>
 		</dict>
 		<key>Frameworks/CQuickJS.framework/Info.plist</key>
@@ -307,70 +197,70 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			It+hEI9hJ5eGopss0dXTGPDi0rzJIDY+IEbQUZA5Jqk=
+			/aXNVggMd9KAd0umz6yC0+oa0spcr8rgpAvu/B9Ll0s=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			l4lrXMnvDBOivavnEMBmynapucTKLCfk11jYLQAnv0c=
+			UhWy93bK5eU66V/FQekcqZtB7tIIVYYtp+XBm6cxqfA=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			OW9Y1K6uClOrIPjRDqCMnhfC+bwzuAYntQdxz7ylAfk=
+			GDE//mNMWnet7yJvQ9K0gspzgGhSpVrgI+Kin7RavQA=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			l4lrXMnvDBOivavnEMBmynapucTKLCfk11jYLQAnv0c=
+			UhWy93bK5eU66V/FQekcqZtB7tIIVYYtp+XBm6cxqfA=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			UBKZdjiyPQ93laVtQTYMv7oZYB4OdE2A/ijUSR7Sla4=
+			CLEYcH5Ic04tFmMphZPB1EfLQ/fcAkOinJp8W26in3Y=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			It+hEI9hJ5eGopss0dXTGPDi0rzJIDY+IEbQUZA5Jqk=
+			/aXNVggMd9KAd0umz6yC0+oa0spcr8rgpAvu/B9Ll0s=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			rS8aP8At+hRt8kXScRY0+4UOxkowiKWNDrHfVJjROvs=
+			OQJoTZgkNhw16Wi23ap9M6mhqDlO6TztUFSEknSVWdo=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			AypIOtvfyWcHEvNciPx1BU4JppLSr9PW1P4Pcmagx6c=
+			X8QSrmqd7RUGHH2bS4ncPXc8MpdsVxGrUqh2rrjxdtg=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			rS8aP8At+hRt8kXScRY0+4UOxkowiKWNDrHfVJjROvs=
+			OQJoTZgkNhw16Wi23ap9M6mhqDlO6TztUFSEknSVWdo=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			5ACyuzkGjtlJWuSXj0kfghi1FWSJdFvuiJCeoSuPfN0=
+			chUDTpr6OCPMudhZ3+LJ7gC6/kZHhVYKhPX1yWzuPbo=
 			</data>
 		</dict>
 		<key>Roboto-Black.ttf</key>
