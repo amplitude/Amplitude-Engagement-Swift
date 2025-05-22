@@ -99,23 +99,23 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			GLgm/zWLqjfLNSdaEdj8Dk0HhJI=
+			l4LJQTRgQ9AAanWfLsYvWGJQIxo=
 			</data>
 			<key>requirement</key>
-			<string>identifier "com.amplitude.CQuickJS" and anchor apple generic and certificate leaf[subject.CN] = "Apple Development: Michael Cavallaro (CS4VAWCH2Y)" and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */</string>
+			<string>cdhash H"9782c941346043d0006a759f2ec62f586250231a" or cdhash H"9e565ad963a86f85b79b329e9bff440eea15b36d"</string>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-macabi.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			sMB+lHyHj1QELZiclSoF5DIBxQLKBFnKEwsCCNgBc7o=
+			2VnsM0KOjgnUwJskIKG14369rzMWYmEuh9xsPugrQtk=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-macabi.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			RQlINOM1upHJfcTrp4adSlSMB6LRYba/0kpnjsVl+v8=
+			tnHuUEoLaeEXOGSgshjy3Vdbt8PkuqGQcg30oAuqcZQ=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-macabi.swiftdoc</key>
@@ -129,28 +129,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			RQlINOM1upHJfcTrp4adSlSMB6LRYba/0kpnjsVl+v8=
+			tnHuUEoLaeEXOGSgshjy3Vdbt8PkuqGQcg30oAuqcZQ=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-macabi.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			hYlJRALP3bKwQFZpCTgSIsZgP19yZ8C2B9rSsHS+/dE=
+			LY749EoCStT7wnpxMZaVwaDZg8PCCOc71FwOxMBE4oU=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-macabi.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			sMB+lHyHj1QELZiclSoF5DIBxQLKBFnKEwsCCNgBc7o=
+			2VnsM0KOjgnUwJskIKG14369rzMWYmEuh9xsPugrQtk=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-macabi.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Z1pCq5As+z9xVquQcKwsF+Jn/zo2/pKANTU0+ppzoAY=
+			Rz6PXpKKQgC3wj1Q2E67f60gINJqtFESH8n0MscludU=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-macabi.swiftdoc</key>
@@ -164,14 +164,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Z1pCq5As+z9xVquQcKwsF+Jn/zo2/pKANTU0+ppzoAY=
+			Rz6PXpKKQgC3wj1Q2E67f60gINJqtFESH8n0MscludU=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-macabi.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			DeQd9f/trQK3XcrEqjoSb4vCXQWA0edtUJDELi+P+p8=
+			I8P9CBlpIhnK3K+ft7lRxuxGjEeR57uldwD28BWzDrI=
 			</data>
 		</dict>
 		<key>Resources/Apache License.txt</key>
