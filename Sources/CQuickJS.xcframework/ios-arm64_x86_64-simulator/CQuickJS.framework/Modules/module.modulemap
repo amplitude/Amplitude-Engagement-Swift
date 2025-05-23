@@ -1,0 +1,7 @@
+framework module CQuickJS {
+   umbrella header "quickjs.h"
+   header "quickjs-libc.h"
+
+   export *
+   module * { export * }
+}
