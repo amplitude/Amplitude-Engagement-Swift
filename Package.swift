@@ -9,7 +9,7 @@ let package = Package(
         .iOS(.v15),
     ],
     products: [
-      .library(name: "AmplitudeEngagementSwift", type: .dynamic, targets: ["AmplitudeEngagementTarget"])
+      .library(name: "AmplitudeEngagementSwift", targets: ["AmplitudeEngagementTarget"])
     ],
     dependencies: [
         .package(url: "https://github.com/amplitude/AmplitudeCore-Swift.git", from: "1.0.12"),
@@ -24,6 +24,7 @@ let package = Package(
             dependencies: [
                 .product(name: "AmplitudeCoreFramework", package: "AmplitudeCore-Swift"),
                 .target(name: "AmplitudeEngagementSwift"),
+                .target(name: "CQuickJS"),
             ],
             path: "Sources/Wrapper"
         )
