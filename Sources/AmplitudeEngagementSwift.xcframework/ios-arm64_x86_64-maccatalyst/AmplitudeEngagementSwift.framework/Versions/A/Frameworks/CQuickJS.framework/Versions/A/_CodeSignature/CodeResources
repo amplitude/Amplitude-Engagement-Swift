@@ -15,6 +15,27 @@
 	</dict>
 	<key>files2</key>
 	<dict>
+		<key>Headers/quickjs-libc.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			rEQ0YZXvKFS4T1IPqsD9uPtE2H7MrKYmDKZU/2dDZig=
+			</data>
+		</dict>
+		<key>Headers/quickjs.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			jrwOTBTNiWVkOF2roNMl9US9DTzAoMMr+9rPpjN6QOk=
+			</data>
+		</dict>
+		<key>Modules/module.modulemap</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			3gW9lz9fzZHKjUmQl6MmhvInn6QjTpi4mj94xhXRplA=
+			</data>
+		</dict>
 		<key>Resources/Info.plist</key>
 		<dict>
 			<key>hash2</key>

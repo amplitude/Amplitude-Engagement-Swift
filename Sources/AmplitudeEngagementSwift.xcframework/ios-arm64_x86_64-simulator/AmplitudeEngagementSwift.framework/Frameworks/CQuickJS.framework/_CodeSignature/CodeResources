@@ -4,9 +4,21 @@
 <dict>
 	<key>files</key>
 	<dict>
+		<key>Headers/quickjs-libc.h</key>
+		<data>
+		ddglUdVtCycGFydhFGRJWBLwNHc=
+		</data>
+		<key>Headers/quickjs.h</key>
+		<data>
+		L4HO/jiDYBjjsvdiqOoN9EiS80M=
+		</data>
 		<key>Info.plist</key>
 		<data>
 		SrQS3+K6qmvpFl2VA06pdkuIx8A=
+		</data>
+		<key>Modules/module.modulemap</key>
+		<data>
+		8vKRwW5b+3eTO6u3sBRUIWmaJYU=
 		</data>
 		<key>VERSION</key>
 		<data>
@@ -15,6 +27,27 @@
 	</dict>
 	<key>files2</key>
 	<dict>
+		<key>Headers/quickjs-libc.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			rEQ0YZXvKFS4T1IPqsD9uPtE2H7MrKYmDKZU/2dDZig=
+			</data>
+		</dict>
+		<key>Headers/quickjs.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			jrwOTBTNiWVkOF2roNMl9US9DTzAoMMr+9rPpjN6QOk=
+			</data>
+		</dict>
+		<key>Modules/module.modulemap</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			3gW9lz9fzZHKjUmQl6MmhvInn6QjTpi4mj94xhXRplA=
+			</data>
+		</dict>
 		<key>VERSION</key>
 		<dict>
 			<key>hash2</key>
