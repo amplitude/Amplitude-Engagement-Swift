@@ -22,72 +22,24 @@ import _AVKit_SwiftUI
 import _Concurrency
 import _StringProcessing
 import _SwiftConcurrencyShims
-public enum Roboto : Swift.String, Swift.CaseIterable {
-  case thin
-  case bold
-  case light
-  case black
-  case medium
-  case regular
-  public init?(rawValue: Swift.String)
-  public typealias AllCases = [AmplitudeEngagementSwift.Roboto]
-  public typealias RawValue = Swift.String
-  nonisolated public static var allCases: [AmplitudeEngagementSwift.Roboto] {
-    get
-  }
-  public var rawValue: Swift.String {
-    get
-  }
-}
-extension SwiftUICore.Font {
-  public static func roboto(_ roboto: AmplitudeEngagementSwift.Roboto, size: CoreFoundation.CGFloat) -> SwiftUICore.Font
-}
-public struct RobotoFont {
-  public static func registerFonts()
-}
-public struct AmplitudeEndUser {
-  public var user_id: Swift.String?
-  public var device_id: Swift.String?
-  public var user_properties: [Swift.String : Any]
-}
-public struct AmplitudeBootOptions {
-}
-public enum AmplitudeLogLevel : Swift.Int, Swift.Codable {
-  case verbose
-  case debug
-  case warn
-  case error
-  case none
-  public init?(rawValue: Swift.Int)
-  public typealias RawValue = Swift.Int
-  public var rawValue: Swift.Int {
-    get
-  }
-}
-public protocol AmplitudeLogger {
-  func disable()
-  func enable(logLevel: AmplitudeEngagementSwift.AmplitudeLogLevel)
-  func log(_ args: Any...)
-  func warn(_ args: Any...)
-  func error(_ args: Any...)
-  func debug(_ args: Any...)
-}
-public enum AmplitudeServerZone : Swift.String, Swift.Codable {
-  case EU
-  case US
-  public init?(rawValue: Swift.String)
-  public typealias RawValue = Swift.String
-  public var rawValue: Swift.String {
-    get
-  }
-}
-public struct AmplitudeInitOptions : Swift.Codable {
-  public func toString() -> Swift.String
-  public init(serverZone: AmplitudeEngagementSwift.AmplitudeServerZone? = nil, locale: Swift.String? = nil, logLevel: AmplitudeEngagementSwift.AmplitudeLogLevel? = nil)
-  public func encode(to encoder: any Swift.Encoder) throws
-  public init(from decoder: any Swift.Decoder) throws
-}
-public struct AmplitudeEngagementConfig {
+public class AmplitudeEngagement : Observation.Observable {
+  public var config: AmplitudeEngagementSwift.AmplitudeEngagementConfig
+  public static var logger: any AmplitudeEngagementSwift.AmplitudeLogger
+  public init(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions())
+  public func getPlugin() -> any AmplitudeCore.UniversalPlugin
+  public func boot(_ user_id: Swift.String, device_id: Swift.String? = nil)
+  public func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
+  public func setThemeMode(themeMode: AmplitudeEngagementSwift.ThemeMode)
+  public func setRouter(router: (_ url: Swift.String) -> Swift.Void)
+  public func reset(key: Swift.String, stepIndex: Swift.Int = 0)
+  public func list() -> [AmplitudeEngagementSwift.GuideOrSurvey]
+  public func show(key: Swift.String, stepIndex: Swift.Int = 0)
+  public func screen(_ screenName: Swift.String)
+  public func closeAll()
+  public func forwardEvent(_ eventProperties: [Swift.String : Any])
+  public func addCallback(_ key: Swift.String, _ function: @escaping () -> Swift.Void)
+  public func handleUrl(_ url: Foundation.URL) -> Swift.Bool
+  @objc deinit
 }
 public enum ContentBlockType : Swift.String, Swift.Codable {
   case markdown
@@ -1289,20 +1241,53 @@ extension AmplitudeEngagementSwift.ButtonMeta : Swift.CustomDebugStringConvertib
     get
   }
 }
-@_hasMissingDesignatedInitializers open class BaseEvent : AmplitudeCore.AnalyticsEvent, Swift.Codable {
-  public var eventProperties: [Swift.String : Any]?
-  public var userId: Swift.String?
-  public var deviceId: Swift.String?
-  public var timestamp: Swift.Int64?
-  public var sessionId: Swift.Int64?
-  public var eventType: Swift.String
-  required public init(from decoder: any Swift.Decoder) throws
-  public func encode(to encoder: any Swift.Encoder)
-  @objc deinit
+public struct AmplitudeEndUser {
+  public var user_id: Swift.String?
+  public var device_id: Swift.String?
+  public var user_properties: [Swift.String : Any]
 }
-public struct JSON : Swift.Codable {
-  public init(from decoder: any Swift.Decoder) throws
+public struct AmplitudeBootOptions {
+}
+public enum GuideOrSurveyStatus : Swift.String, Swift.Codable {
+  case visible
+  case active
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public struct GuideOrSurvey : Swift.Codable, Swift.Identifiable {
+  public var id: Swift.Int
+  public var status: AmplitudeEngagementSwift.GuideOrSurveyStatus
+  public var step: Swift.Int
+  public var title: Swift.String
+  public typealias ID = Swift.Int
   public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public enum Roboto : Swift.String, Swift.CaseIterable {
+  case thin
+  case bold
+  case light
+  case black
+  case medium
+  case regular
+  public init?(rawValue: Swift.String)
+  public typealias AllCases = [AmplitudeEngagementSwift.Roboto]
+  public typealias RawValue = Swift.String
+  nonisolated public static var allCases: [AmplitudeEngagementSwift.Roboto] {
+    get
+  }
+  public var rawValue: Swift.String {
+    get
+  }
+}
+extension SwiftUICore.Font {
+  public static func roboto(_ roboto: AmplitudeEngagementSwift.Roboto, size: CoreFoundation.CGFloat) -> SwiftUICore.Font
+}
+public struct RobotoFont {
+  public static func registerFonts()
 }
 public enum DebugStatus {
   case success
@@ -1326,58 +1311,22 @@ public enum AmplitudeEngagementError : Swift.Error {
   case nudgeRenderingFailed(Swift.String)
   case unknown(Swift.String)
 }
-extension SwiftUICore.View {
-  @_Concurrency.MainActor @preconcurrency public func amplitudeView(_ identifier: Swift.String) -> some SwiftUICore.View
-  
-}
-public enum ThemeMode : Swift.String {
-  case auto
-  case dark
-  case light
+public enum AmplitudeServerZone : Swift.String, Swift.Codable {
+  case EU
+  case US
   public init?(rawValue: Swift.String)
   public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
     get
   }
 }
-public enum GuideOrSurveyStatus : Swift.String, Swift.Codable {
-  case visible
-  case active
-  public init?(rawValue: Swift.String)
-  public typealias RawValue = Swift.String
-  public var rawValue: Swift.String {
-    get
-  }
-}
-public struct GuideOrSurvey : Swift.Codable, Swift.Identifiable {
-  public var id: Swift.Int
-  public var status: AmplitudeEngagementSwift.GuideOrSurveyStatus
-  public var step: Swift.Int
-  public var title: Swift.String
-  public typealias ID = Swift.Int
+public struct AmplitudeInitOptions : Swift.Codable {
+  public func toString() -> Swift.String
+  public init(serverZone: AmplitudeEngagementSwift.AmplitudeServerZone? = nil, locale: Swift.String? = nil, logLevel: AmplitudeEngagementSwift.AmplitudeLogLevel? = nil)
   public func encode(to encoder: any Swift.Encoder) throws
   public init(from decoder: any Swift.Decoder) throws
 }
-
-
-public class AmplitudeEngagement : Observation.Observable {
-  public var config: AmplitudeEngagementSwift.AmplitudeEngagementConfig
-  public static var logger: any AmplitudeEngagementSwift.AmplitudeLogger
-  public init(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions())
-  public func getPlugin() -> any AmplitudeCore.UniversalPlugin
-  public func boot(_ user_id: Swift.String, device_id: Swift.String? = nil)
-  public func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
-  public func setThemeMode(themeMode: AmplitudeEngagementSwift.ThemeMode)
-  public func setRouter(router: (_ url: Swift.String) -> Swift.Void)
-  public func reset(key: Swift.String, stepIndex: Swift.Int = 0)
-  public func list() -> [AmplitudeEngagementSwift.GuideOrSurvey]
-  public func show(key: Swift.String, stepIndex: Swift.Int = 0)
-  public func screen(_ screenName: Swift.String)
-  public func closeAll()
-  public func forwardEvent(_ eventProperties: [Swift.String : Any])
-  public func addCallback(_ key: Swift.String, _ function: @escaping () -> Swift.Void)
-  public func handleUrl(_ url: Foundation.URL) -> Swift.Bool
-  @objc deinit
+public struct AmplitudeEngagementConfig {
 }
 public struct AnyCodable : Swift.Codable, Swift.Hashable {
   public let value: Any
@@ -1390,15 +1339,57 @@ public struct AnyCodable : Swift.Codable, Swift.Hashable {
     get
   }
 }
-extension AmplitudeEngagementSwift.Roboto : Swift.Equatable {}
-extension AmplitudeEngagementSwift.Roboto : Swift.Hashable {}
-extension AmplitudeEngagementSwift.Roboto : Swift.RawRepresentable {}
-extension AmplitudeEngagementSwift.AmplitudeLogLevel : Swift.Equatable {}
-extension AmplitudeEngagementSwift.AmplitudeLogLevel : Swift.Hashable {}
-extension AmplitudeEngagementSwift.AmplitudeLogLevel : Swift.RawRepresentable {}
-extension AmplitudeEngagementSwift.AmplitudeServerZone : Swift.Equatable {}
-extension AmplitudeEngagementSwift.AmplitudeServerZone : Swift.Hashable {}
-extension AmplitudeEngagementSwift.AmplitudeServerZone : Swift.RawRepresentable {}
+@_hasMissingDesignatedInitializers open class BaseEvent : AmplitudeCore.AnalyticsEvent, Swift.Codable {
+  public var eventProperties: [Swift.String : Any]?
+  public var userId: Swift.String?
+  public var deviceId: Swift.String?
+  public var timestamp: Swift.Int64?
+  public var sessionId: Swift.Int64?
+  public var eventType: Swift.String
+  required public init(from decoder: any Swift.Decoder) throws
+  public func encode(to encoder: any Swift.Encoder)
+  @objc deinit
+}
+public struct JSON : Swift.Codable {
+  public init(from decoder: any Swift.Decoder) throws
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+public enum AmplitudeLogLevel : Swift.Int, Swift.Codable {
+  case verbose
+  case debug
+  case warn
+  case error
+  case none
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public protocol AmplitudeLogger {
+  func disable()
+  func enable(logLevel: AmplitudeEngagementSwift.AmplitudeLogLevel)
+  func log(_ args: Any...)
+  func warn(_ args: Any...)
+  func error(_ args: Any...)
+  func debug(_ args: Any...)
+}
+extension SwiftUICore.View {
+  @_Concurrency.MainActor @preconcurrency public func amplitudeView(_ identifier: Swift.String) -> some SwiftUICore.View
+  
+}
+
+
+public enum ThemeMode : Swift.String {
+  case auto
+  case dark
+  case light
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
 extension AmplitudeEngagementSwift.ContentBlockType : Swift.Equatable {}
 extension AmplitudeEngagementSwift.ContentBlockType : Swift.Hashable {}
 extension AmplitudeEngagementSwift.ContentBlockType : Swift.RawRepresentable {}
@@ -1489,11 +1480,20 @@ extension AmplitudeEngagementSwift.TriggerSourceType : Swift.RawRepresentable {}
 extension AmplitudeEngagementSwift.SimpleNudgeTriggerType : Swift.Equatable {}
 extension AmplitudeEngagementSwift.SimpleNudgeTriggerType : Swift.Hashable {}
 extension AmplitudeEngagementSwift.SimpleNudgeTriggerType : Swift.RawRepresentable {}
-extension AmplitudeEngagementSwift.DebugStatus : Swift.Equatable {}
-extension AmplitudeEngagementSwift.DebugStatus : Swift.Hashable {}
-extension AmplitudeEngagementSwift.ThemeMode : Swift.Equatable {}
-extension AmplitudeEngagementSwift.ThemeMode : Swift.Hashable {}
-extension AmplitudeEngagementSwift.ThemeMode : Swift.RawRepresentable {}
 extension AmplitudeEngagementSwift.GuideOrSurveyStatus : Swift.Equatable {}
 extension AmplitudeEngagementSwift.GuideOrSurveyStatus : Swift.Hashable {}
 extension AmplitudeEngagementSwift.GuideOrSurveyStatus : Swift.RawRepresentable {}
+extension AmplitudeEngagementSwift.Roboto : Swift.Equatable {}
+extension AmplitudeEngagementSwift.Roboto : Swift.Hashable {}
+extension AmplitudeEngagementSwift.Roboto : Swift.RawRepresentable {}
+extension AmplitudeEngagementSwift.DebugStatus : Swift.Equatable {}
+extension AmplitudeEngagementSwift.DebugStatus : Swift.Hashable {}
+extension AmplitudeEngagementSwift.AmplitudeServerZone : Swift.Equatable {}
+extension AmplitudeEngagementSwift.AmplitudeServerZone : Swift.Hashable {}
+extension AmplitudeEngagementSwift.AmplitudeServerZone : Swift.RawRepresentable {}
+extension AmplitudeEngagementSwift.AmplitudeLogLevel : Swift.Equatable {}
+extension AmplitudeEngagementSwift.AmplitudeLogLevel : Swift.Hashable {}
+extension AmplitudeEngagementSwift.AmplitudeLogLevel : Swift.RawRepresentable {}
+extension AmplitudeEngagementSwift.ThemeMode : Swift.Equatable {}
+extension AmplitudeEngagementSwift.ThemeMode : Swift.Hashable {}
+extension AmplitudeEngagementSwift.ThemeMode : Swift.RawRepresentable {}

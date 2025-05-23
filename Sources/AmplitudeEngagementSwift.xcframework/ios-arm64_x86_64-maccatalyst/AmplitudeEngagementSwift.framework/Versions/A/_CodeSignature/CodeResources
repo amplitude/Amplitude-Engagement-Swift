@@ -99,79 +99,79 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			rWY4U6JgeYxaayo0dbHkfrI2mfY=
+			3Jt8Y0qPZuAVIugRJee9YrmWHcg=
 			</data>
 			<key>requirement</key>
-			<string>cdhash H"ad663853a260798c5a6b2a3475b1e47eb23699f6" or cdhash H"85ec58d2e24d349264d0e2db80bc6a23db457b60"</string>
+			<string>cdhash H"dc9b7c634a8f66e01522e81125e7bd62b9961dc8" or cdhash H"7b82d153e904a26f05a01ff417b3a94edc91daf6"</string>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-macabi.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			bg/mwWpT4WHL5p5hy/6yMiUXZsTGdGiuMRGDAHtxAOk=
+			wJeGRKDU/phKr3ZZ01loUPqraqy1QQtODPXd57SCrDk=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-macabi.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			vfWucejFXpYvqyf1hGANP3gvO3p1QFVrdQt7fvkkecQ=
+			M8Q755cgfGTA+4DMHA8rfsl4RcfLiPCeIVkG5nM4JjM=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-macabi.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			rdFHlffWVN/0c2GXy5MEP3q7/BdZ8blWeiUloUerfOc=
+			ZwLHAAvjdEdXTsiRHsJ6L64qScV9U6vaz0D6P4DxDpU=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-macabi.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			vfWucejFXpYvqyf1hGANP3gvO3p1QFVrdQt7fvkkecQ=
+			M8Q755cgfGTA+4DMHA8rfsl4RcfLiPCeIVkG5nM4JjM=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-macabi.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			3AYmB0B4dt+rL9tb2cX3TPzrHe1pinxwWqtVdHnCUfU=
+			0kDSYWkHRKCS9IiH9fhk+i3kptBF+eMAIx25tkQhp9Q=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-macabi.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			bg/mwWpT4WHL5p5hy/6yMiUXZsTGdGiuMRGDAHtxAOk=
+			wJeGRKDU/phKr3ZZ01loUPqraqy1QQtODPXd57SCrDk=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-macabi.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			UyJyEM6cxdLoLMNuZfGPJ3EpfKC04C3icU7p2JWQmrc=
+			NKIWFi9iONd0KOuRI0u7D/K/6p8zC6OdM5FYIBS+eZg=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-macabi.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			qChV3y+Df98aPVrwG/bU5XUXOQ+4+D/dI050D56LJHQ=
+			upUsv/QUazUX0ahUxwx75Kzibq102C+yajM12u8usaw=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-macabi.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			UyJyEM6cxdLoLMNuZfGPJ3EpfKC04C3icU7p2JWQmrc=
+			NKIWFi9iONd0KOuRI0u7D/K/6p8zC6OdM5FYIBS+eZg=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-macabi.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			cJSzsuyVNaDI+QQN63ex8QtrXtfXY+zRJeX/DpTXYPw=
+			Os7kVtOy+uBMGEkl9PfWKMUC+q4UJFWn8ufIzzjdav4=
 			</data>
 		</dict>
 		<key>Resources/Apache License.txt</key>

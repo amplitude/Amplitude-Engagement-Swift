@@ -14,7 +14,7 @@
 		</data>
 		<key>Frameworks/CQuickJS.framework/CQuickJS</key>
 		<data>
-		Qiq6VETfMD9Bhr6/Yg80AXK+ypA=
+		g9ma3qxMCZ3ZZHE+tyY6IOnbig8=
 		</data>
 		<key>Frameworks/CQuickJS.framework/Info.plist</key>
 		<data>
@@ -34,11 +34,11 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios.abi.json</key>
 		<data>
-		Eiq7cb1Kh09tR2I0pLqjSJrXfPw=
+		WAF/qVVGa68OukkI92AUgMxdECU=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios.private.swiftinterface</key>
 		<data>
-		M3SI9s/jyxFl4rrwTSkJAFxmA6o=
+		dVFH80SjwcUnV38A1c+RJMIpRok=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<data>
@@ -46,11 +46,11 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios.swiftinterface</key>
 		<data>
-		M3SI9s/jyxFl4rrwTSkJAFxmA6o=
+		dVFH80SjwcUnV38A1c+RJMIpRok=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<data>
-		BzutKTAjziAUqdQCgv5pcwEmw+M=
+		PpF4qznx5uSHEEAfysZ1A5JbOMw=
 		</data>
 		<key>Roboto-Black.ttf</key>
 		<data>
@@ -149,7 +149,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			rlIn+qDW8FPQ+Q4Z1AfelaNueRMCXslnbTdWXu3hMu0=
+			l5btzMegbPfywmmxuaE5tAAj0TMPupql292v8b7sVos=
 			</data>
 		</dict>
 		<key>Frameworks/CQuickJS.framework/Info.plist</key>
@@ -177,14 +177,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			UlNjBGbBFhQMmQgqDGJ9tzbEeq1k5tdcZodTsmFxAKY=
+			S2QiHw40aKpm6AUNclvwOPoJmbxa7KbGl25ilBTH9F8=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			rhJH8TYxqwVaTXEI8WT5PmFaOvr02JRxE73horDz5AQ=
+			NECWy1mbqTysdYmljoP0DKr539l1+bq3P9fv6sHs5DQ=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios.swiftdoc</key>
@@ -198,14 +198,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			rhJH8TYxqwVaTXEI8WT5PmFaOvr02JRxE73horDz5AQ=
+			NECWy1mbqTysdYmljoP0DKr539l1+bq3P9fv6sHs5DQ=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Q06BeK0ofLPMmK3CVHLapfutKIGIPnwY3mQghFh/BDU=
+			Cx9Q01e9mgsqX9Gmep2AkiLCV9T3jZeSz6GuYmDfhsk=
 			</data>
 		</dict>
 		<key>Roboto-Black.ttf</key>
