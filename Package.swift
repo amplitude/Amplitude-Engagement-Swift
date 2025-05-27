@@ -28,5 +28,5 @@ let package = Package(
             ],
             path: "Sources/Wrapper"
         )
-    ],
+    ]
 )
