@@ -1,8 +1,8 @@
-amplitude_version = "0.0.1" # Version is managed automatically by semantic-release, please don't change it manually
+amplitude_engagement_version = "0.0.1" # Version is managed automatically by semantic-release, please don't change it manually
 
 Pod::Spec.new do |s|
   s.name                   = "AmplitudeEngagementSwift"
-  s.version                = amplitude_version
+  s.version                = amplitude_engagement_version
   s.summary                = "Amplitude Engagement SDK for Guides & Surveys"
   s.homepage               = "https://amplitude.com"
   s.license                = { :type => "MIT" }
