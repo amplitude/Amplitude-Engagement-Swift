@@ -1,4 +1,4 @@
-amplitude_engagement_version = "1.0.1" # Version is managed automatically by semantic-release, please don't change it manually
+amplitude_engagement_version = "1.0.3" # Version is managed automatically by semantic-release, please don't change it manually
 
 Pod::Spec.new do |s|
   s.name                   = "AmplitudeEngagementSwift"
@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.swift_version = '5.9'
 
   s.ios.deployment_target  = '15.0'
-  # s.ios.resource_bundle    = { 'AmplitudeEngagement': ['Sources/AmplitudeEngagement/Resources/engagement.js'] }
+
   s.ios.vendored_frameworks = [
     'Sources/AmplitudeEngagementSwift.xcframework',
     'Sources/CQuickJS.xcframework',
