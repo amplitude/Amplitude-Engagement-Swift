@@ -8228,6 +8228,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     publishAnalyticsEventToMessageBus: () => publishAnalyticsEventToMessageBus,
     removeCallback: () => removeCallback,
     setOrganization: () => setOrganization,
+    setSessionProperties: () => setSessionProperties,
     setTheme: () => setTheme,
     setThemeMode: () => setThemeMode,
     urlMatchesTargeting: () => urlMatchesTargeting
@@ -8291,6 +8292,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var import_get = __toESM(require_get());
 
   // ../shared/src/internal/middleware/types.ts
+  var isValidSessionPropertyKey = (key) => typeof key === "string" && key.length > 0;
+  var isValidSessionPropertyValue = (value) => typeof value === "number" || typeof value === "string" || typeof value === "boolean";
   var isListBlock = (block) => block.type === "survey_list";
   var hasConditionalActionsBlock = (block) => (block.type === "survey_rating" || block.type === "survey_list") && (!!block.meta.conditionalActions || !!block.meta.defaultAction);
 
@@ -8422,6 +8425,36 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var countGreaterThan = (epoch, timestamps) => {
     return timestamps.filter((ts) => ts > epoch).length;
   };
+  var countForPeriod = (timestamps, sessionStart, period, periodCount = 1) => {
+    const currentEpoch = Date.now();
+    const dayInMillis = 1e3 * 60 * 60 * 24;
+    let startEpoch;
+    switch (period) {
+      case "session":
+        startEpoch = sessionStart;
+        break;
+      case "day":
+        startEpoch = currentEpoch - dayInMillis * periodCount;
+        break;
+      case "week":
+        startEpoch = currentEpoch - dayInMillis * 7 * periodCount;
+        break;
+      case "month":
+        startEpoch = currentEpoch - dayInMillis * 30 * periodCount;
+        break;
+      case "quarter":
+        startEpoch = currentEpoch - dayInMillis * 90 * periodCount;
+        break;
+      case "year":
+        startEpoch = currentEpoch - dayInMillis * 365 * periodCount;
+        break;
+      case "ever":
+        return `${timestamps.length}`;
+      default:
+        startEpoch = currentEpoch;
+    }
+    return `${countGreaterThan(startEpoch, timestamps)}`;
+  };
   var countsByTimeWindow = (timestamps, sessionStart) => {
     const currentEpoch = Date.now();
     const dayInMillis = 1e3 * 60 * 60 * 24;
@@ -8438,7 +8471,21 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   };
   var passesCooldown = (_, nudge) => {
     const nudgeState = getNudgeDataFromUserStore(_, nudge.variantId);
-    const activationCounts = countsByTimeWindow(nudgeState?.activatedTs ?? [], _.sessionStart);
+    const timestamps = nudgeState?.activatedTs ?? [];
+    const activationCounts = {};
+    const legacyCounts = countsByTimeWindow(timestamps, _.sessionStart);
+    Object.assign(activationCounts, legacyCounts);
+    for (const cooldownLimit of nudge.lifecycleConfig.cooldownLimits) {
+      if (cooldownLimit.period && cooldownLimit.periodCount) {
+        const key = `${cooldownLimit.periodCount}_${cooldownLimit.period}`;
+        activationCounts[key] = countForPeriod(
+          timestamps,
+          _.sessionStart,
+          cooldownLimit.period,
+          cooldownLimit.periodCount
+        );
+      }
+    }
     const nudgeStateTarget = {
       context: {
         derivedNudgeState: { activationCounts },
@@ -8462,6 +8509,16 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     }
     return true;
   };
+  var passesTriggerElement = (_, nudge, triggerEvent, nudgeSeenThisSessionTs) => {
+    if (triggerEvent?.trigger.type == "element_appeared" && nudge.triggerConfig.type == "element_appeared") {
+      if (nudgeSeenThisSessionTs.length > 0) {
+        return false;
+      }
+      const elementToAppearIsVisible = _.services.isElementVisible(nudge.triggerConfig.data.selector);
+      if (!elementToAppearIsVisible) return false;
+    }
+    return true;
+  };
   var shouldTemporarilyHide = (_, nudge) => {
     return urlMatchesConditions(_, _.location.href, nudge.temporarilyHideTargeting.conditions, false);
   };
@@ -8469,18 +8526,33 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     return _.endUserStore.data.nudgeInteractions;
   };
   var getNudgeDataFromUserStore = (_, variantId) => getAllNudgeDataFromUserStore(_)?.[Number(variantId)];
-  var passesTriggerMatch = (_, nudge, triggerEvent, nudgeSeenThisSessionTs) => {
-    if (triggerEvent?.overrides?.excludeNudgeIds?.includes(nudge.variantId)) {
+  var getSessionPropertyConditions = (conditionGroups) => conditionGroups.map((andGroup) => andGroup.filter((condition) => condition.selector.includes("sessionProperties"))).filter((sessionOnlyAndGroup) => sessionOnlyAndGroup.length > 0);
+  var passesSessionProperties = (_, sessionPropertyConditions) => {
+    if (sessionPropertyConditions.flat().length === 0) {
+      return true;
+    }
+    const sessionPropertyEvalTarget = {
+      context: {
+        sessionProperties: _.sessionProperties
+      },
+      result: {}
+    };
+    return _.evalEngine.evaluateConditions(sessionPropertyEvalTarget, sessionPropertyConditions);
+  };
+  var passesTriggerMatch = (_, nudge, triggerEvent) => {
+    if (!triggerEvent) return false;
+    if (triggerEvent.overrides?.excludeNudgeIds?.includes(nudge.variantId)) {
       return false;
     }
     const nudgeState = getNudgeActorSnapshot(_, nudge.variantId);
-    if (triggerEvent?.trigger.type === "active" && isNudgeActive(_, nudge)) {
+    if (triggerEvent.trigger.type === "active" && isNudgeActive(_, nudge)) {
       return true;
     }
     if (nudgeState?.status !== "done") {
       const evalTarget = {
         context: {
-          ...triggerEvent?.trigger
+          ...triggerEvent?.trigger,
+          sessionProperties: _.sessionProperties
         },
         result: {}
       };
@@ -8490,13 +8562,6 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       }
       if (!_.evalEngine.evaluateConditions(evalTarget, conditionsToEvaluate)) {
         return false;
-      }
-      if (triggerEvent?.trigger.type == "element_appeared" && nudge.triggerConfig.type == "element_appeared") {
-        if (nudgeSeenThisSessionTs.length > 0) {
-          return false;
-        }
-        const elementToAppearIsVisible = _.services.isElementVisible(nudge.triggerConfig.data.selector);
-        if (!elementToAppearIsVisible) return false;
       }
       return true;
     }
@@ -8755,6 +8820,11 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     if (!(toRemove in _.callbacks)) return;
     delete _.callbacks[toRemove];
   };
+  var setSessionProperties = (_, sessionProperties) => {
+    const sessionPropertiesToSet = { ..._.sessionProperties, ...sessionProperties };
+    if ((0, import_isEqual.default)(_.sessionProperties, sessionPropertiesToSet)) return;
+    _.sessionProperties = sessionPropertiesToSet;
+  };
   var setTheme = (_, theme) => {
     _.theme = theme;
   };
@@ -8924,6 +8994,248 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     return null;
   };
   var Track = {
+    resourceCenter: {
+      /**
+       * Fired whenever Resource Center is opened.
+       * TODO: Add source property once we have a proper way to plumb it through
+       */
+      opened: () => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Opened", {});
+      },
+      /**
+       * Fired whenever Resource Center is closed.
+       */
+      closed: () => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Closed", {});
+      },
+      /**
+       * Fired whenever a piece of content is viewed in Resource Center.
+       * @param title The title of the article
+       * @param url The URL of the article
+       * @param sourceKey The source key of the article (if available)
+       */
+      articleViewed: (title, url, sourceKey) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Viewed", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever the link to a document in Resource Center is copied.
+       * @param title The title of the article
+       * @param url The URL of the article
+       * @param sourceKey The source key of the article (if available)
+       */
+      articleLinkCopied: (title, url, sourceKey) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Link Copied", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever a link in a piece of content is clicked.
+       * @param title The title of the article
+       * @param url The URL of the article
+       * @param sourceKey The source key of the article (if available)
+       * @param destination The destination URL of the link
+       */
+      articleLinkClicked: (title, url, sourceKey, destination) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Link Clicked", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
+          ["[Guides-Surveys] Destination" /* Destination */]: destination
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever a piece of content is scrolled.
+       * @param title The title of the article
+       * @param url The URL of the article
+       * @param sourceKey The source key of the article (if available)
+       */
+      articleScrolled: (title, url, sourceKey) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Scrolled", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever a video is viewed within the Resource Center.
+       * @param title The title of the article
+       * @param url The URL of the article/video
+       * @param sourceKey The source key of the article (if available)
+       */
+      videoViewed: (title, url, sourceKey) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Viewed", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever the play button of a video is clicked.
+       * @param title The title of the article
+       * @param url The URL of the article/video
+       * @param sourceKey The source key of the article (if available)
+       */
+      videoPlayed: (title, url, sourceKey) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Played", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever the pause button of a video is clicked.
+       * @param title The title of the article
+       * @param url The URL of the article/video
+       * @param sourceKey The source key of the article (if available)
+       */
+      videoPaused: (title, url, sourceKey) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Paused", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever a video is closed or stopped within the Resource Center.
+       * @param title The title of the article
+       * @param url The URL of the article/video
+       * @param sourceKey The source key of the article (if available)
+       * @param duration The duration in milliseconds that the video was viewed
+       */
+      videoClosed: (title, url, sourceKey, duration) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Closed", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
+          ["[Guides-Surveys] Duration" /* Duration */]: duration
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever a piece of content is closed or navigated away from.
+       * @param title The title of the article
+       * @param url The URL of the article
+       * @param sourceKey The source key of the article (if available)
+       * @param duration The duration in milliseconds that the article was viewed
+       */
+      articleClosed: (title, url, sourceKey, duration) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Closed", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
+          ["[Guides-Surveys] Duration" /* Duration */]: duration
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever a search is executed in Resource Center.
+       * @param inputText The search query text
+       * @param resultsCount The number of search results
+       */
+      searchExecuted: (inputText, resultsCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Search", {
+          ["[Guides-Surveys] Input Text" /* InputText */]: inputText,
+          ["[Guides-Surveys] Results Count" /* ResultsCount */]: resultsCount ?? 0
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever a search result is clicked in Resource Center.
+       * @param title The title of the clicked result
+       * @param excerpt The excerpt of the clicked result
+       * @param type The type of the clicked result (e.g., 'document', 'video', 'resource', 'nudge')
+       * @param id The ID of the clicked result
+       * @param sourceKey The source key of the clicked result (if available)
+       * @param position The position of the clicked result in the list
+       */
+      resultClicked: (title, excerpt, type2, id, sourceKey, position) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Result Clicked", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] Excerpt" /* Excerpt */]: excerpt,
+          ["[Guides-Surveys] Type" /* Type */]: type2,
+          ["[Guides-Surveys] Key" /* Key */]: null,
+          // Content Item ID is not tracked
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
+          // TODO: Add source property once we have a proper way to plumb it through
+          ["[Guides-Surveys] Position" /* Position */]: position
+        });
+      },
+      /**
+       * Fired whenever a recommendation set is shown in Resource Center.
+       * @param title The title of the recommendation set
+       * @param key The key of the recommendation set
+       * @param isDefault Whether the recommendation set is the default set
+       */
+      recommendationSetShown: (title, key, isDefault) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Recommendation Set Shown", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] Key" /* Key */]: key,
+          // TODO: Add source property once we have a proper way to plumb it through
+          ["[Guides-Surveys] Is Default" /* IsDefault */]: isDefault
+        });
+      },
+      /**
+       * Fired whenever an item in a recommendation set is clicked in Resource Center.
+       * @param title The title of the clicked recommendation
+       * @param type The type of the clicked recommendation (e.g., 'document', 'video', 'link', 'nudge')
+       * @param url The URL of the clicked recommendation (if available)
+       * @param key The key of the clicked recommendation (if available)
+       * @param sourceKey The source key of the clicked recommendation (if available)
+       * @param position The position of the clicked recommendation in the list
+       * @param recommendationSetKey The key of the recommendation set that contains the clicked recommendation
+       * @param isDefault Whether the recommendation set is the default set
+       * @param isAutopilot Whether the recommendation is an autopilot recommendation
+       */
+      recommendationClicked: (title, type2, url, key, sourceKey, position, recommendationSetKey, isDefault, isAutopilot) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Recommendation Clicked", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] Type" /* Type */]: type2,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Key" /* Key */]: key,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
+          // TODO: Add source property once we have a proper way to plumb it through
+          ["[Guides-Surveys] Position" /* Position */]: position,
+          ["[Guides-Surveys] Recommendation Set Key" /* RecommendationSetKey */]: recommendationSetKey,
+          ["[Guides-Surveys] Is Default" /* IsDefault */]: isDefault,
+          ["[Guides-Surveys] Is Autopilot" /* IsAutopilot */]: isAutopilot
+        });
+      },
+      /**
+       * Fired whenever an item in the additional resources section (quick links) is clicked in Resource Center.
+       * @param title The title of the clicked quick link
+       * @param type The type of the clicked quick link (e.g., 'document', 'video', 'link', 'nudge')
+       * @param url The URL of the clicked quick link (if available)
+       * @param key The key of the clicked quick link (if available)
+       * @param sourceKey The source key of the clicked quick link (if available)
+       * @param position The position of the clicked quick link in the list
+       * @param isDefault Whether the quick link is in the default set
+       */
+      quickLinkClicked: (title, type2, url, key, sourceKey, position, isDefault) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Quick Link Clicked", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] Type" /* Type */]: type2,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Key" /* Key */]: key,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
+          // TODO: Add source property once we have a proper way to plumb it through
+          ["[Guides-Surveys] Position" /* Position */]: position,
+          ["[Guides-Surveys] Is Default" /* IsDefault */]: isDefault
+        });
+      }
+    },
     nudge: {
       /**
        * Properties that will be included on all nudge events.
@@ -8934,6 +9246,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         return {
           ["[Guides-Surveys] Type" /* Type */]: nudge.type,
           ["[Guides-Surveys] Key" /* Key */]: nudge.flagKey,
+          ["[Guides-Surveys] Tags" /* Tags */]: nudge.tags,
           ["[Guides-Surveys] Variant ID" /* Variant */]: nudge.variant,
           ["[Guides-Surveys] Step ID" /* StepId */]: nudgeStep?.id ?? 0,
           ["[Guides-Surveys] Step Index" /* StepIndex */]: stepIndex ?? 0,
@@ -9236,6 +9549,9 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     }
     _.messageBus.publish("location_change");
   };
+  var sessionPropertiesChanged = (_) => {
+    _.messageBus.publish("session_properties_change");
+  };
   var locationSub = (_) => _.services.onLocationChange((location) => {
     _.location = ref(location);
   });
@@ -9268,6 +9584,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       // NOTE: need this because nudges and checklist triggering depends on _.endUser
       ["location", "href"]
     ]),
+    sub(_, sessionPropertiesChanged, [["sessionProperties"]]),
     sub(_, (_2) => updateChecklistStepConditionsGoals(_2), [["activeChecklist"], ["location"]]),
     sub(_, (_2) => resetTimedTriggers(_2), [["location"]]),
     sub(
@@ -9314,6 +9631,12 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         source: { type: "trigger", properties: { triggerType: "user_confusion" } }
       });
     });
+    _.messageBus.subscribe("exit_intent", () => {
+      triggerSmartNudge(_, {
+        trigger: { type: "exit_intent" },
+        source: { type: "trigger", properties: { triggerType: "exit_intent" } }
+      });
+    });
     _.messageBus.subscribe(
       "dom_mutation",
       () => {
@@ -9348,6 +9671,17 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       "nudge_trigger_click",
       150
     );
+    _.messageBus.subscribe("session_properties_change", () => {
+      sendIndirectTrigger(_, {
+        trigger: { type: "immediately" },
+        source: {
+          type: "trigger",
+          properties: {
+            triggerType: "immediately"
+          }
+        }
+      });
+    });
     _.messageBus.subscribe("start_debug", (message) => {
       startDebugSession(_, message.event.data.experience.nudge, { toStepIndex: 0 });
     });
@@ -9367,7 +9701,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     return decideResult?.[flagKey]?.key;
   };
   var nudgePassesDecide = (nudge, decideResult) => {
-    if (nudge.platform !== "ios") {
+    if (nudge.platform !== __GS_PLATFORM__) {
       return false;
     }
     const activeVariantForNudge = getActiveVariantForFlag(nudge.flagKey, decideResult);
@@ -9566,7 +9900,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     guards: {
       passesNudgeMatch: ({ context }) => !context.triggerEvent?.nudgeId || context.nudge.variantId === context.triggerEvent.nudgeId,
       passesBuiltInThrottles: ({ context }) => context.triggerEvent?.overrides?.builtInThrottles || passesBuiltInThrottles(globalStore, context.nudge),
-      passesTriggerMatch: ({ context }) => context.triggerEvent?.overrides?.triggerMatch || passesTriggerMatch(globalStore, context.nudge, context.triggerEvent, context.nudgeSeenThisSessionTs),
+      passesTriggerMatch: ({ context }) => context.triggerEvent?.overrides?.triggerMatch || passesTriggerMatch(globalStore, context.nudge, context.triggerEvent),
       passesCooldown: ({ context }) => context.triggerEvent?.overrides?.cooldown || passesCooldown(globalStore, context.nudge),
       passesAudience: ({ context }) => context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode || // In debug/simulate mode we always want our audience guard to pass
       nudgePassesDecide(context.nudge, globalStore.decide),
@@ -9576,6 +9910,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         return !shouldTemporarilyHide(globalStore, context.nudge) && passesRegularPageTargeting;
       },
       passesClicked: ({ context }) => passesClickedElement(globalStore, context.nudge, context.triggerEvent),
+      passesTriggerElement: ({ context }) => passesTriggerElement(globalStore, context.nudge, context.triggerEvent, context.nudgeSeenThisSessionTs),
       passesCustomThrottles: ({ context }) => shouldBypassCustomThrottles(globalStore, context.nudge) || context.triggerEvent?.overrides?.customThrottles || passesCustomThrottles(globalStore, context.nudge),
       passesLocalization: ({ context }) => context.triggerEvent?.overrides?.localization || passesLocalization(globalStore, context.nudge, getCurrentLocale()),
       // step specific
@@ -9584,6 +9919,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       stepChecksFailed: (_, params) => params.passed,
       canStepBack: ({ context }) => context.stepIndexStack.length > 0,
       isTooltipNudge: ({ context }) => !!isTooltipNudge(context.nudge),
+      isPinStep: ({ context }) => !!isPinStep(getNudgeStep(context.nudge, context.stepIndex)),
+      isWebPlatform: ({ context }) => context.nudge.platform === "web",
       hasSurveyResponse: (_, params) => "surveyResponse" in params.event,
       hasSequentialSteps: ({ context }) => hasSequentialSteps(context.nudge),
       isDismissal: (_, params) => params.isDismissAction
@@ -9877,7 +10214,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       }
     }
   }).createMachine({
-    /** @xstate-layout N4IgpgJg5mDOIC5QDkCu0wGIBKBRAyrgCoD6+RAgkbgNoAMAuoqAA4D2sAlgC6dsB2zEAA9EAFgBMAGhABPRBICcANgDsAOgDMiugA4ArIolLddMWIC+FmWgw5cAMTz4AEiWQBVACIBxWoyF2Ll4BIVEESRl5BE0ARl1FdQl9OgllWLpNZX1ky2sQWxh1AEkIABssImxinz9seiYkECCePkEm8JyoxF1Y9RS6OmyxTXMxAwkrG3QigGEACzAAYwBrTn4oAAJZgQhWgVh1BeW1jc2KdE4wfiWsBsCOffbQcNjNZPVY5V0xfU1NVI5MTdBB-MTqb5iIZ0RQpZTGTRTAozMBHRardZbHb8PYhfiHY4Ys4XPbXW6YGixRqsR54sKITQGPoSVQjfSxCT-H7AuQM3S6dS-UaaVS6bL835IwqowmnLG7J4E9Fyzb4fhsNgAL0gFICTRadI6CkUIqSLPiItiilisR50RSmi0ujiYgyGWtKTy0wwaJOmO2CrxSr9ZzVGu1EApVIewTa9JiulUzNZmnZnMZ5hBowkgrBbwkPzi7ylKN9RPlOMVZZVAAUAIYwXXU5q0uNGhO9JIptNczO8hBfKGfLKKVmu1Sw-4ln2y-3Y3FtYPlzb1xuU5sGtsvPmdllsjm9u3iUyCob6XrjUfw2LTubKueBxfVh9sMoQNgAd34TZjT3jEjEb51FMfRlGUTJWTMVkQUvfoxEUUxVBSRRR3ZW8ZXvM55yrWcsI1N9P2-ddf0NbcEyTLt93TbkQRZHJ1GtSRxgBRlGWUdDnzwysg04rZpU2ABZOtuCWeYf31VtQnbKFwUTdk6AySR+W+fQQQSR0JwQ1IEIA8wONwisFwOXjNn4oSRLE4iJNjKSyMZdlKNTA8MyPBBkjoXNRgSFIMkTIx9MwwycMCzYiAAJ04KAYDCwThNE8SaRs54REQRRJC0QxvOSEVR00EFVDA4ci0yuhQMkAKQyCniDNCiKorAGLzPiqzEr-dt7OTKjD1ok1lGAiRStTfR2UML1kRnELsOqybUFgbg2AAW1C+YwrYbhuAqWAEpbJL41iVRWSSG1THGUwxS+EFlHMYDnVtWJ2RFUZFAq5cpqfGrZlm+alqIFa1o2uAow3STkvCNjOqc6i+2iAtrrFVRtCtFkk3Y-JpXUfBuDAFhMHffhUTm4TUXRzHsfuay2rI3pUiSEYxARq7Su+EEvm0J1VAU8xtBOjjSZYEy3oOXGBFRdYADc2BWVE+cF-EhNE9YwHJ1rSJSiJ9AO9QzF6Ashl0NJVP7ArwVYr59fA-a0t5rH+Y+x8hbx0X+AlqWMZt2XYHl+ZFZanbKbV35Ne1jlTG+A2WfggUOfAhSbQQyPrexkyhOETZsGuCAGp1ZW-dVzoRgFUdTH+K8Umkft7q+fptABIwoQnJNE9tkKU7TjOs8jX3N1stX9ALhjRUybQCrLtTnQhf5bVKpQbXGJv1HTnEGs2AAZDUca8Yp8AErf8Bz7vQcQVkUP6PQDsrlkshZpN9AY5RGP2wCDfnxfM5ite2Bx-BkAAeR-gAtfwwNdrtmPokFIiYb4cgZizQwOZQIFnutTOEL927v3XvYJwBA3CeF8EAkiW41bZFKloSeygvKlQQizGEApzzkLoBzVQyQMio29EUPmC80GrwwbMFeP9CD7xBvGVkCRT6QIvjAiufccxDCUJQ0wHJUFL3QZ-TA5Af41kESAsiSF0oQL7ubBGbwWY2hzOMQCFicj31GEot+3DVEOGKMgLeLgtH+3CKyCcYjz5pkkdEN4poG5WggsxSYaNSwcNfsvD+OMPA1i8FQXAZAPDYAAGq4AAJokGcDWH+yABF6hVoQ8IV14S5kkKMK6EgQ7UJpgE+6iCUKDFULY6J69OHKMxJgCgXhUkUGQLMfBFM86IEMCoSi7lbQFiYSzAwGh4Q5H5O8Vk+1WkqP5lEiKGx7CEFIOQRJbiRmghQn1PckylIzP7MYfaWs+5GCMAYAEPw1n2I2WgrpeAfDOD3oU3OxTRknImT5C55cYbmD6NAzSYERj3RaeEn0kSuExI6W-LpFB8D4BqMgEguTcnpOwCQCgswiA-3qL8g+8YNbvAHqKOIQx77OhZrCAUTIkwoSQhrFkLzkWbK6V4PJQyik9w8YBcBZ8oGX2UCY8CgofilN+GkE0Y0SY2xRW0z+6gKAQDFnWG4XTf6kH5cgQVfzhWIGyByfoooxSgTMPBRQtFBh9CcjaoUTD4jcvaVqnVertlGpNRS9sFr4HWuyOBcwKEWbkMdJkE01S-hIILJ6jV3rdVLD5QKruQjQERu8RKvxiB4iWskANBV2hY26GTc3SqAZuKLmFvjdQ4tJbS3dvbOWdYFb40Of8hAY4xXiN8VfCuCFEgI3MOQ0UHJ0hVoFu2rajsm3OxbW7bGHsvY+2jMM3twarXKVtRGh1VyYQaBAgpUcQx-hhLYa2pOmzXmcKgGFOAXBtk9rNQgXdGt93hvtbRCpsrAIAniGKe+s705PpfV0rN2i1b9rzRI4dMMIJJFGH8EcOh4JWHyOqTO8AmjSgIR+gAtEe6IxHb4oRQlCAEeYfj6A4qUCoRHD4IH1gVBiDCvgWrgVmK04JGEa0vPtECL0VQexY-GbQWZRRa0jpIA6OQCqsPGneGtHsTIkiuDcMAkn2yKVvhzNIagUiQSuiCYaOZrSKTOgkZ0YmHx1uMjVMMWpIB6bImkJhnx4JDCFIMZ0qgYLZDgghJGo40qKQc1xIy+ITKrl09uj9qZExazSvoi80NxAmiOldMUSgdIwkRPCtTr151ztfO+L8Hm1ZWhy5Qt4dmDpJgs9S60l745vDUMq0sdsnNxZqmZOK8wavhETGpYad88vTrSnCm9c7+tLhVOFSK0VYoWVG+agCnl75UbeJkWIal77qE0heA6ZgbwlYwup8rH0vqLWWqtdam1NsDnAn1JMIpLwTiE1K-sdz+j8gUo01Itom6vYAjlsCCaGF0t0JdTIN1a6cm+NaYw88vAi1exOa61SVD02nROx1IXKlmEMGoN4PWEWqr67F-DQrWNQgMHJic2tjA-DSBHQYSQEgzwGiodHV3V3VuXK3TZ7mkusdyH0aHdKjF6GocdgqHOEjgURnN1Tt63nKNea90CPwaW3XpQhPKFcWS0O0AWaX5oqfsNVfenl7yNh64OvA7jjJVepFBQoaEWhtasnZ-ENIs7U2+qgK9ydiRBjkOUjCc8rkQMQvPRkP4EwDCztp4qCPOh4F6AMV5osjq3iClFL8O5xCmHgbAJB2Ar7w+S-jJOjQl9S6lWGkFq5FiIR2uqXJBTlbsNAA */
+    /** @xstate-layout N4IgpgJg5mDOIC5QDkCu0wGIBKBRAyrgCoD6+RAgkbgNoAMAuoqAA4D2sAlgC6dsB2zEAA9EAFgBMAGhABPRAEYA7EoB0ATgCsAZgWaJADk1ilxugYC+FmWgw5cAMTz4AEiWQBVACIBxWoyF2Ll4BIVEESRl5BAMFVTF1RPUEwwMlZW0rG3QYVQBJCAAbLCJsPJ8-bHomJBAgnj5BWvD9KMRtADZNdVUJTSUxBTp1JQNzdSyQW1yAYQALMABjAGtOfigAAhmBCAaBWFV5pdX1jYp0TjB+RaxqwI49ptBwhQMJCVUh9W0JLQ6uhTaNoIXTDVR0bR0UyaAxiBIGSzWKY5MCHBYrNabbb8XYhfgHI4Y07nXZXG6YGgKGqsB54sKITQKZSfbSQiQKSSjYGaCG9AzqCTmBTfCSSTJI6aowknLE7R4E9Eyjb4fhsNgAL0gFICtXqdOa4kB2nBKmS-TZA2BP15HQ5wyMooM2kR2QwaOOmK2crxCo9pxVas1EApVPuwUa9IQjIkaiNdHZnIMwI6CU+YiMMLe6gREkmkvdRNlOPlBaVAAUAIYwbXUuq0iMGhCA76qIzJbTqBRdEyM4G-MQdPnmPqvCSs5R5lGlz3Y3GNX2FjaV6uU2t6hvPBlDWOs+McmNJuTtWGqZ2-H6Cpms7RKSdu6Uz73z6enGaFTgrLV3XX10KNsSaB0PRjmI5g9toCRAkeIKsh8hhQv0EISEBt4SlOD6vk++wvli76fsGq5ho8kaMjeLJsvuXLQQMcRDMoXY8pICSaHesyKo+xY+jhGxEAATpwUAwLxGy4MUAC2VzcDWRH6puUZ6DuFGJsCwoCqooyMlCSjOh0AysVK7GYZxz4YZsfECUJIniZJIZrr+TwiFuJjkXuynQU6xp0MYowdE67LqCm+ncbOJamV6bCFBAbAAO78NJP7hn+cmdCmqhdB0EIItCRgdFaUJiBoJjpp06h0MKQVhSFXGVWqkUxXFhEJcRjaMrpLkJgeVqAgY4LOkYoI5qhrpsX6RZzthYWShsACyFbcIsczxTSiUOeEoEFWkPI6HQYg-K8fZGAVTFeQK-S+eKw0GaNXrGRNhmbFNs3zYtjXLc1cmMiM7WUYe0TaGY6n9KBHR9emLrIve903eN+LceZglgMJT0LUtdYrZGyQfP9Iqldm-K6AdoGqN0UKQnQEKmBBFVQ1VJlQ-DlnIy9oZNbJjnyV9cYdVRf0JAVphKCDNHCrt1PXbTd3i6gsDcGwYk8XMvFsNw3DFLAqPrkl7PvKYp4DAixj8imOhdfGaV2tm+jFUYYuLhLsOVdLsvy0QivK6rcC2TJG7s4yaTfW5f03porbRuYgHY+D+Y1bdDtQwAMmwiwVu+6pzY0Gv2ZGvxfQKZr-DpgJiHlCLqWMsT9oM5VoZD4tYXH12J8nqfpwIXusz7LTKIprmddBPyAYV0aduT3wdEF+DcGALCYFF-CojLc2ovmk-T9+b1s+EyTOR2UJGEMxiaH2ZUh2VyiDIkPLxhPU8sMF9fq3PqJrAAbmwyyoqvLD27As0LWsYB15o3er7TsHxhSkU6KKBSKkmRqAhAoZCbxrzaRvtPe+sdH4CGfvwN+H9VBfx-n-OYADXrAM3gyMBnwtBGg6NA-oKk0gFV3Iyfo-IBh9DQXfMKs1hAbGwFcCAiMvw6g3p3RAukBifEdGaCCYxi7QVeGpLsfV+TrR5FHKcX9uK8P4YI4RBEWZiK1uESRBVEHplkemHaKk+jATYSYJkopBZcNUAInEiMNiJzYDPLweR8DTX8fgIBmtVqIDSCeLo3RBjkwHFCPs7wjqJAMHQ1k-JEgXQhrkbR7ihHCW8TPfAyAADyxSABa-g7Lo0bAiCCaVNDRKGDtDKSg+x0XBN8fQXkMwZUySvW+bj9H5LVDPPATgCBuE8L4Sp3sTGIFGETax7J-pKE7J0FSCRYxMP0BmEemi3Q5KGV4kZmAZjx2KYQEJWcalOgKlE5ITS4mtOgoKHkxNviWN0MgiYNdskDNyZ4gpmByDFLLFc6pckcx3IaQ82JLTj7kw6Z0H4Axg5pFcQC4ZPjMAODyMgfxLhwUgPCAiDk9TGlwviYot4HxRhfDGPBEwuZfmf3+UcoFHgyxeCoLgMgHhsAADVcAAE0SDODLMU5AlzRHkPEQgU0agMp6DoKkphuVFGgToOpCCZ4YwphSBi9lIzBkeP4usTAFAvACooMgGYMyO5zPleOeI7wyr-V0CmBQCTB7vCFpbdIWhDWmuOT4k1eTMT2EIKQcgPKiUUKdboF1l53VdkGH2W0Id0qAneFoWEXkg15JDXfTFEa8A+GcMEmVoTIzaUTZIZNOhU1epeU6HoShDB-ExghFiLKCFsuDQUsNiMI0UHwPgcoyASASolUK7AJAKAzCIMUqoVbrlySUCqnqiDG3Oh+PyI+LyVnxH0JbWIygoQFsBcakt5qvCSvtcYsJMR5Hkthc0ql0RU0hwHCknkXRNqBV7YcgdxqKAQBfhWa4EaSmkDvcgB9srHULLUO2ro-ZVkpmkIexIGgT2ZmTePID-bC2DrAxBqDt771xrlch9SyET0mACpEF5CC0rrWgTtJifStHEavaGsjkHFgRrg7QIxiGn0ROhRS99zzohjkFLhtk8YUyksI5dPt6DMVFowTDLB89VCv3fqy6eRCKz-3ntRx1knX0xJk32eEvQonGGzCdGMl6sXcJpg-We2CDO4KMxp7+D9iGkLE9WxstHUMMYw8xuTCRBzAyZLpOJ3d3PaYEVAXicAuDmss0+yL9H0NMaw3Jml4IjDaSApBUYaXB0Zay7AHLUB26PsjNZ+5tmnl9kPupKJKTzDxl3VYJEqohHwFqJKWZT6AC06hgTTcHOTJby3lv-R7epgoxQpsYzoR8LyPJIR810AeuTo9WxaFiQPJLamslXTtg-bbjYOx9nbT0YYKqdB+vSDd6OXnMHcRJJca4YBHtyT0G1EGvxfhDARE6PsZpejmnbTCACGRbZKh-txAMGpICg-ZjpNQSQApQmzExPK2kNCigQcMMcLje0x109xZcIOHVPqS3c1ZGkz4BRGAdLs7yoR2kFl0H56mGehRpnhD+EA8drT3WlIWMJAL7ZO+0QUHwSa+WJ4N0W9O-uM7CgzTxokwASX4NwWX4gBa9B1UYMqv7m1B0TX0bS6YYc05++hfXEu64RSirFS3IJ2QfF8ukJpMLkslxQ+aXpA5ITrduzpn3i5HpzQWoHtIhMCou5vH0WEjJUF67rv9w3-EEZIzT3MQPdCjqNrGK9nMB1IQuvWtebp+yRr3ZLzTJ2csFZKxVmrQP6u4hrJGKj-1JX2iAi1Tnuh7blDsk97XLvBuE5JxTpwNObNwtyRHIT5JpUby7ShOqv67TNdG3JiBbjBzb6B50O26hOhQJdl8gkYEfxia6AgnnYUyFb8-l0EvBsFA8BR+RTxdJ4wwJkJ0xusKcdkYQodbRmV1NtFxcfQH9JAtUIEIIyp-hYQ5tFFVkep+R30lMYQhpE90CoZdFMVcdWdIw6E3hpEewuxOwK5GFUpIR0gVUoEvhUDqDeMPNA8N0FNt0f8-J90VJJE0wvIb9H9kJatr0hlMRRDtwFcAJwCOQeRZNEBRQYQNAVUOQbw0VkhlD+NwNBM1DGCIt0hzEzBScAQtAElVl1J4x2xXgUxTALDPNi9dMM9ad6lbQewmVecXlBg9tVltp3gMh+hfDBlMtssbDWs7DEEXVwdTBYhdJHd9CUljRXkukYxARAIxBhsLAgA */
     id: "Nudge",
     initial: "Idle",
     states: {
@@ -9944,7 +10281,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           "Checking Clicked": {
             always: [
               {
-                target: "#Nudge.Step",
+                target: "Checking Trigger Element",
                 guard: "passesClicked",
                 actions: [{ type: "logCondition", params: { conditionName: "clicked", conditionResult: "PASS" } }]
               },
@@ -9954,6 +10291,24 @@ when parsing ${JSON.stringify(input, null, 2)}`);
               }
             ],
             description: "Was the target element clicked?"
+          },
+          "Checking Trigger Element": {
+            always: [
+              {
+                target: "#Nudge.Step",
+                guard: "passesTriggerElement",
+                actions: [
+                  { type: "logCondition", params: { conditionName: "triggerElement", conditionResult: "PASS" } }
+                ]
+              },
+              {
+                target: "#Nudge.Idle",
+                actions: [
+                  { type: "logCondition", params: { conditionName: "triggerElement", conditionResult: "FAIL" } }
+                ]
+              }
+            ],
+            description: "Was the trigger element added to the DOM?"
           },
           "Checking Cooldown": {
             always: [
@@ -10090,13 +10445,19 @@ This includes searching for elements to pin to or checking availability of comma
 Limit is currently hard-coded to 1`
           },
           "Render Loop": {
-            entry: [{ type: "sendEnterRenderLoop" }, { type: "markSeen" }, { type: "saveSeen" }],
+            entry: enqueueActions(({ enqueue, check }) => {
+              enqueue({ type: "sendEnterRenderLoop" });
+              if (!(check({ type: "isPinStep" }) && check({ type: "isWebPlatform" }))) {
+                enqueue({ type: "markSeen" });
+                enqueue({ type: "saveSeen" });
+              }
+            }),
             states: {
               Rendering: {
                 entry: enqueueActions(({ enqueue, check }) => {
                   enqueue({ type: "renderStep" });
                   enqueue({ type: "reevaluateChecklistItemGoals" });
-                  if (!check({ type: "isTooltipNudge" })) {
+                  if (!check({ type: "isTooltipNudge" }) && !(check({ type: "isPinStep" }) && check({ type: "isWebPlatform" }))) {
                     enqueue({ type: "reportSeen" });
                   }
                   enqueue({ type: "reportExposure" });
@@ -10153,6 +10514,9 @@ Limit is currently hard-coded to 1`
                       { type: "resetStep" },
                       { type: "saveInteraction" }
                     ]
+                  },
+                  STEP_VISIBLE: {
+                    actions: [{ type: "markSeen" }, { type: "saveSeen" }, { type: "reportSeen" }]
                   }
                 }
               },
@@ -10497,7 +10861,7 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
       setOriginalDebuggingNudge: assign({
         debugMode: ({ context }, params) => ({
           ...context.debugMode,
-          originalNudge: context.debugMode?.originalNudge ? context.debugMode.originalNudge : params.nudge
+          originalNudge: params.nudge
         })
       }),
       setDebuggingNudgeId: assign({
@@ -11131,7 +11495,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var NudgeContentSurveyTextBlockV = type({
     uuid: string,
     type: literal("survey_text"),
-    meta: intersection([type({ prompt: string }), SurveyValidation])
+    meta: intersection([type({ prompt: string }), SurveyValidation, partial({ ariaLabel: string })])
   });
   var NudgeStepContentSurveyTextShortBlockTypeV = type({
     uuid: string,
@@ -11141,7 +11505,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         type({ prompt: string }),
         partial({ prefill: type({ enabled: boolean, userProperty: string }) })
       ]),
-      SurveyValidation
+      SurveyValidation,
+      partial({ ariaLabel: string })
     ])
   });
   var NudgeContentListBlockV = type({
@@ -11162,7 +11527,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           enabled: boolean,
           label: string,
           placeholderLabel: string
-        })
+        }),
+        ariaLabel: string
       })
     ])
   });
@@ -11200,7 +11566,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       SurveyValidation,
       partial({
         conditionalActions: array(NudgeConditionalActionV),
-        defaultAction: NudgeButtonActionV
+        defaultAction: NudgeButtonActionV,
+        ariaLabel: string
       })
     ])
   });
@@ -11398,6 +11765,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     literal("smart_delay"),
     literal("rage_click"),
     literal("user_confusion"),
+    literal("exit_intent"),
     literal("none")
   ]);
   var ElementAppearedTriggerConfigV = type({
@@ -11409,7 +11777,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var ElementClickedTriggerConfigV = type({
     type: literal("element_clicked"),
     data: type({ selector: string }),
-    conditions: union([nullType, undefinedType, any])
+    conditions: array(array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
   });
   var EventTriggerConfigV = type({
@@ -11441,13 +11809,15 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     literal("day"),
     literal("week"),
     literal("month"),
+    literal("year"),
     literal("session"),
     string
     // keep for forward compatibility
   ]);
   var NudgeCooldownLimitV = partial({
     max: number,
-    period: NudgeCooldownPeriodV
+    period: NudgeCooldownPeriodV,
+    periodCount: union([number, undefinedType])
   });
   var NudgeLifecycleConfigV = type({
     stopShowingIfCompleted: boolean,
@@ -11474,7 +11844,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         position: union([literal("bottomRight"), literal("bottomLeft")]),
         priority: number,
         dir: union([literal("ltr"), literal("rtl")]),
-        stepCounterFormat: union([literal("numeric"), literal("verbose")])
+        stepCounterFormat: union([literal("numeric"), literal("verbose")]),
+        tags: array(string)
       })
     ],
     "NudgeBase"
@@ -11892,11 +12263,11 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       }
     });
   };
-  var restartDebugSession = (_, options = { resetToOriginalDebugNudge: true }) => {
+  var restartDebugSession = async (_, options = { resetToOriginalDebugNudge: true }) => {
     const debugNudge = getDebuggedNudge(_, { getOriginal: !!options.resetToOriginalDebugNudge });
     if (debugNudge) {
+      await stopDebugSession(_, { refreshDecide: false });
       resetNudge(_, debugNudge.variantId);
-      stopDebugSession(_, { refreshDecide: false });
       setTimeout(() => {
         startDebugSession(_, debugNudge, { toStepIndex: options.toStepIndex, refreshDecide: false });
       }, 50);
@@ -12023,6 +12394,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         }
       }
     };
+    const sessionPropertyConditions = getSessionPropertyConditions(nudge.triggerConfig.conditions);
     const nudgeChecks = {
       limits: {
         result: passesCooldown(_, nudge),
@@ -12052,6 +12424,14 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           isSnoozable: nudge.isSnoozable,
           isSnoozableOnAllSteps: nudge.isSnoozableOnAllSteps,
           snoozeDuration: nudge.snoozeDuration
+        }
+      },
+      sessionProperties: {
+        result: passesSessionProperties(_, sessionPropertyConditions),
+        explanation: "Session properties do not match the conditions.",
+        detail: {
+          conditions: sessionPropertyConditions,
+          sessionProperties: _.sessionProperties
         }
       }
     };
@@ -12297,7 +12677,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
             return true;
           }
           const hasOverride = context.triggerEvent.overrides?.triggerMatch;
-          const baseTriggerConditionMet = passesTriggerMatch(_, simulatedNudge, context.triggerEvent, []);
+          const baseTriggerConditionMet = passesTriggerMatch(_, simulatedNudge, context.triggerEvent);
           if (hasOverride) {
             updateTriggerMatched(true);
             return true;
@@ -12308,6 +12688,13 @@ when parsing ${JSON.stringify(input, null, 2)}`);
               updateTriggerMatched(true);
             }
             return clickedElementMatch;
+          }
+          if (baseTriggerConditionMet && simulatedNudge.triggerConfig.type === "element_appeared") {
+            const triggerElementMatch = passesTriggerElement(_, simulatedNudge, context.triggerEvent, []);
+            if (triggerElementMatch) {
+              updateTriggerMatched(true);
+            }
+            return triggerElementMatch;
           }
           if (baseTriggerConditionMet) {
             updateTriggerMatched(true);
@@ -12758,7 +13145,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       get: function(_, prop) {
         if (prop in sdk) return sdk[prop];
         if (prop === "then") return void 0;
-        if (prop === "gs") {
+        if (prop === "gs" || prop === "rc") {
           return new Proxy(
             {},
             {
@@ -12872,8 +13259,11 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   // ../shared/src/products/resource-center/service-actions.ts
   var service_actions_exports2 = {};
   __export(service_actions_exports2, {
+    previewAutopilotKeywords: () => previewAutopilotKeywords,
+    previewContentItem: () => previewContentItem,
     previewRecSet: () => previewRecSet,
     previewResourceCenter: () => previewResourceCenter,
+    setInitialPage: () => setInitialPage,
     showResourceCenter: () => showResourceCenter
   });
 
@@ -12886,6 +13276,15 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   };
   var previewResourceCenter = (_, resourceCenter, quickLinks) => {
     _.services.previewResourceCenter(_, resourceCenter, quickLinks);
+  };
+  var previewAutopilotKeywords = (_, keywords) => {
+    _.services.previewAutopilotKeywords(_, keywords);
+  };
+  var previewContentItem = (_, contentItemId) => {
+    _.services.setCurrentContentId(_, contentItemId);
+  };
+  var setInitialPage = (_, navigateTo) => {
+    _.resourceCenter.initialPage = navigateTo;
   };
 
   // ../shared/src/services/analytics/client.ts
@@ -12995,6 +13394,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       this.addIntegration = this.addIntegration.bind(this);
       this.setThemeMode = this.setThemeMode.bind(this);
       this.addCallback = this.addCallback.bind(this);
+      this.setSessionProperty = this.setSessionProperty.bind(this);
       this._initStarted = window.engagement?._initStarted === true;
       this._configuration = {
         ...this._configuration,
@@ -13126,6 +13526,26 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         });
       }
     };
+    rc = {
+      /**
+       * Opens the Resource Center widget.
+       */
+      open: () => {
+        this.resourceCenterActions.showResourceCenter(true);
+      },
+      /**
+       * Closes the Resource Center widget.
+       */
+      close: () => {
+        this.resourceCenterActions.showResourceCenter(false);
+      },
+      /**
+       * Toggles the Resource Center widget visibility.
+       */
+      toggle: () => {
+        this.resourceCenterActions.showResourceCenter(!this._.resourceCenter.visible);
+      }
+    };
     /**
      * Sets a router function can be used during navigation to update the page's URL without triggering a reload..
      *
@@ -13134,6 +13554,24 @@ when parsing ${JSON.stringify(input, null, 2)}`);
      */
     setRouter(routerFn) {
       this.globalActions.addCallbacks({ "engagement-router": routerFn });
+    }
+    /**
+     * Updates the localization locale. This will trigger a re-fetch of the config and refresh all nudges.
+     *
+     * @param locale The new language code.
+     */
+    async updateLanguage(locale) {
+      if (this._configuration) {
+        this._configuration.locale = locale;
+      }
+      const updatedConfig = await getEndUserConfig(this._configuration.apiKey);
+      const refreshedNudges = updatedConfig.nudges;
+      getAllNudgeActors(this._)?.forEach((actor) => {
+        const nudge = refreshedNudges.find((nudge2) => nudge2.variantId === actor.getSnapshot().context.nudge.variantId);
+        if (nudge) {
+          actor?.send({ type: "REFRESH_NUDGE", nudge });
+        }
+      });
     }
     /**
      * Make Guides and Surveys available to the user. They will not be available before `.boot` is called, even if the
@@ -13222,6 +13660,22 @@ when parsing ${JSON.stringify(input, null, 2)}`);
      */
     addCallback(callbackKey, callbackFn) {
       this.globalActions.addCallbacks({ [callbackKey]: callbackFn });
+    }
+    /**
+     * Set a session property to the SDK.
+     * @param key The key to set the session property to.
+     * @param value The value to set for the session property.
+     */
+    setSessionProperty(key, value) {
+      if (!isValidSessionPropertyKey(key)) {
+        console.error("Invalid session property key", key);
+        return;
+      }
+      if (!isValidSessionPropertyValue(value)) {
+        console.error("Invalid session property value", value);
+        return;
+      }
+      this.globalActions.setSessionProperties({ [key]: value });
     }
     /** Internal SDK methods **/
     async _configUser() {
@@ -13316,14 +13770,24 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       LocalStorage_default.remove(`debug:nudges`);
       logger.log(`Disabled debugging for nudges. Restart the application.`);
     }
-    _showResourceCenter(show, recSet, resourceCenter, quickLinks) {
+    _showResourceCenter(show, options) {
       this.resourceCenterActions.showResourceCenter(show);
-      if (recSet !== void 0) {
-        this.resourceCenterActions.previewRecSet(recSet);
+      if (options?.recSet !== void 0) {
+        this.resourceCenterActions.previewRecSet(options.recSet);
       }
-      if (resourceCenter && quickLinks !== void 0) {
-        this.resourceCenterActions.previewResourceCenter(resourceCenter, quickLinks);
+      if (options?.resourceCenter && options?.quickLinks !== void 0) {
+        this.resourceCenterActions.previewResourceCenter(options.resourceCenter, options.quickLinks);
       }
+      if (options?.autopilotKeywords !== void 0) {
+        this.resourceCenterActions.previewAutopilotKeywords(options.autopilotKeywords);
+      }
+      if (options?.contentItemId !== void 0) {
+        this.resourceCenterActions.previewContentItem(options.contentItemId);
+      }
+    }
+    _startChat() {
+      this.resourceCenterActions.setInitialPage({ item: { page: "chat", params: {} } });
+      this.resourceCenterActions.showResourceCenter(true);
     }
     /**
      * Logs debug snapshots for guides and surveys in the system.
@@ -14725,6 +15189,9 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     },
     previewResourceCenter: (..._args) => {
       return;
+    },
+    previewAutopilotKeywords: (..._args) => {
+      return;
     }
   };
   var DEFAULT_OPTIONS2 = {
@@ -14750,6 +15217,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       decide: void 0,
       evalEngine: new EvaluationEngine(),
       callbacks: {},
+      sessionProperties: {},
       flags: null,
       nudgesManager: null,
       currentModalNudge: null,

@@ -1322,6 +1322,10 @@ extension SwiftUICore.View {
 }
 
 
+@_inheritsConvenienceInitializers public class __ReactNative__AESDK : AmplitudeEngagementSwift.AmplitudeEngagement {
+  override public init(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = super)
+  @objc deinit
+}
 public class AmplitudeEngagement : Observation.Observable {
   public var config: AmplitudeEngagementSwift.AmplitudeEngagementConfig
   public static var logger: any AmplitudeEngagementSwift.AmplitudeLogger
