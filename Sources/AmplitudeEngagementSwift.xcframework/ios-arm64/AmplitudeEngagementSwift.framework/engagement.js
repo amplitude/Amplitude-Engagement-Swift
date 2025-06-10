@@ -11864,7 +11864,10 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   });
   var NudgeAdditionalV = type(
     {
-      platform: withFallback(union([literal("web"), literal("android"), literal("ios")]), "web"),
+      platform: withFallback(
+        union([literal("web"), literal("android"), literal("ios"), literal("react-native")]),
+        "web"
+      ),
       showStepCounter: boolean,
       isDismissible: boolean,
       isSnoozable: boolean,
