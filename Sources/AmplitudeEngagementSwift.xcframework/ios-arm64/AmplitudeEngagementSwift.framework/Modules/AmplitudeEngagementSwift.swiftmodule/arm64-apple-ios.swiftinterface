@@ -1349,8 +1349,11 @@ public struct AmplitudeEndUser {
   public var user_id: Swift.String?
   public var device_id: Swift.String?
   public var user_properties: [Swift.String : Any]
+  public init(user_id: Swift.String? = nil, device_id: Swift.String? = nil, user_properties: [Swift.String : Any] = [:])
 }
 public struct AmplitudeBootOptions {
+  public init(user_id: Swift.String?, device_id: Swift.String? = nil, integrations: [(_ eventType: Swift.String, _ eventProperties: [Swift.String : Any]) -> Swift.Void] = [], user_properties: [Swift.String : Any] = [:])
+  public init(user: AmplitudeEngagementSwift.AmplitudeEndUser, integrations: [(_ eventType: Swift.String, _ eventProperties: [Swift.String : Any]) -> Swift.Void] = [])
 }
 public enum Roboto : Swift.String, Swift.CaseIterable {
   case thin

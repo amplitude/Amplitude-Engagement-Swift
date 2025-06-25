@@ -8577,7 +8577,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     return true;
   };
   var hasRemainingSteps = (nudge) => ({ stepIndex }) => stepIndex < nudge.steps.length - 1;
-  var shouldBypassCustomThrottles = (_, nudge) => nudge.priority === 3 /* Urgent */ || !isIncludedInCustomThrottles(nudge) || _.nudgeDebugToolBar.visible && _.nudgeDebugToolBar.bypassCustomThrottles;
+  var shouldBypassCustomThrottles = (_, nudge) => nudge.priority === 4 /* Urgent */ || !isIncludedInCustomThrottles(nudge) || _.nudgeDebugToolBar.visible && _.nudgeDebugToolBar.bypassCustomThrottles;
   var getNudgeById = (_, id) => getNudgeActorSnapshot(_, id)?.context.nudge;
   var getNudgeByFlagKey = (_, flagKey) => getAllNudges(_).find((nudge) => nudge.flagKey === flagKey);
   var getAllNudges = (_) => {
@@ -9502,7 +9502,6 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     "minimized",
     "scrollPosition",
     "query",
-    "currentContentItemId",
     "recentSearches",
     "isAdditionalResourcesExpanded"
   ];
@@ -10192,6 +10191,14 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       closePopover: ({ context }) => {
         context.popoverActor?.send({ type: "CLOSE" });
       },
+      setTriggerMatch: assign({
+        triggerMatch: ({ event, context }) => {
+          if (event.type === "TRIGGER") {
+            return event;
+          }
+          return context.triggerMatch;
+        }
+      }),
       logCondition: ({ context }, params) => {
         if (shouldDebugNudges) {
           try {
@@ -10343,7 +10350,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
             always: [
               {
                 target: "Checking Page",
-                guard: "passesTriggerMatch"
+                guard: "passesTriggerMatch",
+                actions: [{ type: "setTriggerMatch" }]
               },
               {
                 target: "#Nudge.Idle"
@@ -10634,6 +10642,7 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
                 actions: [{ type: "refreshNudge", params: ({ event }) => ({ nudge: event.nudge }) }]
               },
               CLOSE: "Done",
+              CLOSE_WITHOUT_REACTIVATION: "Done",
               STOP: "Done",
               FINISH: {
                 target: "Done",
@@ -10671,11 +10680,13 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
             exit: [
               enqueueActions(({ context, enqueue, event }) => {
                 if (!(context?.triggerEvent?.overrides?.simulateMode || !isIncludedInCustomThrottles(nudge)) && event.type !== "STOP") {
-                  enqueue.sendTo(({ context: context2 }) => context2.parentRef, {
-                    type: "TRIGGER",
-                    trigger: { type: "active" },
-                    source: { type: "active" }
-                  });
+                  if (event.type !== "CLOSE_WITHOUT_REACTIVATION") {
+                    enqueue.sendTo(({ context: context2 }) => context2.parentRef, {
+                      type: "TRIGGER",
+                      trigger: { type: "active" },
+                      source: { type: "active" }
+                    });
+                  }
                   const allNudgesSeenThisSession = Array.from(getAllNudgeActors(globalStore)?.values() ?? []).reduce((acc, curr) => {
                     const context2 = curr.getSnapshot().context;
                     if (context2.nudgeSeenThisSessionTs.length > 0) {
@@ -10718,6 +10729,7 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
         surveyResponses,
         nudgeSeenThisSessionTs: [],
         triggerEvent: null,
+        triggerMatch: null,
         prevPassedConditions: false,
         isDismissed: false,
         isCompleted: false
@@ -11031,8 +11043,8 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
                 }
               } else if (triggerEvent) {
                 const sortedMachines = Array.from(nudgeMachines.values()).sort((a, b) => {
-                  const priorityA = a.getSnapshot()?.context.nudge.priority ?? 1 /* Medium */;
-                  const priorityB = b.getSnapshot()?.context.nudge.priority ?? 1 /* Medium */;
+                  const priorityA = a.getSnapshot()?.context.nudge.priority ?? 2 /* Medium */;
+                  const priorityB = b.getSnapshot()?.context.nudge.priority ?? 2 /* Medium */;
                   if (priorityA === priorityB) {
                     const userStoreNudgeDataA = getNudgeDataFromUserStore(
                       globalStore,
@@ -15268,7 +15280,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         textStrings: {},
         showQuickLinks: false,
         recentSearches: [],
-        isAdditionalResourcesExpanded: true
+        isAdditionalResourcesExpanded: true,
+        shouldPersistOnReload: true
       }
     };
   };
@@ -15280,6 +15293,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       ...baseStore,
       resourceCenter: {
         ...baseStore.resourceCenter,
+        shouldPersistOnReload: persistResourceCenter,
         ...persistResourceCenter ? resourceCenterFromStorage : {}
       }
     });
