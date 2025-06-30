@@ -2258,9 +2258,9 @@
   var require_arrayPush = __commonJS({
     "../shared/node_modules/lodash/_arrayPush.js"(exports, module) {
       function arrayPush(array2, values) {
-        var index = -1, length = values.length, offset = array2.length;
+        var index = -1, length = values.length, offset2 = array2.length;
         while (++index < length) {
-          array2[offset + index] = values[index];
+          array2[offset2 + index] = values[index];
         }
         return array2;
       }
@@ -6326,8 +6326,8 @@ ${err.message}`);
   }
   var i2;
   function stringify(arr) {
-    var offset = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 0;
-    var uuid = (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
+    var offset2 = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 0;
+    var uuid = (byteToHex[arr[offset2 + 0]] + byteToHex[arr[offset2 + 1]] + byteToHex[arr[offset2 + 2]] + byteToHex[arr[offset2 + 3]] + "-" + byteToHex[arr[offset2 + 4]] + byteToHex[arr[offset2 + 5]] + "-" + byteToHex[arr[offset2 + 6]] + byteToHex[arr[offset2 + 7]] + "-" + byteToHex[arr[offset2 + 8]] + byteToHex[arr[offset2 + 9]] + "-" + byteToHex[arr[offset2 + 10]] + byteToHex[arr[offset2 + 11]] + byteToHex[arr[offset2 + 12]] + byteToHex[arr[offset2 + 13]] + byteToHex[arr[offset2 + 14]] + byteToHex[arr[offset2 + 15]]).toLowerCase();
     if (!validate_default(uuid)) {
       throw TypeError("Stringified UUID is invalid");
     }
@@ -6336,15 +6336,15 @@ ${err.message}`);
   var stringify_default = stringify;
 
   // ../shared/node_modules/uuid/dist/esm-browser/v4.js
-  function v4(options, buf, offset) {
+  function v4(options, buf, offset2) {
     options = options || {};
     var rnds = options.random || (options.rng || rng)();
     rnds[6] = rnds[6] & 15 | 64;
     rnds[8] = rnds[8] & 63 | 128;
     if (buf) {
-      offset = offset || 0;
+      offset2 = offset2 || 0;
       for (var i2 = 0; i2 < 16; ++i2) {
-        buf[offset + i2] = rnds[i2];
+        buf[offset2 + i2] = rnds[i2];
       }
       return buf;
     }
@@ -8476,14 +8476,10 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     const legacyCounts = countsByTimeWindow(timestamps, _.sessionStart);
     Object.assign(activationCounts, legacyCounts);
     for (const cooldownLimit of nudge.lifecycleConfig.cooldownLimits) {
-      if (cooldownLimit.period && cooldownLimit.periodCount) {
-        const key = `${cooldownLimit.periodCount}_${cooldownLimit.period}`;
-        activationCounts[key] = countForPeriod(
-          timestamps,
-          _.sessionStart,
-          cooldownLimit.period,
-          cooldownLimit.periodCount
-        );
+      if (cooldownLimit.period) {
+        const periodCount = cooldownLimit.periodCount ?? 1;
+        const key = `${periodCount}_${cooldownLimit.period}`;
+        activationCounts[key] = countForPeriod(timestamps, _.sessionStart, cooldownLimit.period, periodCount);
       }
     }
     const nudgeStateTarget = {
@@ -9161,7 +9157,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
        * @param sourceKey The source key of the clicked result (if available)
        * @param position The position of the clicked result in the list
        */
-      resultClicked: (title, excerpt, type2, id, sourceKey, position) => {
+      resultClicked: (title, excerpt, type2, id, sourceKey, position2) => {
         getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Result Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] Excerpt" /* Excerpt */]: excerpt,
@@ -9170,7 +9166,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           // Content Item ID is not tracked
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
           // TODO: Add source property once we have a proper way to plumb it through
-          ["[Guides-Surveys] Position" /* Position */]: position
+          ["[Guides-Surveys] Position" /* Position */]: position2
         });
       },
       /**
@@ -9199,7 +9195,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
        * @param isDefault Whether the recommendation set is the default set
        * @param isAutopilot Whether the recommendation is an autopilot recommendation
        */
-      recommendationClicked: (title, type2, url, key, sourceKey, position, recommendationSetKey, isDefault, isAutopilot) => {
+      recommendationClicked: (title, type2, url, key, sourceKey, position2, recommendationSetKey, isDefault, isAutopilot) => {
         getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Recommendation Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] Type" /* Type */]: type2,
@@ -9207,7 +9203,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           ["[Guides-Surveys] Key" /* Key */]: key,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
           // TODO: Add source property once we have a proper way to plumb it through
-          ["[Guides-Surveys] Position" /* Position */]: position,
+          ["[Guides-Surveys] Position" /* Position */]: position2,
           ["[Guides-Surveys] Recommendation Set Key" /* RecommendationSetKey */]: recommendationSetKey,
           ["[Guides-Surveys] Is Default" /* IsDefault */]: isDefault,
           ["[Guides-Surveys] Is Autopilot" /* IsAutopilot */]: isAutopilot
@@ -9223,7 +9219,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
        * @param position The position of the clicked quick link in the list
        * @param isDefault Whether the quick link is in the default set
        */
-      quickLinkClicked: (title, type2, url, key, sourceKey, position, isDefault) => {
+      quickLinkClicked: (title, type2, url, key, sourceKey, position2, isDefault) => {
         getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Quick Link Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] Type" /* Type */]: type2,
@@ -9231,7 +9227,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           ["[Guides-Surveys] Key" /* Key */]: key,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
           // TODO: Add source property once we have a proper way to plumb it through
-          ["[Guides-Surveys] Position" /* Position */]: position,
+          ["[Guides-Surveys] Position" /* Position */]: position2,
           ["[Guides-Surveys] Is Default" /* IsDefault */]: isDefault
         });
       }
@@ -11958,15 +11954,25 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     nullType,
     undefinedType
   ]);
-  var ThemeObjectV = type(
+  var ThemeObjectBaseV = type(
     {
       id: number,
       name: string,
       isDefault: boolean,
       theme: ThemeV
     },
-    "Theme"
+    "ThemeBase"
   );
+  var PlatformV = type({
+    type: union([literal("web"), literal("ios"), literal("android"), literal("react-native"), string])
+  });
+  var ThemeObjectAdditionalV = partial(
+    {
+      platform: PlatformV
+    },
+    "ThemeAdditional"
+  );
+  var ThemeObjectV = intersection([ThemeObjectBaseV, ThemeObjectAdditionalV], "Nudge");
   var defaults3 = {};
   var decode2 = (data) => {
     try {
@@ -12318,6 +12324,10 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       actor?.send({ type: "DISMISS" });
     }
   };
+  var closeNudgeWithoutReactivation = (_, nudge) => {
+    const actor = getNudgeActor(_, nudge.variantId);
+    actor?.send({ type: "CLOSE_WITHOUT_REACTIVATION" });
+  };
   var execStepAction = (_, nudge, stepIndex, action) => {
     if (!action) return;
     if (action?.type === "nudge") {
@@ -12585,6 +12595,9 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   nudgeActionsBridge.function("dismissNudge", (nudge) => {
     dismissNudge(window.engagement._, nudge, 0 /* DEFAULT */);
   });
+  nudgeActionsBridge.function("closeNudgeWithoutReactivation", (nudge) => {
+    closeNudgeWithoutReactivation(window.engagement._, nudge);
+  });
   nudgeActionsBridge.function(
     "execNudgeAction",
     (variantId, action, meta) => {
@@ -12642,6 +12655,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
 
   // src/actions/location.ts
   var setLocation = (_, location) => {
+    _.messageBus.publish("dom_mutation");
     notifyLocationSubscribers(location);
     getAllNudgeActors(_)?.forEach((actor) => {
       const snapshot = actor.getSnapshot();
@@ -12758,6 +12772,655 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       [["nudgeDebugToolBar", "bypassCustomThrottles"]]
     );
   };
+
+  // node_modules/@floating-ui/utils/dist/floating-ui.utils.mjs
+  var min = Math.min;
+  var max = Math.max;
+  var oppositeSideMap = {
+    left: "right",
+    right: "left",
+    bottom: "top",
+    top: "bottom"
+  };
+  var oppositeAlignmentMap = {
+    start: "end",
+    end: "start"
+  };
+  function clamp(start, value, end) {
+    return max(start, min(value, end));
+  }
+  function evaluate(value, param) {
+    return typeof value === "function" ? value(param) : value;
+  }
+  function getSide(placement) {
+    return placement.split("-")[0];
+  }
+  function getAlignment(placement) {
+    return placement.split("-")[1];
+  }
+  function getOppositeAxis(axis) {
+    return axis === "x" ? "y" : "x";
+  }
+  function getAxisLength(axis) {
+    return axis === "y" ? "height" : "width";
+  }
+  function getSideAxis(placement) {
+    return ["top", "bottom"].includes(getSide(placement)) ? "y" : "x";
+  }
+  function getAlignmentAxis(placement) {
+    return getOppositeAxis(getSideAxis(placement));
+  }
+  function getAlignmentSides(placement, rects, rtl) {
+    if (rtl === void 0) {
+      rtl = false;
+    }
+    const alignment = getAlignment(placement);
+    const alignmentAxis = getAlignmentAxis(placement);
+    const length = getAxisLength(alignmentAxis);
+    let mainAlignmentSide = alignmentAxis === "x" ? alignment === (rtl ? "end" : "start") ? "right" : "left" : alignment === "start" ? "bottom" : "top";
+    if (rects.reference[length] > rects.floating[length]) {
+      mainAlignmentSide = getOppositePlacement(mainAlignmentSide);
+    }
+    return [mainAlignmentSide, getOppositePlacement(mainAlignmentSide)];
+  }
+  function getExpandedPlacements(placement) {
+    const oppositePlacement = getOppositePlacement(placement);
+    return [getOppositeAlignmentPlacement(placement), oppositePlacement, getOppositeAlignmentPlacement(oppositePlacement)];
+  }
+  function getOppositeAlignmentPlacement(placement) {
+    return placement.replace(/start|end/g, (alignment) => oppositeAlignmentMap[alignment]);
+  }
+  function getSideList(side, isStart, rtl) {
+    const lr = ["left", "right"];
+    const rl = ["right", "left"];
+    const tb = ["top", "bottom"];
+    const bt = ["bottom", "top"];
+    switch (side) {
+      case "top":
+      case "bottom":
+        if (rtl) return isStart ? rl : lr;
+        return isStart ? lr : rl;
+      case "left":
+      case "right":
+        return isStart ? tb : bt;
+      default:
+        return [];
+    }
+  }
+  function getOppositeAxisPlacements(placement, flipAlignment, direction, rtl) {
+    const alignment = getAlignment(placement);
+    let list = getSideList(getSide(placement), direction === "start", rtl);
+    if (alignment) {
+      list = list.map((side) => side + "-" + alignment);
+      if (flipAlignment) {
+        list = list.concat(list.map(getOppositeAlignmentPlacement));
+      }
+    }
+    return list;
+  }
+  function getOppositePlacement(placement) {
+    return placement.replace(/left|right|bottom|top/g, (side) => oppositeSideMap[side]);
+  }
+  function expandPaddingObject(padding) {
+    return {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      ...padding
+    };
+  }
+  function getPaddingObject(padding) {
+    return typeof padding !== "number" ? expandPaddingObject(padding) : {
+      top: padding,
+      right: padding,
+      bottom: padding,
+      left: padding
+    };
+  }
+  function rectToClientRect(rect) {
+    const {
+      x,
+      y: y2,
+      width,
+      height
+    } = rect;
+    return {
+      width,
+      height,
+      top: y2,
+      left: x,
+      right: x + width,
+      bottom: y2 + height,
+      x,
+      y: y2
+    };
+  }
+
+  // node_modules/@floating-ui/core/dist/floating-ui.core.mjs
+  function computeCoordsFromPlacement(_ref, placement, rtl) {
+    let {
+      reference,
+      floating
+    } = _ref;
+    const sideAxis = getSideAxis(placement);
+    const alignmentAxis = getAlignmentAxis(placement);
+    const alignLength = getAxisLength(alignmentAxis);
+    const side = getSide(placement);
+    const isVertical = sideAxis === "y";
+    const commonX = reference.x + reference.width / 2 - floating.width / 2;
+    const commonY = reference.y + reference.height / 2 - floating.height / 2;
+    const commonAlign = reference[alignLength] / 2 - floating[alignLength] / 2;
+    let coords;
+    switch (side) {
+      case "top":
+        coords = {
+          x: commonX,
+          y: reference.y - floating.height
+        };
+        break;
+      case "bottom":
+        coords = {
+          x: commonX,
+          y: reference.y + reference.height
+        };
+        break;
+      case "right":
+        coords = {
+          x: reference.x + reference.width,
+          y: commonY
+        };
+        break;
+      case "left":
+        coords = {
+          x: reference.x - floating.width,
+          y: commonY
+        };
+        break;
+      default:
+        coords = {
+          x: reference.x,
+          y: reference.y
+        };
+    }
+    switch (getAlignment(placement)) {
+      case "start":
+        coords[alignmentAxis] -= commonAlign * (rtl && isVertical ? -1 : 1);
+        break;
+      case "end":
+        coords[alignmentAxis] += commonAlign * (rtl && isVertical ? -1 : 1);
+        break;
+    }
+    return coords;
+  }
+  var computePosition = async (reference, floating, config) => {
+    const {
+      placement = "bottom",
+      strategy = "absolute",
+      middleware = [],
+      platform
+    } = config;
+    const validMiddleware = middleware.filter(Boolean);
+    const rtl = await (platform.isRTL == null ? void 0 : platform.isRTL(floating));
+    let rects = await platform.getElementRects({
+      reference,
+      floating,
+      strategy
+    });
+    let {
+      x,
+      y: y2
+    } = computeCoordsFromPlacement(rects, placement, rtl);
+    let statefulPlacement = placement;
+    let middlewareData = {};
+    let resetCount = 0;
+    for (let i2 = 0; i2 < validMiddleware.length; i2++) {
+      const {
+        name,
+        fn
+      } = validMiddleware[i2];
+      const {
+        x: nextX,
+        y: nextY,
+        data,
+        reset
+      } = await fn({
+        x,
+        y: y2,
+        initialPlacement: placement,
+        placement: statefulPlacement,
+        strategy,
+        middlewareData,
+        rects,
+        platform,
+        elements: {
+          reference,
+          floating
+        }
+      });
+      x = nextX != null ? nextX : x;
+      y2 = nextY != null ? nextY : y2;
+      middlewareData = {
+        ...middlewareData,
+        [name]: {
+          ...middlewareData[name],
+          ...data
+        }
+      };
+      if (reset && resetCount <= 50) {
+        resetCount++;
+        if (typeof reset === "object") {
+          if (reset.placement) {
+            statefulPlacement = reset.placement;
+          }
+          if (reset.rects) {
+            rects = reset.rects === true ? await platform.getElementRects({
+              reference,
+              floating,
+              strategy
+            }) : reset.rects;
+          }
+          ({
+            x,
+            y: y2
+          } = computeCoordsFromPlacement(rects, statefulPlacement, rtl));
+        }
+        i2 = -1;
+      }
+    }
+    return {
+      x,
+      y: y2,
+      placement: statefulPlacement,
+      strategy,
+      middlewareData
+    };
+  };
+  async function detectOverflow(state, options) {
+    var _await$platform$isEle;
+    if (options === void 0) {
+      options = {};
+    }
+    const {
+      x,
+      y: y2,
+      platform,
+      rects,
+      elements,
+      strategy
+    } = state;
+    const {
+      boundary = "clippingAncestors",
+      rootBoundary = "viewport",
+      elementContext = "floating",
+      altBoundary = false,
+      padding = 0
+    } = evaluate(options, state);
+    const paddingObject = getPaddingObject(padding);
+    const altContext = elementContext === "floating" ? "reference" : "floating";
+    const element = elements[altBoundary ? altContext : elementContext];
+    const clippingClientRect = rectToClientRect(await platform.getClippingRect({
+      element: ((_await$platform$isEle = await (platform.isElement == null ? void 0 : platform.isElement(element))) != null ? _await$platform$isEle : true) ? element : element.contextElement || await (platform.getDocumentElement == null ? void 0 : platform.getDocumentElement(elements.floating)),
+      boundary,
+      rootBoundary,
+      strategy
+    }));
+    const rect = elementContext === "floating" ? {
+      x,
+      y: y2,
+      width: rects.floating.width,
+      height: rects.floating.height
+    } : rects.reference;
+    const offsetParent = await (platform.getOffsetParent == null ? void 0 : platform.getOffsetParent(elements.floating));
+    const offsetScale = await (platform.isElement == null ? void 0 : platform.isElement(offsetParent)) ? await (platform.getScale == null ? void 0 : platform.getScale(offsetParent)) || {
+      x: 1,
+      y: 1
+    } : {
+      x: 1,
+      y: 1
+    };
+    const elementClientRect = rectToClientRect(platform.convertOffsetParentRelativeRectToViewportRelativeRect ? await platform.convertOffsetParentRelativeRectToViewportRelativeRect({
+      elements,
+      rect,
+      offsetParent,
+      strategy
+    }) : rect);
+    return {
+      top: (clippingClientRect.top - elementClientRect.top + paddingObject.top) / offsetScale.y,
+      bottom: (elementClientRect.bottom - clippingClientRect.bottom + paddingObject.bottom) / offsetScale.y,
+      left: (clippingClientRect.left - elementClientRect.left + paddingObject.left) / offsetScale.x,
+      right: (elementClientRect.right - clippingClientRect.right + paddingObject.right) / offsetScale.x
+    };
+  }
+  var arrow = (options) => ({
+    name: "arrow",
+    options,
+    async fn(state) {
+      const {
+        x,
+        y: y2,
+        placement,
+        rects,
+        platform,
+        elements,
+        middlewareData
+      } = state;
+      const {
+        element,
+        padding = 0
+      } = evaluate(options, state) || {};
+      if (element == null) {
+        return {};
+      }
+      const paddingObject = getPaddingObject(padding);
+      const coords = {
+        x,
+        y: y2
+      };
+      const axis = getAlignmentAxis(placement);
+      const length = getAxisLength(axis);
+      const arrowDimensions = await platform.getDimensions(element);
+      const isYAxis = axis === "y";
+      const minProp = isYAxis ? "top" : "left";
+      const maxProp = isYAxis ? "bottom" : "right";
+      const clientProp = isYAxis ? "clientHeight" : "clientWidth";
+      const endDiff = rects.reference[length] + rects.reference[axis] - coords[axis] - rects.floating[length];
+      const startDiff = coords[axis] - rects.reference[axis];
+      const arrowOffsetParent = await (platform.getOffsetParent == null ? void 0 : platform.getOffsetParent(element));
+      let clientSize = arrowOffsetParent ? arrowOffsetParent[clientProp] : 0;
+      if (!clientSize || !await (platform.isElement == null ? void 0 : platform.isElement(arrowOffsetParent))) {
+        clientSize = elements.floating[clientProp] || rects.floating[length];
+      }
+      const centerToReference = endDiff / 2 - startDiff / 2;
+      const largestPossiblePadding = clientSize / 2 - arrowDimensions[length] / 2 - 1;
+      const minPadding = min(paddingObject[minProp], largestPossiblePadding);
+      const maxPadding = min(paddingObject[maxProp], largestPossiblePadding);
+      const min$1 = minPadding;
+      const max2 = clientSize - arrowDimensions[length] - maxPadding;
+      const center = clientSize / 2 - arrowDimensions[length] / 2 + centerToReference;
+      const offset2 = clamp(min$1, center, max2);
+      const shouldAddOffset = !middlewareData.arrow && getAlignment(placement) != null && center !== offset2 && rects.reference[length] / 2 - (center < min$1 ? minPadding : maxPadding) - arrowDimensions[length] / 2 < 0;
+      const alignmentOffset = shouldAddOffset ? center < min$1 ? center - min$1 : center - max2 : 0;
+      return {
+        [axis]: coords[axis] + alignmentOffset,
+        data: {
+          [axis]: offset2,
+          centerOffset: center - offset2 - alignmentOffset,
+          ...shouldAddOffset && {
+            alignmentOffset
+          }
+        },
+        reset: shouldAddOffset
+      };
+    }
+  });
+  var flip = function(options) {
+    if (options === void 0) {
+      options = {};
+    }
+    return {
+      name: "flip",
+      options,
+      async fn(state) {
+        var _middlewareData$arrow, _middlewareData$flip;
+        const {
+          placement,
+          middlewareData,
+          rects,
+          initialPlacement,
+          platform,
+          elements
+        } = state;
+        const {
+          mainAxis: checkMainAxis = true,
+          crossAxis: checkCrossAxis = true,
+          fallbackPlacements: specifiedFallbackPlacements,
+          fallbackStrategy = "bestFit",
+          fallbackAxisSideDirection = "none",
+          flipAlignment = true,
+          ...detectOverflowOptions
+        } = evaluate(options, state);
+        if ((_middlewareData$arrow = middlewareData.arrow) != null && _middlewareData$arrow.alignmentOffset) {
+          return {};
+        }
+        const side = getSide(placement);
+        const initialSideAxis = getSideAxis(initialPlacement);
+        const isBasePlacement = getSide(initialPlacement) === initialPlacement;
+        const rtl = await (platform.isRTL == null ? void 0 : platform.isRTL(elements.floating));
+        const fallbackPlacements = specifiedFallbackPlacements || (isBasePlacement || !flipAlignment ? [getOppositePlacement(initialPlacement)] : getExpandedPlacements(initialPlacement));
+        const hasFallbackAxisSideDirection = fallbackAxisSideDirection !== "none";
+        if (!specifiedFallbackPlacements && hasFallbackAxisSideDirection) {
+          fallbackPlacements.push(...getOppositeAxisPlacements(initialPlacement, flipAlignment, fallbackAxisSideDirection, rtl));
+        }
+        const placements2 = [initialPlacement, ...fallbackPlacements];
+        const overflow = await detectOverflow(state, detectOverflowOptions);
+        const overflows = [];
+        let overflowsData = ((_middlewareData$flip = middlewareData.flip) == null ? void 0 : _middlewareData$flip.overflows) || [];
+        if (checkMainAxis) {
+          overflows.push(overflow[side]);
+        }
+        if (checkCrossAxis) {
+          const sides2 = getAlignmentSides(placement, rects, rtl);
+          overflows.push(overflow[sides2[0]], overflow[sides2[1]]);
+        }
+        overflowsData = [...overflowsData, {
+          placement,
+          overflows
+        }];
+        if (!overflows.every((side2) => side2 <= 0)) {
+          var _middlewareData$flip2, _overflowsData$filter;
+          const nextIndex = (((_middlewareData$flip2 = middlewareData.flip) == null ? void 0 : _middlewareData$flip2.index) || 0) + 1;
+          const nextPlacement = placements2[nextIndex];
+          if (nextPlacement) {
+            const ignoreCrossAxisOverflow = checkCrossAxis === "alignment" ? initialSideAxis !== getSideAxis(nextPlacement) : false;
+            if (!ignoreCrossAxisOverflow || // We leave the current main axis only if every placement on that axis
+            // overflows the main axis.
+            overflowsData.every((d) => d.overflows[0] > 0 && getSideAxis(d.placement) === initialSideAxis)) {
+              return {
+                data: {
+                  index: nextIndex,
+                  overflows: overflowsData
+                },
+                reset: {
+                  placement: nextPlacement
+                }
+              };
+            }
+          }
+          let resetPlacement = (_overflowsData$filter = overflowsData.filter((d) => d.overflows[0] <= 0).sort((a, b) => a.overflows[1] - b.overflows[1])[0]) == null ? void 0 : _overflowsData$filter.placement;
+          if (!resetPlacement) {
+            switch (fallbackStrategy) {
+              case "bestFit": {
+                var _overflowsData$filter2;
+                const placement2 = (_overflowsData$filter2 = overflowsData.filter((d) => {
+                  if (hasFallbackAxisSideDirection) {
+                    const currentSideAxis = getSideAxis(d.placement);
+                    return currentSideAxis === initialSideAxis || // Create a bias to the `y` side axis due to horizontal
+                    // reading directions favoring greater width.
+                    currentSideAxis === "y";
+                  }
+                  return true;
+                }).map((d) => [d.placement, d.overflows.filter((overflow2) => overflow2 > 0).reduce((acc, overflow2) => acc + overflow2, 0)]).sort((a, b) => a[1] - b[1])[0]) == null ? void 0 : _overflowsData$filter2[0];
+                if (placement2) {
+                  resetPlacement = placement2;
+                }
+                break;
+              }
+              case "initialPlacement":
+                resetPlacement = initialPlacement;
+                break;
+            }
+          }
+          if (placement !== resetPlacement) {
+            return {
+              reset: {
+                placement: resetPlacement
+              }
+            };
+          }
+        }
+        return {};
+      }
+    };
+  };
+  async function convertValueToCoords(state, options) {
+    const {
+      placement,
+      platform,
+      elements
+    } = state;
+    const rtl = await (platform.isRTL == null ? void 0 : platform.isRTL(elements.floating));
+    const side = getSide(placement);
+    const alignment = getAlignment(placement);
+    const isVertical = getSideAxis(placement) === "y";
+    const mainAxisMulti = ["left", "top"].includes(side) ? -1 : 1;
+    const crossAxisMulti = rtl && isVertical ? -1 : 1;
+    const rawValue = evaluate(options, state);
+    let {
+      mainAxis,
+      crossAxis,
+      alignmentAxis
+    } = typeof rawValue === "number" ? {
+      mainAxis: rawValue,
+      crossAxis: 0,
+      alignmentAxis: null
+    } : {
+      mainAxis: rawValue.mainAxis || 0,
+      crossAxis: rawValue.crossAxis || 0,
+      alignmentAxis: rawValue.alignmentAxis
+    };
+    if (alignment && typeof alignmentAxis === "number") {
+      crossAxis = alignment === "end" ? alignmentAxis * -1 : alignmentAxis;
+    }
+    return isVertical ? {
+      x: crossAxis * crossAxisMulti,
+      y: mainAxis * mainAxisMulti
+    } : {
+      x: mainAxis * mainAxisMulti,
+      y: crossAxis * crossAxisMulti
+    };
+  }
+  var offset = function(options) {
+    if (options === void 0) {
+      options = 0;
+    }
+    return {
+      name: "offset",
+      options,
+      async fn(state) {
+        var _middlewareData$offse, _middlewareData$arrow;
+        const {
+          x,
+          y: y2,
+          placement,
+          middlewareData
+        } = state;
+        const diffCoords = await convertValueToCoords(state, options);
+        if (placement === ((_middlewareData$offse = middlewareData.offset) == null ? void 0 : _middlewareData$offse.placement) && (_middlewareData$arrow = middlewareData.arrow) != null && _middlewareData$arrow.alignmentOffset) {
+          return {};
+        }
+        return {
+          x: x + diffCoords.x,
+          y: y2 + diffCoords.y,
+          data: {
+            ...diffCoords,
+            placement
+          }
+        };
+      }
+    };
+  };
+  var shift = function(options) {
+    if (options === void 0) {
+      options = {};
+    }
+    return {
+      name: "shift",
+      options,
+      async fn(state) {
+        const {
+          x,
+          y: y2,
+          placement
+        } = state;
+        const {
+          mainAxis: checkMainAxis = true,
+          crossAxis: checkCrossAxis = false,
+          limiter = {
+            fn: (_ref) => {
+              let {
+                x: x2,
+                y: y3
+              } = _ref;
+              return {
+                x: x2,
+                y: y3
+              };
+            }
+          },
+          ...detectOverflowOptions
+        } = evaluate(options, state);
+        const coords = {
+          x,
+          y: y2
+        };
+        const overflow = await detectOverflow(state, detectOverflowOptions);
+        const crossAxis = getSideAxis(getSide(placement));
+        const mainAxis = getOppositeAxis(crossAxis);
+        let mainAxisCoord = coords[mainAxis];
+        let crossAxisCoord = coords[crossAxis];
+        if (checkMainAxis) {
+          const minSide = mainAxis === "y" ? "top" : "left";
+          const maxSide = mainAxis === "y" ? "bottom" : "right";
+          const min2 = mainAxisCoord + overflow[minSide];
+          const max2 = mainAxisCoord - overflow[maxSide];
+          mainAxisCoord = clamp(min2, mainAxisCoord, max2);
+        }
+        if (checkCrossAxis) {
+          const minSide = crossAxis === "y" ? "top" : "left";
+          const maxSide = crossAxis === "y" ? "bottom" : "right";
+          const min2 = crossAxisCoord + overflow[minSide];
+          const max2 = crossAxisCoord - overflow[maxSide];
+          crossAxisCoord = clamp(min2, crossAxisCoord, max2);
+        }
+        const limitedCoords = limiter.fn({
+          ...state,
+          [mainAxis]: mainAxisCoord,
+          [crossAxis]: crossAxisCoord
+        });
+        return {
+          ...limitedCoords,
+          data: {
+            x: limitedCoords.x - x,
+            y: limitedCoords.y - y2,
+            enabled: {
+              [mainAxis]: checkMainAxis,
+              [crossAxis]: checkCrossAxis
+            }
+          }
+        };
+      }
+    };
+  };
+
+  // src/pin-positioning/index.ts
+  var pinPositioningBridge = registerJSBridge("pinPositioning");
+  async function position(reference, floating, clippingRect) {
+    const arrowEl = { x: 0, y: 0, width: 24, height: 12 };
+    const platform = {
+      getElementRects: (data) => data,
+      getDimensions: (element) => element,
+      getClippingRect: () => clippingRect
+    };
+    const props = await computePosition(reference, floating, {
+      platform,
+      placement: "top",
+      middleware: [offset(arrowEl.width), flip(), shift({ padding: 5 }), arrow({ element: arrowEl })]
+    });
+    const { x, y: y2, placement } = props;
+    return { x, y: y2, placement, arrow: props.middlewareData.arrow };
+  }
+  pinPositioningBridge.function("position", position);
 
   // ../shared/node_modules/@amplitude/analytics-connector/dist/analytics-connector.esm.js
   var ApplicationContextProviderImpl = (
@@ -14858,8 +15521,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var cb_btou = (cccc) => {
     switch (cccc.length) {
       case 4:
-        var cp = (7 & cccc.charCodeAt(0)) << 18 | (63 & cccc.charCodeAt(1)) << 12 | (63 & cccc.charCodeAt(2)) << 6 | 63 & cccc.charCodeAt(3), offset = cp - 65536;
-        return _fromCC((offset >>> 10) + 55296) + _fromCC((offset & 1023) + 56320);
+        var cp = (7 & cccc.charCodeAt(0)) << 18 | (63 & cccc.charCodeAt(1)) << 12 | (63 & cccc.charCodeAt(2)) << 6 | 63 & cccc.charCodeAt(3), offset2 = cp - 65536;
+        return _fromCC((offset2 >>> 10) + 55296) + _fromCC((offset2 & 1023) + 56320);
       case 3:
         return _fromCC((15 & cccc.charCodeAt(0)) << 12 | (63 & cccc.charCodeAt(1)) << 6 | 63 & cccc.charCodeAt(2));
       default:

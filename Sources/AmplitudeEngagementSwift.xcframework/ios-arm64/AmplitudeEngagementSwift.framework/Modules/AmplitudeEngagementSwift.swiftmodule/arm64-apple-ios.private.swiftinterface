@@ -16,6 +16,7 @@ import Swift
 import SwiftUI
 import SwiftUICore
 import UIKit
+import WebKit
 import _AVKit_SwiftUI
 import _Concurrency
 import _StringProcessing
@@ -1334,7 +1335,6 @@ public class AmplitudeEngagement : Observation.Observable {
   public func boot(_ user_id: Swift.String, device_id: Swift.String? = nil)
   public func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
   public func setThemeMode(themeMode: AmplitudeEngagementSwift.ThemeMode)
-  public func setRouter(router: (_ url: Swift.String) -> Swift.Void)
   public func reset(key: Swift.String, stepIndex: Swift.Int = 0)
   public func list() -> [AmplitudeEngagementSwift.GuideOrSurvey]
   public func show(key: Swift.String, stepIndex: Swift.Int = 0)
