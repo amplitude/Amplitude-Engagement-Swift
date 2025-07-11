@@ -9493,14 +9493,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
 
   // ../shared/src/store/resource-center-storage-manager.ts
   var STORAGE_KEY = "resourceCenter";
-  var PERSISTED_FIELDS = [
-    "visible",
-    "minimized",
-    "scrollPosition",
-    "query",
-    "recentSearches",
-    "isAdditionalResourcesExpanded"
-  ];
+  var PERSISTED_FIELDS = ["visible", "minimized", "scrollPosition", "query", "isAdditionalResourcesExpanded"];
   var retrieveStoredResourceCenterState = () => {
     const obj = {};
     const storage = new CustomStorageStore();
@@ -12133,11 +12126,12 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   // ../shared/src/products/nudges/store/actions.ts
   var shouldDebugNudges = !!LocalStorage_default.get("debug:nudges", false);
   var initNudges = (_, nudges) => {
+    const platformNudges = nudges.filter((nudge) => nudge.platform === __GS_PLATFORM__);
     if (_.nudgesManager) {
-      _.nudgesManager.send({ type: "REFRESH_FROM_CONFIG", nudges });
+      _.nudgesManager.send({ type: "REFRESH_FROM_CONFIG", nudges: platformNudges });
       return;
     }
-    const machine = NudgesManagerMachine(_, nudges);
+    const machine = NudgesManagerMachine(_, platformNudges);
     const actor = createActor(machine, {
       id: NUDGES_MANAGER_ID,
       inspect: (inspectionEvent) => {
@@ -12633,7 +12627,6 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     "updateSurveyResponse",
     (variantId, surveyResponse) => {
       const actor = getNudgeActor(window.engagement._, variantId);
-      console.log("updateSurveyResponse", variantId, surveyResponse);
       actor?.send({ type: "UPDATE_SURVEY_RESPONSE", surveyResponse });
     }
   );
@@ -13415,7 +13408,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     const props = await computePosition(reference, floating, {
       platform,
       placement: "top",
-      middleware: [offset(arrowEl.width), flip(), shift({ padding: 5 }), arrow({ element: arrowEl })]
+      middleware: [offset(arrowEl.height), flip(), shift({ padding: 5 }), arrow({ element: arrowEl })]
     });
     const { x, y: y2, placement } = props;
     return { x, y: y2, placement, arrow: props.middlewareData.arrow };
@@ -15942,7 +15935,6 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         isAutopilotEnabled: false,
         textStrings: {},
         showQuickLinks: false,
-        recentSearches: [],
         isAdditionalResourcesExpanded: true,
         shouldPersistOnReload: true
       }
