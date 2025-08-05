@@ -2991,6 +2991,124 @@
   }
   registerJSBridge("crypto").function("getRandomValues", getRandomValues);
 
+  // src/abortcontroller-polyfill.ts
+  var AbortError = class extends Error {
+    constructor(message = "The operation was aborted") {
+      super(message);
+      this.name = "AbortError";
+    }
+  };
+  var EventTarget = class {
+    constructor() {
+      this.listeners = /* @__PURE__ */ new Map();
+    }
+    addEventListener(type2, listener) {
+      if (!this.listeners.has(type2)) {
+        this.listeners.set(type2, /* @__PURE__ */ new Set());
+      }
+      this.listeners.get(type2)?.add(listener);
+    }
+    removeEventListener(type2, listener) {
+      const typeListeners = this.listeners.get(type2);
+      if (typeListeners) {
+        typeListeners.delete(listener);
+      }
+    }
+    dispatchEvent(event) {
+      const typeListeners = this.listeners.get(event.type);
+      if (typeListeners) {
+        typeListeners.forEach((listener) => {
+          try {
+            listener(event);
+          } catch (error) {
+            console.error("Error in event listener:", error);
+          }
+        });
+      }
+      return true;
+    }
+  };
+  var AbortSignal = class _AbortSignal extends EventTarget {
+    constructor() {
+      super(...arguments);
+      this._aborted = false;
+      this._reason = void 0;
+      this.onabort = null;
+    }
+    get aborted() {
+      return this._aborted;
+    }
+    get reason() {
+      return this._reason;
+    }
+    /**
+     * Creates an AbortSignal that is already aborted
+     */
+    static abort(reason) {
+      const signal = new _AbortSignal();
+      signal._abort(reason || new AbortError());
+      return signal;
+    }
+    /**
+     * Creates an AbortSignal that will be aborted after the specified timeout
+     */
+    static timeout(milliseconds) {
+      const signal = new _AbortSignal();
+      setTimeout(() => {
+        signal._abort(new AbortError(`The operation timed out after ${milliseconds}ms`));
+      }, milliseconds);
+      return signal;
+    }
+    /**
+     * Throws an AbortError if the signal is aborted
+     */
+    throwIfAborted() {
+      if (this._aborted) {
+        throw this._reason;
+      }
+    }
+    /**
+     * Internal method to abort the signal
+     */
+    _abort(reason) {
+      if (this._aborted) {
+        return;
+      }
+      this._aborted = true;
+      this._reason = reason || new AbortError();
+      const event = {
+        type: "abort",
+        target: this,
+        currentTarget: this
+      };
+      this.dispatchEvent(event);
+      if (this.onabort) {
+        try {
+          this.onabort(event);
+        } catch (error) {
+          console.error("Error in onabort handler:", error);
+        }
+      }
+    }
+  };
+  var AbortController2 = class {
+    constructor() {
+      this._signal = new AbortSignal();
+    }
+    get signal() {
+      return this._signal;
+    }
+    /**
+     * Aborts the associated AbortSignal
+     */
+    abort(reason) {
+      this._signal._abort(reason);
+    }
+  };
+  globalThis.AbortController = AbortController2;
+  globalThis.AbortSignal = AbortSignal;
+  globalThis.AbortError = AbortError;
+
   // ../shared/node_modules/xstate/dev/dist/xstate-dev.esm.js
   function getGlobal() {
     if (typeof globalThis !== "undefined") {
@@ -5257,6 +5375,95 @@ ${err.message}`);
         }
         callbackState.receivers?.forEach((receiver) => receiver(event));
         return state;
+      },
+      getInitialSnapshot: (_, input) => {
+        return {
+          status: "active",
+          output: void 0,
+          error: void 0,
+          input
+        };
+      },
+      getPersistedSnapshot: (snapshot) => snapshot,
+      restoreSnapshot: (snapshot) => snapshot
+    };
+    return logic;
+  }
+  var XSTATE_PROMISE_RESOLVE = "xstate.promise.resolve";
+  var XSTATE_PROMISE_REJECT = "xstate.promise.reject";
+  var controllerMap = /* @__PURE__ */ new WeakMap();
+  function fromPromise(promiseCreator) {
+    const logic = {
+      config: promiseCreator,
+      transition: (state, event, scope) => {
+        if (state.status !== "active") {
+          return state;
+        }
+        switch (event.type) {
+          case XSTATE_PROMISE_RESOLVE: {
+            const resolvedValue = event.data;
+            return {
+              ...state,
+              status: "done",
+              output: resolvedValue,
+              input: void 0
+            };
+          }
+          case XSTATE_PROMISE_REJECT:
+            return {
+              ...state,
+              status: "error",
+              error: event.data,
+              input: void 0
+            };
+          case XSTATE_STOP: {
+            controllerMap.get(scope.self)?.abort();
+            return {
+              ...state,
+              status: "stopped",
+              input: void 0
+            };
+          }
+          default:
+            return state;
+        }
+      },
+      start: (state, {
+        self: self2,
+        system,
+        emit: emit2
+      }) => {
+        if (state.status !== "active") {
+          return;
+        }
+        const controller = new AbortController();
+        controllerMap.set(self2, controller);
+        const resolvedPromise = Promise.resolve(promiseCreator({
+          input: state.input,
+          system,
+          self: self2,
+          signal: controller.signal,
+          emit: emit2
+        }));
+        resolvedPromise.then((response) => {
+          if (self2.getSnapshot().status !== "active") {
+            return;
+          }
+          controllerMap.delete(self2);
+          system._relay(self2, self2, {
+            type: XSTATE_PROMISE_RESOLVE,
+            data: response
+          });
+        }, (errorData) => {
+          if (self2.getSnapshot().status !== "active") {
+            return;
+          }
+          controllerMap.delete(self2);
+          system._relay(self2, self2, {
+            type: XSTATE_PROMISE_REJECT,
+            data: errorData
+          });
+        });
       },
       getInitialSnapshot: (_, input) => {
         return {
@@ -8241,6 +8448,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     closeAllNudgeMocks: () => closeAllNudgeMocks,
     forceTriggerSingleNudge: () => forceTriggerSingleNudge,
     getDebugSnapshot: () => getDebugSnapshot,
+    getDebugSnapshotForHeadless: () => getDebugSnapshotForHeadless,
     initNudges: () => initNudges,
     resetNudge: () => resetNudge,
     resetTimedTriggers: () => resetTimedTriggers,
@@ -8331,7 +8539,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       stepsPresentation: "single",
       blockedBy: ["banner"],
       includedInCustomThrottles: false,
-      inputs: false,
+      inputs: true,
       media: false,
       stopOnSimulateStart: true,
       canBeActive: true
@@ -8340,7 +8548,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       stepsPresentation: "single",
       blockedBy: [],
       includedInCustomThrottles: false,
-      inputs: false,
+      inputs: true,
       media: true,
       stopOnSimulateStart: false,
       canBeActive: false
@@ -8384,6 +8592,23 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       name: getNudgeProductType(nudge) === "guide" ? "Guide" : "Survey"
     };
   };
+
+  // ../shared/src/services/targeting/helpers.ts
+  var getActiveVariantForFlag = (flagKey, decideResult) => {
+    return decideResult?.[flagKey]?.key;
+  };
+  var nudgePassesDecide = (nudge, decideResult) => {
+    if (nudge.platform !== __GS_PLATFORM__) {
+      return false;
+    }
+    const activeVariantForNudge = getActiveVariantForFlag(nudge.flagKey, decideResult);
+    if (!activeVariantForNudge) {
+      logger.error("Nudge does not have a decide result!");
+      return false;
+    }
+    return activeVariantForNudge === nudge.variant;
+  };
+  var getExperimentKey = (nudge, decideResult) => decideResult?.[nudge.flagKey]?.metadata?.experimentKey;
 
   // ../shared/src/products/nudges/store/selectors.ts
   var getAllNudgeActors = (_) => _.nudgesManager?.getSnapshot()?.context.nudgeMachines;
@@ -8505,18 +8730,22 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     }
     return true;
   };
-  var passesTriggerElement = (_, nudge, triggerEvent, nudgeSeenThisSessionTs) => {
+  var passesTriggerElement = async (_, nudge, triggerEvent, nudgeSeenThisSessionTs) => {
     if (triggerEvent?.trigger.type == "element_appeared" && nudge.triggerConfig.type == "element_appeared") {
       if (nudgeSeenThisSessionTs.length > 0) {
         return false;
       }
-      const elementToAppearIsVisible = _.services.isElementVisible(nudge.triggerConfig.data.selector);
+      const elementToAppearIsVisible = await _.services.isElementVisible(nudge.triggerConfig.data.selector);
       if (!elementToAppearIsVisible) return false;
     }
     return true;
   };
   var shouldTemporarilyHide = (_, nudge) => {
-    return urlMatchesConditions(_, _.location.href, nudge.temporarilyHideTargeting.conditions, false);
+    if (nudge.hideIfPageTargetingNotMet) {
+      return !passesPageTargeting(_, nudge);
+    } else {
+      return urlMatchesConditions(_, _.location.href, nudge.temporarilyHideTargeting.conditions, false);
+    }
   };
   var getAllNudgeDataFromUserStore = (_) => {
     return _.endUserStore.data.nudgeInteractions;
@@ -8564,7 +8793,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     return false;
   };
   var isNudgeActive = (_, nudge) => !!getNudgeDataFromUserStore(_, nudge.variantId)?.activelifeCycleUuid;
-  var passesPinnedElement = (_, nudge, stepIndex) => {
+  var passesPinnedElement = async (_, nudge, stepIndex) => {
     const step = getNudgeStep(nudge, stepIndex);
     if (!step) return false;
     if (isAnchorableStep(step)) {
@@ -8574,6 +8803,84 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   };
   var hasRemainingSteps = (nudge) => ({ stepIndex }) => stepIndex < nudge.steps.length - 1;
   var shouldBypassCustomThrottles = (_, nudge) => nudge.priority === 4 /* Urgent */ || !isIncludedInCustomThrottles(nudge) || _.nudgeDebugToolBar.visible && _.nudgeDebugToolBar.bypassCustomThrottles;
+  var getGlobalChecks = (_, nudge) => {
+    const { type: type2 } = getProductMeta(nudge);
+    const globalChecks = {
+      builtInThrottles: {
+        result: passesBuiltInThrottles(_, nudge),
+        explanation: `This ${type2} is blocked by another currently rendered guide or survey.`
+      },
+      customThrottles: {
+        result: passesCustomThrottles(_, nudge),
+        explanation: `The custom throttle for ${type2}s of this type prevents further guides or surveys from being shown.`,
+        detail: {
+          limit: type2 === "survey" ? _.organization?.surveyThrottle.limit.max : _.organization?.guideThrottle.limit.max,
+          period: type2 === "survey" ? _.organization?.surveyThrottle.limit.period : _.organization?.guideThrottle.limit.period
+        }
+      }
+    };
+    return globalChecks;
+  };
+  var getNudgeChecks = (_, nudge) => {
+    const { name } = getProductMeta(nudge);
+    const sessionPropertyConditions = getSessionPropertyConditions(nudge.triggerConfig.conditions);
+    const nudgeChecks = {
+      limits: {
+        result: passesCooldown(_, nudge),
+        explanation: `${name} has been seen the maximum number of times.`,
+        detail: {
+          limits: nudge.lifecycleConfig
+        }
+      },
+      userTargeting: {
+        result: nudgePassesDecide(nudge, _.decide),
+        explanation: "Booted user is not targeted by this flag.",
+        detail: {
+          userTargeting: nudge.flagKey
+        }
+      },
+      page: {
+        result: passesPageTargeting(_, nudge),
+        explanation: `${name} is not shown on this page.`,
+        detail: {
+          page: nudge.pageTargeting.conditions
+        }
+      },
+      snooze: {
+        result: passesSnoozedConditions(_, nudge),
+        explanation: `${name} is snoozed.`,
+        detail: {
+          isSnoozable: nudge.isSnoozable,
+          isSnoozableOnAllSteps: nudge.isSnoozableOnAllSteps,
+          snoozeDuration: nudge.snoozeDuration
+        }
+      },
+      sessionProperties: {
+        result: passesSessionProperties(_, sessionPropertyConditions),
+        explanation: "Session properties do not match the conditions.",
+        detail: {
+          conditions: sessionPropertyConditions,
+          sessionProperties: _.sessionProperties
+        }
+      }
+    };
+    return nudgeChecks;
+  };
+  var getStepChecks = async (_, nudge, stepIndex) => {
+    const nudgeActorContext = getNudgeActorSnapshot(_, nudge.variantId)?.context;
+    const currentStep = stepIndex ?? nudgeActorContext?.stepIndex ?? 0;
+    const step = nudgeActorContext ? getNudgeStep(nudgeActorContext.nudge, currentStep) : void 0;
+    const stepChecks = {
+      element: {
+        result: await passesPinnedElement(_, nudge, currentStep),
+        explanation: "Pinned element is not visible on the page.",
+        detail: {
+          element: isAnchorableStep(step) ? step?.formFactor.anchor : "unknown"
+        }
+      }
+    };
+    return stepChecks;
+  };
   var getNudgeById = (_, id) => getNudgeActorSnapshot(_, id)?.context.nudge;
   var getNudgeByFlagKey = (_, flagKey) => getAllNudges(_).find((nudge) => nudge.flagKey === flagKey);
   var getAllNudges = (_) => {
@@ -8655,7 +8962,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     const immediateAction = getImmediateAction(event.buttonMeta);
     return event.buttonMeta?.action?.type === "use_conditional_logic" || !immediateAction ? getActionBasedOnConditions(step, event) : immediateAction;
   };
-  var isTooltipNudge = (nudge) => nudge?.type === "tooltip";
+  var isTooltipNudge = (nudge) => nudge?.type === "tooltip" || nudge?.steps[0]?.formFactor.type === "tooltip";
   var isTooltipStep = (step) => step?.formFactor.type === "tooltip";
   var isPinStep = (step) => step?.formFactor.type === "pin";
   var isAnchorableStep = (step) => isPinStep(step) || isTooltipStep(step);
@@ -8685,6 +8992,16 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var getCurrentLocale = () => {
     const locale = getSDK()?.[_configuration].locale;
     return locale ? locale.split("-")[0] : void 0;
+  };
+  var getAppliedNudgeLocale = (nudge, localizationSettings) => {
+    if (!localizationSettings || !localizationSettings.enabled || !nudge.translationStatus) {
+      return void 0;
+    }
+    if (nudge.translationStatus.translated) {
+      return getCurrentLocale();
+    } else {
+      return localizationSettings.defaultLocale;
+    }
   };
 
   // ../shared/src/util/Interpolate.ts
@@ -9240,6 +9557,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         const nudgeStep = typeof stepIndex === "undefined" ? null : getNudgeStep(nudge, stepIndex);
         const isLastStep = stepIndex === nudge.steps.length - 1;
         return {
+          ["[Guides-Surveys] Title" /* Title */]: nudge.title,
           ["[Guides-Surveys] Type" /* Type */]: nudge.type,
           ["[Guides-Surveys] Key" /* Key */]: nudge.flagKey,
           ["[Guides-Surveys] Tags" /* Tags */]: nudge.tags,
@@ -9249,9 +9567,9 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           ["[Guides-Surveys] Step Title" /* StepTitle */]: nudgeStep?.title ?? "",
           ["[Guides-Surveys] Is Last Step" /* IsLastStep */]: isLastStep,
           ["[Guides-Surveys] Lifecycle UUID" /* LifecycleUuid */]: context?.interactionState?.activelifeCycleUuid,
-          ["[Guides-Surveys] Is From Debug Mode" /* IsFromDebugMode */]: !!context?.triggerEvent?.overrides?.simulateMode
-          // TODO: add once feature is implemented
-          // tag
+          ["[Guides-Surveys] Is From Debug Mode" /* IsFromDebugMode */]: !!context?.triggerEvent?.overrides?.simulateMode,
+          ["[Guides-Surveys] App Type" /* AppType */]: nudge.platform,
+          ["[Guides-Surveys] Localization Language" /* LocalizationLanguage */]: getAppliedNudgeLocale(nudge, getSDK()?._.organization?.localization)
         };
       },
       /**
@@ -9530,6 +9848,1003 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     debounceTimeout = setTimeout(saveToStorage, debounceDelay);
   };
 
+  // ../shared/src/internal/middleware/evaluation.ts
+  var EvaluationConditionV = type({
+    selector: array(string),
+    op: string,
+    values: array(string)
+  });
+
+  // ../shared/src/internal/middleware/organization.ts
+  var ThrottleV = intersection([
+    type({
+      max: number,
+      period: string
+    }),
+    partial({
+      enabled: boolean
+    })
+  ]);
+  var CustomThrottleV = type({
+    limit: ThrottleV,
+    conditions: array(array(EvaluationConditionV))
+  });
+  var TranslationBehaviorV = keyof({
+    showDefault: null,
+    showOutOfDate: null,
+    dontShow: null
+  });
+  var LocalizationV = type({
+    enabled: boolean,
+    defaultLocale: string,
+    addedLocales: array(string),
+    translationUnavailable: TranslationBehaviorV,
+    translationOutdated: TranslationBehaviorV
+  });
+  var OrganizationV = intersection([
+    type({
+      branding: string,
+      shareLinkParam: string,
+      guideThrottle: CustomThrottleV,
+      surveyThrottle: CustomThrottleV
+    }),
+    partial({
+      localization: LocalizationV
+    })
+  ]);
+  var defaults = {
+    branding: "",
+    shareLinkParam: "",
+    guideThrottle: { limit: { enabled: false, max: 10, period: "day" }, conditions: [[]] },
+    surveyThrottle: { limit: { enabled: false, max: 10, period: "day" }, conditions: [[]] },
+    localization: {
+      enabled: false,
+      defaultLocale: "en",
+      addedLocales: [],
+      translationUnavailable: "showDefault",
+      translationOutdated: "showOutOfDate"
+    }
+  };
+  var decode = (data) => {
+    try {
+      return decodeThrowing(OrganizationV, data);
+    } catch (e2) {
+      logger.error("Error decoding project settings", { error: e2 });
+      getSentry()?.captureException(e2);
+      return decodeThrowing(OrganizationV, { ...defaults, ...data });
+    }
+  };
+
+  // ../shared/node_modules/io-ts-types/es6/clone.js
+  function clone(t2) {
+    var r = Object.create(Object.getPrototypeOf(t2));
+    Object.assign(r, t2);
+    return r;
+  }
+
+  // ../shared/node_modules/io-ts-types/es6/withValidate.js
+  function withValidate(codec, validate2, name) {
+    if (name === void 0) {
+      name = codec.name;
+    }
+    var r = clone(codec);
+    r.validate = validate2;
+    r.decode = function(i2) {
+      return validate2(i2, getDefaultContext(r));
+    };
+    r.name = name;
+    return r;
+  }
+
+  // ../shared/node_modules/io-ts-types/es6/withFallback.js
+  function withFallback(codec, a, name) {
+    if (name === void 0) {
+      name = "withFallback(" + codec.name + ")";
+    }
+    return withValidate(codec, function(u, c2) {
+      return orElse(function() {
+        return success(a);
+      })(codec.validate(u, c2));
+    }, name);
+  }
+
+  // ../shared/src/internal/middleware/generics.ts
+  function decodeThrowing2(validator, input) {
+    const result = validator.decode(input);
+    return pipe(
+      result,
+      fold(
+        (_errors) => {
+          const messages = PathReporter.report(result);
+          logger.debug(JSON.stringify(_errors));
+          throw new Error(`${messages.join("\n")}
+when parsing ${JSON.stringify(input, null, 2)}`);
+        },
+        (value) => value
+      )
+    );
+  }
+  var GenericObject = type({
+    id: union([number, string])
+  });
+  var GenericBatchRequest = type({
+    batch: array(unknown),
+    note: string
+  });
+
+  // ../shared/src/types/entities/nudge/actions.ts
+  var AdminAction = type({
+    type: literal("admin"),
+    value: string
+  });
+  var CallbackAction = type({
+    type: literal("callback"),
+    value: string
+  });
+  var LinkAction = intersection([
+    type({
+      type: literal("link"),
+      value: string
+    }),
+    partial({
+      operation: union([literal("router"), literal("self"), literal("blank"), undefinedType]),
+      meta: type({
+        command: string
+      })
+    })
+  ]);
+  var OpenChatActionTypeV = union([
+    literal("intercom"),
+    literal("helpscout"),
+    literal("freshdesk"),
+    literal("freshchat"),
+    literal("crisp"),
+    literal("zendesk"),
+    literal("liveChat"),
+    literal("gist"),
+    literal("olark"),
+    literal("hubspot"),
+    literal("drift"),
+    literal("pylon"),
+    literal("talkdesk_v2"),
+    literal("zendesk_handoff"),
+    string
+  ]);
+  var OpenChatActionV = type({
+    type: literal("open_chat"),
+    meta: type({
+      type: OpenChatActionTypeV
+    })
+  });
+  var DismissAction = type({
+    type: literal("dismiss")
+  });
+  var CompleteAction = type({
+    type: literal("complete")
+  });
+  var StepBackAction = type({
+    type: literal("step_back")
+  });
+  var StepForwardAction = type({
+    type: literal("step_forward")
+  });
+  var SnoozeInterval = union([literal("hour"), literal("day"), literal("week")]);
+  var SnoozeValue = number;
+  var SnoozeAction = intersection([
+    type({
+      type: literal("snooze")
+    }),
+    partial({
+      interval: SnoozeInterval,
+      value: SnoozeValue
+    })
+  ]);
+  var BuiltInAction = type({
+    type: literal("builtin"),
+    value: string
+  });
+  var ScriptAction = type({
+    type: literal("script"),
+    value: string
+  });
+  var VideoAction = type({
+    type: literal("video"),
+    value: string
+  });
+  var NoAction = type({ type: literal("no_action") });
+  var ClickAction = type({
+    type: literal("click"),
+    value: string
+  });
+  var NudgeActionV = type({
+    type: literal("nudge"),
+    value: number
+  });
+  var GoToNudgeStepActionV = type({
+    type: literal("go_to_step"),
+    value: number
+  });
+  var UseConditionalLogicAction = type({
+    type: literal("use_conditional_logic")
+  });
+  var ShowVideoAction = type({
+    type: literal("video"),
+    value: number
+  });
+  var ShowDocumentAction = type({
+    type: literal("document"),
+    value: number
+  });
+  var ActionV = union([
+    NoAction,
+    ClickAction,
+    LinkAction,
+    OpenChatActionV,
+    DismissAction,
+    CompleteAction,
+    SnoozeAction,
+    NudgeActionV,
+    GoToNudgeStepActionV,
+    UseConditionalLogicAction,
+    StepBackAction,
+    StepForwardAction,
+    CallbackAction,
+    ShowVideoAction,
+    ShowDocumentAction
+  ]);
+  var LabeledActionV = type({
+    cta: string,
+    action: ActionV
+  });
+  var TriggerAction = type({
+    type: literal("trigger"),
+    value: ActionV
+  });
+
+  // ../shared/src/internal/middleware/helpers/goals.ts
+  var PageVisitedGoal = type({
+    type: literal("page_visited"),
+    value: string
+  });
+  var ElementClickedGoal = type({
+    type: literal("element_clicked"),
+    value: string
+  });
+  var CTAClickedGoal = type({
+    type: literal("cta_clicked")
+  });
+  var EventTrackedGoal = intersection([
+    type({
+      type: literal("event_tracked"),
+      event: string
+    }),
+    partial({
+      conditions: array(array(EvaluationConditionV))
+    })
+  ]);
+
+  // ../shared/src/internal/middleware/page-targeting.ts
+  var PageTargetingConfigV = type({
+    conditions: array(array(EvaluationConditionV)),
+    configs: array(
+      type({
+        isExclude: boolean,
+        matchType: union([
+          literal("contains"),
+          literal("endsWith"),
+          literal("exact"),
+          literal("pattern"),
+          literal("regex"),
+          literal("simple"),
+          literal("startsWith")
+        ]),
+        url: string
+      })
+    )
+  });
+
+  // ../shared/src/internal/middleware/nudge.ts
+  var NudgeContentMarkdownBlockV = type({
+    type: literal("markdown"),
+    meta: type({ value: string })
+  });
+  var NudgeContentImageBlockV = type({
+    type: literal("image"),
+    meta: intersection([
+      type({ src: string, filename: string, size: string }),
+      partial({
+        altText: string,
+        style: partial({
+          scale: string
+        })
+      })
+    ])
+  });
+  var NudgeContentVideoBlockV = type({
+    type: literal("video"),
+    meta: type({ type: literal("url"), src: string })
+  });
+  var Required = union([
+    type({
+      value: literal(true),
+      message: string
+    }),
+    type({
+      value: literal(false),
+      message: union([nullType, undefinedType, string])
+    })
+  ]);
+  var SurveyValidation = partial({
+    validation: partial({
+      required: Required
+    })
+  });
+  var NudgeButtonActionV = union([
+    NoAction,
+    ClickAction,
+    LinkAction,
+    OpenChatActionV,
+    DismissAction,
+    CompleteAction,
+    SnoozeAction,
+    StepBackAction,
+    StepForwardAction,
+    NudgeActionV,
+    GoToNudgeStepActionV,
+    UseConditionalLogicAction,
+    CallbackAction,
+    ShowDocumentAction,
+    ShowVideoAction
+  ]);
+  var NudgeConditionalActionV = type({
+    operator: union([literal("eq"), literal("neq"), literal("gt"), literal("lt")]),
+    operand: union([string, number]),
+    action: NudgeButtonActionV
+  });
+  var NudgeContentButtonBlockV = type({
+    type: literal("button"),
+    meta: union([
+      partial({
+        label: string,
+        action: NudgeButtonActionV,
+        buttonType: union([literal("primary"), literal("secondary"), literal("snooze")], void 0)
+      }),
+      nullType
+    ])
+  });
+  var NudgeContentSurveyTextBlockV = type({
+    uuid: string,
+    type: literal("survey_text"),
+    meta: intersection([type({ prompt: string }), SurveyValidation, partial({ ariaLabel: string })])
+  });
+  var NudgeStepContentSurveyTextShortBlockTypeV = type({
+    uuid: string,
+    type: literal("survey_text_short"),
+    meta: intersection([
+      intersection([
+        type({ prompt: string }),
+        partial({ prefill: type({ enabled: boolean, userProperty: string }) })
+      ]),
+      SurveyValidation,
+      partial({ ariaLabel: string })
+    ])
+  });
+  var NudgeContentListBlockV = type({
+    uuid: string,
+    type: literal("survey_list"),
+    meta: intersection([
+      type({
+        options: array(string),
+        listType: union([literal("single"), literal("multiple")]),
+        displayType: union([literal("dropdown"), literal("list"), literal("grid")])
+      }),
+      SurveyValidation,
+      partial({
+        conditionalActions: array(NudgeConditionalActionV),
+        defaultAction: NudgeButtonActionV,
+        isOrderRandom: boolean,
+        otherOption: type({
+          enabled: boolean,
+          label: string,
+          placeholderLabel: string
+        }),
+        ariaLabel: string
+      })
+    ])
+  });
+  var NudgeContentSurveyRatingBlockV = type({
+    uuid: string,
+    type: literal("survey_rating"),
+    meta: intersection([
+      union([
+        type({
+          type: literal("emojis"),
+          lowerLabel: string,
+          upperLabel: string,
+          options: number,
+          emojis: array(string)
+        }),
+        type({
+          type: literal("numbers"),
+          lowerLabel: string,
+          upperLabel: string,
+          options: number
+        }),
+        type({
+          type: literal("stars"),
+          lowerLabel: string,
+          upperLabel: string,
+          options: number
+        }),
+        type({
+          type: literal("nps"),
+          lowerLabel: string,
+          upperLabel: string,
+          options: number
+        })
+      ]),
+      SurveyValidation,
+      partial({
+        conditionalActions: array(NudgeConditionalActionV),
+        defaultAction: NudgeButtonActionV,
+        ariaLabel: string
+      })
+    ])
+  });
+  var NudgeContentBlockV = union([
+    NudgeContentMarkdownBlockV,
+    NudgeContentImageBlockV,
+    NudgeContentVideoBlockV,
+    NudgeContentButtonBlockV,
+    NudgeContentSurveyTextBlockV,
+    NudgeStepContentSurveyTextShortBlockTypeV,
+    NudgeContentSurveyRatingBlockV,
+    NudgeContentListBlockV
+  ]);
+  var NudgeStepBaseV = type({
+    id: number,
+    title: string,
+    content: array(NudgeContentBlockV)
+  });
+  var MediaPositionV = union([literal("left"), literal("right")]);
+  var NudgeStepFooterLayoutConfigV = partial({
+    footerLayout: union([literal("classic"), literal("split"), literal("centered"), literal("stacked")])
+  });
+  var NudgeStepLayoutConfigV = union([
+    partial({
+      layout: union([literal("classic"), literal("vertical")])
+    }),
+    partial({
+      layout: literal("horizontal"),
+      mediaPosition: MediaPositionV
+    })
+  ]);
+  var ElementSelectorV = type({
+    selector: string,
+    text: string,
+    tag: string,
+    attributes: record(string, string)
+  });
+  var NudgeStepAdditionalV = intersection(
+    [
+      type({
+        formFactor: union([
+          intersection([
+            type({
+              type: literal("modal")
+            }),
+            partial({
+              textAnimation: literal("typewriter"),
+              canClickOutsideToClose: boolean
+            }),
+            NudgeStepLayoutConfigV,
+            NudgeStepFooterLayoutConfigV
+          ]),
+          intersection([
+            type({
+              type: literal("checklist")
+            }),
+            partial({
+              zIndexOverride: union([undefinedType, nullType, number])
+            })
+          ]),
+          intersection([
+            type({
+              type: literal("popover"),
+              position: union([
+                literal("top-left"),
+                literal("top-right"),
+                literal("bottom-right"),
+                literal("bottom-left"),
+                literal("center")
+              ])
+            }),
+            partial({
+              textAnimation: literal("typewriter"),
+              zIndexOverride: union([undefinedType, nullType, number])
+            }),
+            NudgeStepLayoutConfigV,
+            NudgeStepFooterLayoutConfigV
+          ]),
+          intersection([
+            type({
+              type: literal("banner"),
+              position: union([literal("top"), literal("bottom")]),
+              placement: union([literal("default"), literal("overlay")]),
+              sticky: boolean
+            }),
+            partial({
+              textAnimation: literal("typewriter"),
+              zIndexOverride: union([undefinedType, nullType, number])
+            }),
+            NudgeStepLayoutConfigV,
+            NudgeStepFooterLayoutConfigV
+          ]),
+          intersection([
+            type({
+              type: literal("pin"),
+              anchor: string
+            }),
+            partial({
+              anchorSelector: ElementSelectorV,
+              isOpenByDefault: boolean,
+              isShowingMask: boolean,
+              advanceTrigger: string,
+              offset: type({
+                x: string,
+                y: string
+              }),
+              position: union([
+                literal("auto"),
+                literal("top"),
+                literal("bottom"),
+                literal("left"),
+                literal("right")
+              ]),
+              alignment: union([
+                literal("center"),
+                literal("top"),
+                literal("bottom"),
+                literal("left"),
+                literal("right")
+              ]),
+              textAnimation: literal("typewriter"),
+              zIndexOverride: union([undefinedType, nullType, number]),
+              pointer: type({ type: union([literal("beacon"), literal("arrow")]) })
+            }),
+            NudgeStepLayoutConfigV,
+            NudgeStepFooterLayoutConfigV
+          ]),
+          intersection([
+            type({
+              type: literal("tooltip"),
+              anchor: string,
+              showOn: union([literal("hover"), literal("click")]),
+              marker: intersection([
+                union([
+                  type({
+                    type: literal("beacon")
+                  }),
+                  type({
+                    type: literal("icon"),
+                    icon: union([
+                      literal("helpCircle"),
+                      literal("helpSquare"),
+                      literal("infoCircle"),
+                      literal("bookClosed"),
+                      literal("lightBulb"),
+                      literal("lightning")
+                    ])
+                  }),
+                  type({
+                    type: literal("image"),
+                    source: string
+                  })
+                ]),
+                type({
+                  positioning: type({
+                    position: union([
+                      literal("left"),
+                      literal("right"),
+                      literal("inline_left"),
+                      literal("inline_right")
+                    ]),
+                    offset: type({
+                      x: string,
+                      y: string
+                    })
+                  })
+                })
+              ])
+            }),
+            partial({
+              anchorSelector: ElementSelectorV,
+              textAnimation: literal("typewriter"),
+              zIndexOverride: union([undefinedType, nullType, number]),
+              pointer: type({ type: union([literal("none"), literal("arrow")]) })
+            }),
+            NudgeStepLayoutConfigV,
+            NudgeStepFooterLayoutConfigV
+          ])
+        ])
+      }),
+      partial({
+        goal: union([PageVisitedGoal, ElementClickedGoal, CTAClickedGoal, EventTrackedGoal, nullType])
+      })
+    ],
+    "NudgeStepAdditional"
+  );
+  var stepDefaults = {
+    formFactor: {
+      type: "popover",
+      position: "top-right"
+    }
+  };
+  var NudgeStepV = intersection([NudgeStepBaseV, NudgeStepAdditionalV], "Nudge");
+  var SimpleNudgeTriggerType = union([
+    literal("immediately"),
+    literal("smart_delay"),
+    literal("rage_click"),
+    literal("user_confusion"),
+    literal("exit_intent"),
+    literal("none")
+  ]);
+  var ElementAppearedTriggerConfigV = type({
+    type: literal("element_appeared"),
+    data: type({ selector: string }),
+    conditions: array(array(EvaluationConditionV))
+    // serialized from API (not in assistance-ui)
+  });
+  var ElementClickedTriggerConfigV = type({
+    type: literal("element_clicked"),
+    data: type({ selector: string }),
+    conditions: array(array(EvaluationConditionV))
+    // serialized from API (not in assistance-ui)
+  });
+  var EventTriggerConfigV = type({
+    type: literal("analytics_event"),
+    data: type({
+      event: string
+    }),
+    conditions: array(array(EvaluationConditionV))
+    // serialized from API (not in assistance-ui)
+  });
+  var AfterTimeTriggerConfigV = type({
+    type: literal("after_time"),
+    data: type({ unit: union([literal("minute"), literal("second")]), value: number }),
+    conditions: array(array(EvaluationConditionV))
+    // serialized from API (not in assistance-ui)
+  });
+  var NudgeTriggerConfigV = union([
+    type({
+      type: SimpleNudgeTriggerType,
+      conditions: array(array(EvaluationConditionV)),
+      data: union([nullType, undefinedType, record(string, any)])
+    }),
+    ElementAppearedTriggerConfigV,
+    ElementClickedTriggerConfigV,
+    EventTriggerConfigV,
+    AfterTimeTriggerConfigV
+  ]);
+  var NudgeCooldownPeriodV = union([
+    literal("day"),
+    literal("week"),
+    literal("month"),
+    literal("year"),
+    literal("session"),
+    string
+    // keep for forward compatibility
+  ]);
+  var NudgeCooldownLimitV = partial({
+    max: number,
+    period: NudgeCooldownPeriodV,
+    periodCount: union([number, undefinedType])
+  });
+  var NudgeLifecycleConfigV = type({
+    stopShowingIfCompleted: boolean,
+    stopShowingIfDismissed: boolean,
+    cooldownLimits: array(NudgeCooldownLimitV),
+    conditions: array(array(EvaluationConditionV))
+    // serialized from API (not in assistance-ui)
+  });
+  var NudgeBaseV = intersection(
+    [
+      type({
+        title: string,
+        // TODO: can be removed, not needed in the SDK
+        variantId: number,
+        steps: array(NudgeStepV),
+        triggerConfig: NudgeTriggerConfigV,
+        lifecycleConfig: NudgeLifecycleConfigV,
+        flagKey: string
+      }),
+      partial({
+        archived: boolean,
+        displayTitle: string,
+        displayDescription: string,
+        position: union([literal("bottomRight"), literal("bottomLeft")]),
+        priority: number,
+        dir: union([literal("ltr"), literal("rtl")]),
+        stepCounterFormat: union([literal("numeric"), literal("verbose")]),
+        tags: array(string)
+      })
+    ],
+    "NudgeBase"
+  );
+  var NudgeTypeV = union([
+    literal("survey"),
+    literal("tour"),
+    literal("banner"),
+    literal("tooltip"),
+    literal("checklist"),
+    string
+  ]);
+  var TranslationStatusV = type({
+    translated: boolean,
+    status: union([literal("missing"), literal("outdated"), literal("up-to-date"), nullType, undefinedType])
+  });
+  var NudgeAdditionalV = type(
+    {
+      platform: withFallback(
+        union([literal("web"), literal("android"), literal("ios"), literal("react-native")]),
+        "web"
+      ),
+      showStepCounter: boolean,
+      isDismissible: boolean,
+      isSnoozable: boolean,
+      isSnoozableOnAllSteps: boolean,
+      snoozeLabel: string,
+      doneLabel: string,
+      snoozeDuration: type({
+        interval: SnoozeInterval,
+        value: SnoozeValue
+      }),
+      type: NudgeTypeV,
+      previewUrl: union([string, nullType, undefinedType]),
+      customThemeId: union([number, nullType, undefinedType]),
+      variant: string,
+      pageTargeting: PageTargetingConfigV,
+      hideIfPageTargetingNotMet: boolean,
+      temporarilyHideTargeting: PageTargetingConfigV,
+      translationStatus: union([TranslationStatusV, nullType, undefinedType])
+    },
+    "NudgeAdditional"
+  );
+  var defaults2 = {
+    platform: "web",
+    showStepCounter: false,
+    isDismissible: true,
+    isSnoozable: false,
+    isSnoozableOnAllSteps: true,
+    snoozeLabel: "Snooze",
+    doneLabel: "Done",
+    snoozeDuration: {
+      interval: "day",
+      value: 3
+    },
+    type: "tour",
+    previewUrl: null,
+    customThemeId: null,
+    translationStatus: null,
+    variant: "treatment",
+    pageTargeting: {
+      conditions: [[]],
+      configs: []
+    },
+    hideIfPageTargetingNotMet: true,
+    temporarilyHideTargeting: {
+      conditions: [[]],
+      configs: []
+    }
+  };
+  var NudgeV = intersection([NudgeBaseV, NudgeAdditionalV], "Nudge");
+  var Nudge = class {
+    static decode = (data) => {
+      try {
+        return decodeThrowing2(NudgeV, data);
+      } catch (e2) {
+        logger.error("Error decoding guide or survey", { error: e2 });
+        getSentry()?.captureException(e2);
+        return decodeThrowing2(NudgeV, {
+          ...defaults2,
+          ...data,
+          steps: (data.steps || []).map((step) => ({ ...stepDefaults, ...step }))
+        });
+      }
+    };
+  };
+
+  // ../shared/src/internal/middleware/theme.ts
+  var ThemeModeV = type({
+    varDefaults: record(string, union([string, number])),
+    varOverrides: record(string, union([string, number])),
+    componentOverrides: record(string, any),
+    mobileOverrides: record(string, any)
+  });
+  var ThemeV = union([
+    type({
+      lightMode: ThemeModeV,
+      darkMode: ThemeModeV
+    }),
+    nullType,
+    undefinedType
+  ]);
+  var ThemeObjectBaseV = type(
+    {
+      id: number,
+      name: string,
+      isDefault: boolean,
+      theme: ThemeV
+    },
+    "ThemeBase"
+  );
+  var PlatformV = type({
+    type: union([literal("web"), literal("ios"), literal("android"), literal("react-native"), string])
+  });
+  var ThemeObjectAdditionalV = partial(
+    {
+      platform: PlatformV
+    },
+    "ThemeAdditional"
+  );
+  var ThemeObjectV = intersection([ThemeObjectBaseV, ThemeObjectAdditionalV], "Nudge");
+  var defaults3 = {};
+  var decode2 = (data) => {
+    try {
+      return decodeThrowing2(ThemeObjectV, data);
+    } catch (e2) {
+      logger.error("Error decoding theme", { error: e2 });
+      getSentry()?.captureException(e2);
+      return decodeThrowing2(ThemeObjectV, { ...defaults3, ...data });
+    }
+  };
+
+  // ../shared/src/types/flags.ts
+  var defaultFlags = {
+    "support-ruby-on-rails": false,
+    "enable-when-element-appears-trigger": true
+  };
+
+  // ../shared/src/types/api/resource-center.ts
+  var LauncherV = intersection([
+    type({
+      type: string,
+      position: string,
+      offsetX: number,
+      offsetY: number,
+      zIndex: number
+    }),
+    partial({
+      anchorElement: union([string, nullType]),
+      iconSrc: union([string, nullType])
+    })
+  ]);
+  var ResourceCenterV = intersection([
+    type({
+      isAutopilotEnabled: boolean,
+      textStrings: record(string, string),
+      showQuickLinks: boolean
+    }),
+    partial({
+      key: union([string, nullType, undefinedType]),
+      mobileLauncher: union([LauncherV, nullType]),
+      desktopLauncher: union([LauncherV, nullType]),
+      customTheme: union([number, nullType])
+    })
+  ]);
+  var ResourceCenter = class {
+    static decode = (data) => {
+      return decodeThrowing2(ResourceCenterV, data);
+    };
+  };
+
+  // ../shared/src/sdk/config.ts
+  function guard(meta, fn, defaultValue) {
+    try {
+      const result = fn();
+      if (result === void 0) return defaultValue;
+      return result;
+    } catch (e2) {
+      getSentry()?.captureException(e2);
+      logger.error(`Error decoding config response (${meta.apiKey}). Using default value for '${meta.field}'`, {
+        error: e2,
+        field: meta.field,
+        defaultValue
+      });
+      return defaultValue;
+    }
+  }
+  async function fetchConfig(apiKey, isEditorPreview, isAdmin = false, locale = void 0) {
+    let path = isAdmin ? `/sdk/v1/preview/config` : `/sdk/v1/config`;
+    if (locale) {
+      path += `?locale=${locale}`;
+    }
+    if (isEditorPreview) return null;
+    const result = await get(path, {
+      headers: {
+        Authorization: `Api-Key ${apiKey}`
+      }
+    });
+    return result.data;
+  }
+  async function fetchResourceCenters(apiKey, isEditorPreview = false) {
+    try {
+      const path = `/sdk/v1/resource_center`;
+      if (isEditorPreview) return [];
+      const result = await get(path, {
+        headers: {
+          Authorization: `Api-Key ${apiKey}`
+        }
+      });
+      const data = result.data;
+      if (!data?.resourceCenters) {
+        return [];
+      }
+      const resourceCenters = data.resourceCenters.map((rc) => {
+        try {
+          return ResourceCenter.decode(rc);
+        } catch (e2) {
+          getSentry()?.captureException(e2);
+          logger.error("Error decoding resource center", JSON.stringify({ error: e2, resourceCenter: rc }));
+          return void 0;
+        }
+      }).filter((rc) => Boolean(rc));
+      return resourceCenters;
+    } catch (error) {
+      getSentry()?.captureException(error);
+      logger.error("Error fetching resource center settings. Continuing with empty data.", { error });
+      return [];
+    }
+  }
+  async function getConfig(apiKey, isAdmin = false, locale = void 0, isEditorPreview = false) {
+    const [data, resourceCenters, flags] = await Promise.all([
+      fetchConfig(apiKey, isEditorPreview, isAdmin, locale).catch((error) => {
+        logger.error("Error fetching config. Continuing with empty data.", { error });
+        return {};
+      }),
+      fetchResourceCenters(apiKey, isEditorPreview),
+      // XXX(pjhul): using mocked data for now!
+      defaultFlags
+    ]);
+    if (!data || Object.keys(data).length === 0) {
+      logger.error("Error decoding config response. It is empty.");
+    }
+    const { organization, nudges, themes } = data || {};
+    const decodedNudges = nudges?.flatMap((nudge) => {
+      try {
+        return [Nudge.decode(nudge)];
+      } catch (e2) {
+        getSentry()?.captureException(e2);
+        logger.error("Error decoding nudge", JSON.stringify({ error: e2, nudge }));
+        return [];
+      }
+    });
+    return {
+      organization: guard(
+        { apiKey, field: "organization" },
+        () => decode(organization),
+        defaults
+      ),
+      nudges: (decodedNudges ?? []).flatMap(
+        (nudge) => guard({ apiKey, field: `nudges[id=${nudge?.variantId}]` }, () => [nudge], [])
+      ),
+      flags,
+      themes: (themes ?? []).flatMap(
+        (theme) => guard({ apiKey, field: `themes[id=${theme?.id}]` }, () => [decode2(theme)], [])
+      ),
+      resourceCenters
+    };
+  }
+  async function getPreviewConfig(apiKey, isEditorPreview = false) {
+    if (!apiKey) {
+      return;
+    }
+    return getConfig(apiKey, true, getSDK()?.[_configuration].locale, isEditorPreview);
+  }
+  async function getEndUserConfig(apiKey, isEditorPreview = false) {
+    return getConfig(apiKey, false, getSDK()?.[_configuration].locale, isEditorPreview);
+  }
+
   // ../shared/src/store/global-subscriptions.ts
   var locationChanged = (_) => {
     if (!_.endUserStore.initializedSuccessfully) {
@@ -9673,33 +10988,37 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     _.messageBus.subscribe("start_debug", (message) => {
       startDebugSession(_, message.event.data.experience.nudge, { toStepIndex: 0 });
     });
-    _.messageBus.subscribe("start_recorder", (message) => {
+    _.messageBus.subscribe("start_recorder", async (message) => {
       shutdownNudges(_);
       closeAllNudgeMocks(_);
       _.nudgeRecorderToolBar.visible = true;
       _.nudgeRecorderToolBar.experience = message.event.data.experience;
+      const configuration = getSDK()?.[_configuration];
+      const previewConfig = await getPreviewConfig(configuration?.apiKey);
+      if (previewConfig?.nudges) {
+        await getSDK()?._reloadNudges(previewConfig);
+      }
+      const updatedTheme = _.nudgeRecorderToolBar.experience?.theme;
+      if (updatedTheme) {
+        const themeId = updatedTheme.id;
+        let themeFound = false;
+        const updatedThemes = _.themes.map((themeItem) => {
+          if (themeId && themeItem.id === themeId) {
+            themeFound = true;
+            return updatedTheme;
+          }
+          return themeItem;
+        });
+        if (!themeFound && themeId) {
+          updatedThemes.push(updatedTheme);
+        }
+        await getSDK()?._reloadThemes({ themes: updatedThemes });
+      }
     });
   };
 
   // ../shared/src/products/nudges/store/nudgesManagerMachine.ts
   var import_isEqual3 = __toESM(require_isEqual());
-
-  // ../shared/src/services/targeting/helpers.ts
-  var getActiveVariantForFlag = (flagKey, decideResult) => {
-    return decideResult?.[flagKey]?.key;
-  };
-  var nudgePassesDecide = (nudge, decideResult) => {
-    if (nudge.platform !== __GS_PLATFORM__) {
-      return false;
-    }
-    const activeVariantForNudge = getActiveVariantForFlag(nudge.flagKey, decideResult);
-    if (!activeVariantForNudge) {
-      logger.error("Nudge does not have a decide result!");
-      return false;
-    }
-    return activeVariantForNudge === nudge.variant;
-  };
-  var getExperimentKey = (nudge, decideResult) => decideResult?.[nudge.flagKey]?.metadata?.experimentKey;
 
   // ../shared/src/products/nudges/store/nudgeStepMachine.ts
   var StepConditionsMachine = (_) => setup({
@@ -9721,18 +11040,16 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     actors: {
       searchForElement: fromCallback(
         ({ sendBack, input }) => {
-          if (passesPinnedElement(_, input.nudge, input.stepIndex)) {
-            sendBack({ type: "PASSED_TARGET_ELEMENT" });
-          }
-          _.messageBus.subscribe(
-            "dom_mutation",
-            () => {
-              if (passesPinnedElement(_, input.nudge, input.stepIndex)) {
+          const checkElement = async () => {
+            try {
+              if (await passesPinnedElement(_, input.nudge, input.stepIndex)) {
                 sendBack({ type: "PASSED_TARGET_ELEMENT" });
               }
-            },
-            `search-for-pin-target-${input.nudge.variantId}`
-          );
+            } catch (error) {
+            }
+          };
+          checkElement();
+          _.messageBus.subscribe("dom_mutation", checkElement, `search-for-pin-target-${input.nudge.variantId}`);
           return () => {
             _.messageBus.unsubscribe("dom_mutation", `search-for-pin-target-${input.nudge.variantId}`);
           };
@@ -9883,7 +11200,14 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var NudgeMachine = (globalStore, nudge) => setup({
     types: {},
     actors: {
-      StepConditionsMachine: StepConditionsMachine(globalStore)
+      StepConditionsMachine: StepConditionsMachine(globalStore),
+      FindTargetElementMachine: fromPromise(
+        async ({
+          input
+        }) => {
+          return passesTriggerElement(globalStore, input.nudge, input.triggerEvent, input.nudgeSeenThisSessionTs);
+        }
+      )
     },
     guards: {
       passesNudgeMatch: ({ context }) => !context.triggerEvent?.nudgeId || context.nudge.variantId === context.triggerEvent.nudgeId,
@@ -9891,16 +11215,16 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       passesTriggerMatch: ({ context }) => context.triggerEvent?.overrides?.triggerMatch || passesTriggerMatch(globalStore, context.nudge, context.triggerEvent),
       passesCooldown: ({ context }) => context.triggerEvent?.overrides?.cooldown || passesCooldown(globalStore, context.nudge),
       passesAudience: ({ context }) => context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode || // In debug/simulate mode we always want our audience guard to pass
-      nudgePassesDecide(context.nudge, globalStore.decide),
+      getActiveVariantForFlag(context.nudge.flagKey, globalStore.decide) === "control" || nudgePassesDecide(context.nudge, globalStore.decide),
       passesSnoozed: ({ context }) => context.triggerEvent?.overrides?.snoozed || passesSnoozedConditions(globalStore, context.nudge),
       passesPage: ({ context }) => {
         const passesRegularPageTargeting = context.triggerEvent?.overrides?.page || passesPageTargeting(globalStore, context.nudge);
         return !shouldTemporarilyHide(globalStore, context.nudge) && passesRegularPageTargeting;
       },
       passesClicked: ({ context }) => passesClickedElement(globalStore, context.nudge, context.triggerEvent),
-      passesTriggerElement: ({ context }) => passesTriggerElement(globalStore, context.nudge, context.triggerEvent, context.nudgeSeenThisSessionTs),
       passesCustomThrottles: ({ context }) => shouldBypassCustomThrottles(globalStore, context.nudge) || context.triggerEvent?.overrides?.customThrottles || passesCustomThrottles(globalStore, context.nudge),
       passesLocalization: ({ context }) => context.triggerEvent?.overrides?.localization || passesLocalization(globalStore, context.nudge, getCurrentLocale()),
+      passesExperimentVariant: ({ context }) => context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode || nudgePassesDecide(context.nudge, globalStore.decide),
       // step specific
       remainingSteps: ({ context }) => hasRemainingSteps(context.nudge)(context),
       advanceToSpecificStep: ({ context }, params) => params.step !== void 0 && params.step >= 0 && params.step < context.nudge.steps.length,
@@ -10210,7 +11534,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       }
     }
   }).createMachine({
-    /** @xstate-layout N4IgpgJg5mDOIC5QDkCu0wGIBKBRAyrgCoD6+RAgkbgNoAMAuoqAA4D2sAlgC6dsB2zEAA9EAFgBMAGhABPRAEYA7EoB0ATgCsAZgWaJADk1ilxugYC+FmWgw5cAMTz4AEiWQBVACIBxWoyF2Ll4BIVEESRl5BAMFVTF1RPUEwwMlZW0rG3QYVQBJCAAbLCJsPJ8-bHomJBAgnj5BWvD9KMRtADZNdVUJTSUxBTp1JQNzdSyQW1yAYQALMABjAGtOfigAAhmBCAaBWFV5pdX1jYp0TjB+RaxqwI49ptBwhQMJCVUh9W0JLQ6uhTaNoIXTDVR0bR0UyaAxiBIGSzWKY5MCHBYrNabbb8XYhfgHI4Y07nXZXG6YGgKGqsB54sKITQKZSfbSQiQKSSjYGaCG9AzqCTmBTfCSSTJI6aowknLE7R4E9Eyjb4fhsNgAL0gFICtXqdOa4kB2nBKmS-TZA2BP15HQ5wyMooM2kR2QwaOOmK2crxCo9pxVas1EApVPuwUa9IQjIkaiNdHZnIMwI6CU+YiMMLe6gREkmkvdRNlOPlBaVAAUAIYwbXUuq0iMGhCA76qIzJbTqBRdEyM4G-MQdPnmPqvCSs5R5lGlz3Y3GNX2FjaV6uU2t6hvPBlDWOs+McmNJuTtWGqZ2-H6Cpms7RKSdu6Uz73z6enGaFTgrLV3XX10KNsSaB0PRjmI5g9toCRAkeIKsh8hhQv0EISEBt4SlOD6vk++wvli76fsGq5ho8kaMjeLJsvuXLQQMcRDMoXY8pICSaHesyKo+xY+jhGxEAATpwUAwLxGy4MUAC2VzcDWRH6puUZ6DuFGJsCwoCqooyMlCSjOh0AysVK7GYZxz4YZsfECUJIniZJIZrr+TwiFuJjkXuynQU6xp0MYowdE67LqCm+ncbOJamV6bCFBAbAAO78NJP7hn+cmdCmqhdB0EIItCRgdFaUJiBoJjpp06h0MKQVhSFXGVWqkUxXFhEJcRjaMrpLkJgeVqAgY4LOkYoI5qhrpsX6RZzthYWShsACyFbcIsczxTSiUOeEoEFWkPI6HQYg-K8fZGAVTFeQK-S+eKw0GaNXrGRNhmbFNs3zYtjXLc1cmMiM7WUYe0TaGY6n9KBHR9emLrIve903eN+LceZglgMJT0LUtdYrZGyQfP9Iqldm-K6AdoGqN0UKQnQEKmBBFVQ1VJlQ-DlnIy9oZNbJjnyV9cYdVRf0JAVphKCDNHCrt1PXbTd3i6gsDcGwYk8XMvFsNw3DFLAqPrkl7PvKYp4DAixj8imOhdfGaV2tm+jFUYYuLhLsOVdLsvy0QivK6rcC2TJG7s4yaTfW5f03porbRuYgHY+D+Y1bdDtQwAMmwiwVu+6pzY0Gv2ZGvxfQKZr-DpgJiHlCLqWMsT9oM5VoZD4tYXH12J8nqfpwIXusz7LTKIprmddBPyAYV0aduT3wdEF+DcGALCYFF-CojLc2ovmk-T9+b1s+EyTOR2UJGEMxiaH2ZUh2VyiDIkPLxhPU8sMF9fq3PqJrAAbmwyyoqvLD27As0LWsYB15o3er7TsHxhSkU6KKBSKkmRqAhAoZCbxrzaRvtPe+sdH4CGfvwN+H9VBfx-n-OYADXrAM3gyMBnwtBGg6NA-oKk0gFV3Iyfo-IBh9DQXfMKs1hAbGwFcCAiMvw6g3p3RAukBifEdGaCCYxi7QVeGpLsfV+TrR5FHKcX9uK8P4YI4RBEWZiK1uESRBVEHplkemHaKk+jATYSYJkopBZcNUAInEiMNiJzYDPLweR8DTX8fgIBmtVqIDSCeLo3RBjkwHFCPs7wjqJAMHQ1k-JEgXQhrkbR7ihHCW8TPfAyAADyxSABa-g7Lo0bAiCCaVNDRKGDtDKSg+x0XBN8fQXkMwZUySvW+bj9H5LVDPPATgCBuE8L4Sp3sTGIFGETax7J-pKE7J0FSCRYxMP0BmEemi3Q5KGV4kZmAZjx2KYQEJWcalOgKlE5ITS4mtOgoKHkxNviWN0MgiYNdskDNyZ4gpmByDFLLFc6pckcx3IaQ82JLTj7kw6Z0H4Axg5pFcQC4ZPjMAODyMgfxLhwUgPCAiDk9TGlwviYot4HxRhfDGPBEwuZfmf3+UcoFHgyxeCoLgMgHhsAADVcAAE0SDODLMU5AlzRHkPEQgU0agMp6DoKkphuVFGgToOpCCZ4YwphSBi9lIzBkeP4usTAFAvACooMgGYMyO5zPleOeI7wyr-V0CmBQCTB7vCFpbdIWhDWmuOT4k1eTMT2EIKQcgPKiUUKdboF1l53VdkGH2W0Id0qAneFoWEXkg15JDXfTFEa8A+GcMEmVoTIzaUTZIZNOhU1epeU6HoShDB-ExghFiLKCFsuDQUsNiMI0UHwPgcoyASASolUK7AJAKAzCIMUqoVbrlySUCqnqiDG3Oh+PyI+LyVnxH0JbWIygoQFsBcakt5qvCSvtcYsJMR5Hkthc0ql0RU0hwHCknkXRNqBV7YcgdxqKAQBfhWa4EaSmkDvcgB9srHULLUO2ro-ZVkpmkIexIGgT2ZmTePID-bC2DrAxBqDt771xrlch9SyET0mACpEF5CC0rrWgTtJifStHEavaGsjkHFgRrg7QIxiGn0ROhRS99zzohjkFLhtk8YUyksI5dPt6DMVFowTDLB89VCv3fqy6eRCKz-3ntRx1knX0xJk32eEvQonGGzCdGMl6sXcJpg-We2CDO4KMxp7+D9iGkLE9WxstHUMMYw8xuTCRBzAyZLpOJ3d3PaYEVAXicAuDmss0+yL9H0NMaw3Jml4IjDaSApBUYaXB0Zay7AHLUB26PsjNZ+5tmnl9kPupKJKTzDxl3VYJEqohHwFqJKWZT6AC06hgTTcHOTJby3lv-R7epgoxQpsYzoR8LyPJIR810AeuTo9WxaFiQPJLamslXTtg-bbjYOx9nbT0YYKqdB+vSDd6OXnMHcRJJca4YBHtyT0G1EGvxfhDARE6PsZpejmnbTCACGRbZKh-txAMGpICg-ZjpNQSQApQmzExPK2kNCigQcMMcLje0x109xZcIOHVPqS3c1ZGkz4BRGAdLs7yoR2kFl0H56mGehRpnhD+EA8drT3WlIWMJAL7ZO+0QUHwSa+WJ4N0W9O-uM7CgzTxokwASX4NwWX4gBa9B1UYMqv7m1B0TX0bS6YYc05++hfXEu64RSirFS3IJ2QfF8ukJpMLkslxQ+aXpA5ITrduzpn3i5HpzQWoHtIhMCou5vH0WEjJUF67rv9w3-EEZIzT3MQPdCjqNrGK9nMB1IQuvWtebp+yRr3ZLzTJ2csFZKxVmrQP6u4hrJGKj-1JX2iAi1Tnuh7blDsk97XLvBuE5JxTpwNObNwtyRHIT5JpUby7ShOqv67TNdG3JiBbjBzb6B50O26hOhQJdl8gkYEfxia6AgnnYUyFb8-l0EvBsFA8BR+RTxdJ4wwJkJ0xusKcdkYQodbRmV1NtFxcfQH9JAtUIEIIyp-hYQ5tFFVkep+R30lMYQhpE90CoZdFMVcdWdIw6E3hpEewuxOwK5GFUpIR0gVUoEvhUDqDeMPNA8N0FNt0f8-J90VJJE0wvIb9H9kJatr0hlMRRDtwFcAJwCOQeRZNEBRQYQNAVUOQbw0VkhlD+NwNBM1DGCIt0hzEzBScAQtAElVl1J4x2xXgUxTALDPNi9dMM9ad6lbQewmVecXlBg9tVltp3gMh+hfDBlMtssbDWs7DEEXVwdTBYhdJHd9CUljRXkukYxARAIxBhsLAgA */
+    /** @xstate-layout N4IgpgJg5mDOIC5QDkCu0wGIBKBRAyrgCoD6+RAgkbgNoAMAuoqAA4D2sAlgC6dsB2zEAA9EAFgBMAGhABPRAEYA7EoB0ATgCsAZgWaJADk1ilxugYC+FmWgw5cAMTz4AEiWQBVACIBxWoyF2Ll4BIVEESRl5BAMFVTF1RPUEwwMlZW0rG3QYVQBJCAAbLCJsPJ8-bHomJBAgnj5BWvD9KMRtADZNdVUJTSUxBTp1JQNzdSyQW1yAYQALMABjAGtOfigAAhmBCAaBWFV5pdX1jYp0TjB+RaxqwI49ptBwhQMJCVUh9W0JLQ6uhTaNoIXTDVR0bR0UyaAxiBIGSzWKY5MCHBYrNabbb8XYhfgHI4Y07nXZXG6YGgKGqsB54sKITQKZSfbSQiQKSSjYGaCG9AzqCTmBTfCSSTJI6aowknLE7R4E9Eyjb4fhsNgAL0gFICtXqdOa4kB2nBKmS-TZA2BP15HQ5wyMooM2kR2QwaOOmK2crxCo9pxVas1EApVPuwUa9IQjIkaiNdHZnIMwI6CU+YiMMLe6gREkmkvdRNlOPlBaVAAUAIYwbXUuq0iMGhCA76qIzJbTqBRdEyM4G-MQdPnmPqvCSs5R5lGlz3Y3GNX2FjaV6uU2t6hvPBlDWOs+McmNJuTtWGqZ2-H6Cpms7RKSdu6Uz73z6enGaFTgrLV3XX10KNsSaB0PRjmI5g9toCRAkeIKsh8hhQv0EISEBt4SlOD6vk++wvli76fsGq5ho8kaMjeLJsvuXLQQMcRDMoXY8pICSaHesyKo+xY+jhGxEAATpwUAwLxGy4MUAC2VzcDWRH6puUZ6DuFGJsCwoCqooyMlCSjOh0AysVK7GYZxz4YZsfECUJIniZJIZrr+TwiFuJjkXuynQU6xp0MYowdE67LqCm+ncbOJamV6bCFBAbAAO78NJP7hn+cmdCmqhdB0EIItCRgdFaUJiBoJjpp06h0MKQVhSFXGVWqkUxXFhEJcRjaMrpLkJgeVqAgY4LOkYoI5qhrpsX6RZzthYWShsACyFbcIsczxTSiUOeEoEFWkPI6HQYg-K8fZGAVTFeQK-S+eKw0GaNXrGRNhmbFNs3zYtjXLc1cmMiM7WUYe0TaGY6n9KBHR9emLrIve903eN+LceZglgMJT0LUtdYrZGyQfP9Iqldm-K6AdoGqN0UKQnQEKmBBFVQ1VJlQ-DlnIy9oZNbJjnyV9cYdVRf0JAVphKCDNHCrt1PXbTd3i6gsDcGwYk8XMvFsNw3DFLAqPrkl7PvKYp4DAixj8imOhdfGaV2tm+jFUYYuLhLsOVdLsvy0QivK6rcC2TJG7s4yaTfW5f03porbRuYgHY+D+Y1bdDtQwAMmwiwVu+6pzY0Gv2ZGvxfQKZr-DpgJiHlCLqWMsT9oM5VoZD4tYXH12J8nqfpwIXusz7LTKIprmddBPyAYV0aduT3wdEF+DcGALCYFF-CojLc2ovmk-T9+b1s+EyTOR2UJGEMxiaH2ZUh2VyiDIkPLxhPU8sMF9fq3PqJrAAbmwyyoqvLD27As0LWsYB15o3er7TsHxhSkU6KKBSKkmRqAhAoZCbxrzaRvtPe+sdH4CGfvwN+H9VBfx-n-OYADXrAM3gyMBnwtBGg6NA-oKk0gFV3Iyfo-IBh9DQXfMKs1hAbGwFcCAiMvw6g3p3RAukBifEdGaCCYxi7QVeGpLsfV+TrR5FHKcX9uK8P4YI4RBEWZiK1uESRBVEHplkemHaKk+jATYSYJkopBZcNUAInEiMNiJzYDPLweR8DTX8fgIBmtVqIDSCeLo3RBjkwHFCPs7wjqJAMHQ1k-JEgXQhrkbR7ihHCW8TPfAyAADyxSABa-g7Lo0bAiCCaVNDRKGDtDKSg+x0XBN8fQXkMwZUySvW+bj9H5LVDPPATgCBuE8L4Sp3sTGIFGETax7J-pKE7J0FSCRYxMP0BmEemi3Q5KGV4kZmAZjx2KYQEJWcalOgKlE5ITS4mtOgoKHkxNviWN0MgiYNdskDNyZ4gppzzmEBIAAdTyEQFwxSPCkDwBQGYRA8gADUqB5GKcgK51S5JZTUOlDkpgTC-GedEGMZsEiJFtOYeMzo+laP+UcoF5BillixSA8IOY7kNIebElpx9yYdM6D8AYwc0iuIBcMnxmAHB5GQP4lwbKKExFiFyxpvL4mKLeB8UYXwxjwSJeKxlJyPBli8FQXAZAPDYGRbgAAmiQZwZYMWXNEeQ8RCBTR4pPnQVJTDcqKNAnQdSEEzwxhTCkQ1HjJV3wlZiTAFAvCouQDMGZHc5kevHPEd4ZV-q6BTAoBJg93hC0tukLQka8nHJ8YMqNcbnDEDIJQagir3XaV0Fmy8uauyDD7LaEO+KLxaFhF5CtgKRk1ryXW3APhnDBNdaEyMba4iSE7TobtBaXlOh6EoQwfxMYIRYr8z+DKo1VpjUMuNFB8D4HKMgEgTqnU2uwCQBFRBilVHndcuSSgfU9UQWu2lu6j4vJWfEfQltYjKChKO6NE7EZxq8Bi1NxiwnKp2vUtVzSNXRG7SHAcKSeRdE2oFI9BCT2VoKXB-i6xMDkFwGWEgyL-F5AAELx2Q269N2lYini6QKFVPISWIGzT1YtN5S0QJg2e1QFAIAvwrNcONJTSCIeQBxhdjYFlqB3V0fsqyUzSBA4kDQ4HMydvHqRw5p7KOyfk4pmjqn1NfvZlp9SyFwMmACpEF5CC0rrWgTtJidKDnkbHdW2zCnFgIaQ2QjTOKFkYZ5VhoTCAxyChM2yeMKYERdik5RmOMMsHz1UK-d+x7p5EIrP-eeLb00RNVUlp5fZ4S9CicYbMJ0Yx5fHQV+Us9sEldwWVsjFWH7ENIUYzjqHXM6Y8-p7zpKEiDmBkyXScTu7derQIqAvE4BcBo7V6bsJtPub015wzpKtXgiMNpICkFRibfPTtvbcbYvOY5Ql+5MTkt9kPupKJKTqVjidFYJEqohHwFqJKWZqGAC06hgSw8HOTcmYwwIDF2sYIKBRigw4xnQj4XkeSQj5roYDpLR6ti0LEgeq2LOXQwYVvHjYOx9h3T0YYwxcNk-2SNO2D9uIkkuNcMAzO5J6DaiDX4vwhgIidH2M0vRzQ7phABDItslQ-24gGDUkAxfsx0moJIAUoTZiYnlbSGhRQIOGGOFxpHevVShsuUXabUOrbuasjSZ8AojAOl2d5UI7SCy6D8hnju6bizwh-CA+u1o-B6gXUwOUifk-aIKD4JNfIm5paLB3NMBdhQZp40SYAJL8G4HH8QAteghqMGVAjG6g7tr6NpdMsvbf06yVdfnmD74RSirFKvIJ2QfF8ukJp3K1sl20+aXpA5ISHvDwXvvk0UQzTmgtYfaRCYFVbzePosJGSoPz3XVf9N+IIyRpvuYw+6FHTXWMdnOYDqQizeta83Tec9814XmmTs5YFYlYVY1Zh8M84g1kRg1dS0Lt2hAQg1986Ed1lB2Qu9o4V9CtuIm4U5OA042Y4ttZj8NBklSobxdooR-U-p2ks8jZyYQJgs-lp5h8dAd1qEdBQIuxfIEhgQ-hiYycBxu1BhTBXEvBsFh9+MehOgf1BRYRkJ0xftLcdkYRpdbRcxLMBkI99hmDJAg0IEIIyp-hYQEdFFVkep+QsNMsYQhpu8RtuEoZdEJU9c3dIw6E3hpEewuxOwK5GFUpIR0gfUoEvg1CGcrMKMRlh9pDdC+hdBAN+Q08mx2c0wvJBh2QGl9AGDytz1rNx1Y11gIjtw0pjZ+MORBNmsYQNAfUOQbxRVkhHsZM5NItMQIj0hzEzAzcAQtAElVl1J4x2xXgUxhD1D0EJVpNND8Rt87d6lbQewiU-cXkUiTQtA2R2RtJ+g6jttdtYB9soBmjEEs0Jdk8ux0gDoQZegicM90h-oSMrAgA */
     id: "Nudge",
     initial: "Idle",
     states: {
@@ -10236,8 +11560,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
                 target: "#Nudge.Idle",
                 actions: [
                   { type: "setFailedConditions" },
-                  { type: "logCondition", params: { conditionName: "audience", conditionResult: "FAIL" } },
-                  { type: "reportExperimentControlExposure" }
+                  { type: "logCondition", params: { conditionName: "audience", conditionResult: "FAIL" } }
                 ]
               }
             ],
@@ -10289,21 +11612,30 @@ when parsing ${JSON.stringify(input, null, 2)}`);
             description: "Was the target element clicked?"
           },
           "Checking Trigger Element": {
-            always: [
-              {
-                target: "#Nudge.Step",
-                guard: "passesTriggerElement",
-                actions: [
-                  { type: "logCondition", params: { conditionName: "triggerElement", conditionResult: "PASS" } }
-                ]
-              },
-              {
-                target: "#Nudge.Idle",
-                actions: [
-                  { type: "logCondition", params: { conditionName: "triggerElement", conditionResult: "FAIL" } }
-                ]
-              }
-            ],
+            invoke: {
+              src: "FindTargetElementMachine",
+              id: "FindTargetElementMachine",
+              input: ({ context }) => ({
+                nudge: context.nudge,
+                triggerEvent: context.triggerEvent,
+                nudgeSeenThisSessionTs: context.nudgeSeenThisSessionTs
+              }),
+              onDone: [
+                {
+                  target: "#Nudge.Step",
+                  guard: ({ event }) => event.output,
+                  actions: [
+                    { type: "logCondition", params: { conditionName: "triggerElement", conditionResult: "PASS" } }
+                  ]
+                },
+                {
+                  target: "#Nudge.Idle",
+                  actions: [
+                    { type: "logCondition", params: { conditionName: "triggerElement", conditionResult: "FAIL" } }
+                  ]
+                }
+              ]
+            },
             description: "Was the trigger element added to the DOM?"
           },
           "Checking Cooldown": {
@@ -10425,7 +11757,7 @@ This includes searching for elements to pin to or checking availability of comma
           "Checking Max Rendered": {
             always: [
               {
-                target: "Render Loop",
+                target: "Checking Experiment Variant",
                 guard: "passesBuiltInThrottles",
                 actions: [
                   { type: "logCondition", params: { conditionName: "builtInThrottles", conditionResult: "PASS" } }
@@ -10440,6 +11772,26 @@ This includes searching for elements to pin to or checking availability of comma
             ],
             description: `Are we already rendering the maximum number of simultaneous nudges?
 Limit is currently hard-coded to 1`
+          },
+          "Checking Experiment Variant": {
+            always: [
+              {
+                target: "Render Loop",
+                guard: "passesExperimentVariant",
+                actions: [
+                  { type: "logCondition", params: { conditionName: "experimentVariant", conditionResult: "PASS" } }
+                ]
+              },
+              {
+                target: "Done",
+                actions: [
+                  { type: "logCondition", params: { conditionName: "experimentVariant", conditionResult: "FAIL" } },
+                  { type: "reportExperimentControlExposure" }
+                ]
+              }
+            ],
+            description: `Is this nudge the correct variant for the experiment?
+This ensures only the right variant is shown for experiment nudges.`
           },
           "Render Loop": {
             entry: enqueueActions(({ enqueue, check }) => {
@@ -11129,1000 +12481,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
   });
 
-  // ../shared/src/internal/middleware/evaluation.ts
-  var EvaluationConditionV = type({
-    selector: array(string),
-    op: string,
-    values: array(string)
-  });
-
-  // ../shared/src/internal/middleware/organization.ts
-  var ThrottleV = intersection([
-    type({
-      max: number,
-      period: string
-    }),
-    partial({
-      enabled: boolean
-    })
-  ]);
-  var CustomThrottleV = type({
-    limit: ThrottleV,
-    conditions: array(array(EvaluationConditionV))
-  });
-  var TranslationBehaviorV = keyof({
-    showDefault: null,
-    showOutOfDate: null,
-    dontShow: null
-  });
-  var LocalizationV = type({
-    enabled: boolean,
-    defaultLocale: string,
-    addedLocales: array(string),
-    translationUnavailable: TranslationBehaviorV,
-    translationOutdated: TranslationBehaviorV
-  });
-  var OrganizationV = intersection([
-    type({
-      branding: string,
-      shareLinkParam: string,
-      guideThrottle: CustomThrottleV,
-      surveyThrottle: CustomThrottleV
-    }),
-    partial({
-      localization: LocalizationV
-    })
-  ]);
-  var defaults = {
-    branding: "",
-    shareLinkParam: "",
-    guideThrottle: { limit: { enabled: false, max: 10, period: "day" }, conditions: [[]] },
-    surveyThrottle: { limit: { enabled: false, max: 10, period: "day" }, conditions: [[]] },
-    localization: {
-      enabled: false,
-      defaultLocale: "en",
-      addedLocales: [],
-      translationUnavailable: "showDefault",
-      translationOutdated: "showOutOfDate"
-    }
-  };
-  var decode = (data) => {
-    try {
-      return decodeThrowing(OrganizationV, data);
-    } catch (e2) {
-      logger.error("Error decoding project settings", { error: e2 });
-      getSentry()?.captureException(e2);
-      return decodeThrowing(OrganizationV, { ...defaults, ...data });
-    }
-  };
-
-  // ../shared/node_modules/io-ts-types/es6/clone.js
-  function clone(t2) {
-    var r = Object.create(Object.getPrototypeOf(t2));
-    Object.assign(r, t2);
-    return r;
-  }
-
-  // ../shared/node_modules/io-ts-types/es6/withValidate.js
-  function withValidate(codec, validate2, name) {
-    if (name === void 0) {
-      name = codec.name;
-    }
-    var r = clone(codec);
-    r.validate = validate2;
-    r.decode = function(i2) {
-      return validate2(i2, getDefaultContext(r));
-    };
-    r.name = name;
-    return r;
-  }
-
-  // ../shared/node_modules/io-ts-types/es6/withFallback.js
-  function withFallback(codec, a, name) {
-    if (name === void 0) {
-      name = "withFallback(" + codec.name + ")";
-    }
-    return withValidate(codec, function(u, c2) {
-      return orElse(function() {
-        return success(a);
-      })(codec.validate(u, c2));
-    }, name);
-  }
-
-  // ../shared/src/internal/middleware/generics.ts
-  function decodeThrowing2(validator, input) {
-    const result = validator.decode(input);
-    return pipe(
-      result,
-      fold(
-        (_errors) => {
-          const messages = PathReporter.report(result);
-          logger.debug(JSON.stringify(_errors));
-          throw new Error(`${messages.join("\n")}
-when parsing ${JSON.stringify(input, null, 2)}`);
-        },
-        (value) => value
-      )
-    );
-  }
-  var GenericObject = type({
-    id: union([number, string])
-  });
-  var GenericBatchRequest = type({
-    batch: array(unknown),
-    note: string
-  });
-
-  // ../shared/src/types/entities/nudge/actions.ts
-  var AdminAction = type({
-    type: literal("admin"),
-    value: string
-  });
-  var CallbackAction = type({
-    type: literal("callback"),
-    value: string
-  });
-  var LinkAction = intersection([
-    type({
-      type: literal("link"),
-      value: string
-    }),
-    partial({
-      operation: union([literal("router"), literal("self"), literal("blank"), undefinedType]),
-      meta: type({
-        command: string
-      })
-    })
-  ]);
-  var OpenChatActionTypeV = union([
-    literal("intercom"),
-    literal("helpscout"),
-    literal("freshdesk"),
-    literal("freshchat"),
-    literal("crisp"),
-    literal("zendesk"),
-    literal("liveChat"),
-    literal("gist"),
-    literal("olark"),
-    literal("hubspot"),
-    literal("drift"),
-    literal("pylon"),
-    literal("talkdesk_v2"),
-    literal("zendesk_handoff"),
-    string
-  ]);
-  var OpenChatActionV = type({
-    type: literal("open_chat"),
-    meta: type({
-      type: OpenChatActionTypeV
-    })
-  });
-  var DismissAction = type({
-    type: literal("dismiss")
-  });
-  var CompleteAction = type({
-    type: literal("complete")
-  });
-  var StepBackAction = type({
-    type: literal("step_back")
-  });
-  var StepForwardAction = type({
-    type: literal("step_forward")
-  });
-  var SnoozeInterval = union([literal("hour"), literal("day"), literal("week")]);
-  var SnoozeValue = number;
-  var SnoozeAction = intersection([
-    type({
-      type: literal("snooze")
-    }),
-    partial({
-      interval: SnoozeInterval,
-      value: SnoozeValue
-    })
-  ]);
-  var BuiltInAction = type({
-    type: literal("builtin"),
-    value: string
-  });
-  var ScriptAction = type({
-    type: literal("script"),
-    value: string
-  });
-  var VideoAction = type({
-    type: literal("video"),
-    value: string
-  });
-  var NoAction = type({ type: literal("no_action") });
-  var ClickAction = type({
-    type: literal("click"),
-    value: string
-  });
-  var NudgeActionV = type({
-    type: literal("nudge"),
-    value: number
-  });
-  var GoToNudgeStepActionV = type({
-    type: literal("go_to_step"),
-    value: number
-  });
-  var UseConditionalLogicAction = type({
-    type: literal("use_conditional_logic")
-  });
-  var ShowVideoAction = type({
-    type: literal("video"),
-    value: number
-  });
-  var ShowDocumentAction = type({
-    type: literal("document"),
-    value: number
-  });
-  var ActionV = union([
-    NoAction,
-    ClickAction,
-    LinkAction,
-    OpenChatActionV,
-    DismissAction,
-    CompleteAction,
-    SnoozeAction,
-    NudgeActionV,
-    GoToNudgeStepActionV,
-    UseConditionalLogicAction,
-    StepBackAction,
-    StepForwardAction,
-    CallbackAction,
-    ShowVideoAction,
-    ShowDocumentAction
-  ]);
-  var LabeledActionV = type({
-    cta: string,
-    action: ActionV
-  });
-  var TriggerAction = type({
-    type: literal("trigger"),
-    value: ActionV
-  });
-
-  // ../shared/src/internal/middleware/helpers/goals.ts
-  var PageVisitedGoal = type({
-    type: literal("page_visited"),
-    value: string
-  });
-  var ElementClickedGoal = type({
-    type: literal("element_clicked"),
-    value: string
-  });
-  var CTAClickedGoal = type({
-    type: literal("cta_clicked")
-  });
-  var EventTrackedGoal = intersection([
-    type({
-      type: literal("event_tracked"),
-      event: string
-    }),
-    partial({
-      conditions: array(array(EvaluationConditionV))
-    })
-  ]);
-
-  // ../shared/src/internal/middleware/page-targeting.ts
-  var PageTargetingConfigV = type({
-    conditions: array(array(EvaluationConditionV)),
-    configs: array(
-      type({
-        isExclude: boolean,
-        matchType: union([
-          literal("contains"),
-          literal("endsWith"),
-          literal("exact"),
-          literal("pattern"),
-          literal("regex"),
-          literal("simple"),
-          literal("startsWith")
-        ]),
-        url: string
-      })
-    )
-  });
-
-  // ../shared/src/internal/middleware/nudge.ts
-  var NudgeContentMarkdownBlockV = type({
-    type: literal("markdown"),
-    meta: type({ value: string })
-  });
-  var NudgeContentImageBlockV = type({
-    type: literal("image"),
-    meta: intersection([
-      type({ src: string, filename: string, size: string }),
-      partial({
-        altText: string,
-        style: partial({
-          scale: string
-        })
-      })
-    ])
-  });
-  var NudgeContentVideoBlockV = type({
-    type: literal("video"),
-    meta: type({ type: literal("url"), src: string })
-  });
-  var Required = union([
-    type({
-      value: literal(true),
-      message: string
-    }),
-    type({
-      value: literal(false),
-      message: union([nullType, undefinedType, string])
-    })
-  ]);
-  var SurveyValidation = partial({
-    validation: partial({
-      required: Required
-    })
-  });
-  var NudgeButtonActionV = union([
-    NoAction,
-    ClickAction,
-    LinkAction,
-    OpenChatActionV,
-    DismissAction,
-    CompleteAction,
-    SnoozeAction,
-    StepBackAction,
-    StepForwardAction,
-    NudgeActionV,
-    GoToNudgeStepActionV,
-    UseConditionalLogicAction,
-    CallbackAction,
-    ShowDocumentAction,
-    ShowVideoAction
-  ]);
-  var NudgeConditionalActionV = type({
-    operator: union([literal("eq"), literal("neq"), literal("gt"), literal("lt")]),
-    operand: union([string, number]),
-    action: NudgeButtonActionV
-  });
-  var NudgeContentButtonBlockV = type({
-    type: literal("button"),
-    meta: union([
-      partial({
-        label: string,
-        action: NudgeButtonActionV,
-        buttonType: union([literal("primary"), literal("secondary"), literal("snooze")], void 0)
-      }),
-      nullType
-    ])
-  });
-  var NudgeContentSurveyTextBlockV = type({
-    uuid: string,
-    type: literal("survey_text"),
-    meta: intersection([type({ prompt: string }), SurveyValidation, partial({ ariaLabel: string })])
-  });
-  var NudgeStepContentSurveyTextShortBlockTypeV = type({
-    uuid: string,
-    type: literal("survey_text_short"),
-    meta: intersection([
-      intersection([
-        type({ prompt: string }),
-        partial({ prefill: type({ enabled: boolean, userProperty: string }) })
-      ]),
-      SurveyValidation,
-      partial({ ariaLabel: string })
-    ])
-  });
-  var NudgeContentListBlockV = type({
-    uuid: string,
-    type: literal("survey_list"),
-    meta: intersection([
-      type({
-        options: array(string),
-        listType: union([literal("single"), literal("multiple")]),
-        displayType: union([literal("dropdown"), literal("list"), literal("grid")])
-      }),
-      SurveyValidation,
-      partial({
-        conditionalActions: array(NudgeConditionalActionV),
-        defaultAction: NudgeButtonActionV,
-        isOrderRandom: boolean,
-        otherOption: type({
-          enabled: boolean,
-          label: string,
-          placeholderLabel: string
-        }),
-        ariaLabel: string
-      })
-    ])
-  });
-  var NudgeContentSurveyRatingBlockV = type({
-    uuid: string,
-    type: literal("survey_rating"),
-    meta: intersection([
-      union([
-        type({
-          type: literal("emojis"),
-          lowerLabel: string,
-          upperLabel: string,
-          options: number,
-          emojis: array(string)
-        }),
-        type({
-          type: literal("numbers"),
-          lowerLabel: string,
-          upperLabel: string,
-          options: number
-        }),
-        type({
-          type: literal("stars"),
-          lowerLabel: string,
-          upperLabel: string,
-          options: number
-        }),
-        type({
-          type: literal("nps"),
-          lowerLabel: string,
-          upperLabel: string,
-          options: number
-        })
-      ]),
-      SurveyValidation,
-      partial({
-        conditionalActions: array(NudgeConditionalActionV),
-        defaultAction: NudgeButtonActionV,
-        ariaLabel: string
-      })
-    ])
-  });
-  var NudgeContentBlockV = union([
-    NudgeContentMarkdownBlockV,
-    NudgeContentImageBlockV,
-    NudgeContentVideoBlockV,
-    NudgeContentButtonBlockV,
-    NudgeContentSurveyTextBlockV,
-    NudgeStepContentSurveyTextShortBlockTypeV,
-    NudgeContentSurveyRatingBlockV,
-    NudgeContentListBlockV
-  ]);
-  var NudgeStepBaseV = type({
-    id: number,
-    title: string,
-    content: array(NudgeContentBlockV)
-  });
-  var MediaPositionV = union([literal("left"), literal("right")]);
-  var NudgeStepFooterLayoutConfigV = partial({
-    footerLayout: union([literal("classic"), literal("split"), literal("centered"), literal("stacked")])
-  });
-  var NudgeStepLayoutConfigV = union([
-    partial({
-      layout: union([literal("classic"), literal("vertical")])
-    }),
-    partial({
-      layout: literal("horizontal"),
-      mediaPosition: MediaPositionV
-    })
-  ]);
-  var ElementSelectorV = type({
-    selector: string,
-    text: string,
-    tag: string,
-    attributes: record(string, string)
-  });
-  var NudgeStepAdditionalV = intersection(
-    [
-      type({
-        formFactor: union([
-          intersection([
-            type({
-              type: literal("modal")
-            }),
-            partial({
-              textAnimation: literal("typewriter"),
-              canClickOutsideToClose: boolean
-            }),
-            NudgeStepLayoutConfigV,
-            NudgeStepFooterLayoutConfigV
-          ]),
-          intersection([
-            type({
-              type: literal("checklist")
-            }),
-            partial({
-              zIndexOverride: union([undefinedType, nullType, number])
-            })
-          ]),
-          intersection([
-            type({
-              type: literal("popover"),
-              position: union([
-                literal("top-left"),
-                literal("top-right"),
-                literal("bottom-right"),
-                literal("bottom-left"),
-                literal("center")
-              ])
-            }),
-            partial({
-              textAnimation: literal("typewriter"),
-              zIndexOverride: union([undefinedType, nullType, number])
-            }),
-            NudgeStepLayoutConfigV,
-            NudgeStepFooterLayoutConfigV
-          ]),
-          intersection([
-            type({
-              type: literal("banner"),
-              position: union([literal("top"), literal("bottom")]),
-              placement: union([literal("default"), literal("overlay")]),
-              sticky: boolean
-            }),
-            partial({
-              layout: literal("classic"),
-              textAnimation: literal("typewriter"),
-              zIndexOverride: union([undefinedType, nullType, number])
-            })
-          ]),
-          intersection([
-            type({
-              type: literal("pin"),
-              anchor: string
-            }),
-            partial({
-              anchorSelector: ElementSelectorV,
-              isOpenByDefault: boolean,
-              isShowingMask: boolean,
-              advanceTrigger: string,
-              offset: type({
-                x: string,
-                y: string
-              }),
-              position: union([
-                literal("auto"),
-                literal("top"),
-                literal("bottom"),
-                literal("left"),
-                literal("right")
-              ]),
-              alignment: union([
-                literal("center"),
-                literal("top"),
-                literal("bottom"),
-                literal("left"),
-                literal("right")
-              ]),
-              textAnimation: literal("typewriter"),
-              zIndexOverride: union([undefinedType, nullType, number]),
-              pointer: type({ type: union([literal("beacon"), literal("arrow")]) })
-            }),
-            NudgeStepLayoutConfigV,
-            NudgeStepFooterLayoutConfigV
-          ]),
-          intersection([
-            type({
-              type: literal("tooltip"),
-              anchor: string,
-              showOn: union([literal("hover"), literal("click")]),
-              marker: intersection([
-                union([
-                  type({
-                    type: literal("beacon")
-                  }),
-                  type({
-                    type: literal("icon"),
-                    icon: union([
-                      literal("helpCircle"),
-                      literal("helpSquare"),
-                      literal("infoCircle"),
-                      literal("bookClosed"),
-                      literal("lightBulb"),
-                      literal("lightning")
-                    ])
-                  }),
-                  type({
-                    type: literal("image"),
-                    source: string
-                  })
-                ]),
-                type({
-                  positioning: type({
-                    position: union([
-                      literal("left"),
-                      literal("right"),
-                      literal("inline_left"),
-                      literal("inline_right")
-                    ]),
-                    offset: type({
-                      x: string,
-                      y: string
-                    })
-                  })
-                })
-              ])
-            }),
-            partial({
-              anchorSelector: ElementSelectorV,
-              textAnimation: literal("typewriter"),
-              zIndexOverride: union([undefinedType, nullType, number]),
-              pointer: type({ type: union([literal("none"), literal("arrow")]) })
-            }),
-            NudgeStepLayoutConfigV,
-            NudgeStepFooterLayoutConfigV
-          ])
-        ])
-      }),
-      partial({
-        goal: union([PageVisitedGoal, ElementClickedGoal, CTAClickedGoal, EventTrackedGoal, nullType])
-      })
-    ],
-    "NudgeStepAdditional"
-  );
-  var stepDefaults = {
-    formFactor: {
-      type: "popover",
-      position: "top-right"
-    }
-  };
-  var NudgeStepV = intersection([NudgeStepBaseV, NudgeStepAdditionalV], "Nudge");
-  var SimpleNudgeTriggerType = union([
-    literal("immediately"),
-    literal("smart_delay"),
-    literal("rage_click"),
-    literal("user_confusion"),
-    literal("exit_intent"),
-    literal("none")
-  ]);
-  var ElementAppearedTriggerConfigV = type({
-    type: literal("element_appeared"),
-    data: type({ selector: string }),
-    conditions: array(array(EvaluationConditionV))
-    // serialized from API (not in assistance-ui)
-  });
-  var ElementClickedTriggerConfigV = type({
-    type: literal("element_clicked"),
-    data: type({ selector: string }),
-    conditions: array(array(EvaluationConditionV))
-    // serialized from API (not in assistance-ui)
-  });
-  var EventTriggerConfigV = type({
-    type: literal("analytics_event"),
-    data: type({
-      event: string
-    }),
-    conditions: array(array(EvaluationConditionV))
-    // serialized from API (not in assistance-ui)
-  });
-  var AfterTimeTriggerConfigV = type({
-    type: literal("after_time"),
-    data: type({ unit: union([literal("minute"), literal("second")]), value: number }),
-    conditions: array(array(EvaluationConditionV))
-    // serialized from API (not in assistance-ui)
-  });
-  var NudgeTriggerConfigV = union([
-    type({
-      type: SimpleNudgeTriggerType,
-      conditions: array(array(EvaluationConditionV)),
-      data: union([nullType, undefinedType, record(string, any)])
-    }),
-    ElementAppearedTriggerConfigV,
-    ElementClickedTriggerConfigV,
-    EventTriggerConfigV,
-    AfterTimeTriggerConfigV
-  ]);
-  var NudgeCooldownPeriodV = union([
-    literal("day"),
-    literal("week"),
-    literal("month"),
-    literal("year"),
-    literal("session"),
-    string
-    // keep for forward compatibility
-  ]);
-  var NudgeCooldownLimitV = partial({
-    max: number,
-    period: NudgeCooldownPeriodV,
-    periodCount: union([number, undefinedType])
-  });
-  var NudgeLifecycleConfigV = type({
-    stopShowingIfCompleted: boolean,
-    stopShowingIfDismissed: boolean,
-    cooldownLimits: array(NudgeCooldownLimitV),
-    conditions: array(array(EvaluationConditionV))
-    // serialized from API (not in assistance-ui)
-  });
-  var NudgeBaseV = intersection(
-    [
-      type({
-        title: string,
-        // TODO: can be removed, not needed in the SDK
-        variantId: number,
-        steps: array(NudgeStepV),
-        triggerConfig: NudgeTriggerConfigV,
-        lifecycleConfig: NudgeLifecycleConfigV,
-        flagKey: string
-      }),
-      partial({
-        archived: boolean,
-        displayTitle: string,
-        displayDescription: string,
-        position: union([literal("bottomRight"), literal("bottomLeft")]),
-        priority: number,
-        dir: union([literal("ltr"), literal("rtl")]),
-        stepCounterFormat: union([literal("numeric"), literal("verbose")]),
-        tags: array(string)
-      })
-    ],
-    "NudgeBase"
-  );
-  var NudgeTypeV = union([
-    literal("survey"),
-    literal("tour"),
-    literal("banner"),
-    literal("tooltip"),
-    literal("checklist"),
-    string
-  ]);
-  var TranslationStatusV = type({
-    translated: boolean,
-    status: union([literal("missing"), literal("outdated"), literal("up-to-date"), nullType, undefinedType])
-  });
-  var NudgeAdditionalV = type(
-    {
-      platform: withFallback(
-        union([literal("web"), literal("android"), literal("ios"), literal("react-native")]),
-        "web"
-      ),
-      showStepCounter: boolean,
-      isDismissible: boolean,
-      isSnoozable: boolean,
-      isSnoozableOnAllSteps: boolean,
-      snoozeLabel: string,
-      doneLabel: string,
-      snoozeDuration: type({
-        interval: SnoozeInterval,
-        value: SnoozeValue
-      }),
-      type: NudgeTypeV,
-      previewUrl: union([string, nullType, undefinedType]),
-      customThemeId: union([number, nullType, undefinedType]),
-      variant: string,
-      pageTargeting: PageTargetingConfigV,
-      temporarilyHideTargeting: PageTargetingConfigV,
-      translationStatus: union([TranslationStatusV, nullType, undefinedType])
-    },
-    "NudgeAdditional"
-  );
-  var defaults2 = {
-    platform: "web",
-    showStepCounter: false,
-    isDismissible: true,
-    isSnoozable: false,
-    isSnoozableOnAllSteps: true,
-    snoozeLabel: "Snooze",
-    doneLabel: "Done",
-    snoozeDuration: {
-      interval: "day",
-      value: 3
-    },
-    type: "tour",
-    previewUrl: null,
-    customThemeId: null,
-    translationStatus: null,
-    variant: "control",
-    pageTargeting: {
-      conditions: [[]],
-      configs: []
-    },
-    temporarilyHideTargeting: {
-      conditions: [[]],
-      configs: []
-    }
-  };
-  var NudgeV = intersection([NudgeBaseV, NudgeAdditionalV], "Nudge");
-  var Nudge = class {
-    static decode = (data) => {
-      try {
-        return decodeThrowing2(NudgeV, data);
-      } catch (e2) {
-        logger.error("Error decoding guide or survey", { error: e2 });
-        getSentry()?.captureException(e2);
-        return decodeThrowing2(NudgeV, {
-          ...defaults2,
-          ...data,
-          steps: (data.steps || []).map((step) => ({ ...stepDefaults, ...step }))
-        });
-      }
-    };
-  };
-
-  // ../shared/src/internal/middleware/theme.ts
-  var ThemeModeV = type({
-    varDefaults: record(string, union([string, number])),
-    varOverrides: record(string, union([string, number])),
-    componentOverrides: record(string, any),
-    mobileOverrides: record(string, any)
-  });
-  var ThemeV = union([
-    type({
-      lightMode: ThemeModeV,
-      darkMode: ThemeModeV
-    }),
-    nullType,
-    undefinedType
-  ]);
-  var ThemeObjectBaseV = type(
-    {
-      id: number,
-      name: string,
-      isDefault: boolean,
-      theme: ThemeV
-    },
-    "ThemeBase"
-  );
-  var PlatformV = type({
-    type: union([literal("web"), literal("ios"), literal("android"), literal("react-native"), string])
-  });
-  var ThemeObjectAdditionalV = partial(
-    {
-      platform: PlatformV
-    },
-    "ThemeAdditional"
-  );
-  var ThemeObjectV = intersection([ThemeObjectBaseV, ThemeObjectAdditionalV], "Nudge");
-  var defaults3 = {};
-  var decode2 = (data) => {
-    try {
-      return decodeThrowing2(ThemeObjectV, data);
-    } catch (e2) {
-      logger.error("Error decoding theme", { error: e2 });
-      getSentry()?.captureException(e2);
-      return decodeThrowing2(ThemeObjectV, { ...defaults3, ...data });
-    }
-  };
-
-  // ../shared/src/types/flags.ts
-  var defaultFlags = {
-    "support-ruby-on-rails": false,
-    "enable-when-element-appears-trigger": true
-  };
-
-  // ../shared/src/types/api/resource-center.ts
-  var LauncherV = intersection([
-    type({
-      type: string,
-      position: string,
-      offsetX: number,
-      offsetY: number,
-      zIndex: number
-    }),
-    partial({
-      anchorElement: union([string, nullType]),
-      iconSrc: union([string, nullType])
-    })
-  ]);
-  var ResourceCenterV = intersection([
-    type({
-      isAutopilotEnabled: boolean,
-      textStrings: record(string, string),
-      showQuickLinks: boolean
-    }),
-    partial({
-      key: union([string, nullType, undefinedType]),
-      mobileLauncher: union([LauncherV, nullType]),
-      desktopLauncher: union([LauncherV, nullType]),
-      customTheme: union([number, nullType])
-    })
-  ]);
-  var ResourceCenter = class {
-    static decode = (data) => {
-      return decodeThrowing2(ResourceCenterV, data);
-    };
-  };
-
-  // ../shared/src/sdk/config.ts
-  function guard(meta, fn, defaultValue) {
-    try {
-      const result = fn();
-      if (result === void 0) return defaultValue;
-      return result;
-    } catch (e2) {
-      getSentry()?.captureException(e2);
-      logger.error(`Error decoding config response (${meta.apiKey}). Using default value for '${meta.field}'`, {
-        error: e2,
-        field: meta.field,
-        defaultValue
-      });
-      return defaultValue;
-    }
-  }
-  async function fetchConfig(apiKey, isEditorPreview, isAdmin = false, locale = void 0) {
-    let path = isAdmin ? `/sdk/v1/admin/config` : `/sdk/v1/config`;
-    if (locale) {
-      path += `?locale=${locale}`;
-    }
-    if (isEditorPreview) return null;
-    const result = await get(path, {
-      headers: {
-        Authorization: `Api-Key ${apiKey}`
-      }
-    });
-    return result.data;
-  }
-  async function fetchResourceCenters(apiKey, isEditorPreview = false) {
-    try {
-      const path = `/sdk/v1/resource_center`;
-      if (isEditorPreview) return [];
-      const result = await get(path, {
-        headers: {
-          Authorization: `Api-Key ${apiKey}`
-        }
-      });
-      const data = result.data;
-      if (!data?.resourceCenters) {
-        return [];
-      }
-      const resourceCenters = data.resourceCenters.map((rc) => {
-        try {
-          return ResourceCenter.decode(rc);
-        } catch (e2) {
-          getSentry()?.captureException(e2);
-          logger.error("Error decoding resource center", JSON.stringify({ error: e2, resourceCenter: rc }));
-          return void 0;
-        }
-      }).filter((rc) => Boolean(rc));
-      return resourceCenters;
-    } catch (error) {
-      getSentry()?.captureException(error);
-      logger.error("Error fetching resource center settings. Continuing with empty data.", { error });
-      return [];
-    }
-  }
-  async function getConfig(apiKey, isAdmin = false, locale = void 0, isEditorPreview = false) {
-    const [data, resourceCenters, flags] = await Promise.all([
-      fetchConfig(apiKey, isEditorPreview, isAdmin, locale).catch((error) => {
-        logger.error("Error fetching config. Continuing with empty data.", { error });
-        return {};
-      }),
-      fetchResourceCenters(apiKey, isEditorPreview),
-      // XXX(pjhul): using mocked data for now!
-      defaultFlags
-    ]);
-    if (!data || Object.keys(data).length === 0) {
-      logger.error("Error decoding config response. It is empty.");
-    }
-    const { organization, nudges, themes } = data || {};
-    const decodedNudges = nudges?.flatMap((nudge) => {
-      try {
-        return [Nudge.decode(nudge)];
-      } catch (e2) {
-        getSentry()?.captureException(e2);
-        logger.error("Error decoding nudge", JSON.stringify({ error: e2, nudge }));
-        return [];
-      }
-    });
-    return {
-      organization: guard(
-        { apiKey, field: "organization" },
-        () => decode(organization),
-        defaults
-      ),
-      nudges: (decodedNudges ?? []).flatMap(
-        (nudge) => guard({ apiKey, field: `nudges[id=${nudge?.variantId}]` }, () => [nudge], [])
-      ),
-      flags,
-      themes: (themes ?? []).flatMap(
-        (theme) => guard({ apiKey, field: `themes[id=${theme?.id}]` }, () => [decode2(theme)], [])
-      ),
-      resourceCenters
-    };
-  }
-  async function getAdminConfig(apiKey, isEditorPreview = false) {
-    if (!apiKey) {
-      return;
-    }
-    return getConfig(apiKey, true, getSDK()?.[_configuration].locale, isEditorPreview);
-  }
-  async function getEndUserConfig(apiKey, isEditorPreview = false) {
-    return getConfig(apiKey, false, getSDK()?.[_configuration].locale, isEditorPreview);
-  }
-
   // ../shared/src/products/nudges/store/actions.ts
   var shouldDebugNudges = !!LocalStorage_default.get("debug:nudges", false);
   var initNudges = (_, nudges) => {
@@ -12157,29 +12515,31 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     });
     _.nudgesManager = ref(actor);
     _.nudgesManager.start();
-    sendIndirectTrigger(_, {
-      trigger: { type: "active" },
-      source: { type: "active" },
-      overrides: { cooldown: true, customThrottles: true, page: true }
-    });
-    sendIndirectTrigger(_, {
-      trigger: { type: "immediately" },
-      source: {
-        type: "trigger",
-        properties: {
-          triggerType: "immediately"
+    if (!getSDK()?.[_configuration]?.options?.headless) {
+      sendIndirectTrigger(_, {
+        trigger: { type: "active" },
+        source: { type: "active" },
+        overrides: { cooldown: true, customThrottles: true, page: true }
+      });
+      sendIndirectTrigger(_, {
+        trigger: { type: "immediately" },
+        source: {
+          type: "trigger",
+          properties: {
+            triggerType: "immediately"
+          }
         }
-      }
-    });
-    sendIndirectTrigger(_, {
-      trigger: { type: "element_appeared" },
-      source: {
-        type: "trigger",
-        properties: {
-          triggerType: "element_appeared"
+      });
+      sendIndirectTrigger(_, {
+        trigger: { type: "element_appeared" },
+        source: {
+          type: "trigger",
+          properties: {
+            triggerType: "element_appeared"
+          }
         }
-      }
-    });
+      });
+    }
     setupMessageBusNudgeTriggerSubscriptions(_);
   };
   var sendIndirectTrigger = (_, triggerEventPayload) => {
@@ -12241,14 +12601,14 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   };
   var startDebugSession = async (_, nudge, options = { refreshDecide: true }) => {
     const configuration = getSDK()?.[_configuration];
-    const adminConfig = await getAdminConfig(configuration?.apiKey);
-    if (adminConfig?.nudges) {
-      await getSDK()?._reloadNudges(adminConfig);
+    const previewConfig = await getPreviewConfig(configuration?.apiKey);
+    if (previewConfig?.nudges) {
+      await getSDK()?._reloadNudges(previewConfig);
     }
-    if (adminConfig?.themes) {
-      await getSDK()?._reloadThemes({ themes: adminConfig.themes });
+    if (previewConfig?.themes) {
+      await getSDK()?._reloadThemes({ themes: previewConfig.themes });
     }
-    const adminNudge = adminConfig?.nudges.find((n) => n.variantId === nudge.variantId);
+    const adminNudge = previewConfig?.nudges.find((n) => n.variantId === nudge.variantId);
     if (!adminNudge) {
       _.services.postMessageToDashboard("FAILED_TO_LOAD_PREVIEW_NUDGE" /* FailedToLoadPreviewNudge */);
       return;
@@ -12321,6 +12681,22 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var closeNudgeWithoutReactivation = (_, nudge) => {
     const actor = getNudgeActor(_, nudge.variantId);
     actor?.send({ type: "CLOSE_WITHOUT_REACTIVATION" });
+  };
+  var snoozeNudge = (_, nudge, duration, renderMode = 0 /* DEFAULT */) => {
+    if (renderMode === 1 /* MOCK */) {
+      _.services.closeNudgeMock(_, nudge);
+    } else {
+      const actor = getNudgeActor(_, nudge.variantId);
+      actor?.send({
+        type: "SNOOZE",
+        action: {
+          type: "snooze",
+          interval: duration.interval ?? nudge.snoozeDuration.interval,
+          value: duration.value ?? nudge.snoozeDuration.value
+        },
+        buttonType: "snooze"
+      });
+    }
   };
   var execStepAction = (_, nudge, stepIndex, action) => {
     if (!action) return;
@@ -12397,79 +12773,36 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     }
     updateEndUserStore(_.endUserStore, allNudgeData);
   };
-  var getDebugSnapshot = (_, nudge, stepIndex) => {
-    const { type: type2, name } = getProductMeta(nudge);
-    const globalChecks = {
-      builtInThrottles: {
-        result: passesBuiltInThrottles(_, nudge),
-        explanation: `This ${type2} is blocked by another currently rendered guide or survey.`
-      },
-      customThrottles: {
-        result: passesCustomThrottles(_, nudge),
-        explanation: `The custom throttle for ${type2}s of this type prevents further guides or surveys from being shown.`,
-        detail: {
-          limit: type2 === "survey" ? _.organization?.surveyThrottle.limit.max : _.organization?.guideThrottle.limit.max,
-          period: type2 === "survey" ? _.organization?.surveyThrottle.limit.period : _.organization?.guideThrottle.limit.period
-        }
-      }
-    };
-    const sessionPropertyConditions = getSessionPropertyConditions(nudge.triggerConfig.conditions);
-    const nudgeChecks = {
-      limits: {
-        result: passesCooldown(_, nudge),
-        explanation: `${name} has been seen the maximum number of times.`,
-        detail: {
-          limits: nudge.lifecycleConfig
-        }
-      },
-      userTargeting: {
-        result: nudgePassesDecide(nudge, _.decide),
-        explanation: "Booted user is not targeted by this flag.",
-        detail: {
-          userTargeting: nudge.flagKey
-        }
-      },
-      page: {
-        result: passesPageTargeting(_, nudge),
-        explanation: `${name} is not shown on this page.`,
-        detail: {
-          page: nudge.pageTargeting.conditions
-        }
-      },
-      snooze: {
-        result: passesSnoozedConditions(_, nudge),
-        explanation: `${name} is snoozed.`,
-        detail: {
-          isSnoozable: nudge.isSnoozable,
-          isSnoozableOnAllSteps: nudge.isSnoozableOnAllSteps,
-          snoozeDuration: nudge.snoozeDuration
-        }
-      },
-      sessionProperties: {
-        result: passesSessionProperties(_, sessionPropertyConditions),
-        explanation: "Session properties do not match the conditions.",
-        detail: {
-          conditions: sessionPropertyConditions,
-          sessionProperties: _.sessionProperties
-        }
-      }
-    };
+  var getDebugSnapshot = async (_, nudge, stepIndex) => {
     const nudgeActorContext = getNudgeActorSnapshot(_, nudge.variantId)?.context;
-    const currentStep = stepIndex ?? nudgeActorContext?.stepIndex ?? 0;
-    const step = nudgeActorContext ? getNudgeStep(nudgeActorContext.nudge, currentStep) : void 0;
-    const stepChecks = {
-      element: {
-        result: passesPinnedElement(_, nudge, currentStep),
-        explanation: "Pinned element is not visible on the page.",
-        detail: {
-          element: isAnchorableStep(step) ? step?.formFactor.anchor : "unknown"
-        }
-      }
-    };
     const snapShot = {
-      ...globalChecks,
-      ...nudgeChecks,
-      ...stepChecks
+      ...getGlobalChecks(_, nudge),
+      ...getNudgeChecks(_, nudge),
+      ...await getStepChecks(_, nudge, stepIndex)
+    };
+    return {
+      guideOrSurvey: nudge,
+      willRenderIfTriggered: Object.values(snapShot).every(({ result }) => result),
+      checks: Object.fromEntries(
+        Object.entries(snapShot).map(([key, value]) => [
+          key,
+          {
+            result: value.result ? "PASS" : "FAIL",
+            ...value.result ? {} : { explanation: value.explanation },
+            // only show the explanation if the check fails
+            ...value.detail ? { detail: value.detail } : {}
+          }
+        ])
+      ),
+      trigger: nudge.triggerConfig,
+      mostRecentTrigger: nudgeActorContext?.triggerEvent?.trigger
+    };
+  };
+  var getDebugSnapshotForHeadless = (_, nudge) => {
+    const nudgeActorContext = getNudgeActorSnapshot(_, nudge.variantId)?.context;
+    const snapShot = {
+      ...getGlobalChecks(_, nudge),
+      ...getNudgeChecks(_, nudge)
     };
     return {
       guideOrSurvey: nudge,
@@ -12673,7 +13006,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
 
   // src/actions/simulation.ts
   var simulationActionsBridge = registerNativeBridge("simulationActions");
-  var updateSimulationContext = (_, context, triggerMatched, updateTriggerMatched) => {
+  var updateSimulationContext = async (_, context, triggerMatched, updateTriggerMatched) => {
     if (_.nudgeDebugToolBar.visible) {
       const simulatedNudge = context?.debugMode?.currentNudge;
       const simulatedNudgeActor = simulatedNudge ? _.nudgesManager?.getSnapshot().context.nudgeMachines.get(String(simulatedNudge.variantId)) : null;
@@ -12692,13 +13025,13 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         bypassCustomThrottles: _.nudgeDebugToolBar.bypassCustomThrottles,
         // targeting information
         passesPageTargeting: simulatedNudge ? passesPageTargeting(_, simulatedNudge) : false,
-        passesPinnedElement: simulatedNudge ? passesPinnedElement(_, simulatedNudge, currentStepIndex) : false,
+        passesPinnedElement: simulatedNudge ? await passesPinnedElement(_, simulatedNudge, currentStepIndex) : false,
         shouldTemporarilyHide: simulatedNudge ? shouldTemporarilyHide(_, simulatedNudge) : false,
-        passesTriggerMatch: simulatedNudge && context?.triggerEvent ? (() => {
+        passesTriggerMatch: simulatedNudge && context?.triggerEvent ? await (async () => {
           if (triggerMatched) {
             return true;
           }
-          const hasOverride = context.triggerEvent.overrides?.triggerMatch;
+          const hasOverride = context.triggerEvent?.overrides?.triggerMatch;
           const baseTriggerConditionMet = passesTriggerMatch(_, simulatedNudge, context.triggerEvent);
           if (hasOverride) {
             updateTriggerMatched(true);
@@ -12712,7 +13045,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
             return clickedElementMatch;
           }
           if (baseTriggerConditionMet && simulatedNudge.triggerConfig.type === "element_appeared") {
-            const triggerElementMatch = passesTriggerElement(_, simulatedNudge, context.triggerEvent, []);
+            const triggerElementMatch = await passesTriggerElement(_, simulatedNudge, context.triggerEvent, []);
             if (triggerElementMatch) {
               updateTriggerMatched(true);
             }
@@ -12765,6 +13098,12 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       [["nudgeDebugToolBar", "bypassCustomThrottles"]]
     );
   };
+
+  // src/actions/view-hierarchy-mutation.ts
+  var viewHierarchyMutationActionsBridge = registerJSBridge("viewHierarchyMutationActions");
+  viewHierarchyMutationActionsBridge.function("publishViewHierarchyMutation", () => {
+    window.engagement._.messageBus.publish("dom_mutation");
+  });
 
   // node_modules/@floating-ui/utils/dist/floating-ui.utils.mjs
   var min = Math.min;
@@ -13723,6 +14062,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       _configuration: {
         apiKey: existingProxy?._configuration?.apiKey ?? "",
         serverUrl: existingProxy?._configuration?.serverUrl,
+        chatUrl: existingProxy?._configuration?.chatUrl,
         serverZone: existingProxy?._configuration?.serverZone ?? "US",
         options: {
           ...existingProxy?._configuration?.options
@@ -13765,7 +14105,40 @@ when parsing ${JSON.stringify(input, null, 2)}`);
             bundleURL = `${cdnBaseUrl}/engagement-browser/prod/index.min.js.gz`;
           }
         }
-        loadAsyncScripts(bundleURL, proxy2._configuration.options.splitting ? "module" : void 0);
+        let timeoutId = null;
+        const clearQueueAndCleanup = () => {
+          if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+          }
+          if (proxy2._q && proxy2._q.length > 0) {
+            console.warn(
+              `Engagement SDK failed to load within ${LOAD_TIMEOUT_MS}ms. Resolving pending calls gracefully.`
+            );
+            while (proxy2._q.length > 0) {
+              const item = proxy2._q.shift();
+              if (!item) continue;
+              const methodName = item[0];
+              if (ASYNC_METHODS_SNIPPET.includes(methodName)) {
+                if (item[1] instanceof Function && item[2] instanceof Function) {
+                  const resolve = item[1];
+                  console.warn(`Engagement SDK method '${methodName}' resolved as no-op due to script loading failure`);
+                  resolve(void 0);
+                }
+              }
+            }
+          }
+        };
+        loadAsyncScripts(
+          bundleURL,
+          proxy2._configuration.options.splitting ? "module" : void 0,
+          initOptions?.nonce,
+          clearQueueAndCleanup
+        );
+        const LOAD_TIMEOUT_MS = 1e4;
+        timeoutId = setTimeout(() => {
+          clearQueueAndCleanup();
+        }, LOAD_TIMEOUT_MS);
       },
       plugin(options) {
         const initFunc = proxy2.init;
@@ -13782,6 +14155,13 @@ when parsing ${JSON.stringify(input, null, 2)}`);
               ...options,
               options: { logLevel: config.logLevel, logger: config.loggerProvider, ...options?.options }
             });
+            const integrations = [
+              {
+                track: (event) => {
+                  client.track(event);
+                }
+              }
+            ];
             await window.engagement.boot({
               user: () => {
                 const identity3 = identityStore.getIdentity();
@@ -13792,15 +14172,23 @@ when parsing ${JSON.stringify(input, null, 2)}`);
                   getSessionId: client.getSessionId
                 };
               },
-              integrations: [
-                {
-                  track: (event) => {
-                    client.track(event);
-                  }
-                }
-              ]
+              integrations
             });
             identityStore.addIdentityListener((identity3) => {
+              if (window.engagement?._.user?.user_id !== identity3.userId || window.engagement?._.user?.device_id !== identity3.deviceId) {
+                window.engagement.boot({
+                  user: () => {
+                    const identity4 = identityStore.getIdentity();
+                    return {
+                      user_id: client.getUserId(),
+                      device_id: client.getDeviceId(),
+                      user_properties: identity4.userProperties,
+                      getSessionId: client.getSessionId
+                    };
+                  },
+                  integrations
+                });
+              }
               window.engagement._setUserProperties(identity3.userProperties);
             });
           },
@@ -14137,6 +14525,35 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         execute
       };
     }
+    /**
+     * Transforms the result from getAllGuidesAndSurveys to a headless-friendly format
+     * by removing sensitive internal data like conditions arrays
+     */
+    transformForHeadless = (items) => {
+      return items.map((item) => {
+        const result = JSON.parse(JSON.stringify(item));
+        if (result.lifecycleConfig?.conditions) {
+          delete result.lifecycleConfig.conditions;
+        }
+        if (result.pageTargeting?.conditions) {
+          delete result.pageTargeting.conditions;
+        }
+        if (result.temporarilyHideTargeting?.conditions) {
+          delete result.temporarilyHideTargeting.conditions;
+        }
+        if (result.lifeCycleState?.checks?.sessionProperties) {
+          delete result.lifeCycleState.checks.sessionProperties;
+        }
+        if (result.lifeCycleState?.checks?.limits?.detail?.limits?.conditions) {
+          delete result.lifeCycleState.checks.limits.detail.limits.conditions;
+        }
+        if (result.lifeCycleState?.willRenderIfTriggered !== void 0) {
+          result.lifeCycleState.passesAllChecks = result.lifeCycleState.willRenderIfTriggered;
+          delete result.lifeCycleState.willRenderIfTriggered;
+        }
+        return result;
+      });
+    };
     gs = {
       /**
        * Resets a guide or survey to a specific step. If no step is provided, resets the nudge to initial step.
@@ -14152,6 +14569,34 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           return;
         }
         this.nudgeActions.resetNudge(nudge?.variantId, { step });
+      },
+      getAllGuidesAndSurveys: () => {
+        const allActors = getAllNudgeActors(this._);
+        if (!allActors) return [];
+        const retval = [];
+        for (const actor of allActors.values()) {
+          const nudge = actor.getSnapshot().context.nudge;
+          const eustoreSnapshot = getNudgeDataFromUserStore(this._, nudge.variantId);
+          const rendering = actor.getSnapshot().matches({ Step: "Render Loop" });
+          const active = !!eustoreSnapshot?.activelifeCycleUuid;
+          const debugSnapshot = getDebugSnapshotForHeadless(this._, nudge);
+          const lifeCycleState = {
+            activelifeCycleUuid: eustoreSnapshot?.activelifeCycleUuid || "",
+            currentStep: eustoreSnapshot?.currentStep || 0,
+            isCompleted: eustoreSnapshot?.isCompleted || false,
+            isDismissed: eustoreSnapshot?.isDismissed || false,
+            isChecklistExpanded: eustoreSnapshot?.isChecklistExpanded ?? true,
+            steps: eustoreSnapshot?.steps || {},
+            shouldShow: rendering || active,
+            checks: debugSnapshot?.checks || {},
+            willRenderIfTriggered: debugSnapshot?.willRenderIfTriggered || false
+          };
+          retval.push({
+            ...nudge,
+            lifeCycleState
+          });
+        }
+        return this.transformForHeadless(retval);
       },
       /**
        * Returns a list of active and visible guides or surveys.
@@ -14188,7 +14633,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         }
       },
       /**
-       * Force closes all active guides and surveys
+       * Force 3 all active guides and surveys
        * Analytics events will not be sent for guides or surveys that are closed this way.
        */
       closeAll: () => {
@@ -14244,6 +14689,18 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         }
       });
     }
+    async decide() {
+      if (!this._.user) {
+        logger.error("User must be set before calling decide");
+        return;
+      }
+      if (!this._configuration.apiKey) {
+        logger.error("API key must be set before calling decide");
+        return;
+      }
+      this._.decide = await decide_default.decide(this._configuration.apiKey, this._.user, this._.isEditorPreview);
+      return this._.decide;
+    }
     /**
      * Make Guides and Surveys available to the user. They will not be available before `.boot` is called, even if the
      * snippet has been run on the page they are on.
@@ -14267,13 +14724,14 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         this._.user = void 0;
         return;
       }
+      this._.user = this._.services.enrichUser(this._.user);
       this._.integrations = [];
       options.integrations?.forEach((integration) => {
         this.addIntegration(integration);
       });
       logger.log("booting...", JSON.stringify(this._.user, null, 2));
       try {
-        this._.decide = await decide_default.decide(this._configuration.apiKey, this._.user, this._.isEditorPreview);
+        await this.decide();
         logger.debug("Decide data fetched successfully");
       } catch (e2) {
         logger.error("Failed to fetch decide data", e2);
@@ -14347,6 +14805,51 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         return;
       }
       this.globalActions.setSessionProperties({ [key]: value });
+    }
+    /**
+     * Register an action on a guide or survey by its variant ID.
+     * @param variantId The variant ID of the guide or survey
+     * @param action The action object to perform with type and optional metadata
+     */
+    registerAction(variantId, action) {
+      const nudge = getNudgeById(this._, variantId);
+      if (!nudge) {
+        logger.warn(`registerAction: Guide or survey with variantId: ${variantId} not found`);
+        return;
+      }
+      if (action.type === "show") {
+        this.nudgeActions.forceTriggerSingleNudge(nudge, { source: { type: "sdk" } });
+      } else if (action.type === "dismiss") {
+        dismissNudge(this._, nudge, 0 /* DEFAULT */);
+      } else if (action.type === "snooze") {
+        snoozeNudge(this._, nudge, nudge.snoozeDuration, 0 /* DEFAULT */);
+      } else if (action.type === "ctaClick") {
+        const actor = getNudgeActor(this._, variantId);
+        const nudgeData = getNudgeDataFromUserStore(this._, variantId);
+        const currentStepIndex = nudgeData?.currentStep || 0;
+        const currentStep = nudge.steps[currentStepIndex];
+        if (!currentStep) {
+          logger.error(`registerAction: Step ${currentStepIndex} not found for nudge ${variantId}`);
+          return;
+        }
+        const buttonBlock = currentStep.content.find(
+          (block) => block.type === "button" && block.meta?.buttonType === action.buttonType
+        );
+        if (!buttonBlock) {
+          logger.error(`registerAction: No button with type ${action.buttonType} found in step ${currentStepIndex}`);
+          return;
+        }
+        if (action.surveyResponse) {
+          actor?.send({ type: "UPDATE_SURVEY_RESPONSE", surveyResponse: action.surveyResponse });
+        }
+        const meta = buttonBlock.meta;
+        const buttonAction = determineAction(currentStep, { buttonMeta: meta, surveyResponse: action.surveyResponse });
+        execNudgeAction(this._, buttonAction, meta, 0 /* DEFAULT */, actor);
+      } else {
+        logger.error(
+          `registerAction: Invalid action type "${action.type}". Must be "show", "dismiss", "snooze", or "ctaClick"`
+        );
+      }
     }
     /** Internal SDK methods **/
     async _configUser() {
@@ -14505,13 +15008,13 @@ when parsing ${JSON.stringify(input, null, 2)}`);
      * // Get snapshots for all guides and surveys
      * _getDebugSnapshot();
      */
-    _getDebugSnapshot(options) {
+    async _getDebugSnapshot(options) {
       if (options?.variantId) {
         if (typeof options.variantId === "number") {
           const nudge = getNudgeById(this._, options.variantId);
           if (nudge) {
             const stepIndex = typeof options.stepIndex === "number" ? options.stepIndex : 0;
-            const snapshot = getDebugSnapshot(this._, nudge, stepIndex);
+            const snapshot = await getDebugSnapshot(this._, nudge, stepIndex);
             const { name } = getProductMeta(nudge);
             const message = `${name} debug snapshot: ${snapshot.guideOrSurvey.title} - ${snapshot.guideOrSurvey.variant}`;
             console.log(message, snapshot);
@@ -14521,7 +15024,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       }
       const nudges = getAllNudges(this._);
       for (const nudge of nudges) {
-        const snapshot = getDebugSnapshot(this._, nudge);
+        const snapshot = await getDebugSnapshot(this._, nudge);
         const { name } = getProductMeta(nudge);
         const message = `${name} debug snapshot: ${snapshot.guideOrSurvey.title} - ${snapshot.guideOrSurvey.variant}`;
         console.log(message, snapshot);
@@ -15847,7 +16350,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       return;
     },
     getDefaultUIMode: () => "lightMode",
-    isElementVisible: () => false,
+    isElementVisible: async () => false,
     matchesSelector: () => false,
     showResourceCenter: (..._args) => {
       return;
@@ -15863,6 +16366,9 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     },
     previewAutopilotKeywords: (..._args) => {
       return;
+    },
+    enrichUser: (user) => {
+      return user;
     }
   };
   var DEFAULT_OPTIONS2 = {
@@ -15963,11 +16469,13 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var services = {
     ...NOOP_SERVICES,
     onLocationChange,
+    enrichUser: (user) => user,
+    // No-op for mobile - just return user as-is
     linkExecutable: (_, action, forceNewTab) => nudgeServicesBridge.function("linkExecutable").call(JSON.stringify(action), forceNewTab),
     getDefaultUIMode: () => nudgeServicesBridge.function("getDefaultUIMode").call(),
     closeStep: (_, nudge, stepIndex) => nudgeServicesBridge.function("closeStep").call(JSON.stringify(nudge), stepIndex),
     clickElement: (selector) => nudgeServicesBridge.function("clickElement").call(selector),
-    isElementVisible: (selector) => nudgeServicesBridge.function("isElementVisible").call(typeof selector === "string" ? selector : selector.selector || selector.text),
+    isElementVisible: async (selector) => nudgeServicesBridge.function("isElementVisible").promise({ selector: typeof selector === "string" ? selector : selector.selector || selector.text }),
     renderNudge(_, nudge, stepIndex, options) {
       const _options = {
         renderMode: options?.renderMode,
@@ -16033,8 +16541,9 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     } else {
       console.log("Using custom logger", proxy2[_configuration].options.logger);
     }
-    if (proxy2[_configuration].options?.logger) {
-      proxy2[_configuration].options.logger.enable(proxy2[_configuration].options?.logLevel ?? 2);
+    const logLevel = proxy2[_configuration].options?.logLevel;
+    if (logLevel !== void 0) {
+      proxy2[_configuration].options.logger.enable(logLevel);
     }
     if (takeoverApiKey) {
       proxy2[_configuration].apiKey = takeoverApiKey;
