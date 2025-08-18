@@ -7948,7 +7948,9 @@ ${err.message}`);
         completedTs: union([number, literal(-1)])
         // only used for checklists
       })
-    )
+    ),
+    tagIds: array(number)
+    // Tag IDs associated with this nudge
   });
   var NudgeInteractionsV = record(string, NudgeInteractionStateV);
   var EndUserStoreDataV = type({
@@ -8234,7 +8236,8 @@ ${err.message}`);
   // ../shared/src/types/decode.ts
   var ALLOWED_NUDGE_INTERACTION_DEFAULTS = {
     lastSeenDeviceId: "",
-    lastSeenSessionId: -1
+    lastSeenSessionId: -1,
+    tagIds: []
   };
   function decodeEndUserStoreData(input) {
     const result = EndUserStoreDataV.decode(input);
@@ -8323,10 +8326,11 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       stepIndexStack: [],
       currentStep: 0,
       isChecklistExpanded: true,
-      steps: {}
+      steps: {},
+      tagIds: []
     };
   };
-  var updateEndUserStore = async (eus, updates, options = { replaceArrays: ["stepIndexStack"] }) => {
+  var updateEndUserStore = async (eus, updates, options = { replaceArrays: ["stepIndexStack", "tagIds"] }) => {
     const eusData = eus.data;
     Object.entries(updates).forEach(([variantId, updates2]) => {
       if (updates2 === null) {
@@ -8628,24 +8632,49 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     if (!_.organization) return true;
     const nudgesState = getAllNudgeDataFromUserStore(_);
     const nudgeProductType = getNudgeProductType(nudge);
-    const allActivateTs = [];
     if (!nudgesState) return true;
-    for (const nudgeState of Object.values(nudgesState)) {
-      const stateNudgeProductType = nudgeState.type === "survey" ? "survey" : "guide";
-      if (nudgeState.type && nudgeState?.activatedTs?.length && stateNudgeProductType === nudgeProductType && typeIsIncludedInCustomThrottles(nudgeState.type)) {
-        allActivateTs.push(...nudgeState.activatedTs);
-      }
+    const throttleConfig = nudgeProductType === "survey" ? _.organization.surveyThrottle : _.organization.guideThrottle;
+    let limits = throttleConfig.limits;
+    if (!limits && throttleConfig.limit) {
+      limits = [throttleConfig.limit];
     }
-    const activationCounts = countsByTimeWindow(allActivateTs, _.sessionStart);
+    const { productTypeCounts, tagThrottleCounts, secondsSinceLastActivation } = getAllActivationCounts(
+      nudgesState,
+      _.sessionStart,
+      nudgeProductType,
+      throttleConfig.limits
+    );
     const nudgeStateTarget = {
       context: {
-        derivedNudgeState: { activationCounts }
+        derivedNudgeState: {
+          activationCounts: {
+            ...productTypeCounts,
+            ...tagThrottleCounts
+          },
+          secondsSinceLastActivation
+        }
       },
       result: {}
     };
-    const conditions = nudgeProductType === "survey" ? _.organization.surveyThrottle.conditions : _.organization.guideThrottle.conditions;
-    const retval = _.evalEngine.evaluateConditions(nudgeStateTarget, conditions);
-    return retval;
+    const applicableConditions = throttleConfig.conditions.map((andGroup) => {
+      return andGroup.filter((condition) => {
+        const hasTagThrottle = condition.selector.some((part) => part.startsWith("tagThrottle_"));
+        if (!hasTagThrottle) {
+          return true;
+        }
+        const tagThrottlePart = condition.selector.find((part) => part.startsWith("tagThrottle_"));
+        if (tagThrottlePart) {
+          const tagIds = tagThrottlePart.replace("tagThrottle_", "").split("_").map(Number);
+          return tagIds.some((tagId) => nudge.tags?.some((tag) => tag.id === tagId));
+        }
+        return false;
+      });
+    }).filter((andGroup) => andGroup.length > 0);
+    const passed = applicableConditions.flat().length == 0 || _.evalEngine.evaluateConditions(nudgeStateTarget, applicableConditions);
+    if (!passed) {
+      return false;
+    }
+    return true;
   };
   var countGreaterThan = (epoch, timestamps) => {
     return timestamps.filter((ts) => ts > epoch).length;
@@ -8683,15 +8712,152 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var countsByTimeWindow = (timestamps, sessionStart) => {
     const currentEpoch = Date.now();
     const dayInMillis = 1e3 * 60 * 60 * 24;
+    const thresholds = {
+      session: sessionStart,
+      day: currentEpoch - dayInMillis,
+      week: currentEpoch - dayInMillis * 7,
+      month: currentEpoch - dayInMillis * 30,
+      quarter: currentEpoch - dayInMillis * 90,
+      year: currentEpoch - dayInMillis * 365
+    };
+    const counts = {
+      session: 0,
+      day: 0,
+      week: 0,
+      month: 0,
+      quarter: 0,
+      year: 0,
+      ever: timestamps.length
+    };
+    for (const timestamp of timestamps) {
+      if (timestamp > thresholds.session) counts.session++;
+      if (timestamp > thresholds.day) counts.day++;
+      if (timestamp > thresholds.week) counts.week++;
+      if (timestamp > thresholds.month) counts.month++;
+      if (timestamp > thresholds.quarter) counts.quarter++;
+      if (timestamp > thresholds.year) counts.year++;
+    }
     return {
       // TODO: return numbers directly once bug in evalengine with number value 0 is fixed
-      session: `${countGreaterThan(sessionStart, timestamps)}`,
-      day: `${countGreaterThan(currentEpoch - dayInMillis, timestamps)}`,
-      week: `${countGreaterThan(currentEpoch - dayInMillis * 7, timestamps)}`,
-      month: `${countGreaterThan(currentEpoch - dayInMillis * 30, timestamps)}`,
-      quarter: `${countGreaterThan(currentEpoch - dayInMillis * 90, timestamps)}`,
-      year: `${countGreaterThan(currentEpoch - dayInMillis * 365, timestamps)}`,
-      ever: `${timestamps.length}`
+      session: `${counts.session}`,
+      day: `${counts.day}`,
+      week: `${counts.week}`,
+      month: `${counts.month}`,
+      quarter: `${counts.quarter}`,
+      year: `${counts.year}`,
+      ever: `${counts.ever}`
+    };
+  };
+  var getTagThrottleKey = (tagIds) => {
+    const sortedTagIds = [...tagIds].sort((a, b) => a - b);
+    return `tagThrottle_${sortedTagIds.join("_")}`;
+  };
+  var getAllActivationCounts = (nudgesState, sessionStart, targetProductType, limits) => {
+    if (!nudgesState) {
+      return {
+        productTypeCounts: { session: "0", day: "0", week: "0", month: "0", quarter: "0", year: "0", ever: "0" },
+        tagThrottleCounts: {}
+      };
+    }
+    const currentEpoch = Date.now();
+    const dayInMillis = 1e3 * 60 * 60 * 24;
+    const thresholds = {
+      session: sessionStart,
+      day: currentEpoch - dayInMillis,
+      week: currentEpoch - dayInMillis * 7,
+      month: currentEpoch - dayInMillis * 30,
+      quarter: currentEpoch - dayInMillis * 90,
+      year: currentEpoch - dayInMillis * 365
+    };
+    let lastActivationTs = 0;
+    const productTypeCounts = {
+      session: 0,
+      day: 0,
+      week: 0,
+      month: 0,
+      quarter: 0,
+      year: 0,
+      ever: 0
+    };
+    const tagThrottleCounters = {};
+    const tagThrottles = limits.filter((limit) => limit.tagIds?.length);
+    tagThrottles.forEach((throttle) => {
+      if (throttle.tagIds) {
+        const throttleKey = getTagThrottleKey(throttle.tagIds);
+        tagThrottleCounters[throttleKey] = {
+          session: 0,
+          day: 0,
+          week: 0,
+          month: 0,
+          quarter: 0,
+          year: 0,
+          ever: 0
+        };
+      }
+    });
+    for (const nudgeState of Object.values(nudgesState)) {
+      if (nudgeState?.activatedTs?.length && nudgeState.type) {
+        const stateNudgeProductType = nudgeState.type === "survey" ? "survey" : "guide";
+        const matchingTagThrottles = [];
+        if (nudgeState?.tagIds?.length) {
+          tagThrottles.forEach((throttle) => {
+            if (throttle.tagIds && throttle.tagIds.some((tagId) => nudgeState.tagIds.includes(tagId))) {
+              const throttleKey = getTagThrottleKey(throttle.tagIds);
+              if (throttleKey in tagThrottleCounters) {
+                matchingTagThrottles.push(throttleKey);
+              }
+            }
+          });
+        }
+        for (const timestamp of nudgeState.activatedTs) {
+          if (stateNudgeProductType === targetProductType && typeIsIncludedInCustomThrottles(nudgeState.type)) {
+            if (timestamp > lastActivationTs) lastActivationTs = timestamp;
+            productTypeCounts.ever++;
+            if (timestamp > thresholds.session) productTypeCounts.session++;
+            if (timestamp > thresholds.day) productTypeCounts.day++;
+            if (timestamp > thresholds.week) productTypeCounts.week++;
+            if (timestamp > thresholds.month) productTypeCounts.month++;
+            if (timestamp > thresholds.quarter) productTypeCounts.quarter++;
+            if (timestamp > thresholds.year) productTypeCounts.year++;
+          }
+          for (const throttleKey of matchingTagThrottles) {
+            tagThrottleCounters[throttleKey].ever++;
+            if (timestamp > thresholds.session) tagThrottleCounters[throttleKey].session++;
+            if (timestamp > thresholds.day) tagThrottleCounters[throttleKey].day++;
+            if (timestamp > thresholds.week) tagThrottleCounters[throttleKey].week++;
+            if (timestamp > thresholds.month) tagThrottleCounters[throttleKey].month++;
+            if (timestamp > thresholds.quarter) tagThrottleCounters[throttleKey].quarter++;
+            if (timestamp > thresholds.year) tagThrottleCounters[throttleKey].year++;
+          }
+        }
+      }
+    }
+    const productTypeCountsFormatted = {
+      session: `${productTypeCounts.session}`,
+      day: `${productTypeCounts.day}`,
+      week: `${productTypeCounts.week}`,
+      month: `${productTypeCounts.month}`,
+      quarter: `${productTypeCounts.quarter}`,
+      year: `${productTypeCounts.year}`,
+      ever: `${productTypeCounts.ever}`
+    };
+    const tagThrottleCounts = {};
+    for (const [throttleKey, counts] of Object.entries(tagThrottleCounters)) {
+      tagThrottleCounts[throttleKey] = {
+        session: `${counts.session}`,
+        day: `${counts.day}`,
+        week: `${counts.week}`,
+        month: `${counts.month}`,
+        quarter: `${counts.quarter}`,
+        year: `${counts.year}`,
+        ever: `${counts.ever}`
+      };
+    }
+    const secondsSinceLastActivation = lastActivationTs ? Math.floor((currentEpoch - lastActivationTs) / 1e3) : Number.MAX_SAFE_INTEGER;
+    return {
+      productTypeCounts: productTypeCountsFormatted,
+      tagThrottleCounts,
+      secondsSinceLastActivation: `${secondsSinceLastActivation}`
     };
   };
   var passesCooldown = (_, nudge) => {
@@ -8814,8 +8980,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         result: passesCustomThrottles(_, nudge),
         explanation: `The custom throttle for ${type2}s of this type prevents further guides or surveys from being shown.`,
         detail: {
-          limit: type2 === "survey" ? _.organization?.surveyThrottle.limit.max : _.organization?.guideThrottle.limit.max,
-          period: type2 === "survey" ? _.organization?.surveyThrottle.limit.period : _.organization?.guideThrottle.limit.period
+          throttles: type2 === "survey" ? _.organization?.surveyThrottle : _.organization?.guideThrottle
         }
       }
     };
@@ -9064,6 +9229,26 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       }).join("");
     }
     return toRet;
+  };
+  var interpolateUserPropertiesDeep = (obj, store, throwErrorIfUndefined) => {
+    if (typeof obj === "string") {
+      return interpolateUserProperties(obj, store, throwErrorIfUndefined);
+    }
+    if (Array.isArray(obj)) {
+      const result = [];
+      for (const item of obj) {
+        result.push(interpolateUserPropertiesDeep(item, store, throwErrorIfUndefined));
+      }
+      return result;
+    }
+    if (obj && typeof obj === "object") {
+      const result = {};
+      for (const key of Reflect.ownKeys(obj)) {
+        result[key] = interpolateUserPropertiesDeep(obj[key], store, throwErrorIfUndefined);
+      }
+      return result;
+    }
+    return obj;
   };
 
   // ../shared/src/store/executables/executable-actions.ts
@@ -9560,7 +9745,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           ["[Guides-Surveys] Title" /* Title */]: nudge.title,
           ["[Guides-Surveys] Type" /* Type */]: nudge.type,
           ["[Guides-Surveys] Key" /* Key */]: nudge.flagKey,
-          ["[Guides-Surveys] Tags" /* Tags */]: nudge.tags,
+          ["[Guides-Surveys] Tags" /* Tags */]: nudge.tags?.map((tag) => tag.name),
           ["[Guides-Surveys] Variant ID" /* Variant */]: nudge.variant,
           ["[Guides-Surveys] Step ID" /* StepId */]: nudgeStep?.id ?? 0,
           ["[Guides-Surveys] Step Index" /* StepIndex */]: stepIndex ?? 0,
@@ -9862,13 +10047,22 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       period: string
     }),
     partial({
-      enabled: boolean
+      tagIds: array(number),
+      // if it's a tag throttle, this will be set, otherwise the throttle is for all nudge interactions
+      periodCount: union([number, undefinedType])
     })
   ]);
-  var CustomThrottleV = type({
-    limit: ThrottleV,
-    conditions: array(array(EvaluationConditionV))
-  });
+  var CustomThrottleV = intersection([
+    type({
+      limits: array(ThrottleV),
+      conditions: array(array(EvaluationConditionV))
+    }),
+    partial({
+      type: union([literal("time-between"), literal("basic")]),
+      enabled: boolean,
+      limit: ThrottleV
+    })
+  ]);
   var TranslationBehaviorV = keyof({
     showDefault: null,
     showOutOfDate: null,
@@ -9895,8 +10089,16 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var defaults = {
     branding: "",
     shareLinkParam: "",
-    guideThrottle: { limit: { enabled: false, max: 10, period: "day" }, conditions: [[]] },
-    surveyThrottle: { limit: { enabled: false, max: 10, period: "day" }, conditions: [[]] },
+    guideThrottle: {
+      limits: [{ max: 10, period: "day" }],
+      conditions: [[]],
+      enabled: false
+    },
+    surveyThrottle: {
+      limits: [{ max: 10, period: "day" }],
+      conditions: [[]],
+      enabled: false
+    },
     localization: {
       enabled: false,
       defaultLocale: "en",
@@ -10319,12 +10521,20 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       mediaPosition: MediaPositionV
     })
   ]);
-  var ElementSelectorV = type({
-    selector: string,
-    text: string,
-    tag: string,
-    attributes: record(string, string)
-  });
+  var ElementSelectorV = intersection([
+    type({
+      selector: string,
+      text: string,
+      tag: string,
+      attributes: record(string, string)
+    }),
+    partial({
+      strategy: withFallback(
+        union([literal("strict"), literal("fallback"), literal("selector_only")]),
+        "fallback"
+      )
+    })
+  ]);
   var NudgeStepAdditionalV = intersection(
     [
       type({
@@ -10454,6 +10664,9 @@ when parsing ${JSON.stringify(input, null, 2)}`);
                       y: string
                     })
                   })
+                }),
+                partial({
+                  width: number
                 })
               ])
             }),
@@ -10535,17 +10748,16 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     string
     // keep for forward compatibility
   ]);
-  var NudgeCooldownLimitV = partial({
-    max: number,
-    period: NudgeCooldownPeriodV,
-    periodCount: union([number, undefinedType])
-  });
   var NudgeLifecycleConfigV = type({
     stopShowingIfCompleted: boolean,
     stopShowingIfDismissed: boolean,
-    cooldownLimits: array(NudgeCooldownLimitV),
+    cooldownLimits: array(ThrottleV),
     conditions: array(array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
+  });
+  var TagV = type({
+    id: number,
+    name: string
   });
   var NudgeBaseV = intersection(
     [
@@ -10566,7 +10778,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         priority: number,
         dir: union([literal("ltr"), literal("rtl")]),
         stepCounterFormat: union([literal("numeric"), literal("verbose")]),
-        tags: array(string)
+        tags: array(TagV)
       })
     ],
     "NudgeBase"
@@ -12735,7 +12947,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         isDismissed,
         completedTs: isCompleted ? [Date.now()] : void 0,
         dismissedTs: isDismissed ? [Date.now()] : void 0,
-        activelifeCycleUuid
+        activelifeCycleUuid,
+        tagIds: nudge.tags?.map((tag) => tag.id) || []
       }
     };
     try {
@@ -14615,7 +14828,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             id: nudge.variantId,
             step: eustoreSnapshot?.currentStep,
             title: nudge.title,
-            status: rendering ? "visible" : "active"
+            status: rendering ? "visible" : "active",
+            key: nudge.flagKey
           });
         }
         return retval;
@@ -16477,6 +16691,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     clickElement: (selector) => nudgeServicesBridge.function("clickElement").call(selector),
     isElementVisible: async (selector) => nudgeServicesBridge.function("isElementVisible").promise({ selector: typeof selector === "string" ? selector : selector.selector || selector.text }),
     renderNudge(_, nudge, stepIndex, options) {
+      nudge = interpolateUserPropertiesDeep(nudge, _);
       const _options = {
         renderMode: options?.renderMode,
         forceOpen: options?.forceOpen,
