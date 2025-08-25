@@ -18,11 +18,11 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		rWIP1B+mjT/2QFV/B17kFL9pbQc=
+		yzhwKkMkWnsoQlpXf718j18U4zg=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		iaFmJC36SIHJ9N7hgW3VGX3M1Ws=
+		BXJ9cM97UM5lFoNoy2Ji9agmpAo=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -30,19 +30,19 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		iaFmJC36SIHJ9N7hgW3VGX3M1Ws=
+		BXJ9cM97UM5lFoNoy2Ji9agmpAo=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		3zzLCc8POH4QJPO3KdcNnAApnrM=
+		m36T9PeLSPWeRickDIy33D4BUOE=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		rWIP1B+mjT/2QFV/B17kFL9pbQc=
+		yzhwKkMkWnsoQlpXf718j18U4zg=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		2CAV5Mx0JnPJ9CSqL+3aw/zefEY=
+		Ro0XA4hMnopGXxn3p7uPiXwumWc=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -50,11 +50,11 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		2CAV5Mx0JnPJ9CSqL+3aw/zefEY=
+		Ro0XA4hMnopGXxn3p7uPiXwumWc=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		218R0PeAVurQybtvoeseqDIGL50=
+		j/vqyo9IyCsMEqpnKqmZSJN3Czo=
 		</data>
 		<key>Roboto-Black.ttf</key>
 		<data>
@@ -153,14 +153,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			7UWqi1hrblFvL8X1AloiuK5NuH3q26Mo5598iFdBnyM=
+			MjySGzuZbTdOUahvQrYLCvESDGX1BQVTkUQZllXO8co=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			olhUkI8r4WHwvn+elhC2YHcAmKLbL2vkDgieYtMGPIU=
+			SPm10lIz8JR6TMWtYxBNsXDYyiCNWXgF1ihcFHuvaAk=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
@@ -174,28 +174,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			olhUkI8r4WHwvn+elhC2YHcAmKLbL2vkDgieYtMGPIU=
+			SPm10lIz8JR6TMWtYxBNsXDYyiCNWXgF1ihcFHuvaAk=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			YyosmKluI1azvhZ1ytevNGBqPDIkUS1xftL2ttHNWag=
+			5f+HpWvyPti3723b+CY2QjS6MdLoShE7CReQchOUqlA=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			7UWqi1hrblFvL8X1AloiuK5NuH3q26Mo5598iFdBnyM=
+			MjySGzuZbTdOUahvQrYLCvESDGX1BQVTkUQZllXO8co=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			GwmB4HuOqGUT78ZULTyRdEriM2Ssg/xwi1ObYLR6O5U=
+			+KEl+yMuvWebZplZkySmMQWO0SVW2rb14a9A09GT8sY=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
@@ -209,14 +209,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			GwmB4HuOqGUT78ZULTyRdEriM2Ssg/xwi1ObYLR6O5U=
+			+KEl+yMuvWebZplZkySmMQWO0SVW2rb14a9A09GT8sY=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			QhOlOvr5WbsJ8ZbbpJspMewZpIwDAviu2OfGFowYZJQ=
+			VA2QG+WyzHpVI1ciBny+/6Q3+phoKUbeMwCFcyGHSlA=
 			</data>
 		</dict>
 		<key>Roboto-Black.ttf</key>
