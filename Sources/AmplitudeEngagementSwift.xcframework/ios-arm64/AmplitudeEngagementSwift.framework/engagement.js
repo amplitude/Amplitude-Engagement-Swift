@@ -8583,6 +8583,12 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var shouldStopOnSimulateStart = (nudge) => {
     return RULES[getApplicableNudgeType(nudge.type)].stopOnSimulateStart;
   };
+  var usesNavigationStack = (nudge) => {
+    return !nudge.isCarousel;
+  };
+  var closesNudgeOnStepChange = (nudge) => {
+    return !nudge.isCarousel;
+  };
   var isSurvey = (nudge) => {
     return nudge.type === "survey";
   };
@@ -8968,7 +8974,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     return true;
   };
   var hasRemainingSteps = (nudge) => ({ stepIndex }) => stepIndex < nudge.steps.length - 1;
-  var shouldBypassCustomThrottles = (_, nudge) => nudge.priority === 4 /* Urgent */ || !isIncludedInCustomThrottles(nudge) || _.nudgeDebugToolBar.visible && _.nudgeDebugToolBar.bypassCustomThrottles;
+  var shouldBypassCustomThrottles = (_, nudge) => nudge.priority === 4 /* Urgent */ || !isIncludedInCustomThrottles(nudge) || _.nudgeDebugToolBar.visible && _.nudgeDebugToolBar.bypassCustomThrottles || isTestNudge(_, nudge);
   var getGlobalChecks = (_, nudge) => {
     const { type: type2 } = getProductMeta(nudge);
     const globalChecks = {
@@ -8977,7 +8983,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         explanation: `This ${type2} is blocked by another currently rendered guide or survey.`
       },
       customThrottles: {
-        result: passesCustomThrottles(_, nudge),
+        result: shouldBypassCustomThrottles(_, nudge) || passesCustomThrottles(_, nudge),
         explanation: `The custom throttle for ${type2}s of this type prevents further guides or surveys from being shown.`,
         detail: {
           throttles: type2 === "survey" ? _.organization?.surveyThrottle : _.organization?.guideThrottle
@@ -8986,46 +8992,56 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     };
     return globalChecks;
   };
-  var getNudgeChecks = (_, nudge) => {
+  var getNudgeChecks = (_, nudge, skipChecks = []) => {
     const { name } = getProductMeta(nudge);
     const sessionPropertyConditions = getSessionPropertyConditions(nudge.triggerConfig.conditions);
     const nudgeChecks = {
-      limits: {
-        result: passesCooldown(_, nudge),
-        explanation: `${name} has been seen the maximum number of times.`,
-        detail: {
-          limits: nudge.lifecycleConfig
+      ...skipChecks.includes("limits") ? {} : {
+        limits: {
+          result: passesCooldown(_, nudge),
+          explanation: `${name} has been seen the maximum number of times.`,
+          detail: {
+            limits: nudge.lifecycleConfig
+          }
         }
       },
-      userTargeting: {
-        result: nudgePassesDecide(nudge, _.decide),
-        explanation: "Booted user is not targeted by this flag.",
-        detail: {
-          userTargeting: nudge.flagKey
+      ...skipChecks.includes("userTargeting") ? {} : {
+        userTargeting: {
+          result: nudgePassesDecide(nudge, _.decide),
+          explanation: "Booted user is not targeted by this flag.",
+          detail: {
+            userTargeting: nudge.flagKey
+          }
         }
       },
-      page: {
-        result: passesPageTargeting(_, nudge),
-        explanation: `${name} is not shown on this page.`,
-        detail: {
-          page: nudge.pageTargeting.conditions
+      ...skipChecks.includes("page") ? {} : {
+        page: {
+          result: passesPageTargeting(_, nudge),
+          explanation: `${name} is not shown on this page.`,
+          detail: {
+            page: nudge.pageTargeting.conditions
+          }
         }
       },
-      snooze: {
-        result: passesSnoozedConditions(_, nudge),
-        explanation: `${name} is snoozed.`,
-        detail: {
-          isSnoozable: nudge.isSnoozable,
-          isSnoozableOnAllSteps: nudge.isSnoozableOnAllSteps,
-          snoozeDuration: nudge.snoozeDuration
+      ...skipChecks.includes("snooze") ? {} : {
+        snooze: {
+          result: passesSnoozedConditions(_, nudge),
+          explanation: `${name} is snoozed.`,
+          detail: {
+            isSnoozable: nudge.isSnoozable,
+            isSnoozableOnAllSteps: nudge.isSnoozableOnAllSteps,
+            snoozeDuration: nudge.snoozeDuration
+          }
         }
       },
-      sessionProperties: {
-        result: passesSessionProperties(_, sessionPropertyConditions),
-        explanation: "Session properties do not match the conditions.",
-        detail: {
-          conditions: sessionPropertyConditions,
-          sessionProperties: _.sessionProperties
+      ...skipChecks.includes("sessionProperties") ? {} : {
+        sessionProperties: {
+          result: passesSessionProperties(_, sessionPropertyConditions),
+          explanation: "Session properties do not match the conditions.",
+          detail: {
+            conditions: sessionPropertyConditions,
+            sessionProperties: _.sessionProperties
+          }
         }
       }
     };
@@ -9083,6 +9099,19 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     };
   };
   var getNudgeStep = (nudge, stepIndex) => (0, import_get.default)(nudge.steps, stepIndex, void 0);
+  var isTestNudge = (_, nudge) => !!_?.decide?.[nudge.flagKey]?.metadata?.testInstrumentation;
+  var generateUserKey = (_) => {
+    if (_.user?.user_id) {
+      return `uid_${_.user.user_id}`;
+    }
+    if (_.user?.device_id) {
+      return `did_${_.user.device_id}`;
+    }
+    if (_.user?.getSessionId?.()) {
+      return `sid_${_.user.getSessionId()}`;
+    }
+    return "anonymous";
+  };
   var evaluateCondition = (condition, event, options) => {
     if (event.surveyResponse) {
       switch (condition.operator) {
@@ -9155,8 +9184,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     }
   };
   var getCurrentLocale = () => {
-    const locale = getSDK()?.[_configuration].locale;
-    return locale ? locale.split("-")[0] : void 0;
+    return getSDK()?.[_configuration].locale;
   };
   var getAppliedNudgeLocale = (nudge, localizationSettings) => {
     if (!localizationSettings || !localizationSettings.enabled || !nudge.translationStatus) {
@@ -9303,6 +9331,10 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       case "document":
       case "video": {
         _.services.setCurrentContentId(_, action.value);
+        break;
+      }
+      case "app_review": {
+        _.services.appReviewExecutable(_, action);
         break;
       }
     }
@@ -9741,6 +9773,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       _getCommonProperties: (nudge, stepIndex, context) => {
         const nudgeStep = typeof stepIndex === "undefined" ? null : getNudgeStep(nudge, stepIndex);
         const isLastStep = stepIndex === nudge.steps.length - 1;
+        const _ = getSDK()?._;
         return {
           ["[Guides-Surveys] Title" /* Title */]: nudge.title,
           ["[Guides-Surveys] Type" /* Type */]: nudge.type,
@@ -9753,8 +9786,9 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           ["[Guides-Surveys] Is Last Step" /* IsLastStep */]: isLastStep,
           ["[Guides-Surveys] Lifecycle UUID" /* LifecycleUuid */]: context?.interactionState?.activelifeCycleUuid,
           ["[Guides-Surveys] Is From Debug Mode" /* IsFromDebugMode */]: !!context?.triggerEvent?.overrides?.simulateMode,
+          ["[Guides-Surveys] Is From Test Mode" /* IsFromTestMode */]: isTestNudge(_, nudge),
           ["[Guides-Surveys] App Type" /* AppType */]: nudge.platform,
-          ["[Guides-Surveys] Localization Language" /* LocalizationLanguage */]: getAppliedNudgeLocale(nudge, getSDK()?._.organization?.localization)
+          ["[Guides-Surveys] Localization Language" /* LocalizationLanguage */]: getAppliedNudgeLocale(nudge, _?.organization?.localization)
         };
       },
       /**
@@ -9996,7 +10030,14 @@ when parsing ${JSON.stringify(input, null, 2)}`);
 
   // ../shared/src/store/resource-center-storage-manager.ts
   var STORAGE_KEY = "resourceCenter";
-  var PERSISTED_FIELDS = ["visible", "minimized", "scrollPosition", "query", "isAdditionalResourcesExpanded"];
+  var PERSISTED_FIELDS = [
+    "visible",
+    "minimized",
+    "scrollPosition",
+    "query",
+    "isAdditionalResourcesExpanded",
+    "chatSessionId"
+  ];
   var retrieveStoredResourceCenterState = () => {
     const obj = {};
     const storage = new CustomStorageStore();
@@ -10183,6 +10224,15 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     type: literal("callback"),
     value: string
   });
+  var AppReviewAction = intersection([
+    type({
+      type: literal("app_review")
+    }),
+    partial({
+      appStoreId: string,
+      playStorePackageName: string
+    })
+  ]);
   var LinkAction = intersection([
     type({
       type: literal("link"),
@@ -10292,7 +10342,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     StepForwardAction,
     CallbackAction,
     ShowVideoAction,
-    ShowDocumentAction
+    ShowDocumentAction,
+    AppReviewAction
   ]);
   var LabeledActionV = type({
     cta: string,
@@ -10396,7 +10447,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     UseConditionalLogicAction,
     CallbackAction,
     ShowDocumentAction,
-    ShowVideoAction
+    ShowVideoAction,
+    AppReviewAction
   ]);
   var NudgeConditionalActionV = type({
     operator: union([literal("eq"), literal("neq"), literal("gt"), literal("lt")]),
@@ -10512,13 +10564,18 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var NudgeStepFooterLayoutConfigV = partial({
     footerLayout: union([literal("classic"), literal("split"), literal("centered"), literal("stacked")])
   });
-  var NudgeStepLayoutConfigV = union([
+  var NudgeStepLayoutConfigV = intersection([
+    union([
+      partial({
+        layout: union([literal("classic"), literal("vertical")])
+      }),
+      partial({
+        layout: literal("horizontal"),
+        mediaPosition: MediaPositionV
+      })
+    ]),
     partial({
-      layout: union([literal("classic"), literal("vertical")])
-    }),
-    partial({
-      layout: literal("horizontal"),
-      mediaPosition: MediaPositionV
+      contentAlignment: union([literal("start"), literal("center"), literal("end")])
     })
   ]);
   var ElementSelectorV = intersection([
@@ -10793,7 +10850,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   ]);
   var TranslationStatusV = type({
     translated: boolean,
-    status: union([literal("missing"), literal("outdated"), literal("up-to-date"), nullType, undefinedType])
+    status: union([literal("missing"), literal("outdated"), literal("up-to-date"), nullType, undefinedType]),
+    resolvedLocale: union([string, nullType, undefinedType])
   });
   var NudgeAdditionalV = type(
     {
@@ -10802,6 +10860,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         "web"
       ),
       showStepCounter: boolean,
+      isCarousel: union([boolean, undefinedType]),
       isDismissible: boolean,
       isSnoozable: boolean,
       isSnoozableOnAllSteps: boolean,
@@ -10825,6 +10884,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var defaults2 = {
     platform: "web",
     showStepCounter: false,
+    isCarousel: false,
     isDismissible: true,
     isSnoozable: false,
     isSnoozableOnAllSteps: true,
@@ -11009,6 +11069,15 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     }
   }
   async function getConfig(apiKey, isAdmin = false, locale = void 0, isEditorPreview = false) {
+    if (isEditorPreview) {
+      return {
+        organization: defaults,
+        nudges: [],
+        flags: defaultFlags,
+        themes: [],
+        resourceCenters: []
+      };
+    }
     const [data, resourceCenters, flags] = await Promise.all([
       fetchConfig(apiKey, isEditorPreview, isAdmin, locale).catch((error) => {
         logger.error("Error fetching config. Continuing with empty data.", { error });
@@ -11441,7 +11510,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       remainingSteps: ({ context }) => hasRemainingSteps(context.nudge)(context),
       advanceToSpecificStep: ({ context }, params) => params.step !== void 0 && params.step >= 0 && params.step < context.nudge.steps.length,
       stepChecksFailed: (_, params) => params.passed,
-      canStepBack: ({ context }) => context.stepIndexStack.length > 0,
+      canStepBack: ({ context }) => usesNavigationStack(context.nudge) ? context.stepIndexStack.length > 0 : context.stepIndex > 0,
       isTooltipNudge: ({ context }) => !!isTooltipNudge(context.nudge),
       isPinStep: ({ context }) => !!isPinStep(getNudgeStep(context.nudge, context.stepIndex)),
       isWebPlatform: ({ context }) => context.nudge.platform === "web",
@@ -11477,8 +11546,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         stepIndexStack: ({ context }) => [context.stepIndex, ...context.stepIndexStack]
       }),
       decrementStep: assign({
-        stepIndex: ({ context }) => context.stepIndexStack[0],
-        stepIndexStack: ({ context }) => context.stepIndexStack.slice(1)
+        stepIndex: ({ context }) => usesNavigationStack(context.nudge) ? context.stepIndexStack[0] : context.stepIndex - 1,
+        stepIndexStack: ({ context }) => usesNavigationStack(context.nudge) ? context.stepIndexStack.slice(1) : context.stepIndexStack
       }),
       closeStep: ({ context }) => {
         globalStore.services.closeStep(globalStore, context.nudge, context.stepIndex);
@@ -11489,14 +11558,18 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       reportExposure: ({ context }) => {
         const experimentKey = getExperimentKey(context.nudge, globalStore.decide);
         if (experimentKey && typeof experimentKey === "string") {
-          Track.experiment.exposure(context.nudge.flagKey, experimentKey, context.nudge.variant);
+          const exposureKey = `experiment_variant_${generateUserKey(globalStore)}_${context.nudge.flagKey}_${experimentKey}_${context.nudge.variant}`;
+          if (!SessionStorage_default.get(exposureKey, false)) {
+            Track.experiment.exposure(context.nudge.flagKey, experimentKey, context.nudge.variant);
+            SessionStorage_default.set(exposureKey, true);
+          }
         }
       },
       reportExperimentControlExposure: ({ context }) => {
         const experimentKey = getExperimentKey(context.nudge, globalStore.decide);
         const activeVariantForExperiment = getActiveVariantForFlag(context.nudge.flagKey, globalStore.decide);
         if (experimentKey && typeof experimentKey === "string" && activeVariantForExperiment == "control") {
-          const exposureKey = `experiment_control_${context.nudge.flagKey}_${experimentKey}`;
+          const exposureKey = `experiment_control_${generateUserKey(globalStore)}_${context.nudge.flagKey}_${experimentKey}`;
           if (!SessionStorage_default.get(exposureKey, false)) {
             Track.experiment.exposure(context.nudge.flagKey, experimentKey, "control");
             SessionStorage_default.set(exposureKey, true);
@@ -11519,7 +11592,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           }
         });
       },
-      reportAdvance: ({ context }, params) => {
+      reportStepCompletion: ({ context }, params) => {
         let completedViaCta = false;
         if (params.buttonType === "primary" || params.buttonType === "secondary" || !params.buttonType && params.cta) {
           completedViaCta = true;
@@ -12023,7 +12096,17 @@ This ensures only the right variant is shown for experiment nudges.`
                   }
                   enqueue({ type: "reportExposure" });
                 }),
-                exit: [{ type: "closeStep" }],
+                exit: enqueueActions(({ context, event, enqueue, check }) => {
+                  const isStepChange = event.type === "ADVANCE" || event.type === "REGRESS";
+                  if (isStepChange && !closesNudgeOnStepChange(context.nudge)) {
+                    const tryingToGoBeyondFirst = event.type === "REGRESS" && !check({ type: "canStepBack" });
+                    if (tryingToGoBeyondFirst) {
+                      enqueue({ type: "closeStep" });
+                    }
+                    return;
+                  }
+                  enqueue({ type: "closeStep" });
+                }),
                 on: {
                   ADVANCE: {
                     target: "Advancing",
@@ -12034,7 +12117,7 @@ This ensures only the right variant is shown for experiment nudges.`
                       });
                       if (check("hasSequentialSteps")) {
                         enqueue({
-                          type: "reportAdvance",
+                          type: "reportStepCompletion",
                           params: { cta: event.cta, buttonType: event.buttonType }
                         });
                         if (check({ type: "advanceToSpecificStep", params: { step: event.step } })) {
@@ -12201,16 +12284,20 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
                 target: "Done",
                 actions: [
                   { type: "reportSurveyResponse" },
-                  enqueueActions(({ enqueue, check }) => {
+                  enqueueActions(({ enqueue, check, event }) => {
                     if (check({
                       type: "isDismissal",
-                      params: ({ event }) => ({
-                        isDismissAction: event.action?.type === "dismiss"
+                      params: ({ event: event2 }) => ({
+                        isDismissAction: event2.action?.type === "dismiss"
                       })
                     })) {
                       enqueue({ type: "reportDismissed" });
                       enqueue({ type: "markDismissed" });
                     } else {
+                      enqueue({
+                        type: "reportStepCompletion",
+                        params: { cta: event.cta, buttonType: event.buttonType }
+                      });
                       enqueue({ type: "reportCompleted" });
                       enqueue({ type: "markCompleted" });
                     }
@@ -13011,11 +13098,11 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       mostRecentTrigger: nudgeActorContext?.triggerEvent?.trigger
     };
   };
-  var getDebugSnapshotForHeadless = (_, nudge) => {
+  var getDebugSnapshotForHeadless = (_, nudge, skipChecks = []) => {
     const nudgeActorContext = getNudgeActorSnapshot(_, nudge.variantId)?.context;
     const snapShot = {
       ...getGlobalChecks(_, nudge),
-      ...getNudgeChecks(_, nudge)
+      ...getNudgeChecks(_, nudge, skipChecks)
     };
     return {
       guideOrSurvey: nudge,
@@ -13105,7 +13192,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       case "dismiss": {
         actor?.send({
           type: "FINISH",
-          action
+          action,
+          buttonType: meta?.buttonType,
+          cta: meta?.label
         });
         break;
       }
@@ -13114,6 +13203,16 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           type: "SNOOZE",
           action,
           buttonType: meta?.buttonType
+        });
+        break;
+      }
+      case "app_review": {
+        _.services.appReviewExecutable(_, action);
+        actor?.send({
+          type: "ADVANCE",
+          buttonType: meta?.buttonType,
+          cta: meta?.label,
+          action
         });
         break;
       }
@@ -13275,7 +13374,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         endUser: _.user,
         screen: _.location.href
       };
-      simulationActionsBridge.function("updateSimulationContext").call(JSON.stringify(relevantContext));
+      try {
+        const contextJson = JSON.stringify(relevantContext);
+        simulationActionsBridge.function("updateSimulationContext").call(contextJson);
+      } catch (error) {
+        console.error("[SimulationContext] Error calling native bridge:", error);
+      }
     }
   };
   var subscribeToSimulationActions = (_) => {
@@ -13283,20 +13387,52 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     const updateTriggerMatched = (value) => {
       triggerMatched = value;
     };
+    let currentNudgeActorSubscription = null;
+    const subscribeToIndividualNudgeActor = () => {
+      if (currentNudgeActorSubscription) {
+        currentNudgeActorSubscription.unsubscribe();
+        currentNudgeActorSubscription = null;
+      }
+      const simulatedNudge = _.nudgesManager?.getSnapshot().context.debugMode?.currentNudge;
+      if (simulatedNudge) {
+        const actor = _.nudgesManager?.getSnapshot().context.nudgeMachines.get(String(simulatedNudge.variantId));
+        if (actor) {
+          currentNudgeActorSubscription = actor.subscribe(() => {
+            if (_.nudgeDebugToolBar.visible) {
+              const managerSnapshot = _.nudgesManager?.getSnapshot();
+              if (managerSnapshot) {
+                updateSimulationContext(_, managerSnapshot.context, triggerMatched, updateTriggerMatched);
+              }
+            }
+          });
+        }
+      }
+    };
     sub(
       _,
       () => {
         if (_.nudgeDebugToolBar.visible) {
           simulationActionsBridge.function("showDebugToolbar").promise({});
+          subscribeToIndividualNudgeActor();
         } else {
           simulationActionsBridge.function("hideDebugToolbar").promise({});
           updateTriggerMatched(false);
+          if (currentNudgeActorSubscription) {
+            currentNudgeActorSubscription.unsubscribe();
+            currentNudgeActorSubscription = null;
+          }
         }
       },
       [["nudgeDebugToolBar", "visible"]]
     );
     _.nudgesManager?.subscribe((x) => {
       updateSimulationContext(_, x.context, triggerMatched, updateTriggerMatched);
+      if (_.nudgeDebugToolBar.visible) {
+        const currentSimulatedNudge = x.context.debugMode?.currentNudge;
+        if (currentSimulatedNudge) {
+          subscribeToIndividualNudgeActor();
+        }
+      }
     });
     sub(
       _,
@@ -14783,7 +14919,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         }
         this.nudgeActions.resetNudge(nudge?.variantId, { step });
       },
-      getAllGuidesAndSurveys: () => {
+      getAllGuidesAndSurveys: (filterOptions, skipChecks = []) => {
         const allActors = getAllNudgeActors(this._);
         if (!allActors) return [];
         const retval = [];
@@ -14792,7 +14928,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           const eustoreSnapshot = getNudgeDataFromUserStore(this._, nudge.variantId);
           const rendering = actor.getSnapshot().matches({ Step: "Render Loop" });
           const active = !!eustoreSnapshot?.activelifeCycleUuid;
-          const debugSnapshot = getDebugSnapshotForHeadless(this._, nudge);
+          const debugSnapshot = getDebugSnapshotForHeadless(this._, nudge, skipChecks);
           const lifeCycleState = {
             activelifeCycleUuid: eustoreSnapshot?.activelifeCycleUuid || "",
             currentStep: eustoreSnapshot?.currentStep || 0,
@@ -14804,12 +14940,37 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             checks: debugSnapshot?.checks || {},
             willRenderIfTriggered: debugSnapshot?.willRenderIfTriggered || false
           };
+          if (filterOptions?.onlyEligible && !lifeCycleState.willRenderIfTriggered) {
+            continue;
+          }
+          if (filterOptions?.variantIds && !filterOptions.variantIds.includes(nudge.variantId)) {
+            continue;
+          }
           retval.push({
             ...nudge,
             lifeCycleState
           });
         }
         return this.transformForHeadless(retval);
+      },
+      getPreviewGuideOrSurvey: async (variantId) => {
+        const configuration = getSDK()?.[_configuration];
+        const previewConfig = await getPreviewConfig(configuration?.apiKey);
+        if (previewConfig?.nudges) {
+          await getSDK()?._reloadNudges(previewConfig);
+        }
+        const nudge = this.gs.getAllGuidesAndSurveys({ variantIds: [variantId] }, ["userTargeting"])[0];
+        nudge.lifeCycleState.checks.userTargeting = {
+          result: "PASS",
+          explanation: "User targeting always passes in preview mode",
+          detail: {
+            userTargeting: nudge.flagKey
+          }
+        };
+        nudge.lifeCycleState.willRenderIfTriggered = Object.values(nudge.lifeCycleState.checks).every(
+          ({ result }) => result === "PASS"
+        );
+        return nudge;
       },
       /**
        * Returns a list of active and visible guides or surveys.
@@ -14888,7 +15049,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     /**
      * Updates the localization locale. This will trigger a re-fetch of the config and refresh all nudges.
      *
-     * @param locale The new language code.
+     * @param locale The new locale code (e.g., 'en-US' or 'en').
      */
     async updateLanguage(locale) {
       if (this._configuration) {
@@ -15174,7 +15335,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
     }
     _startChat() {
-      this.resourceCenterActions.setInitialPage({ item: { page: "chat", params: {} } });
+      this.resourceCenterActions.setInitialPage({ item: { page: "assistant", params: {} } });
       this.resourceCenterActions.showResourceCenter(true);
     }
     /**
@@ -16583,6 +16744,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     },
     enrichUser: (user) => {
       return user;
+    },
+    appReviewExecutable: (..._args) => {
+      return;
     }
   };
   var DEFAULT_OPTIONS2 = {
@@ -16656,7 +16820,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         textStrings: {},
         showQuickLinks: false,
         isAdditionalResourcesExpanded: true,
-        shouldPersistOnReload: true
+        shouldPersistOnReload: true,
+        chatSessionId: null
       }
     };
   };
@@ -16680,6 +16845,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
 
   // src/services/index.ts
   var nudgeServicesBridge = registerNativeBridge("nudgeServices");
+  var matchesSelector = (targetElement, identifier) => targetElement?.identifier === identifier;
   var services = {
     ...NOOP_SERVICES,
     onLocationChange,
@@ -16690,6 +16856,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     closeStep: (_, nudge, stepIndex) => nudgeServicesBridge.function("closeStep").call(JSON.stringify(nudge), stepIndex),
     clickElement: (selector) => nudgeServicesBridge.function("clickElement").call(selector),
     isElementVisible: async (selector) => nudgeServicesBridge.function("isElementVisible").promise({ selector: typeof selector === "string" ? selector : selector.selector || selector.text }),
+    matchesSelector,
     renderNudge(_, nudge, stepIndex, options) {
       nudge = interpolateUserPropertiesDeep(nudge, _);
       const _options = {
@@ -16702,7 +16869,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }).catch((error) => {
         logger.error("[JS] renderNudge error", error);
       });
-    }
+    },
+    appReviewExecutable: (_, action) => nudgeServicesBridge.function("appReviewExecutable").call(JSON.stringify(action))
   };
 
   // src/index.ts

@@ -18,11 +18,11 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		yzhwKkMkWnsoQlpXf718j18U4zg=
+		Vph6EU7FhC5ObZn10JWVbUyis8c=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		BXJ9cM97UM5lFoNoy2Ji9agmpAo=
+		aulxtrS7Z4vf+yWLlzlj8Ibe3SA=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -30,19 +30,19 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		BXJ9cM97UM5lFoNoy2Ji9agmpAo=
+		aulxtrS7Z4vf+yWLlzlj8Ibe3SA=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		m36T9PeLSPWeRickDIy33D4BUOE=
+		KXr+uVF9tOZADTq9UQTjSpfXO0Y=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		yzhwKkMkWnsoQlpXf718j18U4zg=
+		Vph6EU7FhC5ObZn10JWVbUyis8c=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		Ro0XA4hMnopGXxn3p7uPiXwumWc=
+		DQQP/H7nsiCxK5TB7QL51DsmZqs=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -50,11 +50,11 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		Ro0XA4hMnopGXxn3p7uPiXwumWc=
+		DQQP/H7nsiCxK5TB7QL51DsmZqs=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		j/vqyo9IyCsMEqpnKqmZSJN3Czo=
+		M0jpXliwgT5Gp+YaKMejVvhCzaA=
 		</data>
 		<key>Roboto-Black.ttf</key>
 		<data>
@@ -130,7 +130,7 @@
 		</data>
 		<key>engagement.js</key>
 		<data>
-		eePKpzidOnbIX89ZsbWX3FyIHzo=
+		dXIE6UKGbM2CP9JTgLvRDTDdPtc=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -153,14 +153,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			MjySGzuZbTdOUahvQrYLCvESDGX1BQVTkUQZllXO8co=
+			GxdczSHP25TqdM4i2J/Pr+9rM5e12IcXVfs6VNx2IX4=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			SPm10lIz8JR6TMWtYxBNsXDYyiCNWXgF1ihcFHuvaAk=
+			jbr958lmo587KprcQrOY7KZChv2K3OKCfN8wClCBJ/8=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
@@ -174,28 +174,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			SPm10lIz8JR6TMWtYxBNsXDYyiCNWXgF1ihcFHuvaAk=
+			jbr958lmo587KprcQrOY7KZChv2K3OKCfN8wClCBJ/8=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			5f+HpWvyPti3723b+CY2QjS6MdLoShE7CReQchOUqlA=
+			wNV3nghQIaCEp8okPCXjAGpQDjrUgtuenhuviSJwp40=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			MjySGzuZbTdOUahvQrYLCvESDGX1BQVTkUQZllXO8co=
+			GxdczSHP25TqdM4i2J/Pr+9rM5e12IcXVfs6VNx2IX4=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			+KEl+yMuvWebZplZkySmMQWO0SVW2rb14a9A09GT8sY=
+			3MJxsEErhNr5VvQ+CCDXlgqh8vIRTLlDo+9ODZD95qg=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
@@ -209,14 +209,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			+KEl+yMuvWebZplZkySmMQWO0SVW2rb14a9A09GT8sY=
+			3MJxsEErhNr5VvQ+CCDXlgqh8vIRTLlDo+9ODZD95qg=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			VA2QG+WyzHpVI1ciBny+/6Q3+phoKUbeMwCFcyGHSlA=
+			pr1XNlyXHb7BdWzD8dOL5/IioxRjoXuwGHjZJmUinmM=
 			</data>
 		</dict>
 		<key>Roboto-Black.ttf</key>
@@ -349,7 +349,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			H1Rv65Eypc7+MTQ8/8MYiuMZ4Yg7n1an85pUuO1N48Y=
+			GzZbsUIOmcU/quq7TDsYIRIYakvRkYSeWg7bjOEKMZ8=
 			</data>
 		</dict>
 	</dict>
