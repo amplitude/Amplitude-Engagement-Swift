@@ -10036,7 +10036,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     "scrollPosition",
     "query",
     "isAdditionalResourcesExpanded",
-    "chatSessionId"
+    "currentChatSession"
   ];
   var retrieveStoredResourceCenterState = () => {
     const obj = {};
@@ -10090,7 +10090,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     partial({
       tagIds: array(number),
       // if it's a tag throttle, this will be set, otherwise the throttle is for all nudge interactions
-      periodCount: union([number, undefinedType])
+      periodCount: union([number, undefinedType]),
+      type: union([literal("time-between"), literal("basic")])
     })
   ]);
   var CustomThrottleV = intersection([
@@ -10099,7 +10100,6 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       conditions: array(array(EvaluationConditionV))
     }),
     partial({
-      type: union([literal("time-between"), literal("basic")]),
       enabled: boolean,
       limit: ThrottleV
     })
@@ -13206,16 +13206,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         });
         break;
       }
-      case "app_review": {
-        _.services.appReviewExecutable(_, action);
-        actor?.send({
-          type: "ADVANCE",
-          buttonType: meta?.buttonType,
-          cta: meta?.label,
-          action
-        });
-        break;
-      }
       default: {
         actor?.send({
           type: "ADVANCE",
@@ -13320,6 +13310,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var simulationActionsBridge = registerNativeBridge("simulationActions");
   var updateSimulationContext = async (_, context, triggerMatched, updateTriggerMatched) => {
     if (_.nudgeDebugToolBar.visible) {
+      logger.debug("[SimulationContext] Updating simulation context");
       const simulatedNudge = context?.debugMode?.currentNudge;
       const simulatedNudgeActor = simulatedNudge ? _.nudgesManager?.getSnapshot().context.nudgeMachines.get(String(simulatedNudge.variantId)) : null;
       const currentStepIndex = simulatedNudgeActor?.getSnapshot()?.context?.stepIndex ?? 0;
@@ -13378,8 +13369,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         const contextJson = JSON.stringify(relevantContext);
         simulationActionsBridge.function("updateSimulationContext").call(contextJson);
       } catch (error) {
-        console.error("[SimulationContext] Error calling native bridge:", error);
+        logger.error("[SimulationContext] Error calling native bridge:", error);
       }
+    } else {
+      logger.debug("[SimulationContext] Skipping update because Debug toolbar is not visible");
     }
   };
   var subscribeToSimulationActions = (_) => {
@@ -13389,6 +13382,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     };
     let currentNudgeActorSubscription = null;
     const subscribeToIndividualNudgeActor = () => {
+      logger.debug("[SimulationContext] Subscribing to individual nudge actor");
       if (currentNudgeActorSubscription) {
         currentNudgeActorSubscription.unsubscribe();
         currentNudgeActorSubscription = null;
@@ -13398,9 +13392,15 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         const actor = _.nudgesManager?.getSnapshot().context.nudgeMachines.get(String(simulatedNudge.variantId));
         if (actor) {
           currentNudgeActorSubscription = actor.subscribe(() => {
+            logger.debug("[SimulationContext] Nudge actor state changed");
             if (_.nudgeDebugToolBar.visible) {
+              logger.debug("[SimulationContext] Updating simulation context because the nudge actor state changed");
               const managerSnapshot = _.nudgesManager?.getSnapshot();
               if (managerSnapshot) {
+                logger.debug(
+                  "[SimulationContext] Updating simulation context with manager snapshot",
+                  JSON.stringify(managerSnapshot.context, null, 2)
+                );
                 updateSimulationContext(_, managerSnapshot.context, triggerMatched, updateTriggerMatched);
               }
             }
@@ -13411,10 +13411,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     sub(
       _,
       () => {
+        logger.debug("[SimulationContext] Update occured to nudgeDebugToolBar.visible", _.nudgeDebugToolBar.visible);
         if (_.nudgeDebugToolBar.visible) {
+          logger.debug("[SimulationContext] showing debug toolbar");
           simulationActionsBridge.function("showDebugToolbar").promise({});
           subscribeToIndividualNudgeActor();
         } else {
+          logger.debug("[SimulationContext] hiding debug toolbar");
           simulationActionsBridge.function("hideDebugToolbar").promise({});
           updateTriggerMatched(false);
           if (currentNudgeActorSubscription) {
@@ -13426,20 +13429,34 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       [["nudgeDebugToolBar", "visible"]]
     );
     _.nudgesManager?.subscribe((x) => {
+      logger.debug("[SimulationContext] Update occured to nudgesManager, updating simulation context");
       updateSimulationContext(_, x.context, triggerMatched, updateTriggerMatched);
       if (_.nudgeDebugToolBar.visible) {
         const currentSimulatedNudge = x.context.debugMode?.currentNudge;
         if (currentSimulatedNudge) {
+          logger.debug(
+            "[SimulationContext] Re-subscribing to individual nudge actor because the simulated nudge changed"
+          );
           subscribeToIndividualNudgeActor();
+        } else {
+          logger.debug("[SimulationContext] No simulated nudge found, not re-subscribing to individual nudge actor");
         }
       }
     });
     sub(
       _,
       () => {
+        logger.debug(
+          "[SimulationContext] Update occured to nudgeDebugToolBar.bypassCustomThrottles, is visible:",
+          _.nudgeDebugToolBar.visible
+        );
         if (_.nudgeDebugToolBar.visible) {
           const snapshot = _.nudgesManager?.getSnapshot();
           if (snapshot) {
+            logger.debug(
+              "[SimulationContext] Updating simulation context because the bypassCustomThrottles changed",
+              JSON.stringify(snapshot.context, null, 2)
+            );
             updateSimulationContext(_, snapshot.context, triggerMatched, updateTriggerMatched);
           }
         }
@@ -13455,6 +13472,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   });
 
   // node_modules/@floating-ui/utils/dist/floating-ui.utils.mjs
+  var sides = ["top", "right", "bottom", "left"];
   var min = Math.min;
   var max = Math.max;
   var oppositeSideMap = {
@@ -13944,6 +13962,66 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
     };
   };
+  function getSideOffsets(overflow, rect) {
+    return {
+      top: overflow.top - rect.height,
+      right: overflow.right - rect.width,
+      bottom: overflow.bottom - rect.height,
+      left: overflow.left - rect.width
+    };
+  }
+  function isAnySideFullyClipped(overflow) {
+    return sides.some((side) => overflow[side] >= 0);
+  }
+  var hide = function(options) {
+    if (options === void 0) {
+      options = {};
+    }
+    return {
+      name: "hide",
+      options,
+      async fn(state) {
+        const {
+          rects
+        } = state;
+        const {
+          strategy = "referenceHidden",
+          ...detectOverflowOptions
+        } = evaluate(options, state);
+        switch (strategy) {
+          case "referenceHidden": {
+            const overflow = await detectOverflow(state, {
+              ...detectOverflowOptions,
+              elementContext: "reference"
+            });
+            const offsets = getSideOffsets(overflow, rects.reference);
+            return {
+              data: {
+                referenceHiddenOffsets: offsets,
+                referenceHidden: isAnySideFullyClipped(offsets)
+              }
+            };
+          }
+          case "escaped": {
+            const overflow = await detectOverflow(state, {
+              ...detectOverflowOptions,
+              altBoundary: true
+            });
+            const offsets = getSideOffsets(overflow, rects.floating);
+            return {
+              data: {
+                escapedOffsets: offsets,
+                escaped: isAnySideFullyClipped(offsets)
+              }
+            };
+          }
+          default: {
+            return {};
+          }
+        }
+      }
+    };
+  };
   async function convertValueToCoords(state, options) {
     const {
       placement,
@@ -14096,10 +14174,16 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     const props = await computePosition(reference, floating, {
       platform,
       placement: "top",
-      middleware: [offset(arrowEl.height), flip(), shift({ padding: 5 }), arrow({ element: arrowEl })]
+      middleware: [offset(arrowEl.height), flip(), shift({ padding: 5 }), arrow({ element: arrowEl }), hide()]
     });
     const { x, y: y2, placement } = props;
-    return { x, y: y2, placement, arrow: props.middlewareData.arrow };
+    return {
+      x,
+      y: y2,
+      placement,
+      arrow: props.middlewareData.arrow,
+      isHidden: props.middlewareData.hide?.referenceHidden ?? false
+    };
   }
   pinPositioningBridge.function("position", position);
 
@@ -14671,6 +14755,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     previewContentItem: () => previewContentItem,
     previewRecSet: () => previewRecSet,
     previewResourceCenter: () => previewResourceCenter,
+    setCurrentChatSession: () => setCurrentChatSession,
     setInitialPage: () => setInitialPage,
     showResourceCenter: () => showResourceCenter
   });
@@ -14693,6 +14778,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   };
   var setInitialPage = (_, navigateTo) => {
     _.resourceCenter.initialPage = navigateTo;
+  };
+  var setCurrentChatSession = (_, sessionId, messages, isReviewMode = false) => {
+    _.resourceCenter.currentChatSession = { sessionId, messages, isReviewMode };
   };
 
   // ../shared/src/services/analytics/client.ts
@@ -15334,9 +15422,15 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         this.resourceCenterActions.previewContentItem(options.contentItemId);
       }
     }
-    _startChat() {
+    _startChat(sessionId, messages) {
+      if (sessionId && sessionId !== "behavior-settings" && messages && messages.length > 0) {
+        this.resourceCenterActions.setCurrentChatSession(sessionId, messages, true);
+      }
       this.resourceCenterActions.setInitialPage({ item: { page: "assistant", params: {} } });
       this.resourceCenterActions.showResourceCenter(true);
+    }
+    _shareCurrentChatSession() {
+      return this._.resourceCenter.currentChatSession;
     }
     /**
      * Logs debug snapshots for guides and surveys in the system.
@@ -16751,6 +16845,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   };
   var DEFAULT_OPTIONS2 = {
     isEditorPreview: false,
+    isAssistantPreview: false,
     platform: "unknown",
     location: {
       href: "",
@@ -16762,7 +16857,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   };
   var emptyGlobalStore = (optionsPartial) => {
     const options = { ...DEFAULT_OPTIONS2, ...optionsPartial };
-    const { isEditorPreview, platform } = options;
+    const { isEditorPreview, platform, isAssistantPreview } = options;
     return {
       services: options.services,
       location: options.location,
@@ -16797,6 +16892,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       // needed for dashboard preview
       editorPreviewDevice: "desktop",
       isEditorPreview,
+      isAssistantPreview,
       sessionStart: Date.now(),
       integrations: [],
       resourceCenter: {
@@ -16821,7 +16917,11 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         showQuickLinks: false,
         isAdditionalResourcesExpanded: true,
         shouldPersistOnReload: true,
-        chatSessionId: null
+        currentChatSession: {
+          sessionId: null,
+          messages: [],
+          isReviewMode: false
+        }
       }
     };
   };
@@ -16873,6 +16973,22 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     appReviewExecutable: (_, action) => nudgeServicesBridge.function("appReviewExecutable").call(JSON.stringify(action))
   };
 
+  // src/logger.ts
+  var DefaultMobileLogger = class extends DefaultLogger {
+    log(...args) {
+      console.log(...args);
+    }
+    warn(...args) {
+      console.warn(...args);
+    }
+    error(...args) {
+      console.error(...args);
+    }
+    debug(...args) {
+      console.debug(...args);
+    }
+  };
+
   // src/index.ts
   globalThis.window = {};
   var getApiEndpoint = (serverZone) => {
@@ -16920,7 +17036,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     proxy2[_configuration].apiKey = apiKey;
     if (!proxy2[_configuration].options?.logger) {
       console.log("Using default logger");
-      proxy2[_configuration].options.logger = new DefaultLogger();
+      proxy2[_configuration].options.logger = new DefaultMobileLogger();
     } else {
       console.log("Using custom logger", proxy2[_configuration].options.logger);
     }
@@ -16950,7 +17066,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     Object.assign(window.engagement, sdk);
     Object.setPrototypeOf(window.engagement, sdk);
     subscribeToSimulationActions(_);
-    console.log("Engagement bundle loaded");
+    logger.debug("Engagement bundle loaded");
   };
   window.engagement = createProxy(invokeImmediately);
 })();
