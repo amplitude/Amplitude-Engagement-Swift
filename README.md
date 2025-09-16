@@ -11,7 +11,7 @@ This is Amplitude's latest version of the iOS Engagement SDK.
 
 ## Installation and Quick Start
 
-* For using the SDK, please visit our [docs]([https://www.docs.developers.amplitude.com/data/sdks/ios-swift/](https://amplitude.com/docs/guides-and-surveys/guides-and-surveys-ios-sdk)).
+For using the SDK, please visit our [docs](https://amplitude.com/docs/guides-and-surveys/guides-and-surveys-ios-sdk).
 
 ## Changelog
 
