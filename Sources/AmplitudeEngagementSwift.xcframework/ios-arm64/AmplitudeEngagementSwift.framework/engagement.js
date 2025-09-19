@@ -7977,9 +7977,6 @@ ${err.message}`);
   var getBaseURL_default = getServerUrl;
 
   // ../shared/src/internal/util/sentry.ts
-  var sentryHubFactory = (_dsn) => {
-    return void 0;
-  };
   var getSentry = () => {
     return void 0;
   };
@@ -8586,8 +8583,11 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var usesNavigationStack = (nudge) => {
     return !nudge.isCarousel;
   };
-  var closesNudgeOnStepChange = (nudge) => {
-    return !nudge.isCarousel;
+  var closesNudgeOnStepChange = (nudge, stepIndex) => {
+    if (!nudge.isCarousel) {
+      return true;
+    }
+    return stepIndex >= nudge.steps.length - 1;
   };
   var isSurvey = (nudge) => {
     return nudge.type === "survey";
@@ -9954,6 +9954,130 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           variant
         };
         getClient()?.trackEvent?.("$exposure", eventProperties);
+      }
+    },
+    chat: {
+      /**
+       * Fired whenever a chat session is started/initialized.
+       * @param sessionId The ID of the chat session
+       * @param title The title of the chat session
+       */
+      sessionStarted: (sessionId, title) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Session Started", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Chat Session Title" /* ChatSessionTitle */]: title || null
+        });
+      },
+      /**
+       * Fired whenever a chat session is restarted.
+       * @param sessionId The ID of the chat session
+       * @param previousMessageCount The number of messages in the previous session
+       */
+      sessionRestarted: (sessionId, previousMessageCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Session Restarted", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: previousMessageCount
+        });
+      },
+      /**
+       * Fired whenever a user sends a message in chat.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message
+       * @param messageLength The length of the message
+       * @param messageCount The total number of messages in the session
+       */
+      messageSent: (sessionId, messageId, messageLength, messageCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Message Sent", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Message Length" /* MessageLength */]: messageLength,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
+        });
+      },
+      /**
+       * Fired whenever the assistant responds with a message.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message
+       * @param messageLength The length of the response
+       * @param responseTime The time it took to generate the response (in ms)
+       * @param messageCount The total number of messages in the session
+       * @param hasToolCalls Whether the response includes tool calls
+       */
+      messageReceived: (sessionId, messageId, messageLength, responseTime, messageCount, hasToolCalls) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Message Received", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Message Length" /* MessageLength */]: messageLength,
+          ["[Guides-Surveys] Response Time" /* ResponseTime */]: responseTime,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount,
+          "Has Tool Calls": hasToolCalls
+        });
+      },
+      /**
+       * Fired whenever a tool call is executed in chat.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message containing the tool call
+       * @param toolCallId The ID of the tool call
+       * @param toolCallName The name of the tool being called
+       * @param messageCount The total number of messages in the session
+       */
+      toolCallExecuted: (sessionId, messageId, toolCallId, toolCallName, messageCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Tool Call Executed", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Tool Call ID" /* ToolCallId */]: toolCallId,
+          ["[Guides-Surveys] Tool Call Name" /* ToolCallName */]: toolCallName,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
+        });
+      },
+      /**
+       * Fired whenever a tool call result is displayed in chat.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message containing the tool result
+       * @param toolCallId The ID of the tool call
+       * @param toolCallName The name of the tool that was called
+       * @param status Whether the tool call succeeded or failed
+       * @param messageCount The total number of messages in the session
+       */
+      toolResultDisplayed: (sessionId, messageId, toolCallId, toolCallName, status, messageCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Tool Result Displayed", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Tool Call ID" /* ToolCallId */]: toolCallId,
+          ["[Guides-Surveys] Tool Call Name" /* ToolCallName */]: toolCallName,
+          ["[Guides-Surveys] Tool Result Status" /* ToolResultStatus */]: status,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
+        });
+      },
+      /**
+       * Fired whenever a citation is clicked in chat.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message containing the citation
+       * @param citationId The ID of the citation that was clicked
+       * @param messageCount The total number of messages in the session
+       */
+      citationClicked: (sessionId, messageId, citationId, messageCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Citation Clicked", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Citation ID" /* CitationId */]: citationId,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
+        });
+      },
+      /**
+       * Fired whenever a launch nudge button is clicked in chat.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message containing the launch button
+       * @param toolCallName The name of the tool that provided the nudge
+       * @param messageCount The total number of messages in the session
+       */
+      launchNudgeClicked: (sessionId, messageId, toolCallName, messageCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Launch Nudge Clicked", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Tool Call Name" /* ToolCallName */]: toolCallName,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
+        });
       }
     }
   };
@@ -12098,7 +12222,7 @@ This ensures only the right variant is shown for experiment nudges.`
                 }),
                 exit: enqueueActions(({ context, event, enqueue, check }) => {
                   const isStepChange = event.type === "ADVANCE" || event.type === "REGRESS";
-                  if (isStepChange && !closesNudgeOnStepChange(context.nudge)) {
+                  if (isStepChange && !closesNudgeOnStepChange(context.nudge, context.stepIndex)) {
                     const tryingToGoBeyondFirst = event.type === "REGRESS" && !check({ type: "canStepBack" });
                     if (tryingToGoBeyondFirst) {
                       enqueue({ type: "closeStep" });
@@ -14900,9 +15024,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       if (this._configuration.options.logger) {
         this._configuration.options.logger.enable(this._configuration.options.logLevel ?? 2);
       }
-      this._sentry = sentryHubFactory(
-        "https://86e449af9e7145de4804c2143988499b@o13027.ingest.us.sentry.io/4508580659462144"
-      );
     }
     /**
      * Initializes the Engagement SDK. This will usually not be necessary as it happens automatically when you do amplitude.add(engagementPlugin());
@@ -16943,8 +17064,20 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     return () => unsubs.forEach((unsub) => unsub());
   };
 
+  // ../shared/src/internal/util/theme.ts
+  var findDefaultTheme = (themes) => {
+    const platformSpecificDefault = themes.find(
+      ({ isDefault, platform }) => isDefault && platform?.type === __GS_PLATFORM__
+    )?.theme;
+    if (!platformSpecificDefault) {
+      return themes.find(({ isDefault, platform }) => isDefault && !platform)?.theme;
+    }
+    return platformSpecificDefault;
+  };
+
   // src/services/index.ts
   var nudgeServicesBridge = registerNativeBridge("nudgeServices");
+  var renderNudgeBridge = registerNativeBridge();
   var matchesSelector = (targetElement, identifier) => targetElement?.identifier === identifier;
   var services = {
     ...NOOP_SERVICES,
@@ -16959,12 +17092,19 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     matchesSelector,
     renderNudge(_, nudge, stepIndex, options) {
       nudge = interpolateUserPropertiesDeep(nudge, _);
+      let theme = _.themeOverride?.theme;
+      if (nudge?.customThemeId !== void 0 && nudge.customThemeId !== null) {
+        theme = _.themes.find((t2) => t2.id === nudge.customThemeId)?.theme;
+      }
+      if (!theme) {
+        theme = findDefaultTheme(_.themes);
+      }
       const _options = {
         renderMode: options?.renderMode,
         forceOpen: options?.forceOpen,
         anchorOverride: options?.anchorOverride
       };
-      registerNativeBridge().function("renderNudge").promise({ nudge, stepIndex, options: _options }).then((result) => {
+      renderNudgeBridge.function("renderNudge").promise({ nudge, stepIndex, options: _options, theme }).then((result) => {
         logger.log("[JS] renderNudge result", result);
       }).catch((error) => {
         logger.error("[JS] renderNudge error", error);
