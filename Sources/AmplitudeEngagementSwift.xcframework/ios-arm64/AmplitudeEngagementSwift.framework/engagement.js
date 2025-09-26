@@ -8355,6 +8355,10 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       this.data = emptyEndUserStoreData();
       this.initializedSuccessfully = false;
     }
+    reset() {
+      this.data = emptyEndUserStoreData();
+      this.initializedSuccessfully = false;
+    }
     async fetchData() {
       const endUser = getSDK()._.user;
       if (!endUser) return;
@@ -8394,6 +8398,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       this.data = emptyEndUserStoreData();
       this.initializedSuccessfully = true;
     }
+    reset() {
+    }
     async fetchData() {
     }
     async pushData() {
@@ -8405,6 +8411,10 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     constructor() {
       this.data = emptyEndUserStoreData();
       this.initializedSuccessfully = false;
+    }
+    reset() {
+      this.data = emptyEndUserStoreData();
+      this.initializedSuccessfully = true;
     }
     getEUSKey() {
       const user = getSDK()._.user;
@@ -8574,6 +8584,17 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     const renderingNudgeTypes = new Set(renderingNudges.map(({ type: type2 }) => getApplicableNudgeType(type2)));
     return RULES[getApplicableNudgeType(nudge.type)].blockedBy.some((element) => renderingNudgeTypes.has(element));
   };
+  var getBlockingNudge = (nudge, renderingNudges) => {
+    const nudgeType = getApplicableNudgeType(nudge.type);
+    const blockedByTypes = RULES[nudgeType].blockedBy;
+    for (const renderingNudge of renderingNudges) {
+      const renderingNudgeType = getApplicableNudgeType(renderingNudge.type);
+      if (blockedByTypes.includes(renderingNudgeType)) {
+        return renderingNudge;
+      }
+    }
+    return null;
+  };
   var hasSequentialSteps = (nudge) => {
     return RULES[getApplicableNudgeType(nudge.type)].stepsPresentation === "sequential";
   };
@@ -8583,11 +8604,12 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var usesNavigationStack = (nudge) => {
     return !nudge.isCarousel;
   };
-  var closesNudgeOnStepChange = (nudge, stepIndex) => {
+  var closesNudgeOnStepChange = (nudge, stepIndex, eventType) => {
     if (!nudge.isCarousel) {
       return true;
     }
-    return stepIndex >= nudge.steps.length - 1;
+    const isLastStep = stepIndex >= nudge.steps.length - 1;
+    return isLastStep && eventType === "ADVANCE";
   };
   var isSurvey = (nudge) => {
     return nudge.type === "survey";
@@ -8975,13 +8997,34 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   };
   var hasRemainingSteps = (nudge) => ({ stepIndex }) => stepIndex < nudge.steps.length - 1;
   var shouldBypassCustomThrottles = (_, nudge) => nudge.priority === 4 /* Urgent */ || !isIncludedInCustomThrottles(nudge) || _.nudgeDebugToolBar.visible && _.nudgeDebugToolBar.bypassCustomThrottles || isTestNudge(_, nudge);
+  var checkBuiltInThrottle = (_, nudge) => {
+    const { type: type2 } = getProductMeta(nudge);
+    const result = passesBuiltInThrottles(_, nudge);
+    const nudgesInRenderLoop = getNudgesInRenderLoop(_);
+    const blockingNudge = getBlockingNudge(nudge, nudgesInRenderLoop);
+    let explanation = `This ${type2} is blocked by another currently rendered guide or survey.`;
+    if (result) {
+      explanation = `This ${type2} is not blocked by other guides or surveys.`;
+    }
+    if (blockingNudge?.variantId === nudge.variantId) {
+      explanation = "This nudge is alreadying rendering.";
+    }
+    if (blockingNudge) {
+      explanation = `This ${type2} is blocked by '${blockingNudge.title} - ${blockingNudge.variant}'.`;
+    }
+    return {
+      result,
+      explanation,
+      detail: {
+        blockingNudge
+      }
+    };
+  };
   var getGlobalChecks = (_, nudge) => {
     const { type: type2 } = getProductMeta(nudge);
+    const builtInThrottlesCheck = checkBuiltInThrottle(_, nudge);
     const globalChecks = {
-      builtInThrottles: {
-        result: passesBuiltInThrottles(_, nudge),
-        explanation: `This ${type2} is blocked by another currently rendered guide or survey.`
-      },
+      builtInThrottles: builtInThrottlesCheck,
       customThrottles: {
         result: shouldBypassCustomThrottles(_, nudge) || passesCustomThrottles(_, nudge),
         explanation: `The custom throttle for ${type2}s of this type prevents further guides or surveys from being shown.`,
@@ -12222,7 +12265,7 @@ This ensures only the right variant is shown for experiment nudges.`
                 }),
                 exit: enqueueActions(({ context, event, enqueue, check }) => {
                   const isStepChange = event.type === "ADVANCE" || event.type === "REGRESS";
-                  if (isStepChange && !closesNudgeOnStepChange(context.nudge, context.stepIndex)) {
+                  if (isStepChange && !closesNudgeOnStepChange(context.nudge, context.stepIndex, event.type)) {
                     const tryingToGoBeyondFirst = event.type === "REGRESS" && !check({ type: "canStepBack" });
                     if (tryingToGoBeyondFirst) {
                       enqueue({ type: "closeStep" });
@@ -14620,6 +14663,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         apiKey: existingProxy?._configuration?.apiKey ?? "",
         serverUrl: existingProxy?._configuration?.serverUrl,
         chatUrl: existingProxy?._configuration?.chatUrl,
+        mediaUrl: existingProxy?._configuration?.mediaUrl,
         serverZone: existingProxy?._configuration?.serverZone ?? "US",
         options: {
           ...existingProxy?._configuration?.options
@@ -14995,6 +15039,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     _configuration = {
       serverZone: "US",
       serverUrl: void 0,
+      mediaUrl: void 0,
       apiKey: "",
       options: { ...DEFAULT_OPTIONS }
     };
@@ -15284,6 +15329,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
       this._.decide = await decide_default.decide(this._configuration.apiKey, this._.user, this._.isEditorPreview);
       return this._.decide;
+    }
+    shutdown() {
+      this._.integrations = [];
+      this._.decide = void 0;
+      this._.user = void 0;
+      this._.endUserStore.reset();
     }
     /**
      * Make Guides and Surveys available to the user. They will not be available before `.boot` is called, even if the
@@ -17174,15 +17225,18 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
     }
     proxy2[_configuration].apiKey = apiKey;
+    const hasCustomLogger = !!proxy2[_configuration].options?.logger;
     if (!proxy2[_configuration].options?.logger) {
-      console.log("Using default logger");
       proxy2[_configuration].options.logger = new DefaultMobileLogger();
-    } else {
-      console.log("Using custom logger", proxy2[_configuration].options.logger);
     }
     const logLevel = proxy2[_configuration].options?.logLevel;
     if (logLevel !== void 0) {
       proxy2[_configuration].options.logger.enable(logLevel);
+    }
+    if (hasCustomLogger) {
+      logger.log("Using custom logger", proxy2[_configuration].options.logger);
+    } else {
+      logger.log("Using default logger");
     }
     if (takeoverApiKey) {
       proxy2[_configuration].apiKey = takeoverApiKey;
