@@ -121,8 +121,8 @@
   var require_isObject = __commonJS({
     "../shared/node_modules/lodash/isObject.js"(exports, module) {
       function isObject2(value) {
-        var type11 = typeof value;
-        return value != null && (type11 == "object" || type11 == "function");
+        var type10 = typeof value;
+        return value != null && (type10 == "object" || type10 == "function");
       }
       module.exports = isObject2;
     }
@@ -349,8 +349,8 @@
         if (isArray3(value)) {
           return false;
         }
-        var type11 = typeof value;
-        if (type11 == "number" || type11 == "symbol" || type11 == "boolean" || value == null || isSymbol(value)) {
+        var type10 = typeof value;
+        if (type10 == "number" || type10 == "symbol" || type10 == "boolean" || value == null || isSymbol(value)) {
           return true;
         }
         return reIsPlainProp.test(value) || !reIsDeepProp.test(value) || object != null && value in Object(object);
@@ -480,10 +480,10 @@
   var require_assocIndexOf = __commonJS({
     "../shared/node_modules/lodash/_assocIndexOf.js"(exports, module) {
       var eq = require_eq();
-      function assocIndexOf(array8, key) {
-        var length = array8.length;
+      function assocIndexOf(array7, key) {
+        var length = array7.length;
         while (length--) {
-          if (eq(array8[length][0], key)) {
+          if (eq(array7[length][0], key)) {
             return length;
           }
         }
@@ -615,8 +615,8 @@
   var require_isKeyable = __commonJS({
     "../shared/node_modules/lodash/_isKeyable.js"(exports, module) {
       function isKeyable(value) {
-        var type11 = typeof value;
-        return type11 == "string" || type11 == "number" || type11 == "symbol" || type11 == "boolean" ? value !== "__proto__" : value === null;
+        var type10 = typeof value;
+        return type10 == "string" || type10 == "number" || type10 == "symbol" || type10 == "boolean" ? value !== "__proto__" : value === null;
       }
       module.exports = isKeyable;
     }
@@ -759,13 +759,13 @@
       var memoizeCapped = require_memoizeCapped();
       var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
       var reEscapeChar = /\\(\\)?/g;
-      var stringToPath = memoizeCapped(function(string11) {
+      var stringToPath = memoizeCapped(function(string10) {
         var result = [];
-        if (string11.charCodeAt(0) === 46) {
+        if (string10.charCodeAt(0) === 46) {
           result.push("");
         }
-        string11.replace(rePropName, function(match, number8, quote, subString) {
-          result.push(quote ? subString.replace(reEscapeChar, "$1") : number8 || match);
+        string10.replace(rePropName, function(match, number7, quote, subString) {
+          result.push(quote ? subString.replace(reEscapeChar, "$1") : number7 || match);
         });
         return result;
       });
@@ -776,10 +776,10 @@
   // ../shared/node_modules/lodash/_arrayMap.js
   var require_arrayMap = __commonJS({
     "../shared/node_modules/lodash/_arrayMap.js"(exports, module) {
-      function arrayMap(array8, iteratee) {
-        var index = -1, length = array8 == null ? 0 : array8.length, result = Array(length);
+      function arrayMap(array7, iteratee) {
+        var index = -1, length = array7 == null ? 0 : array7.length, result = Array(length);
         while (++index < length) {
-          result[index] = iteratee(array8[index], index, array8);
+          result[index] = iteratee(array7[index], index, array7);
         }
         return result;
       }
@@ -848,9 +848,9 @@
       var MAX_SAFE_INTEGER = 9007199254740991;
       var reIsUint = /^(?:0|[1-9]\d*)$/;
       function isIndex(value, length) {
-        var type11 = typeof value;
+        var type10 = typeof value;
         length = length == null ? MAX_SAFE_INTEGER : length;
-        return !!length && (type11 == "number" || type11 != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
+        return !!length && (type10 == "number" || type10 != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
       }
       module.exports = isIndex;
     }
@@ -921,59 +921,59 @@
   // ../shared/node_modules/dayjs/dayjs.min.js
   var require_dayjs_min = __commonJS({
     "../shared/node_modules/dayjs/dayjs.min.js"(exports, module) {
-      !function(t14, e2) {
-        "object" == typeof exports && "undefined" != typeof module ? module.exports = e2() : "function" == typeof define && define.amd ? define(e2) : (t14 = "undefined" != typeof globalThis ? globalThis : t14 || self).dayjs = e2();
+      !function(t13, e2) {
+        "object" == typeof exports && "undefined" != typeof module ? module.exports = e2() : "function" == typeof define && define.amd ? define(e2) : (t13 = "undefined" != typeof globalThis ? globalThis : t13 || self).dayjs = e2();
       }(exports, function() {
         "use strict";
-        var t14 = 1e3, e2 = 6e4, n = 36e5, r = "millisecond", i2 = "second", s2 = "minute", u = "hour", a = "day", o = "week", f = "month", h2 = "quarter", c2 = "year", d = "date", $ = "Invalid Date", l2 = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y2 = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M = { name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_") }, m = function(t15, e3, n2) {
-          var r2 = String(t15);
-          return !r2 || r2.length >= e3 ? t15 : "" + Array(e3 + 1 - r2.length).join(n2) + t15;
-        }, g = { s: m, z: function(t15) {
-          var e3 = -t15.utcOffset(), n2 = Math.abs(e3), r2 = Math.floor(n2 / 60), i3 = n2 % 60;
+        var t13 = 1e3, e2 = 6e4, n = 36e5, r = "millisecond", i2 = "second", s2 = "minute", u = "hour", a = "day", o = "week", f = "month", h2 = "quarter", c2 = "year", d = "date", $ = "Invalid Date", l2 = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y2 = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M = { name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_") }, m = function(t14, e3, n2) {
+          var r2 = String(t14);
+          return !r2 || r2.length >= e3 ? t14 : "" + Array(e3 + 1 - r2.length).join(n2) + t14;
+        }, g = { s: m, z: function(t14) {
+          var e3 = -t14.utcOffset(), n2 = Math.abs(e3), r2 = Math.floor(n2 / 60), i3 = n2 % 60;
           return (e3 <= 0 ? "+" : "-") + m(r2, 2, "0") + ":" + m(i3, 2, "0");
-        }, m: function t15(e3, n2) {
-          if (e3.date() < n2.date()) return -t15(n2, e3);
+        }, m: function t14(e3, n2) {
+          if (e3.date() < n2.date()) return -t14(n2, e3);
           var r2 = 12 * (n2.year() - e3.year()) + (n2.month() - e3.month()), i3 = e3.clone().add(r2, f), s3 = n2 - i3 < 0, u2 = e3.clone().add(r2 + (s3 ? -1 : 1), f);
           return +(-(r2 + (n2 - i3) / (s3 ? i3 - u2 : u2 - i3)) || 0);
-        }, a: function(t15) {
-          return t15 < 0 ? Math.ceil(t15) || 0 : Math.floor(t15);
-        }, p: function(t15) {
-          return { M: f, y: c2, w: o, d: a, D: d, h: u, m: s2, s: i2, ms: r, Q: h2 }[t15] || String(t15 || "").toLowerCase().replace(/s$/, "");
-        }, u: function(t15) {
-          return void 0 === t15;
+        }, a: function(t14) {
+          return t14 < 0 ? Math.ceil(t14) || 0 : Math.floor(t14);
+        }, p: function(t14) {
+          return { M: f, y: c2, w: o, d: a, D: d, h: u, m: s2, s: i2, ms: r, Q: h2 }[t14] || String(t14 || "").toLowerCase().replace(/s$/, "");
+        }, u: function(t14) {
+          return void 0 === t14;
         } }, v = "en", D = {};
         D[v] = M;
-        var p = function(t15) {
-          return t15 instanceof _;
-        }, S = function t15(e3, n2, r2) {
+        var p = function(t14) {
+          return t14 instanceof _;
+        }, S = function t14(e3, n2, r2) {
           var i3;
           if (!e3) return v;
           if ("string" == typeof e3) {
             var s3 = e3.toLowerCase();
             D[s3] && (i3 = s3), n2 && (D[s3] = n2, i3 = s3);
             var u2 = e3.split("-");
-            if (!i3 && u2.length > 1) return t15(u2[0]);
+            if (!i3 && u2.length > 1) return t14(u2[0]);
           } else {
             var a2 = e3.name;
             D[a2] = e3, i3 = a2;
           }
           return !r2 && i3 && (v = i3), i3 || !r2 && v;
-        }, w = function(t15, e3) {
-          if (p(t15)) return t15.clone();
+        }, w = function(t14, e3) {
+          if (p(t14)) return t14.clone();
           var n2 = "object" == typeof e3 ? e3 : {};
-          return n2.date = t15, n2.args = arguments, new _(n2);
+          return n2.date = t14, n2.args = arguments, new _(n2);
         }, O = g;
-        O.l = S, O.i = p, O.w = function(t15, e3) {
-          return w(t15, { locale: e3.$L, utc: e3.$u, x: e3.$x, $offset: e3.$offset });
+        O.l = S, O.i = p, O.w = function(t14, e3) {
+          return w(t14, { locale: e3.$L, utc: e3.$u, x: e3.$x, $offset: e3.$offset });
         };
         var _ = function() {
-          function M2(t15) {
-            this.$L = S(t15.locale, null, true), this.parse(t15);
+          function M2(t14) {
+            this.$L = S(t14.locale, null, true), this.parse(t14);
           }
           var m2 = M2.prototype;
-          return m2.parse = function(t15) {
-            this.$d = function(t16) {
-              var e3 = t16.date, n2 = t16.utc;
+          return m2.parse = function(t14) {
+            this.$d = function(t15) {
+              var e3 = t15.date, n2 = t15.utc;
               if (null === e3) return /* @__PURE__ */ new Date(NaN);
               if (O.u(e3)) return /* @__PURE__ */ new Date();
               if (e3 instanceof Date) return new Date(e3);
@@ -985,33 +985,33 @@
                 }
               }
               return new Date(e3);
-            }(t15), this.$x = t15.x || {}, this.init();
+            }(t14), this.$x = t14.x || {}, this.init();
           }, m2.init = function() {
-            var t15 = this.$d;
-            this.$y = t15.getFullYear(), this.$M = t15.getMonth(), this.$D = t15.getDate(), this.$W = t15.getDay(), this.$H = t15.getHours(), this.$m = t15.getMinutes(), this.$s = t15.getSeconds(), this.$ms = t15.getMilliseconds();
+            var t14 = this.$d;
+            this.$y = t14.getFullYear(), this.$M = t14.getMonth(), this.$D = t14.getDate(), this.$W = t14.getDay(), this.$H = t14.getHours(), this.$m = t14.getMinutes(), this.$s = t14.getSeconds(), this.$ms = t14.getMilliseconds();
           }, m2.$utils = function() {
             return O;
           }, m2.isValid = function() {
             return !(this.$d.toString() === $);
-          }, m2.isSame = function(t15, e3) {
-            var n2 = w(t15);
+          }, m2.isSame = function(t14, e3) {
+            var n2 = w(t14);
             return this.startOf(e3) <= n2 && n2 <= this.endOf(e3);
-          }, m2.isAfter = function(t15, e3) {
-            return w(t15) < this.startOf(e3);
-          }, m2.isBefore = function(t15, e3) {
-            return this.endOf(e3) < w(t15);
-          }, m2.$g = function(t15, e3, n2) {
-            return O.u(t15) ? this[e3] : this.set(n2, t15);
+          }, m2.isAfter = function(t14, e3) {
+            return w(t14) < this.startOf(e3);
+          }, m2.isBefore = function(t14, e3) {
+            return this.endOf(e3) < w(t14);
+          }, m2.$g = function(t14, e3, n2) {
+            return O.u(t14) ? this[e3] : this.set(n2, t14);
           }, m2.unix = function() {
             return Math.floor(this.valueOf() / 1e3);
           }, m2.valueOf = function() {
             return this.$d.getTime();
-          }, m2.startOf = function(t15, e3) {
-            var n2 = this, r2 = !!O.u(e3) || e3, h3 = O.p(t15), $2 = function(t16, e4) {
-              var i3 = O.w(n2.$u ? Date.UTC(n2.$y, e4, t16) : new Date(n2.$y, e4, t16), n2);
+          }, m2.startOf = function(t14, e3) {
+            var n2 = this, r2 = !!O.u(e3) || e3, h3 = O.p(t14), $2 = function(t15, e4) {
+              var i3 = O.w(n2.$u ? Date.UTC(n2.$y, e4, t15) : new Date(n2.$y, e4, t15), n2);
               return r2 ? i3 : i3.endOf(a);
-            }, l3 = function(t16, e4) {
-              return O.w(n2.toDate()[t16].apply(n2.toDate("s"), (r2 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e4)), n2);
+            }, l3 = function(t15, e4) {
+              return O.w(n2.toDate()[t15].apply(n2.toDate("s"), (r2 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e4)), n2);
             }, y3 = this.$W, M3 = this.$M, m3 = this.$D, g2 = "set" + (this.$u ? "UTC" : "");
             switch (h3) {
               case c2:
@@ -1033,60 +1033,60 @@
               default:
                 return this.clone();
             }
-          }, m2.endOf = function(t15) {
-            return this.startOf(t15, false);
-          }, m2.$set = function(t15, e3) {
-            var n2, o2 = O.p(t15), h3 = "set" + (this.$u ? "UTC" : ""), $2 = (n2 = {}, n2[a] = h3 + "Date", n2[d] = h3 + "Date", n2[f] = h3 + "Month", n2[c2] = h3 + "FullYear", n2[u] = h3 + "Hours", n2[s2] = h3 + "Minutes", n2[i2] = h3 + "Seconds", n2[r] = h3 + "Milliseconds", n2)[o2], l3 = o2 === a ? this.$D + (e3 - this.$W) : e3;
+          }, m2.endOf = function(t14) {
+            return this.startOf(t14, false);
+          }, m2.$set = function(t14, e3) {
+            var n2, o2 = O.p(t14), h3 = "set" + (this.$u ? "UTC" : ""), $2 = (n2 = {}, n2[a] = h3 + "Date", n2[d] = h3 + "Date", n2[f] = h3 + "Month", n2[c2] = h3 + "FullYear", n2[u] = h3 + "Hours", n2[s2] = h3 + "Minutes", n2[i2] = h3 + "Seconds", n2[r] = h3 + "Milliseconds", n2)[o2], l3 = o2 === a ? this.$D + (e3 - this.$W) : e3;
             if (o2 === f || o2 === c2) {
               var y3 = this.clone().set(d, 1);
               y3.$d[$2](l3), y3.init(), this.$d = y3.set(d, Math.min(this.$D, y3.daysInMonth())).$d;
             } else $2 && this.$d[$2](l3);
             return this.init(), this;
-          }, m2.set = function(t15, e3) {
-            return this.clone().$set(t15, e3);
-          }, m2.get = function(t15) {
-            return this[O.p(t15)]();
+          }, m2.set = function(t14, e3) {
+            return this.clone().$set(t14, e3);
+          }, m2.get = function(t14) {
+            return this[O.p(t14)]();
           }, m2.add = function(r2, h3) {
             var d2, $2 = this;
             r2 = Number(r2);
-            var l3 = O.p(h3), y3 = function(t15) {
+            var l3 = O.p(h3), y3 = function(t14) {
               var e3 = w($2);
-              return O.w(e3.date(e3.date() + Math.round(t15 * r2)), $2);
+              return O.w(e3.date(e3.date() + Math.round(t14 * r2)), $2);
             };
             if (l3 === f) return this.set(f, this.$M + r2);
             if (l3 === c2) return this.set(c2, this.$y + r2);
             if (l3 === a) return y3(1);
             if (l3 === o) return y3(7);
-            var M3 = (d2 = {}, d2[s2] = e2, d2[u] = n, d2[i2] = t14, d2)[l3] || 1, m3 = this.$d.getTime() + r2 * M3;
+            var M3 = (d2 = {}, d2[s2] = e2, d2[u] = n, d2[i2] = t13, d2)[l3] || 1, m3 = this.$d.getTime() + r2 * M3;
             return O.w(m3, this);
-          }, m2.subtract = function(t15, e3) {
-            return this.add(-1 * t15, e3);
-          }, m2.format = function(t15) {
+          }, m2.subtract = function(t14, e3) {
+            return this.add(-1 * t14, e3);
+          }, m2.format = function(t14) {
             var e3 = this, n2 = this.$locale();
             if (!this.isValid()) return n2.invalidDate || $;
-            var r2 = t15 || "YYYY-MM-DDTHH:mm:ssZ", i3 = O.z(this), s3 = this.$H, u2 = this.$m, a2 = this.$M, o2 = n2.weekdays, f2 = n2.months, h3 = function(t16, n3, i4, s4) {
-              return t16 && (t16[n3] || t16(e3, r2)) || i4[n3].slice(0, s4);
-            }, c3 = function(t16) {
-              return O.s(s3 % 12 || 12, t16, "0");
-            }, d2 = n2.meridiem || function(t16, e4, n3) {
-              var r3 = t16 < 12 ? "AM" : "PM";
+            var r2 = t14 || "YYYY-MM-DDTHH:mm:ssZ", i3 = O.z(this), s3 = this.$H, u2 = this.$m, a2 = this.$M, o2 = n2.weekdays, f2 = n2.months, h3 = function(t15, n3, i4, s4) {
+              return t15 && (t15[n3] || t15(e3, r2)) || i4[n3].slice(0, s4);
+            }, c3 = function(t15) {
+              return O.s(s3 % 12 || 12, t15, "0");
+            }, d2 = n2.meridiem || function(t15, e4, n3) {
+              var r3 = t15 < 12 ? "AM" : "PM";
               return n3 ? r3.toLowerCase() : r3;
             }, l3 = { YY: String(this.$y).slice(-2), YYYY: this.$y, M: a2 + 1, MM: O.s(a2 + 1, 2, "0"), MMM: h3(n2.monthsShort, a2, f2, 3), MMMM: h3(f2, a2), D: this.$D, DD: O.s(this.$D, 2, "0"), d: String(this.$W), dd: h3(n2.weekdaysMin, this.$W, o2, 2), ddd: h3(n2.weekdaysShort, this.$W, o2, 3), dddd: o2[this.$W], H: String(s3), HH: O.s(s3, 2, "0"), h: c3(1), hh: c3(2), a: d2(s3, u2, true), A: d2(s3, u2, false), m: String(u2), mm: O.s(u2, 2, "0"), s: String(this.$s), ss: O.s(this.$s, 2, "0"), SSS: O.s(this.$ms, 3, "0"), Z: i3 };
-            return r2.replace(y2, function(t16, e4) {
-              return e4 || l3[t16] || i3.replace(":", "");
+            return r2.replace(y2, function(t15, e4) {
+              return e4 || l3[t15] || i3.replace(":", "");
             });
           }, m2.utcOffset = function() {
             return 15 * -Math.round(this.$d.getTimezoneOffset() / 15);
           }, m2.diff = function(r2, d2, $2) {
             var l3, y3 = O.p(d2), M3 = w(r2), m3 = (M3.utcOffset() - this.utcOffset()) * e2, g2 = this - M3, v2 = O.m(this, M3);
-            return v2 = (l3 = {}, l3[c2] = v2 / 12, l3[f] = v2, l3[h2] = v2 / 3, l3[o] = (g2 - m3) / 6048e5, l3[a] = (g2 - m3) / 864e5, l3[u] = g2 / n, l3[s2] = g2 / e2, l3[i2] = g2 / t14, l3)[y3] || g2, $2 ? v2 : O.a(v2);
+            return v2 = (l3 = {}, l3[c2] = v2 / 12, l3[f] = v2, l3[h2] = v2 / 3, l3[o] = (g2 - m3) / 6048e5, l3[a] = (g2 - m3) / 864e5, l3[u] = g2 / n, l3[s2] = g2 / e2, l3[i2] = g2 / t13, l3)[y3] || g2, $2 ? v2 : O.a(v2);
           }, m2.daysInMonth = function() {
             return this.endOf(f).$D;
           }, m2.$locale = function() {
             return D[this.$L];
-          }, m2.locale = function(t15, e3) {
-            if (!t15) return this.$L;
-            var n2 = this.clone(), r2 = S(t15, e3, true);
+          }, m2.locale = function(t14, e3) {
+            if (!t14) return this.$L;
+            var n2 = this.clone(), r2 = S(t14, e3, true);
             return r2 && (n2.$L = r2), n2;
           }, m2.clone = function() {
             return O.w(this.$d, this);
@@ -1100,14 +1100,14 @@
             return this.$d.toUTCString();
           }, M2;
         }(), T = _.prototype;
-        return w.prototype = T, [["$ms", r], ["$s", i2], ["$m", s2], ["$H", u], ["$W", a], ["$M", f], ["$y", c2], ["$D", d]].forEach(function(t15) {
-          T[t15[1]] = function(e3) {
-            return this.$g(e3, t15[0], t15[1]);
+        return w.prototype = T, [["$ms", r], ["$s", i2], ["$m", s2], ["$H", u], ["$W", a], ["$M", f], ["$y", c2], ["$D", d]].forEach(function(t14) {
+          T[t14[1]] = function(e3) {
+            return this.$g(e3, t14[0], t14[1]);
           };
-        }), w.extend = function(t15, e3) {
-          return t15.$i || (t15(e3, _, w), t15.$i = true), w;
-        }, w.locale = S, w.isDayjs = p, w.unix = function(t15) {
-          return w(1e3 * t15);
+        }), w.extend = function(t14, e3) {
+          return t14.$i || (t14(e3, _, w), t14.$i = true), w;
+        }, w.locale = S, w.isDayjs = p, w.unix = function(t14) {
+          return w(1e3 * t14);
         }, w.en = D[v], w.Ls = D, w.p = {}, w;
       });
     }
@@ -1292,11 +1292,11 @@
       }
       exports.flow = flow2;
       function tuple() {
-        var t14 = [];
+        var t13 = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-          t14[_i] = arguments[_i];
+          t13[_i] = arguments[_i];
         }
-        return t14;
+        return t13;
       }
       exports.tuple = tuple;
       function increment(n) {
@@ -2458,13 +2458,13 @@
         };
       }();
       var __assign3 = exports && exports.__assign || function() {
-        __assign3 = Object.assign || function(t14) {
+        __assign3 = Object.assign || function(t13) {
           for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
             s2 = arguments[i2];
             for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p))
-              t14[p] = s2[p];
+              t13[p] = s2[p];
           }
-          return t14;
+          return t13;
         };
         return __assign3.apply(this, arguments);
       };
@@ -2597,8 +2597,8 @@
         } else if (isKeyofC(domain)) {
           return domain.keys;
         } else if (isUnionC(domain)) {
-          var keys = domain.types.map(function(type12) {
-            return getDomainKeys(type12);
+          var keys = domain.types.map(function(type11) {
+            return getDomainKeys(type11);
           });
           return keys.some(undefinedType.is) ? void 0 : Object.assign.apply(Object, __spreadArray2([{}], keys, false));
         }
@@ -2678,8 +2678,8 @@
         }, domain, codomain);
       }
       function getUnionName(codecs) {
-        return "(" + codecs.map(function(type12) {
-          return type12.name;
+        return "(" + codecs.map(function(type11) {
+          return type11.name;
         }).join(" | ") + ")";
       }
       function mergeAll(base, us) {
@@ -2722,8 +2722,8 @@
           case "PartialType":
             return codec.props;
           case "IntersectionType":
-            return codec.types.reduce(function(props, type12) {
-              return Object.assign(props, getProps(type12));
+            return codec.types.reduce(function(props, type11) {
+              return Object.assign(props, getProps(type11));
             }, {});
         }
       }
@@ -3153,9 +3153,9 @@
         /** @class */
         function(_super) {
           __extends2(RefinementType2, _super);
-          function RefinementType2(name, is, validate2, encode2, type12, predicate) {
+          function RefinementType2(name, is, validate2, encode2, type11, predicate) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type12;
+            _this.type = type11;
             _this.predicate = predicate;
             _this._tag = "RefinementType";
             return _this;
@@ -3215,9 +3215,9 @@
         /** @class */
         function(_super) {
           __extends2(ArrayType2, _super);
-          function ArrayType2(name, is, validate2, encode2, type12) {
+          function ArrayType2(name, is, validate2, encode2, type11) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type12;
+            _this.type = type11;
             _this._tag = "ArrayType";
             return _this;
           }
@@ -3225,7 +3225,7 @@
         }(Type)
       );
       exports.ArrayType = ArrayType;
-      function array8(item, name) {
+      function array7(item, name) {
         if (name === void 0) {
           name = "Array<".concat(item.name, ">");
         }
@@ -3260,7 +3260,7 @@
           return a.map(item.encode);
         }, item);
       }
-      exports.array = array8;
+      exports.array = array7;
       var InterfaceType = (
         /** @class */
         function(_super) {
@@ -3275,7 +3275,7 @@
         }(Type)
       );
       exports.InterfaceType = InterfaceType;
-      function type11(props, name) {
+      function type10(props, name) {
         if (name === void 0) {
           name = getInterfaceTypeName(props);
         }
@@ -3334,8 +3334,8 @@
           return s2;
         }, props);
       }
-      exports.type = type11;
-      exports.interface = type11;
+      exports.type = type10;
+      exports.interface = type10;
       var PartialType = (
         /** @class */
         function(_super) {
@@ -3446,7 +3446,7 @@
         }(Type)
       );
       exports.UnionType = UnionType;
-      function union9(codecs, name) {
+      function union8(codecs, name) {
         if (name === void 0) {
           name = getUnionName(codecs);
         }
@@ -3490,8 +3490,8 @@
           }, codecs, tag_1);
         } else {
           return new UnionType(name, function(u) {
-            return codecs.some(function(type12) {
-              return type12.is(u);
+            return codecs.some(function(type11) {
+              return type11.is(u);
             });
           }, function(u, c2) {
             var errors = [];
@@ -3516,7 +3516,7 @@
           }, codecs);
         }
       }
-      exports.union = union9;
+      exports.union = union8;
       var IntersectionType = (
         /** @class */
         function(_super) {
@@ -3533,14 +3533,14 @@
       exports.IntersectionType = IntersectionType;
       function intersection7(codecs, name) {
         if (name === void 0) {
-          name = "(".concat(codecs.map(function(type12) {
-            return type12.name;
+          name = "(".concat(codecs.map(function(type11) {
+            return type11.name;
           }).join(" & "), ")");
         }
         var len = codecs.length;
         return new IntersectionType(name, function(u) {
-          return codecs.every(function(type12) {
-            return type12.is(u);
+          return codecs.every(function(type11) {
+            return type11.is(u);
           });
         }, codecs.length === 0 ? exports.success : function(u, c2) {
           var us = [];
@@ -3578,14 +3578,14 @@
       exports.TupleType = TupleType;
       function tuple(codecs, name) {
         if (name === void 0) {
-          name = "[".concat(codecs.map(function(type12) {
-            return type12.name;
+          name = "[".concat(codecs.map(function(type11) {
+            return type11.name;
           }).join(", "), "]");
         }
         var len = codecs.length;
         return new TupleType(name, function(u) {
-          return exports.UnknownArray.is(u) && u.length === len && codecs.every(function(type12, i2) {
-            return type12.is(u[i2]);
+          return exports.UnknownArray.is(u) && u.length === len && codecs.every(function(type11, i2) {
+            return type11.is(u[i2]);
           });
         }, function(u, c2) {
           var e2 = exports.UnknownArray.validate(u, c2);
@@ -3613,8 +3613,8 @@
           }
           return errors.length > 0 ? (0, exports.failures)(errors) : (0, exports.success)(as);
         }, useIdentity(codecs) ? exports.identity : function(a) {
-          return codecs.map(function(type12, i2) {
-            return type12.encode(a[i2]);
+          return codecs.map(function(type11, i2) {
+            return type11.encode(a[i2]);
           });
         }, codecs);
       }
@@ -3623,9 +3623,9 @@
         /** @class */
         function(_super) {
           __extends2(ReadonlyType2, _super);
-          function ReadonlyType2(name, is, validate2, encode2, type12) {
+          function ReadonlyType2(name, is, validate2, encode2, type11) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type12;
+            _this.type = type11;
             _this._tag = "ReadonlyType";
             return _this;
           }
@@ -3644,9 +3644,9 @@
         /** @class */
         function(_super) {
           __extends2(ReadonlyArrayType2, _super);
-          function ReadonlyArrayType2(name, is, validate2, encode2, type12) {
+          function ReadonlyArrayType2(name, is, validate2, encode2, type11) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type12;
+            _this.type = type11;
             _this._tag = "ReadonlyArrayType";
             return _this;
           }
@@ -3658,21 +3658,21 @@
         if (name === void 0) {
           name = "ReadonlyArray<".concat(item.name, ">");
         }
-        var codec = array8(item);
+        var codec = array7(item);
         return new ReadonlyArrayType(name, codec.is, codec.validate, codec.encode, item);
       }
       exports.readonlyArray = readonlyArray;
       var strict = function(props, name) {
-        return exact2(type11(props), name);
+        return exact(type10(props), name);
       };
       exports.strict = strict;
       var ExactType = (
         /** @class */
         function(_super) {
           __extends2(ExactType2, _super);
-          function ExactType2(name, is, validate2, encode2, type12) {
+          function ExactType2(name, is, validate2, encode2, type11) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type12;
+            _this.type = type11;
             _this._tag = "ExactType";
             return _this;
           }
@@ -3680,7 +3680,7 @@
         }(Type)
       );
       exports.ExactType = ExactType;
-      function exact2(codec, name) {
+      function exact(codec, name) {
         if (name === void 0) {
           name = getExactTypeName(codec);
         }
@@ -3699,7 +3699,7 @@
           return codec.encode(stripKeys(a, props));
         }, codec);
       }
-      exports.exact = exact2;
+      exports.exact = exact;
       var FunctionType = (
         /** @class */
         function(_super) {
@@ -3802,7 +3802,7 @@
         if (name === void 0) {
           name = getUnionName(codecs);
         }
-        var U = union9(codecs, name);
+        var U = union8(codecs, name);
         if (U instanceof TaggedUnionType) {
           return U;
         } else {
@@ -4941,13 +4941,13 @@
         return function_1.identity;
       };
       exports.sortBy = sortBy;
-      var union9 = function(E) {
+      var union8 = function(E) {
         var uniqE = exports.uniq(E);
         return function(first, second) {
           return uniqE(concat(first, second));
         };
       };
-      exports.union = union9;
+      exports.union = union8;
       var rotate = function(n) {
         return function(as) {
           var len = as.length;
@@ -5649,13 +5649,13 @@
         return exports.copy;
       };
       exports.sortBy = sortBy;
-      var union9 = function(E) {
+      var union8 = function(E) {
         var uniqE = exports.uniq(E);
         return function(first, second) {
           return uniqE(concat(first, second));
         };
       };
-      exports.union = union9;
+      exports.union = union8;
       var rotate = function(n) {
         return function(as) {
           var len = as.length;
@@ -6292,8 +6292,8 @@
           shows[_i] = arguments[_i];
         }
         return {
-          show: function(t14) {
-            return "[" + t14.map(function(a, i2) {
+          show: function(t13) {
+            return "[" + t13.map(function(a, i2) {
               return shows[i2].show(a);
             }).join(", ") + "]";
           }
@@ -6939,11 +6939,11 @@
         return go(exports.empty, input);
       }
       exports.comprehension = comprehension;
-      function union9(E) {
+      function union8(E) {
         var unionE = RNEA.union(E);
         return function(first, second) {
           if (second === void 0) {
-            var unionE_1 = union9(E);
+            var unionE_1 = union8(E);
             return function(ys) {
               return unionE_1(ys, first);
             };
@@ -6951,7 +6951,7 @@
           return exports.isNonEmpty(first) && exports.isNonEmpty(second) ? unionE(first, second) : exports.isNonEmpty(first) ? first : second;
         };
       }
-      exports.union = union9;
+      exports.union = union8;
       function intersection7(E) {
         var elemE = elem(E);
         return function(xs, ys) {
@@ -7960,11 +7960,11 @@
         return go([], input);
       }
       exports.comprehension = comprehension;
-      function union9(E) {
+      function union8(E) {
         var unionE = NEA.union(E);
         return function(first, second) {
           if (second === void 0) {
-            var unionE_1 = union9(E);
+            var unionE_1 = union8(E);
             return function(ys) {
               return unionE_1(ys, first);
             };
@@ -7972,7 +7972,7 @@
           return exports.isNonEmpty(first) && exports.isNonEmpty(second) ? unionE(first, second) : exports.isNonEmpty(first) ? exports.copy(first) : exports.copy(second);
         };
       }
-      exports.union = union9;
+      exports.union = union8;
       function intersection7(E) {
         var elemE = exports.elem(E);
         return function(xs, ys) {
@@ -10014,11 +10014,11 @@
       var O = require_Option();
       var R = require_Record();
       var pipeable_1 = require_pipeable();
-      var t14 = require_lib();
+      var t13 = require_lib();
       var utils_1 = require_utils();
       var isUnionType = function(_a) {
-        var type11 = _a.type;
-        return type11 instanceof t14.UnionType;
+        var type10 = _a.type;
+        return type10 instanceof t13.UnionType;
       };
       var jsToString = function(value) {
         return value === void 0 ? "undefined" : JSON.stringify(value);
@@ -10035,15 +10035,15 @@
         return validation.context;
       };
       exports.TYPE_MAX_LEN = 160;
-      var truncateType = function(type11, options) {
+      var truncateType = function(type10, options) {
         if (options === void 0) {
           options = {};
         }
         var _a = options.truncateLongTypes, truncateLongTypes = _a === void 0 ? true : _a;
-        if (truncateLongTypes && type11.length > exports.TYPE_MAX_LEN) {
-          return type11.slice(0, exports.TYPE_MAX_LEN - 3) + "...";
+        if (truncateLongTypes && type10.length > exports.TYPE_MAX_LEN) {
+          return type10.slice(0, exports.TYPE_MAX_LEN - 3) + "...";
         }
-        return type11;
+        return type10;
       };
       var errorMessageSimple = function(expectedType, path, error, options) {
         return [
@@ -10056,8 +10056,8 @@
       var errorMessageUnion = function(expectedTypes, path, value, options) {
         return [
           "Expecting one of:\n",
-          expectedTypes.map(function(type11) {
-            return "    " + truncateType(type11, options);
+          expectedTypes.map(function(type10) {
+            return "    " + truncateType(type10, options);
           }).join("\n"),
           path === "" ? "\n" : "\nat " + path + " ",
           "but instead got: " + jsToString(value)
@@ -10076,8 +10076,8 @@
           return void 0;
         }));
         var expected = expectedTypes.map(function(_a) {
-          var type11 = _a.type;
-          return type11.name;
+          var type10 = _a.type;
+          return type10.name;
         });
         return expected.length > 0 ? O.some(errorMessageUnion(expected, path, value, options)) : O.none;
       };
@@ -10312,13 +10312,13 @@
   // ../shared/node_modules/lodash/_copyArray.js
   var require_copyArray = __commonJS({
     "../shared/node_modules/lodash/_copyArray.js"(exports, module) {
-      function copyArray(source, array8) {
+      function copyArray(source, array7) {
         var index = -1, length = source.length;
-        array8 || (array8 = Array(length));
+        array7 || (array7 = Array(length));
         while (++index < length) {
-          array8[index] = source[index];
+          array7[index] = source[index];
         }
-        return array8;
+        return array7;
       }
       module.exports = copyArray;
     }
@@ -10882,16 +10882,16 @@
       function overRest(func, start, transform) {
         start = nativeMax(start === void 0 ? func.length - 1 : start, 0);
         return function() {
-          var args = arguments, index = -1, length = nativeMax(args.length - start, 0), array8 = Array(length);
+          var args = arguments, index = -1, length = nativeMax(args.length - start, 0), array7 = Array(length);
           while (++index < length) {
-            array8[index] = args[start + index];
+            array7[index] = args[start + index];
           }
           index = -1;
           var otherArgs = Array(start + 1);
           while (++index < start) {
             otherArgs[index] = args[index];
           }
-          otherArgs[start] = transform(array8);
+          otherArgs[start] = transform(array7);
           return apply(func, this, otherArgs);
         };
       }
@@ -10917,11 +10917,11 @@
       var constant = require_constant();
       var defineProperty = require_defineProperty();
       var identity2 = require_identity();
-      var baseSetToString = !defineProperty ? identity2 : function(func, string11) {
+      var baseSetToString = !defineProperty ? identity2 : function(func, string10) {
         return defineProperty(func, "toString", {
           "configurable": true,
           "enumerable": false,
-          "value": constant(string11),
+          "value": constant(string10),
           "writable": true
         });
       };
@@ -10988,8 +10988,8 @@
         if (!isObject2(object)) {
           return false;
         }
-        var type11 = typeof index;
-        if (type11 == "number" ? isArrayLike(object) && isIndex(index, object.length) : type11 == "string" && index in object) {
+        var type10 = typeof index;
+        if (type10 == "number" ? isArrayLike(object) && isIndex(index, object.length) : type10 == "string" && index in object) {
           return eq(object[index], value);
         }
         return false;
@@ -11081,10 +11081,10 @@
   // ../shared/node_modules/lodash/_arraySome.js
   var require_arraySome = __commonJS({
     "../shared/node_modules/lodash/_arraySome.js"(exports, module) {
-      function arraySome(array8, predicate) {
-        var index = -1, length = array8 == null ? 0 : array8.length;
+      function arraySome(array7, predicate) {
+        var index = -1, length = array7 == null ? 0 : array7.length;
         while (++index < length) {
-          if (predicate(array8[index], index, array8)) {
+          if (predicate(array7[index], index, array7)) {
             return true;
           }
         }
@@ -11112,23 +11112,23 @@
       var cacheHas = require_cacheHas();
       var COMPARE_PARTIAL_FLAG = 1;
       var COMPARE_UNORDERED_FLAG = 2;
-      function equalArrays(array8, other, bitmask, customizer, equalFunc, stack) {
-        var isPartial = bitmask & COMPARE_PARTIAL_FLAG, arrLength = array8.length, othLength = other.length;
+      function equalArrays(array7, other, bitmask, customizer, equalFunc, stack) {
+        var isPartial = bitmask & COMPARE_PARTIAL_FLAG, arrLength = array7.length, othLength = other.length;
         if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
           return false;
         }
-        var arrStacked = stack.get(array8);
+        var arrStacked = stack.get(array7);
         var othStacked = stack.get(other);
         if (arrStacked && othStacked) {
-          return arrStacked == other && othStacked == array8;
+          return arrStacked == other && othStacked == array7;
         }
         var index = -1, result = true, seen = bitmask & COMPARE_UNORDERED_FLAG ? new SetCache() : void 0;
-        stack.set(array8, other);
-        stack.set(other, array8);
+        stack.set(array7, other);
+        stack.set(other, array7);
         while (++index < arrLength) {
-          var arrValue = array8[index], othValue = other[index];
+          var arrValue = array7[index], othValue = other[index];
           if (customizer) {
-            var compared = isPartial ? customizer(othValue, arrValue, index, other, array8, stack) : customizer(arrValue, othValue, index, array8, other, stack);
+            var compared = isPartial ? customizer(othValue, arrValue, index, other, array7, stack) : customizer(arrValue, othValue, index, array7, other, stack);
           }
           if (compared !== void 0) {
             if (compared) {
@@ -11151,7 +11151,7 @@
             break;
           }
         }
-        stack["delete"](array8);
+        stack["delete"](array7);
         stack["delete"](other);
         return result;
       }
@@ -11264,12 +11264,12 @@
   // ../shared/node_modules/lodash/_arrayPush.js
   var require_arrayPush = __commonJS({
     "../shared/node_modules/lodash/_arrayPush.js"(exports, module) {
-      function arrayPush(array8, values) {
-        var index = -1, length = values.length, offset2 = array8.length;
+      function arrayPush(array7, values) {
+        var index = -1, length = values.length, offset2 = array7.length;
         while (++index < length) {
-          array8[offset2 + index] = values[index];
+          array7[offset2 + index] = values[index];
         }
-        return array8;
+        return array7;
       }
       module.exports = arrayPush;
     }
@@ -11291,11 +11291,11 @@
   // ../shared/node_modules/lodash/_arrayFilter.js
   var require_arrayFilter = __commonJS({
     "../shared/node_modules/lodash/_arrayFilter.js"(exports, module) {
-      function arrayFilter(array8, predicate) {
-        var index = -1, length = array8 == null ? 0 : array8.length, resIndex = 0, result = [];
+      function arrayFilter(array7, predicate) {
+        var index = -1, length = array7 == null ? 0 : array7.length, resIndex = 0, result = [];
         while (++index < length) {
-          var value = array8[index];
-          if (predicate(value, index, array8)) {
+          var value = array7[index];
+          if (predicate(value, index, array7)) {
             result[resIndex++] = value;
           }
         }
@@ -11658,9 +11658,9 @@
   var require_trimmedEndIndex = __commonJS({
     "../shared/node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
       var reWhitespace = /\s/;
-      function trimmedEndIndex(string11) {
-        var index = string11.length;
-        while (index-- && reWhitespace.test(string11.charAt(index))) {
+      function trimmedEndIndex(string10) {
+        var index = string10.length;
+        while (index-- && reWhitespace.test(string10.charAt(index))) {
         }
         return index;
       }
@@ -11673,8 +11673,8 @@
     "../shared/node_modules/lodash/_baseTrim.js"(exports, module) {
       var trimmedEndIndex = require_trimmedEndIndex();
       var reTrimStart = /^\s+/;
-      function baseTrim(string11) {
-        return string11 ? string11.slice(0, trimmedEndIndex(string11) + 1).replace(reTrimStart, "") : string11;
+      function baseTrim(string10) {
+        return string10 ? string10.slice(0, trimmedEndIndex(string10) + 1).replace(reTrimStart, "") : string10;
       }
       module.exports = baseTrim;
     }
@@ -11722,7 +11722,7 @@
       var FUNC_ERROR_TEXT = "Expected a function";
       var nativeMax = Math.max;
       var nativeMin = Math.min;
-      function debounce(func, wait, options) {
+      function debounce2(func, wait, options) {
         var lastArgs, lastThis, maxWait, result, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
         if (typeof func != "function") {
           throw new TypeError(FUNC_ERROR_TEXT);
@@ -11803,7 +11803,7 @@
         debounced.flush = flush;
         return debounced;
       }
-      module.exports = debounce;
+      module.exports = debounce2;
     }
   });
 
@@ -11980,21 +11980,21 @@
   globalThis.simpleFetch = simpleFetch2;
 
   // src/crypto-polyfill.ts
-  function getRandomValues(array8) {
-    if (!(array8 instanceof Int8Array || array8 instanceof Uint8Array || array8 instanceof Int16Array || array8 instanceof Uint16Array || array8 instanceof Int32Array || array8 instanceof Uint32Array || array8 instanceof Uint8ClampedArray)) {
+  function getRandomValues(array7) {
+    if (!(array7 instanceof Int8Array || array7 instanceof Uint8Array || array7 instanceof Int16Array || array7 instanceof Uint16Array || array7 instanceof Int32Array || array7 instanceof Uint32Array || array7 instanceof Uint8ClampedArray)) {
       throw new Error("Expected an integer array");
     }
-    if (array8.byteLength > 65536) {
+    if (array7.byteLength > 65536) {
       throw new Error("Can only request a maximum of 65536 bytes");
     }
-    const base64 = registerNativeBridge().function("getRandomBase64").call(array8.byteLength);
+    const base64 = registerNativeBridge().function("getRandomBase64").call(array7.byteLength);
     const decoded = registerNativeBridge().function("base64Decode").call(base64);
-    const bytes = new Uint8Array(array8.byteLength);
-    for (let i2 = 0; i2 < array8.byteLength; i2++) {
+    const bytes = new Uint8Array(array7.byteLength);
+    for (let i2 = 0; i2 < array7.byteLength; i2++) {
       bytes[i2] = decoded.charCodeAt(i2);
     }
-    array8.set(bytes);
-    return array8;
+    array7.set(bytes);
+    return array7;
   }
   registerJSBridge("crypto").function("getRandomValues", getRandomValues);
 
@@ -12009,14 +12009,14 @@
     constructor() {
       this.listeners = /* @__PURE__ */ new Map();
     }
-    addEventListener(type11, listener) {
-      if (!this.listeners.has(type11)) {
-        this.listeners.set(type11, /* @__PURE__ */ new Set());
+    addEventListener(type10, listener) {
+      if (!this.listeners.has(type10)) {
+        this.listeners.set(type10, /* @__PURE__ */ new Set());
       }
-      this.listeners.get(type11)?.add(listener);
+      this.listeners.get(type10)?.add(listener);
     }
-    removeEventListener(type11, listener) {
-      const typeListeners = this.listeners.get(type11);
+    removeEventListener(type10, listener) {
+      const typeListeners = this.listeners.get(type10);
       if (typeListeners) {
         typeListeners.delete(listener);
       }
@@ -12818,11 +12818,11 @@
         }
       };
     }
-    on(type11, handler) {
-      let listeners = this.eventListeners.get(type11);
+    on(type10, handler) {
+      let listeners = this.eventListeners.get(type10);
       if (!listeners) {
         listeners = /* @__PURE__ */ new Set();
-        this.eventListeners.set(type11, listeners);
+        this.eventListeners.set(type10, listeners);
       }
       const wrappedHandler = handler.bind(void 0);
       listeners.add(wrappedHandler);
@@ -13405,7 +13405,7 @@
       toJSON: () => ({
         ...transition,
         source: `#${stateNode.id}`,
-        target: target ? target.map((t14) => `#${t14.id}`) : void 0
+        target: target ? target.map((t13) => `#${t13.id}`) : void 0
       })
     };
     return transition;
@@ -13418,25 +13418,25 @@
           throw new Error('Null events ("") cannot be specified as a transition key. Use `always: { ... }` instead.');
         }
         const transitionsConfig = stateNode.config.on[descriptor];
-        transitions.set(descriptor, toTransitionConfigArray(transitionsConfig).map((t14) => formatTransition(stateNode, descriptor, t14)));
+        transitions.set(descriptor, toTransitionConfigArray(transitionsConfig).map((t13) => formatTransition(stateNode, descriptor, t13)));
       }
     }
     if (stateNode.config.onDone) {
       const descriptor = `xstate.done.state.${stateNode.id}`;
-      transitions.set(descriptor, toTransitionConfigArray(stateNode.config.onDone).map((t14) => formatTransition(stateNode, descriptor, t14)));
+      transitions.set(descriptor, toTransitionConfigArray(stateNode.config.onDone).map((t13) => formatTransition(stateNode, descriptor, t13)));
     }
     for (const invokeDef of stateNode.invoke) {
       if (invokeDef.onDone) {
         const descriptor = `xstate.done.actor.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onDone).map((t14) => formatTransition(stateNode, descriptor, t14)));
+        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onDone).map((t13) => formatTransition(stateNode, descriptor, t13)));
       }
       if (invokeDef.onError) {
         const descriptor = `xstate.error.actor.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onError).map((t14) => formatTransition(stateNode, descriptor, t14)));
+        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onError).map((t13) => formatTransition(stateNode, descriptor, t13)));
       }
       if (invokeDef.onSnapshot) {
         const descriptor = `xstate.snapshot.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onSnapshot).map((t14) => formatTransition(stateNode, descriptor, t14)));
+        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onSnapshot).map((t13) => formatTransition(stateNode, descriptor, t13)));
       }
     }
     for (const delayedTransition of stateNode.after) {
@@ -13506,7 +13506,7 @@ ${err.message}`);
       return stateNode.parent.initial;
     }
     return {
-      target: normalizedTarget.map((t14) => typeof t14 === "string" ? getStateNodeByPath(stateNode.parent, t14) : t14)
+      target: normalizedTarget.map((t13) => typeof t13 === "string" ? getStateNodeByPath(stateNode.parent, t13) : t13)
     };
   }
   function isHistoryNode(stateNode) {
@@ -13731,10 +13731,10 @@ ${err.message}`);
   }
   function computeExitSet(transitions, stateNodeSet, historyValue) {
     const statesToExit = /* @__PURE__ */ new Set();
-    for (const t14 of transitions) {
-      if (t14.target?.length) {
-        const domain = getTransitionDomain(t14, historyValue);
-        if (t14.reenter && t14.source === domain) {
+    for (const t13 of transitions) {
+      if (t13.target?.length) {
+        const domain = getTransitionDomain(t13, historyValue);
+        if (t13.reenter && t13.source === domain) {
           statesToExit.add(domain);
         }
         for (const stateNode of stateNodeSet) {
@@ -13768,7 +13768,7 @@ ${err.message}`);
     if (!isInitial) {
       [nextState, historyValue] = exitStates(nextState, event, actorScope, filteredTransitions, mutStateNodeSet, historyValue, internalQueue, actorScope.actionExecutor);
     }
-    nextState = resolveActionsAndContext(nextState, event, actorScope, filteredTransitions.flatMap((t14) => t14.actions), internalQueue, void 0);
+    nextState = resolveActionsAndContext(nextState, event, actorScope, filteredTransitions.flatMap((t13) => t13.actions), internalQueue, void 0);
     nextState = enterStates(nextState, event, actorScope, filteredTransitions, mutStateNodeSet, internalQueue, historyValue, isInitial);
     const nextStateNodes = [...mutStateNodeSet];
     if (nextState.status === "done") {
@@ -13842,26 +13842,26 @@ ${err.message}`);
     return nextSnapshot;
   }
   function computeEntrySet(transitions, historyValue, statesForDefaultEntry, statesToEnter) {
-    for (const t14 of transitions) {
-      const domain = getTransitionDomain(t14, historyValue);
-      for (const s2 of t14.target || []) {
+    for (const t13 of transitions) {
+      const domain = getTransitionDomain(t13, historyValue);
+      for (const s2 of t13.target || []) {
         if (!isHistoryNode(s2) && // if the target is different than the source then it will *definitely* be entered
-        (t14.source !== s2 || // we know that the domain can't lie within the source
+        (t13.source !== s2 || // we know that the domain can't lie within the source
         // if it's different than the source then it's outside of it and it means that the target has to be entered as well
-        t14.source !== domain || // reentering transitions always enter the target, even if it's the source itself
-        t14.reenter)) {
+        t13.source !== domain || // reentering transitions always enter the target, even if it's the source itself
+        t13.reenter)) {
           statesToEnter.add(s2);
           statesForDefaultEntry.add(s2);
         }
         addDescendantStatesToEnter(s2, historyValue, statesForDefaultEntry, statesToEnter);
       }
-      const targetStates = getEffectiveTargetStates(t14, historyValue);
+      const targetStates = getEffectiveTargetStates(t13, historyValue);
       for (const s2 of targetStates) {
         const ancestors = getProperAncestors(s2, domain);
         if (domain?.type === "parallel") {
           ancestors.push(domain);
         }
-        addAncestorStatesToEnter(statesToEnter, historyValue, statesForDefaultEntry, ancestors, !t14.source.parent && t14.reenter ? void 0 : domain);
+        addAncestorStatesToEnter(statesToEnter, historyValue, statesForDefaultEntry, ancestors, !t13.source.parent && t13.reenter ? void 0 : domain);
       }
     }
   }
@@ -14145,7 +14145,7 @@ ${err.message}`);
   var machineSnapshotCan = function can(event) {
     const transitionData = this.machine.getTransitionData(this, event);
     return !!transitionData?.length && // Check that at least one transition is not forbidden
-    transitionData.some((t14) => t14.target !== void 0 || t14.actions.length);
+    transitionData.some((t13) => t13.target !== void 0 || t13.actions.length);
   };
   var machineSnapshotToJSON = function toJSON() {
     const {
@@ -14830,7 +14830,7 @@ ${err.message}`);
     _initialize() {
       this.transitions = formatTransitions(this);
       if (this.config.always) {
-        this.always = toTransitionConfigArray(this.config.always).map((t14) => formatTransition(this, NULL_EVENT, t14));
+        this.always = toTransitionConfigArray(this.config.always).map((t13) => formatTransition(this, NULL_EVENT, t13));
       }
       Object.keys(this.states).forEach((key) => {
         this.states[key]._initialize();
@@ -14850,7 +14850,7 @@ ${err.message}`);
           eventType: null,
           reenter: false,
           toJSON: () => ({
-            target: this.initial.target.map((t14) => `#${t14.id}`),
+            target: this.initial.target.map((t13) => `#${t13.id}`),
             source: `#${this.id}`,
             actions: this.initial.actions.map(toSerializableAction),
             eventType: null
@@ -14861,9 +14861,9 @@ ${err.message}`);
           return state.definition;
         }),
         on: this.on,
-        transitions: [...this.transitions.values()].flat().map((t14) => ({
-          ...t14,
-          actions: t14.actions.map(toSerializableAction)
+        transitions: [...this.transitions.values()].flat().map((t13) => ({
+          ...t13,
+          actions: t13.actions.map(toSerializableAction)
         })),
         entry: this.entry.map(toSerializableAction),
         exit: this.exit.map(toSerializableAction),
@@ -14913,7 +14913,7 @@ ${err.message}`);
     get on() {
       return memo(this, "on", () => {
         const transitions = this.transitions;
-        return [...transitions].flatMap(([descriptor, t14]) => t14.map((t15) => [descriptor, t15])).reduce((map2, [descriptor, transition]) => {
+        return [...transitions].flatMap(([descriptor, t13]) => t13.map((t14) => [descriptor, t14])).reduce((map2, [descriptor, transition]) => {
           map2[descriptor] = map2[descriptor] || [];
           map2[descriptor].push(transition);
           return map2;
@@ -15246,8 +15246,8 @@ ${err.message}`);
   var c = /* @__PURE__ */ new WeakMap();
   var l = (e2) => e2 && (c.has(e2) ? c.get(e2) : s(e2) === Object.prototype || s(e2) === Array.prototype);
   var y = (e2) => l(e2) && e2[t] || null;
-  var h = (e2, t14 = true) => {
-    c.set(e2, t14);
+  var h = (e2, t13 = true) => {
+    c.set(e2, t13);
   };
 
   // ../shared/node_modules/valtio/esm/vanilla.mjs
@@ -16069,8 +16069,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     setOrganization: () => setOrganization,
     setSessionProperties: () => setSessionProperties,
     setTheme: () => setTheme,
-    setThemeMode: () => setThemeMode,
-    urlMatchesTargeting: () => urlMatchesTargeting
+    setThemeMode: () => setThemeMode
   });
   var import_isEqual = __toESM(require_isEqual());
 
@@ -16095,40 +16094,6 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     updateNudgeStepForPreview: () => updateNudgeStepForPreview
   });
 
-  // ../shared/src/internal/client/share_links.ts
-  var isValidUrl = (sharePageUrl) => {
-    if (!sharePageUrl) {
-      return false;
-    }
-    let testUrl = sharePageUrl;
-    if (testUrl.startsWith("/")) {
-      testUrl = "https://www.example.com" + testUrl;
-    }
-    if (!testUrl.startsWith("http")) {
-      testUrl = "https://" + testUrl;
-    }
-    try {
-      new URL(testUrl);
-    } catch (e2) {
-      return false;
-    }
-    return true;
-  };
-
-  // ../shared/src/products/nudges/store/utils.ts
-  var urlMatchesConditions = (_, url, conditions, defaultValue = true) => {
-    const pageTarget = {
-      context: {
-        url
-      },
-      result: {}
-    };
-    if (conditions.flat().length === 0) {
-      return defaultValue;
-    }
-    return _.evalEngine.evaluateConditions(pageTarget, conditions);
-  };
-
   // ../shared/src/products/nudges/store/selectors.ts
   var import_get = __toESM(require_get());
 
@@ -16136,7 +16101,15 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var isValidSessionPropertyKey = (key) => typeof key === "string" && key.length > 0;
   var isValidSessionPropertyValue = (value) => typeof value === "number" || typeof value === "string" || typeof value === "boolean";
   var isListBlock = (block) => block.type === "survey_list";
-  var hasConditionalActionsBlock = (block) => (block.type === "survey_rating" || block.type === "survey_list") && (!!block.meta.conditionalActions || !!block.meta.defaultAction);
+  var hasConditionalActionsBlock = (block) => {
+    if (!(block.type === "survey_rating" || block.type === "survey_list" || block.type === "button")) {
+      return false;
+    }
+    if (!block.meta) {
+      return false;
+    }
+    return !!(block.meta.conditionalActions && block.meta.conditionalActions.length > 0 || block.meta.defaultAction && block.meta.defaultAction.type !== "no_action");
+  };
 
   // ../shared/src/products/nudges/store/rules.ts
   var RAGE_CLOSE_THRESHOLD = 2e3;
@@ -16199,11 +16172,11 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var canBeActive = (nudge) => {
     return RULES[getApplicableNudgeType(nudge.type)].canBeActive;
   };
-  var typeIsIncludedInCustomThrottles = (type11) => {
-    return RULES[getApplicableNudgeType(type11)].includedInCustomThrottles;
+  var typeIsIncludedInCustomThrottles = (type10) => {
+    return RULES[getApplicableNudgeType(type10)].includedInCustomThrottles;
   };
   var isBlocked = (nudge, renderingNudges) => {
-    const renderingNudgeTypes = new Set(renderingNudges.map(({ type: type11 }) => getApplicableNudgeType(type11)));
+    const renderingNudgeTypes = new Set(renderingNudges.map(({ type: type10 }) => getApplicableNudgeType(type10)));
     return RULES[getApplicableNudgeType(nudge.type)].blockedBy.some((element) => renderingNudgeTypes.has(element));
   };
   var getBlockingNudge = (nudge, renderingNudges) => {
@@ -16240,11 +16213,25 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     return nudge.type === "survey" ? "survey" : "guide";
   };
   var getProductMeta = (nudge) => {
-    const type11 = getNudgeProductType(nudge);
+    const type10 = getNudgeProductType(nudge);
     return {
-      type: type11,
+      type: type10,
       name: getNudgeProductType(nudge) === "guide" ? "Guide" : "Survey"
     };
+  };
+
+  // ../shared/src/products/nudges/store/utils.ts
+  var urlMatchesConditions = (_, url, conditions, defaultValue = true) => {
+    const pageTarget = {
+      context: {
+        url
+      },
+      result: {}
+    };
+    if (conditions.flat().length === 0) {
+      return defaultValue;
+    }
+    return _.evalEngine.evaluateConditions(pageTarget, conditions);
   };
 
   // ../shared/src/services/targeting/helpers.ts
@@ -16652,19 +16639,19 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var hasRemainingSteps = (nudge) => ({ stepIndex }) => stepIndex < nudge.steps.length - 1;
   var shouldBypassCustomThrottles = (_, nudge) => nudge.priority === 4 /* Urgent */ || !isIncludedInCustomThrottles(nudge) || _.nudgeDebugToolBar.visible && _.nudgeDebugToolBar.bypassCustomThrottles || isTestNudge(_, nudge);
   var checkBuiltInThrottle = (_, nudge) => {
-    const { type: type11 } = getProductMeta(nudge);
+    const { type: type10 } = getProductMeta(nudge);
     const result = passesBuiltInThrottles(_, nudge);
     const nudgesInRenderLoop = getNudgesInRenderLoop(_);
     const blockingNudge = getBlockingNudge(nudge, nudgesInRenderLoop);
-    let explanation = `This ${type11} is blocked by another currently rendered guide or survey.`;
+    let explanation = `This ${type10} is blocked by another currently rendered guide or survey.`;
     if (result) {
-      explanation = `This ${type11} is not blocked by other guides or surveys.`;
+      explanation = `This ${type10} is not blocked by other guides or surveys.`;
     }
     if (blockingNudge?.variantId === nudge.variantId) {
       explanation = "This nudge is alreadying rendering.";
     }
     if (blockingNudge) {
-      explanation = `This ${type11} is blocked by '${blockingNudge.title} - ${blockingNudge.variant}'.`;
+      explanation = `This ${type10} is blocked by '${blockingNudge.title} - ${blockingNudge.variant}'.`;
     }
     return {
       result,
@@ -16675,15 +16662,15 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     };
   };
   var getGlobalChecks = (_, nudge) => {
-    const { type: type11 } = getProductMeta(nudge);
+    const { type: type10 } = getProductMeta(nudge);
     const builtInThrottlesCheck = checkBuiltInThrottle(_, nudge);
     const globalChecks = {
       builtInThrottles: builtInThrottlesCheck,
       customThrottles: {
         result: shouldBypassCustomThrottles(_, nudge) || passesCustomThrottles(_, nudge),
-        explanation: `The custom throttle for ${type11}s of this type prevents further guides or surveys from being shown.`,
+        explanation: `The custom throttle for ${type10}s of this type prevents further guides or surveys from being shown.`,
         detail: {
-          throttles: type11 === "survey" ? _.organization?.surveyThrottle : _.organization?.guideThrottle
+          throttles: type10 === "survey" ? _.organization?.surveyThrottle : _.organization?.guideThrottle
         }
       }
     };
@@ -16809,7 +16796,29 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     }
     return "anonymous";
   };
-  var evaluateCondition = (condition, event, options) => {
+  var buildEvaluationContext = (_, event, conditions) => {
+    const surveyResponse = {};
+    if (event.surveyResponse && conditions) {
+      const surveyConditions = conditions.filter((c2) => c2.type === "survey_response");
+      for (const condition of surveyConditions) {
+        surveyResponse[condition.field] = event.surveyResponse.value;
+      }
+    }
+    return {
+      context: {
+        user: _.user ?? {},
+        surveyResponse,
+        location: _.location ?? {}
+      },
+      result: {}
+    };
+  };
+  var evaluateCondition = (_, condition, event, options) => {
+    if (condition.v2?.evaluationConditions) {
+      const evalContext = buildEvaluationContext(_, event, condition.v2.conditions);
+      const result = _.evalEngine.evaluateConditions(evalContext, condition.v2.evaluationConditions);
+      return result;
+    }
     if (event.surveyResponse) {
       switch (condition.operator) {
         case "eq":
@@ -16836,22 +16845,70 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     }
     return null;
   };
-  var getActionBasedOnConditions = (step, event) => {
+  var getActionBasedOnConditions = (_, step, event, buttonType) => {
     const options = step.content.find(isListBlock)?.meta.options;
+    const surveyBlocks = step.content.filter(hasConditionalActionsBlock).filter((block) => block.type === "survey_rating" || block.type === "survey_list");
+    if (buttonType && surveyBlocks.length > 0) {
+      const surveyBlock = surveyBlocks[0];
+      const conditionalActions2 = surveyBlock.meta.conditionalActions;
+      const defaultAction2 = surveyBlock.meta.defaultAction;
+      if (conditionalActions2) {
+        for (let i2 = 0; i2 < conditionalActions2.length; i2++) {
+          const conditionalAction = conditionalActions2[i2];
+          if (evaluateCondition(_, conditionalAction, event, options)) {
+            const selectedAction = conditionalAction.v2?.action || conditionalAction.action || null;
+            return selectedAction;
+          }
+        }
+      }
+      return defaultAction2 ?? null;
+    }
     const conditionalActions = step.content.find(hasConditionalActionsBlock)?.meta.conditionalActions;
     const defaultAction = step.content.find(hasConditionalActionsBlock)?.meta.defaultAction;
     if (conditionalActions) {
-      for (const conditionalAction of conditionalActions) {
-        if (evaluateCondition(conditionalAction, event, options)) {
-          return conditionalAction.action || null;
+      for (let i2 = 0; i2 < conditionalActions.length; i2++) {
+        const conditionalAction = conditionalActions[i2];
+        if (evaluateCondition(_, conditionalAction, event, options)) {
+          const selectedAction = conditionalAction.v2?.action || conditionalAction.action || null;
+          return selectedAction;
         }
       }
     }
     return defaultAction ?? null;
   };
-  var determineAction = (step, event) => {
+  var getActionBasedOnButtonConditions = (_, buttonBlock, event) => {
+    const { conditionalActions, defaultAction } = buttonBlock.meta || {};
+    if (conditionalActions) {
+      for (let i2 = 0; i2 < conditionalActions.length; i2++) {
+        const conditionalAction = conditionalActions[i2];
+        if (evaluateCondition(_, conditionalAction, event)) {
+          const selectedAction = conditionalAction.v2?.action || conditionalAction.action || null;
+          return selectedAction;
+        }
+      }
+    }
+    return defaultAction ?? null;
+  };
+  var determineAction = (_, step, event) => {
     const immediateAction = getImmediateAction(event.buttonMeta);
-    return event.buttonMeta?.action?.type === "use_conditional_logic" || !immediateAction ? getActionBasedOnConditions(step, event) : immediateAction;
+    if (event.buttonMeta?.buttonType !== "snooze") {
+      const buttonBlocks = step.content.filter(
+        (block) => block.type === "button"
+      );
+      const clickedButtonBlock = buttonBlocks.find((block) => {
+        return block.meta?.buttonType === event.buttonMeta?.buttonType && block.meta?.label === event.buttonMeta?.label;
+      });
+      if (clickedButtonBlock && hasConditionalActionsBlock(clickedButtonBlock)) {
+        return getActionBasedOnButtonConditions(_, clickedButtonBlock, event);
+      }
+    }
+    if (event.buttonMeta?.action?.type === "use_conditional_logic") {
+      return getActionBasedOnConditions(_, step, event, event.buttonMeta?.buttonType);
+    }
+    if (immediateAction) {
+      return immediateAction;
+    }
+    return getActionBasedOnConditions(_, step, event);
   };
   var isTooltipNudge = (nudge) => nudge?.type === "tooltip" || nudge?.steps[0]?.formFactor.type === "tooltip";
   var isTooltipStep = (step) => step?.formFactor.type === "tooltip";
@@ -17067,23 +17124,6 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     event_properties = event_properties || {};
     _.messageBus.publish("analytics_event", { event_type, event_properties });
   };
-  var urlMatchesTargeting = (_, sharePageUrl, pageTargeting) => {
-    if (!isValidUrl(sharePageUrl)) {
-      return false;
-    }
-    if (sharePageUrl.includes("{{")) {
-      return true;
-    }
-    let testUrl = sharePageUrl;
-    if (testUrl.startsWith("/")) {
-      testUrl = "https://www.example.com" + testUrl;
-    }
-    if (!testUrl.startsWith("http")) {
-      testUrl = "https://" + testUrl;
-    }
-    const url = new URL(testUrl);
-    return urlMatchesConditions(_, url.href, pageTargeting);
-  };
   var activatePushExperience = (_, experience, source) => {
     forceTriggerSingleNudge(_, experience, {
       source,
@@ -17192,7 +17232,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     surveySubmitted: "[Guides-Surveys] Survey Submitted",
     surveyAbandoned: "[Guides-Surveys] Survey Abandoned"
   };
-  var getEventNameCreator = (nudge) => (type11) => {
+  var getEventNameCreator = (nudge) => (type10) => {
     const productName = isSurvey(nudge) ? "Survey" : "Guide";
     const events = {
       viewed: `[Guides-Surveys] ${productName} Viewed`,
@@ -17206,7 +17246,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       ...guideSpecificEvents,
       ...surveySpecificEvents
     };
-    return events[type11];
+    return events[type10];
   };
 
   // ../shared/src/services/analytics/track.ts
@@ -17390,11 +17430,11 @@ when parsing ${JSON.stringify(input, null, 2)}`);
        * @param sourceKey The source key of the clicked result (if available)
        * @param position The position of the clicked result in the list
        */
-      resultClicked: (title, excerpt, type11, id, sourceKey, position2) => {
+      resultClicked: (title, excerpt, type10, id, sourceKey, position2) => {
         getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Result Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] Excerpt" /* Excerpt */]: excerpt,
-          ["[Guides-Surveys] Type" /* Type */]: type11,
+          ["[Guides-Surveys] Type" /* Type */]: type10,
           ["[Guides-Surveys] Key" /* Key */]: null,
           // Content Item ID is not tracked
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
@@ -17428,10 +17468,10 @@ when parsing ${JSON.stringify(input, null, 2)}`);
        * @param isDefault Whether the recommendation set is the default set
        * @param isAutopilot Whether the recommendation is an autopilot recommendation
        */
-      recommendationClicked: (title, type11, url, key, sourceKey, position2, recommendationSetKey, isDefault, isAutopilot) => {
+      recommendationClicked: (title, type10, url, key, sourceKey, position2, recommendationSetKey, isDefault, isAutopilot) => {
         getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Recommendation Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] Type" /* Type */]: type11,
+          ["[Guides-Surveys] Type" /* Type */]: type10,
           ["[Guides-Surveys] URL" /* URL */]: url,
           ["[Guides-Surveys] Key" /* Key */]: key,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
@@ -17452,10 +17492,10 @@ when parsing ${JSON.stringify(input, null, 2)}`);
        * @param position The position of the clicked quick link in the list
        * @param isDefault Whether the quick link is in the default set
        */
-      quickLinkClicked: (title, type11, url, key, sourceKey, position2, isDefault) => {
+      quickLinkClicked: (title, type10, url, key, sourceKey, position2, isDefault) => {
         getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Quick Link Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] Type" /* Type */]: type11,
+          ["[Guides-Surveys] Type" /* Type */]: type10,
           ["[Guides-Surveys] URL" /* URL */]: url,
           ["[Guides-Surveys] Key" /* Key */]: key,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
@@ -18036,7 +18076,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   };
 
   // ../shared/src/internal/middleware/nudge.ts
-  var t11 = __toESM(require_lib());
+  var t10 = __toESM(require_lib());
 
   // ../shared/node_modules/fp-ts/es6/function.js
   function pipe2(a, ab, bc, cd, de, ef, fg, gh, hi, ij, jk, kl, lm, mn, no, op, pq, qr, rs, st) {
@@ -18131,9 +18171,9 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   );
 
   // ../shared/node_modules/io-ts-types/es6/clone.js
-  function clone(t14) {
-    var r = Object.create(Object.getPrototypeOf(t14));
-    Object.assign(r, t14);
+  function clone(t13) {
+    var r = Object.create(Object.getPrototypeOf(t13));
+    Object.assign(r, t13);
     return r;
   }
 
@@ -18168,7 +18208,6 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   }
 
   // ../shared/src/internal/middleware/generics.ts
-  var t7 = __toESM(require_lib());
   var import_io_ts_reporters2 = __toESM(require_src());
   var import_function3 = __toESM(require_function());
   var import_Either3 = __toESM(require_Either());
@@ -18186,128 +18225,121 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       )
     );
   }
-  var GenericObject = t7.type({
-    id: t7.union([t7.number, t7.string])
-  });
-  var GenericBatchRequest = t7.type({
-    batch: t7.array(t7.unknown),
-    note: t7.string
-  });
 
   // ../shared/src/types/entities/nudge/actions.ts
-  var t8 = __toESM(require_lib());
-  var AdminAction = t8.type({
-    type: t8.literal("admin"),
-    value: t8.string
+  var t7 = __toESM(require_lib());
+  var AdminAction = t7.type({
+    type: t7.literal("admin"),
+    value: t7.string
   });
-  var CallbackAction = t8.type({
-    type: t8.literal("callback"),
-    value: t8.string
+  var CallbackAction = t7.type({
+    type: t7.literal("callback"),
+    value: t7.string
   });
-  var AppReviewAction = t8.intersection([
-    t8.type({
-      type: t8.literal("app_review")
+  var AppReviewAction = t7.intersection([
+    t7.type({
+      type: t7.literal("app_review")
     }),
-    t8.partial({
-      appStoreId: t8.string,
-      playStorePackageName: t8.string
+    t7.partial({
+      appStoreId: t7.string,
+      playStorePackageName: t7.string
     })
   ]);
-  var LinkAction = t8.intersection([
-    t8.type({
-      type: t8.literal("link"),
-      value: t8.string
+  var LinkAction = t7.intersection([
+    t7.type({
+      type: t7.literal("link"),
+      value: t7.string
     }),
-    t8.partial({
-      operation: t8.union([t8.literal("router"), t8.literal("self"), t8.literal("blank"), t8.undefined]),
-      meta: t8.type({
-        command: t8.string
+    t7.partial({
+      operation: t7.union([t7.literal("router"), t7.literal("self"), t7.literal("blank"), t7.undefined]),
+      meta: t7.type({
+        command: t7.string
       })
     })
   ]);
-  var OpenChatActionTypeV = t8.union([
-    t8.literal("intercom"),
-    t8.literal("helpscout"),
-    t8.literal("freshdesk"),
-    t8.literal("freshchat"),
-    t8.literal("crisp"),
-    t8.literal("zendesk"),
-    t8.literal("liveChat"),
-    t8.literal("gist"),
-    t8.literal("olark"),
-    t8.literal("hubspot"),
-    t8.literal("drift"),
-    t8.literal("pylon"),
-    t8.literal("talkdesk_v2"),
-    t8.literal("zendesk_handoff"),
-    t8.string
+  var OpenChatActionTypeV = t7.union([
+    t7.literal("intercom"),
+    t7.literal("helpscout"),
+    t7.literal("freshdesk"),
+    t7.literal("freshchat"),
+    t7.literal("crisp"),
+    t7.literal("zendesk"),
+    t7.literal("liveChat"),
+    t7.literal("gist"),
+    t7.literal("olark"),
+    t7.literal("hubspot"),
+    t7.literal("drift"),
+    t7.literal("pylon"),
+    t7.literal("talkdesk_v2"),
+    t7.literal("zendesk_handoff"),
+    t7.string
   ]);
-  var OpenChatActionV = t8.type({
-    type: t8.literal("open_chat"),
-    meta: t8.type({
+  var OpenChatActionV = t7.type({
+    type: t7.literal("open_chat"),
+    meta: t7.type({
       type: OpenChatActionTypeV
     })
   });
-  var DismissAction = t8.type({
-    type: t8.literal("dismiss")
+  var DismissAction = t7.type({
+    type: t7.literal("dismiss")
   });
-  var CompleteAction = t8.type({
-    type: t8.literal("complete")
+  var CompleteAction = t7.type({
+    type: t7.literal("complete")
   });
-  var StepBackAction = t8.type({
-    type: t8.literal("step_back")
+  var StepBackAction = t7.type({
+    type: t7.literal("step_back")
   });
-  var StepForwardAction = t8.type({
-    type: t8.literal("step_forward")
+  var StepForwardAction = t7.type({
+    type: t7.literal("step_forward")
   });
-  var SnoozeInterval = t8.union([t8.literal("hour"), t8.literal("day"), t8.literal("week")]);
-  var SnoozeValue = t8.number;
-  var SnoozeAction = t8.intersection([
-    t8.type({
-      type: t8.literal("snooze")
+  var SnoozeInterval = t7.union([t7.literal("hour"), t7.literal("day"), t7.literal("week")]);
+  var SnoozeValue = t7.number;
+  var SnoozeAction = t7.intersection([
+    t7.type({
+      type: t7.literal("snooze")
     }),
-    t8.partial({
+    t7.partial({
       interval: SnoozeInterval,
       value: SnoozeValue
     })
   ]);
-  var BuiltInAction = t8.type({
-    type: t8.literal("builtin"),
-    value: t8.string
+  var BuiltInAction = t7.type({
+    type: t7.literal("builtin"),
+    value: t7.string
   });
-  var ScriptAction = t8.type({
-    type: t8.literal("script"),
-    value: t8.string
+  var ScriptAction = t7.type({
+    type: t7.literal("script"),
+    value: t7.string
   });
-  var VideoAction = t8.type({
-    type: t8.literal("video"),
-    value: t8.string
+  var VideoAction = t7.type({
+    type: t7.literal("video"),
+    value: t7.string
   });
-  var NoAction = t8.type({ type: t8.literal("no_action") });
-  var ClickAction = t8.type({
-    type: t8.literal("click"),
-    value: t8.string
+  var NoAction = t7.type({ type: t7.literal("no_action") });
+  var ClickAction = t7.type({
+    type: t7.literal("click"),
+    value: t7.string
   });
-  var NudgeActionV = t8.type({
-    type: t8.literal("nudge"),
-    value: t8.number
+  var NudgeActionV = t7.type({
+    type: t7.literal("nudge"),
+    value: t7.number
   });
-  var GoToNudgeStepActionV = t8.type({
-    type: t8.literal("go_to_step"),
-    value: t8.number
+  var GoToNudgeStepActionV = t7.type({
+    type: t7.literal("go_to_step"),
+    value: t7.number
   });
-  var UseConditionalLogicAction = t8.type({
-    type: t8.literal("use_conditional_logic")
+  var UseConditionalLogicAction = t7.type({
+    type: t7.literal("use_conditional_logic")
   });
-  var ShowVideoAction = t8.type({
-    type: t8.literal("video"),
-    value: t8.number
+  var ShowVideoAction = t7.type({
+    type: t7.literal("video"),
+    value: t7.number
   });
-  var ShowDocumentAction = t8.type({
-    type: t8.literal("document"),
-    value: t8.number
+  var ShowDocumentAction = t7.type({
+    type: t7.literal("document"),
+    value: t7.number
   });
-  var ActionV = t8.union([
+  var ActionV = t7.union([
     NoAction,
     ClickAction,
     LinkAction,
@@ -18325,96 +18357,96 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     ShowDocumentAction,
     AppReviewAction
   ]);
-  var LabeledActionV = t8.type({
-    cta: t8.string,
+  var LabeledActionV = t7.type({
+    cta: t7.string,
     action: ActionV
   });
-  var TriggerAction = t8.type({
-    type: t8.literal("trigger"),
+  var TriggerAction = t7.type({
+    type: t7.literal("trigger"),
     value: ActionV
   });
 
   // ../shared/src/internal/middleware/helpers/goals.ts
-  var t9 = __toESM(require_lib());
-  var PageVisitedGoal = t9.type({
-    type: t9.literal("page_visited"),
-    value: t9.string
+  var t8 = __toESM(require_lib());
+  var PageVisitedGoal = t8.type({
+    type: t8.literal("page_visited"),
+    value: t8.string
   });
-  var ElementClickedGoal = t9.type({
-    type: t9.literal("element_clicked"),
-    value: t9.string
+  var ElementClickedGoal = t8.type({
+    type: t8.literal("element_clicked"),
+    value: t8.string
   });
-  var CTAClickedGoal = t9.type({
-    type: t9.literal("cta_clicked")
+  var CTAClickedGoal = t8.type({
+    type: t8.literal("cta_clicked")
   });
-  var EventTrackedGoal = t9.intersection([
-    t9.type({
-      type: t9.literal("event_tracked"),
-      event: t9.string
+  var EventTrackedGoal = t8.intersection([
+    t8.type({
+      type: t8.literal("event_tracked"),
+      event: t8.string
     }),
-    t9.partial({
-      conditions: t9.array(t9.array(EvaluationConditionV))
+    t8.partial({
+      conditions: t8.array(t8.array(EvaluationConditionV))
     })
   ]);
 
   // ../shared/src/internal/middleware/page-targeting.ts
-  var t10 = __toESM(require_lib());
-  var PageTargetingConfigV = t10.type({
-    conditions: t10.array(t10.array(EvaluationConditionV)),
-    configs: t10.array(
-      t10.type({
-        isExclude: t10.boolean,
-        matchType: t10.union([
-          t10.literal("contains"),
-          t10.literal("endsWith"),
-          t10.literal("exact"),
-          t10.literal("pattern"),
-          t10.literal("regex"),
-          t10.literal("simple"),
-          t10.literal("startsWith")
+  var t9 = __toESM(require_lib());
+  var PageTargetingConfigV = t9.type({
+    conditions: t9.array(t9.array(EvaluationConditionV)),
+    configs: t9.array(
+      t9.type({
+        isExclude: t9.boolean,
+        matchType: t9.union([
+          t9.literal("contains"),
+          t9.literal("endsWith"),
+          t9.literal("exact"),
+          t9.literal("pattern"),
+          t9.literal("regex"),
+          t9.literal("simple"),
+          t9.literal("startsWith")
         ]),
-        url: t10.string
+        url: t9.string
       })
     )
   });
 
   // ../shared/src/internal/middleware/nudge.ts
-  var NudgeContentMarkdownBlockV = t11.type({
-    type: t11.literal("markdown"),
-    meta: t11.type({ value: t11.string })
+  var NudgeContentMarkdownBlockV = t10.type({
+    type: t10.literal("markdown"),
+    meta: t10.type({ value: t10.string })
   });
-  var NudgeContentImageBlockV = t11.type({
-    type: t11.literal("image"),
-    meta: t11.intersection([
-      t11.type({ src: t11.string, filename: t11.string, size: t11.string }),
-      t11.partial({
-        altText: t11.string,
-        style: t11.partial({
-          scale: t11.string
+  var NudgeContentImageBlockV = t10.type({
+    type: t10.literal("image"),
+    meta: t10.intersection([
+      t10.type({ src: t10.string, filename: t10.string, size: t10.string }),
+      t10.partial({
+        altText: t10.string,
+        style: t10.partial({
+          scale: t10.string
         })
       })
     ])
   });
-  var NudgeContentVideoBlockV = t11.type({
-    type: t11.literal("video"),
-    meta: t11.type({ type: t11.literal("url"), src: t11.string })
+  var NudgeContentVideoBlockV = t10.type({
+    type: t10.literal("video"),
+    meta: t10.type({ type: t10.literal("url"), src: t10.string })
   });
-  var Required = t11.union([
-    t11.type({
-      value: t11.literal(true),
-      message: t11.string
+  var Required = t10.union([
+    t10.type({
+      value: t10.literal(true),
+      message: t10.string
     }),
-    t11.type({
-      value: t11.literal(false),
-      message: t11.union([t11.null, t11.undefined, t11.string])
+    t10.type({
+      value: t10.literal(false),
+      message: t10.union([t10.null, t10.undefined, t10.string])
     })
   ]);
-  var SurveyValidation = t11.partial({
-    validation: t11.partial({
+  var SurveyValidation = t10.partial({
+    validation: t10.partial({
       required: Required
     })
   });
-  var NudgeButtonActionV = t11.union([
+  var NudgeButtonActionV = t10.union([
     NoAction,
     ClickAction,
     LinkAction,
@@ -18432,102 +18464,133 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     ShowVideoAction,
     AppReviewAction
   ]);
-  var NudgeConditionalActionV = t11.type({
-    operator: t11.union([t11.literal("eq"), t11.literal("neq"), t11.literal("gt"), t11.literal("lt")]),
-    operand: t11.union([t11.string, t11.number]),
-    action: NudgeButtonActionV
+  var NudgeConditionalActionConditionV = t10.type({
+    field: t10.string,
+    operator: t10.union([
+      t10.literal("eq"),
+      t10.literal("neq"),
+      t10.literal("gt"),
+      t10.literal("lt"),
+      t10.literal("gte"),
+      t10.literal("lte"),
+      t10.literal("contains"),
+      t10.literal("does_not_contain")
+    ]),
+    operand: t10.union([t10.string, t10.number, t10.array(t10.union([t10.string, t10.number]))]),
+    type: t10.union([t10.literal("survey_response"), t10.literal("user_property")])
   });
-  var NudgeContentButtonBlockV = t11.type({
-    type: t11.literal("button"),
-    meta: t11.union([
-      t11.partial({
-        label: t11.string,
+  var NudgeConditionalActionV = t10.intersection([
+    t10.type({
+      operator: t10.union([t10.literal("eq"), t10.literal("neq"), t10.literal("gt"), t10.literal("lt")]),
+      operand: t10.union([t10.string, t10.number]),
+      action: NudgeButtonActionV
+    }),
+    t10.partial({
+      v2: t10.intersection([
+        t10.type({
+          conditions: t10.array(NudgeConditionalActionConditionV),
+          action: NudgeButtonActionV,
+          logic: withFallback(t10.union([t10.literal("and"), t10.literal("or")]), "and")
+        }),
+        t10.partial({
+          evaluationConditions: t10.array(t10.array(EvaluationConditionV))
+        })
+      ])
+    })
+  ]);
+  var NudgeContentButtonBlockV = t10.type({
+    type: t10.literal("button"),
+    meta: t10.union([
+      t10.partial({
+        label: t10.string,
         action: NudgeButtonActionV,
-        buttonType: t11.union([t11.literal("primary"), t11.literal("secondary"), t11.literal("snooze")], void 0)
+        buttonType: t10.union([t10.literal("primary"), t10.literal("secondary"), t10.literal("snooze")], void 0),
+        conditionalActions: t10.array(NudgeConditionalActionV),
+        defaultAction: NudgeButtonActionV
       }),
-      t11.null
+      t10.null
     ])
   });
-  var NudgeContentSurveyTextBlockV = t11.type({
-    uuid: t11.string,
-    type: t11.literal("survey_text"),
-    meta: t11.intersection([t11.type({ prompt: t11.string }), SurveyValidation, t11.partial({ ariaLabel: t11.string })])
+  var NudgeContentSurveyTextBlockV = t10.type({
+    uuid: t10.string,
+    type: t10.literal("survey_text"),
+    meta: t10.intersection([t10.type({ prompt: t10.string }), SurveyValidation, t10.partial({ ariaLabel: t10.string })])
   });
-  var NudgeStepContentSurveyTextShortBlockTypeV = t11.type({
-    uuid: t11.string,
-    type: t11.literal("survey_text_short"),
-    meta: t11.intersection([
-      t11.intersection([
-        t11.type({ prompt: t11.string }),
-        t11.partial({ prefill: t11.type({ enabled: t11.boolean, userProperty: t11.string }) })
+  var NudgeStepContentSurveyTextShortBlockTypeV = t10.type({
+    uuid: t10.string,
+    type: t10.literal("survey_text_short"),
+    meta: t10.intersection([
+      t10.intersection([
+        t10.type({ prompt: t10.string }),
+        t10.partial({ prefill: t10.type({ enabled: t10.boolean, userProperty: t10.string }) })
       ]),
       SurveyValidation,
-      t11.partial({ ariaLabel: t11.string })
+      t10.partial({ ariaLabel: t10.string })
     ])
   });
-  var NudgeContentListBlockV = t11.type({
-    uuid: t11.string,
-    type: t11.literal("survey_list"),
-    meta: t11.intersection([
-      t11.type({
-        options: t11.array(t11.string),
-        listType: t11.union([t11.literal("single"), t11.literal("multiple")]),
-        displayType: t11.union([t11.literal("dropdown"), t11.literal("list"), t11.literal("grid")])
+  var NudgeContentListBlockV = t10.type({
+    uuid: t10.string,
+    type: t10.literal("survey_list"),
+    meta: t10.intersection([
+      t10.type({
+        options: t10.array(t10.string),
+        listType: t10.union([t10.literal("single"), t10.literal("multiple")]),
+        displayType: t10.union([t10.literal("dropdown"), t10.literal("list"), t10.literal("grid")])
       }),
       SurveyValidation,
-      t11.partial({
-        conditionalActions: t11.array(NudgeConditionalActionV),
+      t10.partial({
+        conditionalActions: t10.array(NudgeConditionalActionV),
         defaultAction: NudgeButtonActionV,
-        isOrderRandom: t11.boolean,
-        otherOption: t11.type({
-          enabled: t11.boolean,
-          label: t11.string,
-          placeholderLabel: t11.string
+        isOrderRandom: t10.boolean,
+        otherOption: t10.type({
+          enabled: t10.boolean,
+          label: t10.string,
+          placeholderLabel: t10.string
         }),
-        ariaLabel: t11.string
+        ariaLabel: t10.string
       })
     ])
   });
-  var NudgeContentSurveyRatingBlockV = t11.type({
-    uuid: t11.string,
-    type: t11.literal("survey_rating"),
-    meta: t11.intersection([
-      t11.union([
-        t11.type({
-          type: t11.literal("emojis"),
-          lowerLabel: t11.string,
-          upperLabel: t11.string,
-          options: t11.number,
-          emojis: t11.array(t11.string)
+  var NudgeContentSurveyRatingBlockV = t10.type({
+    uuid: t10.string,
+    type: t10.literal("survey_rating"),
+    meta: t10.intersection([
+      t10.union([
+        t10.type({
+          type: t10.literal("emojis"),
+          lowerLabel: t10.string,
+          upperLabel: t10.string,
+          options: t10.number,
+          emojis: t10.array(t10.string)
         }),
-        t11.type({
-          type: t11.literal("numbers"),
-          lowerLabel: t11.string,
-          upperLabel: t11.string,
-          options: t11.number
+        t10.type({
+          type: t10.literal("numbers"),
+          lowerLabel: t10.string,
+          upperLabel: t10.string,
+          options: t10.number
         }),
-        t11.type({
-          type: t11.literal("stars"),
-          lowerLabel: t11.string,
-          upperLabel: t11.string,
-          options: t11.number
+        t10.type({
+          type: t10.literal("stars"),
+          lowerLabel: t10.string,
+          upperLabel: t10.string,
+          options: t10.number
         }),
-        t11.type({
-          type: t11.literal("nps"),
-          lowerLabel: t11.string,
-          upperLabel: t11.string,
-          options: t11.number
+        t10.type({
+          type: t10.literal("nps"),
+          lowerLabel: t10.string,
+          upperLabel: t10.string,
+          options: t10.number
         })
       ]),
       SurveyValidation,
-      t11.partial({
-        conditionalActions: t11.array(NudgeConditionalActionV),
+      t10.partial({
+        conditionalActions: t10.array(NudgeConditionalActionV),
         defaultAction: NudgeButtonActionV,
-        ariaLabel: t11.string
+        ariaLabel: t10.string
       })
     ])
   });
-  var NudgeContentBlockV = t11.union([
+  var NudgeContentBlockV = t10.union([
     NudgeContentMarkdownBlockV,
     NudgeContentImageBlockV,
     NudgeContentVideoBlockV,
@@ -18537,192 +18600,196 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     NudgeContentSurveyRatingBlockV,
     NudgeContentListBlockV
   ]);
-  var NudgeStepBaseV = t11.type({
-    id: t11.number,
-    title: t11.string,
-    content: t11.array(NudgeContentBlockV)
+  var NudgeStepBaseV = t10.type({
+    id: t10.number,
+    title: t10.string,
+    content: t10.array(NudgeContentBlockV)
   });
-  var MediaPositionV = t11.union([t11.literal("left"), t11.literal("right")]);
-  var NudgeStepFooterLayoutConfigV = t11.partial({
-    footerLayout: t11.union([t11.literal("classic"), t11.literal("split"), t11.literal("centered"), t11.literal("stacked")])
+  var MediaPositionV = t10.union([t10.literal("left"), t10.literal("right")]);
+  var NudgeStepFooterLayoutConfigV = t10.partial({
+    footerLayout: t10.union([t10.literal("classic"), t10.literal("split"), t10.literal("centered"), t10.literal("stacked")])
   });
-  var NudgeStepLayoutConfigV = t11.intersection([
-    t11.union([
-      t11.partial({
-        layout: t11.union([t11.literal("classic"), t11.literal("vertical")])
+  var NudgeStepLayoutConfigV = t10.intersection([
+    t10.union([
+      t10.partial({
+        layout: t10.union([t10.literal("classic"), t10.literal("vertical")])
       }),
-      t11.partial({
-        layout: t11.literal("horizontal"),
+      t10.partial({
+        layout: t10.literal("horizontal"),
         mediaPosition: MediaPositionV
       })
     ]),
-    t11.partial({
-      titleAlignment: t11.union([t11.literal("start"), t11.literal("center"), t11.literal("end")]),
-      contentAlignment: t11.union([t11.literal("start"), t11.literal("center"), t11.literal("end")])
+    t10.partial({
+      titleAlignment: t10.union([t10.literal("start"), t10.literal("center"), t10.literal("end")]),
+      contentAlignment: t10.union([t10.literal("start"), t10.literal("center"), t10.literal("end")])
     })
   ]);
-  var ElementSelectorV = t11.intersection([
-    t11.type({
-      selector: t11.string,
-      text: t11.string,
-      tag: t11.string,
-      attributes: t11.record(t11.string, t11.string)
+  var ElementSelectorV = t10.intersection([
+    t10.type({
+      selector: t10.string,
+      text: t10.string,
+      tag: t10.string,
+      attributes: t10.record(t10.string, t10.string)
     }),
-    t11.partial({
+    t10.partial({
       strategy: withFallback(
-        t11.union([t11.literal("strict"), t11.literal("fallback"), t11.literal("selector_only")]),
+        t10.union([t10.literal("strict"), t10.literal("fallback"), t10.literal("selector_only")]),
         "fallback"
       )
     })
   ]);
-  var NudgeStepAdditionalV = t11.intersection(
+  var NudgeStepAdditionalV = t10.intersection(
     [
-      t11.type({
-        formFactor: t11.union([
-          t11.intersection([
-            t11.type({
-              type: t11.literal("modal")
+      t10.type({
+        formFactor: t10.union([
+          t10.intersection([
+            t10.type({
+              type: t10.literal("modal")
             }),
-            t11.partial({
-              textAnimation: t11.literal("typewriter"),
-              canClickOutsideToClose: t11.boolean
+            t10.partial({
+              textAnimation: t10.literal("typewriter"),
+              canClickOutsideToClose: t10.boolean
             }),
             NudgeStepLayoutConfigV,
             NudgeStepFooterLayoutConfigV
           ]),
-          t11.intersection([
-            t11.type({
-              type: t11.literal("checklist")
+          t10.intersection([
+            t10.type({
+              type: t10.literal("checklist")
             }),
-            t11.partial({
-              zIndexOverride: t11.union([t11.undefined, t11.null, t11.number])
+            t10.partial({
+              zIndexOverride: t10.union([t10.undefined, t10.null, t10.number])
             })
           ]),
-          t11.intersection([
-            t11.type({
-              type: t11.literal("popover"),
-              position: t11.union([
-                t11.literal("top-left"),
-                t11.literal("top-right"),
-                t11.literal("bottom-right"),
-                t11.literal("bottom-left"),
-                t11.literal("center")
+          t10.intersection([
+            t10.type({
+              type: t10.literal("popover"),
+              position: t10.union([
+                t10.literal("top-left"),
+                t10.literal("top-center"),
+                t10.literal("top-right"),
+                t10.literal("right-center"),
+                t10.literal("bottom-right"),
+                t10.literal("bottom-center"),
+                t10.literal("bottom-left"),
+                t10.literal("left-center"),
+                t10.literal("center")
               ])
             }),
-            t11.partial({
-              textAnimation: t11.literal("typewriter"),
-              zIndexOverride: t11.union([t11.undefined, t11.null, t11.number])
+            t10.partial({
+              textAnimation: t10.literal("typewriter"),
+              zIndexOverride: t10.union([t10.undefined, t10.null, t10.number])
             }),
             NudgeStepLayoutConfigV,
             NudgeStepFooterLayoutConfigV
           ]),
-          t11.intersection([
-            t11.type({
-              type: t11.literal("banner"),
-              position: t11.union([t11.literal("top"), t11.literal("bottom")]),
-              placement: t11.union([t11.literal("default"), t11.literal("overlay")]),
-              sticky: t11.boolean
+          t10.intersection([
+            t10.type({
+              type: t10.literal("banner"),
+              position: t10.union([t10.literal("top"), t10.literal("bottom")]),
+              placement: t10.union([t10.literal("default"), t10.literal("overlay")]),
+              sticky: t10.boolean
             }),
-            t11.partial({
-              textAnimation: t11.literal("typewriter"),
-              zIndexOverride: t11.union([t11.undefined, t11.null, t11.number])
+            t10.partial({
+              textAnimation: t10.literal("typewriter"),
+              zIndexOverride: t10.union([t10.undefined, t10.null, t10.number])
             }),
             NudgeStepLayoutConfigV,
             NudgeStepFooterLayoutConfigV
           ]),
-          t11.intersection([
-            t11.type({
-              type: t11.literal("pin"),
-              anchor: t11.string
+          t10.intersection([
+            t10.type({
+              type: t10.literal("pin"),
+              anchor: t10.string
             }),
-            t11.partial({
+            t10.partial({
               anchorSelector: ElementSelectorV,
-              isOpenByDefault: t11.boolean,
-              isShowingMask: t11.boolean,
-              advanceTrigger: t11.string,
-              offset: t11.type({
-                x: t11.string,
-                y: t11.string
+              isOpenByDefault: t10.boolean,
+              isShowingMask: t10.boolean,
+              advanceTrigger: t10.string,
+              offset: t10.type({
+                x: t10.string,
+                y: t10.string
               }),
-              position: t11.union([
-                t11.literal("auto"),
-                t11.literal("top"),
-                t11.literal("bottom"),
-                t11.literal("left"),
-                t11.literal("right")
+              position: t10.union([
+                t10.literal("auto"),
+                t10.literal("top"),
+                t10.literal("bottom"),
+                t10.literal("left"),
+                t10.literal("right")
               ]),
-              alignment: t11.union([
-                t11.literal("center"),
-                t11.literal("top"),
-                t11.literal("bottom"),
-                t11.literal("left"),
-                t11.literal("right")
+              alignment: t10.union([
+                t10.literal("center"),
+                t10.literal("top"),
+                t10.literal("bottom"),
+                t10.literal("left"),
+                t10.literal("right")
               ]),
-              textAnimation: t11.literal("typewriter"),
-              zIndexOverride: t11.union([t11.undefined, t11.null, t11.number]),
-              pointer: t11.type({ type: t11.union([t11.literal("beacon"), t11.literal("arrow")]) })
+              textAnimation: t10.literal("typewriter"),
+              zIndexOverride: t10.union([t10.undefined, t10.null, t10.number]),
+              pointer: t10.type({ type: t10.union([t10.literal("beacon"), t10.literal("arrow")]) })
             }),
             NudgeStepLayoutConfigV,
             NudgeStepFooterLayoutConfigV
           ]),
-          t11.intersection([
-            t11.type({
-              type: t11.literal("tooltip"),
-              anchor: t11.string,
-              showOn: t11.union([t11.literal("hover"), t11.literal("click")]),
-              marker: t11.intersection([
-                t11.union([
-                  t11.type({
-                    type: t11.literal("beacon")
+          t10.intersection([
+            t10.type({
+              type: t10.literal("tooltip"),
+              anchor: t10.string,
+              showOn: t10.union([t10.literal("hover"), t10.literal("click")]),
+              marker: t10.intersection([
+                t10.union([
+                  t10.type({
+                    type: t10.literal("beacon")
                   }),
-                  t11.type({
-                    type: t11.literal("icon"),
-                    icon: t11.union([
-                      t11.literal("helpCircle"),
-                      t11.literal("helpSquare"),
-                      t11.literal("infoCircle"),
-                      t11.literal("bookClosed"),
-                      t11.literal("lightBulb"),
-                      t11.literal("lightning")
+                  t10.type({
+                    type: t10.literal("icon"),
+                    icon: t10.union([
+                      t10.literal("helpCircle"),
+                      t10.literal("helpSquare"),
+                      t10.literal("infoCircle"),
+                      t10.literal("bookClosed"),
+                      t10.literal("lightBulb"),
+                      t10.literal("lightning")
                     ])
                   }),
-                  t11.type({
-                    type: t11.literal("image"),
-                    source: t11.string
+                  t10.type({
+                    type: t10.literal("image"),
+                    source: t10.string
                   })
                 ]),
-                t11.type({
-                  positioning: t11.type({
-                    position: t11.union([
-                      t11.literal("left"),
-                      t11.literal("right"),
-                      t11.literal("inline_left"),
-                      t11.literal("inline_right")
+                t10.type({
+                  positioning: t10.type({
+                    position: t10.union([
+                      t10.literal("left"),
+                      t10.literal("right"),
+                      t10.literal("inline_left"),
+                      t10.literal("inline_right")
                     ]),
-                    offset: t11.type({
-                      x: t11.string,
-                      y: t11.string
+                    offset: t10.type({
+                      x: t10.string,
+                      y: t10.string
                     })
                   })
                 }),
-                t11.partial({
-                  width: t11.number
+                t10.partial({
+                  width: t10.number
                 })
               ])
             }),
-            t11.partial({
+            t10.partial({
               anchorSelector: ElementSelectorV,
-              textAnimation: t11.literal("typewriter"),
-              zIndexOverride: t11.union([t11.undefined, t11.null, t11.number]),
-              pointer: t11.type({ type: t11.union([t11.literal("none"), t11.literal("arrow")]) })
+              textAnimation: t10.literal("typewriter"),
+              zIndexOverride: t10.union([t10.undefined, t10.null, t10.number]),
+              pointer: t10.type({ type: t10.union([t10.literal("none"), t10.literal("arrow")]) })
             }),
             NudgeStepLayoutConfigV,
             NudgeStepFooterLayoutConfigV
           ])
         ])
       }),
-      t11.partial({
-        goal: t11.union([PageVisitedGoal, ElementClickedGoal, CTAClickedGoal, EventTrackedGoal, t11.null])
+      t10.partial({
+        goal: t10.union([PageVisitedGoal, ElementClickedGoal, CTAClickedGoal, EventTrackedGoal, t10.null])
       })
     ],
     "NudgeStepAdditional"
@@ -18733,134 +18800,140 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       position: "top-right"
     }
   };
-  var NudgeStepV = t11.intersection([NudgeStepBaseV, NudgeStepAdditionalV], "Nudge");
-  var SimpleNudgeTriggerType = t11.union([
-    t11.literal("immediately"),
-    t11.literal("smart_delay"),
-    t11.literal("rage_click"),
-    t11.literal("user_confusion"),
-    t11.literal("exit_intent"),
-    t11.literal("none")
+  var NudgeStepV = t10.intersection([NudgeStepBaseV, NudgeStepAdditionalV], "Nudge");
+  var SimpleNudgeTriggerType = t10.union([
+    t10.literal("immediately"),
+    t10.literal("smart_delay"),
+    t10.literal("rage_click"),
+    t10.literal("user_confusion"),
+    t10.literal("exit_intent"),
+    t10.literal("none")
   ]);
-  var ElementAppearedTriggerConfigV = t11.type({
-    type: t11.literal("element_appeared"),
-    data: t11.type({ selector: t11.string }),
-    conditions: t11.array(t11.array(EvaluationConditionV))
+  var ElementAppearedTriggerConfigV = t10.type({
+    type: t10.literal("element_appeared"),
+    data: t10.type({ selector: t10.string }),
+    conditions: t10.array(t10.array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
   });
-  var ElementClickedTriggerConfigV = t11.type({
-    type: t11.literal("element_clicked"),
-    data: t11.type({ selector: t11.string }),
-    conditions: t11.array(t11.array(EvaluationConditionV))
+  var ElementClickedTriggerConfigV = t10.type({
+    type: t10.literal("element_clicked"),
+    data: t10.type({ selector: t10.string }),
+    conditions: t10.array(t10.array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
   });
-  var EventTriggerConfigV = t11.type({
-    type: t11.literal("analytics_event"),
-    data: t11.type({
-      event: t11.string
+  var EventTriggerConfigV = t10.type({
+    type: t10.literal("analytics_event"),
+    data: t10.type({
+      event: t10.string
     }),
-    conditions: t11.array(t11.array(EvaluationConditionV))
+    conditions: t10.array(t10.array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
   });
-  var AfterTimeTriggerConfigV = t11.type({
-    type: t11.literal("after_time"),
-    data: t11.type({ unit: t11.union([t11.literal("minute"), t11.literal("second")]), value: t11.number }),
-    conditions: t11.array(t11.array(EvaluationConditionV))
+  var AfterTimeTriggerConfigV = t10.type({
+    type: t10.literal("after_time"),
+    data: t10.type({ unit: t10.union([t10.literal("minute"), t10.literal("second")]), value: t10.number }),
+    conditions: t10.array(t10.array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
   });
-  var NudgeTriggerConfigV = t11.union([
-    t11.type({
+  var NudgeTriggerConfigV = t10.union([
+    t10.type({
       type: SimpleNudgeTriggerType,
-      conditions: t11.array(t11.array(EvaluationConditionV)),
-      data: t11.union([t11.null, t11.undefined, t11.record(t11.string, t11.any)])
+      conditions: t10.array(t10.array(EvaluationConditionV)),
+      data: t10.union([t10.null, t10.undefined, t10.record(t10.string, t10.any)])
     }),
     ElementAppearedTriggerConfigV,
     ElementClickedTriggerConfigV,
     EventTriggerConfigV,
     AfterTimeTriggerConfigV
   ]);
-  var NudgeCooldownPeriodV = t11.union([
-    t11.literal("day"),
-    t11.literal("week"),
-    t11.literal("month"),
-    t11.literal("year"),
-    t11.literal("session"),
-    t11.string
+  var NudgeCooldownPeriodV = t10.union([
+    t10.literal("day"),
+    t10.literal("week"),
+    t10.literal("month"),
+    t10.literal("year"),
+    t10.literal("session"),
+    t10.string
     // keep for forward compatibility
   ]);
-  var NudgeLifecycleConfigV = t11.type({
-    stopShowingIfCompleted: t11.boolean,
-    stopShowingIfDismissed: t11.boolean,
-    cooldownLimits: t11.array(ThrottleV),
-    conditions: t11.array(t11.array(EvaluationConditionV))
+  var NudgeLifecycleConfigV = t10.type({
+    stopShowingIfCompleted: t10.boolean,
+    stopShowingIfDismissed: t10.boolean,
+    cooldownLimits: t10.array(ThrottleV),
+    conditions: t10.array(t10.array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
   });
-  var TagV = t11.type({
-    id: t11.number,
-    name: t11.string
+  var TagV = t10.type({
+    id: t10.number,
+    name: t10.string
   });
-  var NudgeBaseV = t11.intersection(
+  var NudgeBaseV = t10.intersection(
     [
-      t11.type({
-        title: t11.string,
+      t10.type({
+        title: t10.string,
         // TODO: can be removed, not needed in the SDK
-        variantId: t11.number,
-        steps: t11.array(NudgeStepV),
+        variantId: t10.number,
+        steps: t10.array(NudgeStepV),
         triggerConfig: NudgeTriggerConfigV,
         lifecycleConfig: NudgeLifecycleConfigV,
-        flagKey: t11.string
+        flagKey: t10.string
       }),
-      t11.partial({
-        archived: t11.boolean,
-        displayTitle: t11.string,
-        displayDescription: t11.string,
-        position: t11.union([t11.literal("bottomRight"), t11.literal("bottomLeft")]),
-        priority: t11.number,
-        dir: t11.union([t11.literal("ltr"), t11.literal("rtl")]),
-        stepCounterFormat: t11.union([t11.literal("numeric"), t11.literal("verbose")]),
-        tags: t11.array(TagV)
+      t10.partial({
+        archived: t10.boolean,
+        displayTitle: t10.string,
+        displayDescription: t10.string,
+        position: t10.union([t10.literal("bottomRight"), t10.literal("bottomLeft")]),
+        priority: t10.number,
+        dir: t10.union([t10.literal("ltr"), t10.literal("rtl")]),
+        stepCounterFormat: t10.union([t10.literal("numeric"), t10.literal("verbose")]),
+        tags: t10.array(TagV)
       })
     ],
     "NudgeBase"
   );
-  var NudgeTypeV = t11.union([
-    t11.literal("survey"),
-    t11.literal("tour"),
-    t11.literal("banner"),
-    t11.literal("tooltip"),
-    t11.literal("checklist"),
-    t11.string
+  var NudgeTypeV = t10.union([
+    t10.literal("survey"),
+    t10.literal("tour"),
+    t10.literal("banner"),
+    t10.literal("tooltip"),
+    t10.literal("checklist"),
+    t10.string
   ]);
-  var TranslationStatusV = t11.type({
-    translated: t11.boolean,
-    status: t11.union([t11.literal("missing"), t11.literal("outdated"), t11.literal("up-to-date"), t11.null, t11.undefined]),
-    resolvedLocale: t11.union([t11.string, t11.null, t11.undefined])
+  var TranslationStatusV = t10.type({
+    translated: t10.boolean,
+    status: t10.union([t10.literal("missing"), t10.literal("outdated"), t10.literal("up-to-date"), t10.null, t10.undefined]),
+    resolvedLocale: t10.union([t10.string, t10.null, t10.undefined])
   });
-  var NudgeAdditionalV = t11.type(
+  var NudgeAdditionalV = t10.type(
     {
       platform: withFallback(
-        t11.union([t11.literal("web"), t11.literal("android"), t11.literal("ios"), t11.literal("react-native")]),
+        t10.union([
+          t10.literal("web"),
+          t10.literal("android"),
+          t10.literal("ios"),
+          t10.literal("react-native"),
+          t10.literal("flutter")
+        ]),
         "web"
       ),
-      showStepCounter: t11.boolean,
-      isCarousel: t11.union([t11.boolean, t11.undefined]),
-      isDismissible: t11.boolean,
-      isSnoozable: t11.boolean,
-      isSnoozableOnAllSteps: t11.boolean,
-      snoozeLabel: t11.string,
-      doneLabel: t11.string,
-      snoozeDuration: t11.type({
+      showStepCounter: t10.boolean,
+      isCarousel: t10.union([t10.boolean, t10.undefined]),
+      isDismissible: t10.boolean,
+      isSnoozable: t10.boolean,
+      isSnoozableOnAllSteps: t10.boolean,
+      snoozeLabel: t10.string,
+      doneLabel: t10.string,
+      snoozeDuration: t10.type({
         interval: SnoozeInterval,
         value: SnoozeValue
       }),
       type: NudgeTypeV,
-      previewUrl: t11.union([t11.string, t11.null, t11.undefined]),
-      customThemeId: t11.union([t11.number, t11.null, t11.undefined]),
-      variant: t11.string,
+      previewUrl: t10.union([t10.string, t10.null, t10.undefined]),
+      customThemeId: t10.union([t10.number, t10.null, t10.undefined]),
+      variant: t10.string,
       pageTargeting: PageTargetingConfigV,
-      hideIfPageTargetingNotMet: t11.boolean,
+      hideIfPageTargetingNotMet: t10.boolean,
       temporarilyHideTargeting: PageTargetingConfigV,
-      translationStatus: t11.union([TranslationStatusV, t11.null, t11.undefined])
+      translationStatus: t10.union([TranslationStatusV, t10.null, t10.undefined])
     },
     "NudgeAdditional"
   );
@@ -18892,7 +18965,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       configs: []
     }
   };
-  var NudgeV = t11.intersection([NudgeBaseV, NudgeAdditionalV], "Nudge");
+  var NudgeV = t10.intersection([NudgeBaseV, NudgeAdditionalV], "Nudge");
   var Nudge = class {
     static decode = (data) => {
       try {
@@ -18912,45 +18985,52 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   };
 
   // ../shared/src/internal/middleware/theme.ts
-  var t12 = __toESM(require_lib());
-  var ThemeModeV = t12.intersection([
-    t12.type({
-      varDefaults: t12.record(t12.string, t12.union([t12.string, t12.number])),
-      varOverrides: t12.record(t12.string, t12.union([t12.string, t12.number])),
-      componentOverrides: t12.record(t12.string, t12.any),
-      mobileOverrides: t12.record(t12.string, t12.any)
+  var t11 = __toESM(require_lib());
+  var ThemeModeV = t11.intersection([
+    t11.type({
+      varDefaults: t11.record(t11.string, t11.union([t11.string, t11.number])),
+      varOverrides: t11.record(t11.string, t11.union([t11.string, t11.number])),
+      componentOverrides: t11.record(t11.string, t11.any),
+      mobileOverrides: t11.record(t11.string, t11.any)
     }),
-    t12.partial({
-      customCss: t12.string
+    t11.partial({
+      customCss: t11.string
     })
   ]);
-  var ThemeV = t12.union([
-    t12.type({
+  var ThemeV = t11.union([
+    t11.type({
       lightMode: ThemeModeV,
       darkMode: ThemeModeV
     }),
-    t12.null,
-    t12.undefined
+    t11.null,
+    t11.undefined
   ]);
-  var ThemeObjectBaseV = t12.type(
+  var ThemeObjectBaseV = t11.type(
     {
-      id: t12.number,
-      name: t12.string,
-      isDefault: t12.boolean,
+      id: t11.number,
+      name: t11.string,
+      isDefault: t11.boolean,
       theme: ThemeV
     },
     "ThemeBase"
   );
-  var PlatformV = t12.type({
-    type: t12.union([t12.literal("web"), t12.literal("ios"), t12.literal("android"), t12.literal("react-native"), t12.string])
+  var PlatformV = t11.type({
+    type: t11.union([
+      t11.literal("web"),
+      t11.literal("ios"),
+      t11.literal("android"),
+      t11.literal("react-native"),
+      t11.literal("flutter"),
+      t11.string
+    ])
   });
-  var ThemeObjectAdditionalV = t12.partial(
+  var ThemeObjectAdditionalV = t11.partial(
     {
       platform: PlatformV
     },
     "ThemeAdditional"
   );
-  var ThemeObjectV = t12.intersection([ThemeObjectBaseV, ThemeObjectAdditionalV], "Nudge");
+  var ThemeObjectV = t11.intersection([ThemeObjectBaseV, ThemeObjectAdditionalV], "Nudge");
   var defaults3 = {};
   var decode2 = (data) => {
     try {
@@ -18970,31 +19050,31 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   };
 
   // ../shared/src/types/api/resource-center.ts
-  var t13 = __toESM(require_lib());
-  var LauncherV = t13.intersection([
-    t13.type({
-      type: t13.string,
-      position: t13.string,
-      offsetX: t13.number,
-      offsetY: t13.number,
-      zIndex: t13.number
+  var t12 = __toESM(require_lib());
+  var LauncherV = t12.intersection([
+    t12.type({
+      type: t12.string,
+      position: t12.string,
+      offsetX: t12.number,
+      offsetY: t12.number,
+      zIndex: t12.number
     }),
-    t13.partial({
-      anchorElement: t13.union([t13.string, t13.null]),
-      iconSrc: t13.union([t13.string, t13.null])
+    t12.partial({
+      anchorElement: t12.union([t12.string, t12.null]),
+      iconSrc: t12.union([t12.string, t12.null])
     })
   ]);
-  var ResourceCenterV = t13.intersection([
-    t13.type({
-      isAutopilotEnabled: t13.boolean,
-      textStrings: t13.record(t13.string, t13.string),
-      showQuickLinks: t13.boolean
+  var ResourceCenterV = t12.intersection([
+    t12.type({
+      isAutopilotEnabled: t12.boolean,
+      textStrings: t12.record(t12.string, t12.string),
+      showQuickLinks: t12.boolean
     }),
-    t13.partial({
-      key: t13.union([t13.string, t13.null, t13.undefined]),
-      mobileLauncher: t13.union([LauncherV, t13.null]),
-      desktopLauncher: t13.union([LauncherV, t13.null]),
-      customTheme: t13.union([t13.number, t13.null])
+    t12.partial({
+      key: t12.union([t12.string, t12.null, t12.undefined]),
+      mobileLauncher: t12.union([LauncherV, t12.null]),
+      desktopLauncher: t12.union([LauncherV, t12.null]),
+      customTheme: t12.union([t12.number, t12.null])
     })
   ]);
   var ResourceCenter = class {
@@ -21014,6 +21094,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     const actor = getNudgeActor(_, nudge.variantId);
     actor?.send({ type: "CLOSE_WITHOUT_REACTIVATION" });
   };
+  var closeNudge = (_, nudge) => {
+    const actor = getNudgeActor(_, nudge.variantId);
+    actor?.send({ type: "CLOSE" });
+  };
   var snoozeNudge = (_, nudge, duration, renderMode = 0 /* DEFAULT */) => {
     if (renderMode === 1 /* MOCK */) {
       _.services.closeNudgeMock(_, nudge);
@@ -21052,11 +21136,11 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     deactivate,
     markSeen
   }) => {
-    const type11 = nudge.type;
+    const type10 = nudge.type;
     const activelifeCycleUuid = activate ? v4_default() : deactivate ? "" : void 0;
     const updatedContext = {
       [Number(nudge.variantId)]: {
-        type: type11,
+        type: type10,
         currentStep: stepIndex,
         stepIndexStack,
         lastSeenTs: markSeen ? Date.now() : void 0,
@@ -21267,6 +21351,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   nudgeActionsBridge.function("dismissNudge", (nudge) => {
     dismissNudge(window.engagement._, nudge, 0 /* DEFAULT */);
   });
+  nudgeActionsBridge.function("closeNudge", (nudge) => {
+    closeNudge(window.engagement._, nudge);
+  });
   nudgeActionsBridge.function("closeNudgeWithoutReactivation", (nudge) => {
     closeNudgeWithoutReactivation(window.engagement._, nudge);
   });
@@ -21295,7 +21382,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   nudgeActionsBridge.function(
     "determineAction",
     (step, buttonMeta, surveyResponse) => {
-      return determineAction(step, {
+      return determineAction(window.engagement._, step, {
         buttonMeta,
         surveyResponse
       });
@@ -22287,12 +22374,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }()
   );
   var __assign = function() {
-    __assign = Object.assign || function __assign3(t14) {
+    __assign = Object.assign || function __assign3(t13) {
       for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
         s2 = arguments[i2];
-        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t14[p] = s2[p];
+        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t13[p] = s2[p];
       }
-      return t14;
+      return t13;
     };
     return __assign.apply(this, arguments);
   };
@@ -22604,7 +22691,11 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
               const item = proxy2._q.shift();
               if (!item) continue;
               const methodName = item[0];
-              if (ASYNC_METHODS_SNIPPET.includes(methodName)) {
+              const isAsyncMethod = ASYNC_METHODS_SNIPPET.includes(methodName);
+              console.warn(
+                `Engagement SDK method '${methodName}' still in queue (isAsyncMethod=${isAsyncMethod}); attempting to resolve as no-op.`
+              );
+              if (isAsyncMethod) {
                 if (item[1] instanceof Function && item[2] instanceof Function) {
                   const resolve = item[1];
                   console.warn(`Engagement SDK method '${methodName}' resolved as no-op due to script loading failure`);
@@ -22635,8 +22726,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             const identityStore = AnalyticsConnector.getInstance(instanceName).identityStore;
             initFunc(config.apiKey, {
               serverZone: config.serverZone,
-              serverUrl: config.serverUrl?.includes("amplitude.com") ? void 0 : config.serverUrl,
-              // default Amplitude server URLs are different for GS VS Analytics, we onyl want to pick up custom URLs used for proxying
               ...options,
               options: { logLevel: config.logLevel, logger: config.loggerProvider, ...options?.options }
             });
@@ -22752,15 +22841,15 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           const resolve = args.shift();
           const reject = args.shift();
           try {
-            await method(...args).then(resolve, reject);
+            await method.bind(instance)(...args).then(resolve, reject);
           } catch (err) {
             logger.error(err);
           }
         } else {
-          await method(...args);
+          await method.bind(instance)(...args);
         }
       } else {
-        await method(...args);
+        await method.bind(instance)(...args);
       }
     };
     const callAll = async (fnName) => {
@@ -22782,9 +22871,16 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         continue;
       }
       if (ASYNC_METHODS.includes(fnName)) {
+        logger.debug("Scheduling async call", fnName);
         await call(item);
+        logger.debug("Finished async call", fnName);
       } else {
-        call(item);
+        logger.debug("Scheduling sync call", fnName);
+        call(item).catch((e2) => {
+          logger.warn(`Error processing queued call for ${fnName}`, e2);
+          throw e2;
+        });
+        logger.debug("Finished sync call", fnName);
       }
     }
     queue.length = 0;
@@ -22805,6 +22901,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     });
     return bound;
   };
+
+  // ../shared/src/sdk/sdk.ts
+  var import_debounce = __toESM(require_debounce());
 
   // ../shared/src/products/resource-center/service-actions.ts
   var service_actions_exports2 = {};
@@ -22937,20 +23036,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     _isProxy = false;
     _fingerprint;
     _sentry;
+    _debouncedDecide;
     constructor(_, sdkConfig) {
       this._ = _;
       this.nudgeActions = bindActions(_, service_actions_exports);
       this.resourceCenterActions = bindActions(_, service_actions_exports2);
       this.globalActions = bindActions(_, global_actions_exports);
-      this.setRouter = this.setRouter.bind(this);
-      this.boot = this.boot.bind(this);
-      this._startNudgeDebug = this._startNudgeDebug.bind(this);
-      this.forwardEvent = this.forwardEvent.bind(this);
-      this.addIntegration = this.addIntegration.bind(this);
-      this.setThemeMode = this.setThemeMode.bind(this);
-      this.addCallback = this.addCallback.bind(this);
-      this.setSessionProperty = this.setSessionProperty.bind(this);
-      this._initStarted = window.engagement?._initStarted === true;
       this._configuration = {
         ...this._configuration,
         ...sdkConfig,
@@ -22959,6 +23050,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       if (this._configuration.options.logger) {
         this._configuration.options.logger.enable(this._configuration.options.logLevel ?? 2);
       }
+      this._debouncedDecide = (0, import_debounce.default)(() => {
+        this.decide();
+      }, 1e4);
     }
     /**
      * Initializes the Engagement SDK. This will usually not be necessary as it happens automatically when you do amplitude.add(engagementPlugin());
@@ -23252,6 +23346,14 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       } else {
         user = options.user;
       }
+      if (user) {
+        if (user.user_id === "") {
+          user.user_id = void 0;
+        }
+        if (user.device_id === "") {
+          user.device_id = void 0;
+        }
+      }
       if (!user || !user.user_id && !user.device_id) {
         logger.error("User must specify at least a user_id or device_id");
         this._.user = void 0;
@@ -23382,8 +23484,11 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         if (action.surveyResponse) {
           actor?.send({ type: "UPDATE_SURVEY_RESPONSE", surveyResponse: action.surveyResponse });
         }
+        const snapshot = actor?.getSnapshot();
+        const storedSurveyResponse = snapshot?.context?.surveyResponses?.[currentStep.id];
+        const surveyResponse = storedSurveyResponse ?? action.surveyResponse;
         const meta = buttonBlock.meta;
-        const buttonAction = determineAction(currentStep, { buttonMeta: meta, surveyResponse: action.surveyResponse });
+        const buttonAction = determineAction(this._, currentStep, { buttonMeta: meta, surveyResponse });
         execNudgeAction(this._, buttonAction, meta, 0 /* DEFAULT */, actor);
       } else {
         logger.error(
@@ -23466,6 +23571,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         return;
       }
       this._.user.user_properties = { ...this._.user.user_properties, ...properties };
+      this._debouncedDecide();
     }
     _shareConfig() {
       return {
@@ -23643,12 +23749,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   }
   var __assign2 = function() {
-    __assign2 = Object.assign || function __assign3(t14) {
+    __assign2 = Object.assign || function __assign3(t13) {
       for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
         s2 = arguments[i2];
-        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t14[p] = s2[p];
+        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t13[p] = s2[p];
       }
-      return t14;
+      return t13;
     };
     return __assign2.apply(this, arguments);
   };
@@ -23683,12 +23789,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     var _ = {
       label: 0,
       sent: function() {
-        if (t14[0] & 1) throw t14[1];
-        return t14[1];
+        if (t13[0] & 1) throw t13[1];
+        return t13[1];
       },
       trys: [],
       ops: []
-    }, f, y2, t14, g;
+    }, f, y2, t13, g;
     return g = {
       next: verb(0),
       "throw": verb(1),
@@ -23704,12 +23810,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     function step(op) {
       if (f) throw new TypeError("Generator is already executing.");
       while (g && (g = 0, op[0] && (_ = 0)), _) try {
-        if (f = 1, y2 && (t14 = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t14 = y2["return"]) && t14.call(y2), 0) : y2.next) && !(t14 = t14.call(y2, op[1])).done) return t14;
-        if (y2 = 0, t14) op = [op[0] & 2, t14.value];
+        if (f = 1, y2 && (t13 = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t13 = y2["return"]) && t13.call(y2), 0) : y2.next) && !(t13 = t13.call(y2, op[1])).done) return t13;
+        if (y2 = 0, t13) op = [op[0] & 2, t13.value];
         switch (op[0]) {
           case 0:
           case 1:
-            t14 = op;
+            t13 = op;
             break;
           case 4:
             _.label++;
@@ -23727,25 +23833,25 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             _.trys.pop();
             continue;
           default:
-            if (!(t14 = _.trys, t14 = t14.length > 0 && t14[t14.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+            if (!(t13 = _.trys, t13 = t13.length > 0 && t13[t13.length - 1]) && (op[0] === 6 || op[0] === 2)) {
               _ = 0;
               continue;
             }
-            if (op[0] === 3 && (!t14 || op[1] > t14[0] && op[1] < t14[3])) {
+            if (op[0] === 3 && (!t13 || op[1] > t13[0] && op[1] < t13[3])) {
               _.label = op[1];
               break;
             }
-            if (op[0] === 6 && _.label < t14[1]) {
-              _.label = t14[1];
-              t14 = op;
+            if (op[0] === 6 && _.label < t13[1]) {
+              _.label = t13[1];
+              t13 = op;
               break;
             }
-            if (t14 && _.label < t14[2]) {
-              _.label = t14[2];
+            if (t13 && _.label < t13[2]) {
+              _.label = t13[2];
               _.ops.push(op);
               break;
             }
-            if (t14[2]) _.ops.pop();
+            if (t13[2]) _.ops.pop();
             _.trys.pop();
             continue;
         }
@@ -23754,7 +23860,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         op = [6, e2];
         y2 = 0;
       } finally {
-        f = t14 = 0;
+        f = t13 = 0;
       }
       if (op[0] & 5) throw op[1];
       return {
@@ -23976,13 +24082,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var SemanticVersion = (
     /** @class */
     function() {
-      function SemanticVersion2(major, minor, patch2, preRelease) {
+      function SemanticVersion2(major, minor, patch, preRelease) {
         if (preRelease === void 0) {
           preRelease = void 0;
         }
         this.major = major;
         this.minor = minor;
-        this.patch = patch2;
+        this.patch = patch;
         this.preRelease = preRelease;
       }
       SemanticVersion2.parse = function(version2) {
@@ -23998,9 +24104,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         if (isNaN(major) || isNaN(minor)) {
           return void 0;
         }
-        var patch2 = Number(matchGroup[4]) || 0;
+        var patch = Number(matchGroup[4]) || 0;
         var preRelease = matchGroup[5] || void 0;
-        return new SemanticVersion2(major, minor, patch2, preRelease);
+        return new SemanticVersion2(major, minor, patch, preRelease);
       };
       SemanticVersion2.prototype.compareTo = function(other) {
         if (this.major > other.major)
@@ -24805,13 +24911,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   );
 
   // ../shared/src/store/MessageBus.ts
-  var import_debounce = __toESM(require_debounce());
+  var import_debounce2 = __toESM(require_debounce());
   var MessageBus = class {
     messageToSubscriberGroup;
     debounce;
-    constructor(debounce = import_debounce.default) {
+    constructor(debounce2 = import_debounce2.default) {
       this.messageToSubscriberGroup = /* @__PURE__ */ new Map();
-      this.debounce = debounce;
+      this.debounce = debounce2;
     }
     // Register a subscriber with optional ID (for unsubscribing) and optional debounce timeout (no debounce if not provided)
     subscribe(messageType, listener, listenerId = void 0, debounceTimeout = void 0) {
@@ -25021,6 +25127,38 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     return () => unsubs.forEach((unsub) => unsub());
   };
 
+  // ../shared/src/internal/util/proxyMediaUrl.ts
+  var AMPLITUDE_IMAGE_DOMAINS = ["engagement-static.amplitude.com", "engagement-static.eu.amplitude.com"];
+  var stripAmplitudeImageDomain = (url) => {
+    try {
+      for (const domain of AMPLITUDE_IMAGE_DOMAINS) {
+        const domainWithScheme = `https://${domain}/`;
+        if (url.startsWith(domainWithScheme)) {
+          return url.slice(domainWithScheme.length - 1);
+        }
+      }
+    } catch (e2) {
+      logger.warn(`isAmplitudeHosted#error url=${url}, error=${e2}`);
+    }
+    return null;
+  };
+  var proxyMediaUrl = (originalUrl) => {
+    const sdk = getSDK();
+    let customMediaUrl = sdk?.[_configuration]?.mediaUrl;
+    if (!customMediaUrl) return originalUrl;
+    if (customMediaUrl.endsWith("/")) customMediaUrl = customMediaUrl.slice(0, -1);
+    const originalUrlStripped = stripAmplitudeImageDomain(originalUrl);
+    if (originalUrlStripped == null) return originalUrl;
+    try {
+      return customMediaUrl + originalUrlStripped;
+    } catch (e2) {
+      logger.warn(
+        "proxyMediaUrl#error -- will keep original url; originalUrl=${originalUrl}, customMediaUrl=${customMediaUrl}, error=${e}"
+      );
+      return originalUrl;
+    }
+  };
+
   // ../shared/src/internal/util/theme.ts
   var findDefaultTheme = (themes) => {
     const platformSpecificDefault = themes.find(
@@ -25032,27 +25170,39 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     return platformSpecificDefault;
   };
 
-  // src/services/index.ts
+  // src/services/nudge.ts
   var nudgeServicesBridge = registerNativeBridge("nudgeServices");
-  var matchesSelector = (targetElement, identifier) => targetElement?.identifier === identifier;
-  var services = {
-    ...NOOP_SERVICES,
-    onLocationChange,
-    enrichUser: (user) => user,
-    // No-op for mobile - just return user as-is
-    linkExecutable: (_, action, forceNewTab) => nudgeServicesBridge.function("linkExecutable").call(JSON.stringify(action), forceNewTab),
-    getDefaultUIMode: () => nudgeServicesBridge.function("getDefaultUIMode").call(),
+  var nudgeService = {
+    closeNudgeMock: () => {
+    },
+    closeAllNudgeMocks: () => {
+    },
     closeStep: (_, nudge, stepIndex) => nudgeServicesBridge.function("closeStep").call(JSON.stringify(nudge), stepIndex),
-    clickElement: (selector) => nudgeServicesBridge.function("clickElement").call(selector),
-    isElementVisible: async (selector) => nudgeServicesBridge.function("isElementVisible").promise({ selector: typeof selector === "string" ? selector : selector.selector || selector.text }),
-    matchesSelector,
     renderNudge(_, nudge, stepIndex, options) {
       nudge = interpolateUserPropertiesDeep(nudge, _);
+      nudge = {
+        ...nudge,
+        steps: nudge.steps.map((step) => ({
+          ...step,
+          content: step.content.map((block) => {
+            if (block.type === "image") {
+              return {
+                ...block,
+                meta: {
+                  ...block.meta,
+                  src: block.meta.src ? proxyMediaUrl(block.meta.src) : block.meta.src
+                }
+              };
+            }
+            return block;
+          })
+        }))
+      };
       let theme = _.themeOverride;
       const themeMode = _.themeMode === "auto" ? _.services.getDefaultUIMode() : _.themeMode;
       if (nudge?.customThemeId !== void 0 && nudge.customThemeId !== null) {
         theme = {
-          theme: _.themes.find((t14) => t14.id === nudge.customThemeId)?.theme,
+          theme: _.themes.find((t13) => t13.id === nudge.customThemeId)?.theme,
           mode: themeMode
         };
       }
@@ -25068,8 +25218,25 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         anchorOverride: options?.anchorOverride
       };
       nudgeServicesBridge.function("renderNudge").call(JSON.stringify({ nudge, stepIndex, options: _options, theme }));
-    },
-    appReviewExecutable: (_, action) => nudgeServicesBridge.function("appReviewExecutable").call(JSON.stringify(action))
+    }
+  };
+  var nudge_default = nudgeService;
+
+  // src/services/index.ts
+  var nudgeServicesBridge2 = registerNativeBridge("nudgeServices");
+  var matchesSelector = (targetElement, identifier) => targetElement?.identifier === identifier;
+  var services = {
+    ...NOOP_SERVICES,
+    ...nudge_default,
+    onLocationChange,
+    enrichUser: (user) => user,
+    // No-op for mobile - just return user as-is
+    linkExecutable: (_, action, forceNewTab) => nudgeServicesBridge2.function("linkExecutable").call(JSON.stringify(action), forceNewTab),
+    getDefaultUIMode: () => nudgeServicesBridge2.function("getDefaultUIMode").call(),
+    clickElement: (selector) => nudgeServicesBridge2.function("clickElement").call(selector),
+    isElementVisible: async (selector) => nudgeServicesBridge2.function("isElementVisible").promise({ selector: typeof selector === "string" ? selector : selector.selector || selector.text }),
+    matchesSelector,
+    appReviewExecutable: (_, action) => nudgeServicesBridge2.function("appReviewExecutable").call(JSON.stringify(action))
   };
 
   // src/logger.ts
