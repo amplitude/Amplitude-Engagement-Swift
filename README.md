@@ -15,7 +15,7 @@ For using the SDK, please visit our [docs](https://amplitude.com/docs/guides-and
 
 ## Changelog
 
-Coming soon!
+See our [Changelog](https://amplitude.com/docs/guides-and-surveys/guides-and-surveys-mobile-sdk-changelog) for version history and updates.
 
 ## Need Help?
 
