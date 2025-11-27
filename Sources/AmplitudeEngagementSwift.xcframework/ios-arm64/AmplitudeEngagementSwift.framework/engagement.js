@@ -30,6 +30,14 @@
     mod
   ));
 
+  // ../shared/node_modules/lodash/isArray.js
+  var require_isArray = __commonJS({
+    "../shared/node_modules/lodash/isArray.js"(exports, module) {
+      var isArray3 = Array.isArray;
+      module.exports = isArray3;
+    }
+  });
+
   // ../shared/node_modules/lodash/_freeGlobal.js
   var require_freeGlobal = __commonJS({
     "../shared/node_modules/lodash/_freeGlobal.js"(exports, module) {
@@ -114,6 +122,50 @@
         return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
       }
       module.exports = baseGetTag;
+    }
+  });
+
+  // ../shared/node_modules/lodash/isObjectLike.js
+  var require_isObjectLike = __commonJS({
+    "../shared/node_modules/lodash/isObjectLike.js"(exports, module) {
+      function isObjectLike(value) {
+        return value != null && typeof value == "object";
+      }
+      module.exports = isObjectLike;
+    }
+  });
+
+  // ../shared/node_modules/lodash/isSymbol.js
+  var require_isSymbol = __commonJS({
+    "../shared/node_modules/lodash/isSymbol.js"(exports, module) {
+      var baseGetTag = require_baseGetTag();
+      var isObjectLike = require_isObjectLike();
+      var symbolTag = "[object Symbol]";
+      function isSymbol(value) {
+        return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
+      }
+      module.exports = isSymbol;
+    }
+  });
+
+  // ../shared/node_modules/lodash/_isKey.js
+  var require_isKey = __commonJS({
+    "../shared/node_modules/lodash/_isKey.js"(exports, module) {
+      var isArray3 = require_isArray();
+      var isSymbol = require_isSymbol();
+      var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/;
+      var reIsPlainProp = /^\w*$/;
+      function isKey(value, object) {
+        if (isArray3(value)) {
+          return false;
+        }
+        var type10 = typeof value;
+        if (type10 == "number" || type10 == "symbol" || type10 == "boolean" || value == null || isSymbol(value)) {
+          return true;
+        }
+        return reIsPlainProp.test(value) || !reIsDeepProp.test(value) || object != null && value in Object(object);
+      }
+      module.exports = isKey;
     }
   });
 
@@ -244,121 +296,6 @@
     }
   });
 
-  // ../shared/node_modules/lodash/_defineProperty.js
-  var require_defineProperty = __commonJS({
-    "../shared/node_modules/lodash/_defineProperty.js"(exports, module) {
-      var getNative = require_getNative();
-      var defineProperty = function() {
-        try {
-          var func = getNative(Object, "defineProperty");
-          func({}, "", {});
-          return func;
-        } catch (e2) {
-        }
-      }();
-      module.exports = defineProperty;
-    }
-  });
-
-  // ../shared/node_modules/lodash/_baseAssignValue.js
-  var require_baseAssignValue = __commonJS({
-    "../shared/node_modules/lodash/_baseAssignValue.js"(exports, module) {
-      var defineProperty = require_defineProperty();
-      function baseAssignValue(object, key, value) {
-        if (key == "__proto__" && defineProperty) {
-          defineProperty(object, key, {
-            "configurable": true,
-            "enumerable": true,
-            "value": value,
-            "writable": true
-          });
-        } else {
-          object[key] = value;
-        }
-      }
-      module.exports = baseAssignValue;
-    }
-  });
-
-  // ../shared/node_modules/lodash/eq.js
-  var require_eq = __commonJS({
-    "../shared/node_modules/lodash/eq.js"(exports, module) {
-      function eq(value, other) {
-        return value === other || value !== value && other !== other;
-      }
-      module.exports = eq;
-    }
-  });
-
-  // ../shared/node_modules/lodash/_assignValue.js
-  var require_assignValue = __commonJS({
-    "../shared/node_modules/lodash/_assignValue.js"(exports, module) {
-      var baseAssignValue = require_baseAssignValue();
-      var eq = require_eq();
-      var objectProto = Object.prototype;
-      var hasOwnProperty = objectProto.hasOwnProperty;
-      function assignValue(object, key, value) {
-        var objValue = object[key];
-        if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) || value === void 0 && !(key in object)) {
-          baseAssignValue(object, key, value);
-        }
-      }
-      module.exports = assignValue;
-    }
-  });
-
-  // ../shared/node_modules/lodash/isArray.js
-  var require_isArray = __commonJS({
-    "../shared/node_modules/lodash/isArray.js"(exports, module) {
-      var isArray3 = Array.isArray;
-      module.exports = isArray3;
-    }
-  });
-
-  // ../shared/node_modules/lodash/isObjectLike.js
-  var require_isObjectLike = __commonJS({
-    "../shared/node_modules/lodash/isObjectLike.js"(exports, module) {
-      function isObjectLike(value) {
-        return value != null && typeof value == "object";
-      }
-      module.exports = isObjectLike;
-    }
-  });
-
-  // ../shared/node_modules/lodash/isSymbol.js
-  var require_isSymbol = __commonJS({
-    "../shared/node_modules/lodash/isSymbol.js"(exports, module) {
-      var baseGetTag = require_baseGetTag();
-      var isObjectLike = require_isObjectLike();
-      var symbolTag = "[object Symbol]";
-      function isSymbol(value) {
-        return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
-      }
-      module.exports = isSymbol;
-    }
-  });
-
-  // ../shared/node_modules/lodash/_isKey.js
-  var require_isKey = __commonJS({
-    "../shared/node_modules/lodash/_isKey.js"(exports, module) {
-      var isArray3 = require_isArray();
-      var isSymbol = require_isSymbol();
-      var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/;
-      var reIsPlainProp = /^\w*$/;
-      function isKey(value, object) {
-        if (isArray3(value)) {
-          return false;
-        }
-        var type10 = typeof value;
-        if (type10 == "number" || type10 == "symbol" || type10 == "boolean" || value == null || isSymbol(value)) {
-          return true;
-        }
-        return reIsPlainProp.test(value) || !reIsDeepProp.test(value) || object != null && value in Object(object);
-      }
-      module.exports = isKey;
-    }
-  });
-
   // ../shared/node_modules/lodash/_nativeCreate.js
   var require_nativeCreate = __commonJS({
     "../shared/node_modules/lodash/_nativeCreate.js"(exports, module) {
@@ -473,6 +410,16 @@
         this.size = 0;
       }
       module.exports = listCacheClear;
+    }
+  });
+
+  // ../shared/node_modules/lodash/eq.js
+  var require_eq = __commonJS({
+    "../shared/node_modules/lodash/eq.js"(exports, module) {
+      function eq(value, other) {
+        return value === other || value !== value && other !== other;
+      }
+      module.exports = eq;
     }
   });
 
@@ -842,20 +789,6 @@
     }
   });
 
-  // ../shared/node_modules/lodash/_isIndex.js
-  var require_isIndex = __commonJS({
-    "../shared/node_modules/lodash/_isIndex.js"(exports, module) {
-      var MAX_SAFE_INTEGER = 9007199254740991;
-      var reIsUint = /^(?:0|[1-9]\d*)$/;
-      function isIndex(value, length) {
-        var type10 = typeof value;
-        length = length == null ? MAX_SAFE_INTEGER : length;
-        return !!length && (type10 == "number" || type10 != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
-      }
-      module.exports = isIndex;
-    }
-  });
-
   // ../shared/node_modules/lodash/_toKey.js
   var require_toKey = __commonJS({
     "../shared/node_modules/lodash/_toKey.js"(exports, module) {
@@ -869,6 +802,102 @@
         return result == "0" && 1 / value == -INFINITY ? "-0" : result;
       }
       module.exports = toKey;
+    }
+  });
+
+  // ../shared/node_modules/lodash/_baseGet.js
+  var require_baseGet = __commonJS({
+    "../shared/node_modules/lodash/_baseGet.js"(exports, module) {
+      var castPath = require_castPath();
+      var toKey = require_toKey();
+      function baseGet(object, path) {
+        path = castPath(path, object);
+        var index = 0, length = path.length;
+        while (object != null && index < length) {
+          object = object[toKey(path[index++])];
+        }
+        return index && index == length ? object : void 0;
+      }
+      module.exports = baseGet;
+    }
+  });
+
+  // ../shared/node_modules/lodash/get.js
+  var require_get = __commonJS({
+    "../shared/node_modules/lodash/get.js"(exports, module) {
+      var baseGet = require_baseGet();
+      function get5(object, path, defaultValue) {
+        var result = object == null ? void 0 : baseGet(object, path);
+        return result === void 0 ? defaultValue : result;
+      }
+      module.exports = get5;
+    }
+  });
+
+  // ../shared/node_modules/lodash/_defineProperty.js
+  var require_defineProperty = __commonJS({
+    "../shared/node_modules/lodash/_defineProperty.js"(exports, module) {
+      var getNative = require_getNative();
+      var defineProperty = function() {
+        try {
+          var func = getNative(Object, "defineProperty");
+          func({}, "", {});
+          return func;
+        } catch (e2) {
+        }
+      }();
+      module.exports = defineProperty;
+    }
+  });
+
+  // ../shared/node_modules/lodash/_baseAssignValue.js
+  var require_baseAssignValue = __commonJS({
+    "../shared/node_modules/lodash/_baseAssignValue.js"(exports, module) {
+      var defineProperty = require_defineProperty();
+      function baseAssignValue(object, key, value) {
+        if (key == "__proto__" && defineProperty) {
+          defineProperty(object, key, {
+            "configurable": true,
+            "enumerable": true,
+            "value": value,
+            "writable": true
+          });
+        } else {
+          object[key] = value;
+        }
+      }
+      module.exports = baseAssignValue;
+    }
+  });
+
+  // ../shared/node_modules/lodash/_assignValue.js
+  var require_assignValue = __commonJS({
+    "../shared/node_modules/lodash/_assignValue.js"(exports, module) {
+      var baseAssignValue = require_baseAssignValue();
+      var eq = require_eq();
+      var objectProto = Object.prototype;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      function assignValue(object, key, value) {
+        var objValue = object[key];
+        if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) || value === void 0 && !(key in object)) {
+          baseAssignValue(object, key, value);
+        }
+      }
+      module.exports = assignValue;
+    }
+  });
+
+  // ../shared/node_modules/lodash/_isIndex.js
+  var require_isIndex = __commonJS({
+    "../shared/node_modules/lodash/_isIndex.js"(exports, module) {
+      var MAX_SAFE_INTEGER = 9007199254740991;
+      var reIsUint = /^(?:0|[1-9]\d*)$/;
+      function isIndex(value, length) {
+        var type10 = typeof value;
+        length = length == null ? MAX_SAFE_INTEGER : length;
+        return !!length && (type10 == "number" || type10 != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
+      }
+      module.exports = isIndex;
     }
   });
 
@@ -11614,35 +11643,6 @@
     }
   });
 
-  // ../shared/node_modules/lodash/_baseGet.js
-  var require_baseGet = __commonJS({
-    "../shared/node_modules/lodash/_baseGet.js"(exports, module) {
-      var castPath = require_castPath();
-      var toKey = require_toKey();
-      function baseGet(object, path) {
-        path = castPath(path, object);
-        var index = 0, length = path.length;
-        while (object != null && index < length) {
-          object = object[toKey(path[index++])];
-        }
-        return index && index == length ? object : void 0;
-      }
-      module.exports = baseGet;
-    }
-  });
-
-  // ../shared/node_modules/lodash/get.js
-  var require_get = __commonJS({
-    "../shared/node_modules/lodash/get.js"(exports, module) {
-      var baseGet = require_baseGet();
-      function get5(object, path, defaultValue) {
-        var result = object == null ? void 0 : baseGet(object, path);
-        return result === void 0 ? defaultValue : result;
-      }
-      module.exports = get5;
-    }
-  });
-
   // ../shared/node_modules/lodash/now.js
   var require_now = __commonJS({
     "../shared/node_modules/lodash/now.js"(exports, module) {
@@ -12115,6 +12115,1005 @@
   globalThis.AbortController = AbortController2;
   globalThis.AbortSignal = AbortSignal;
   globalThis.AbortError = AbortError;
+
+  // ../shared/src/products/nudges/store/selectors.ts
+  var import_get = __toESM(require_get());
+
+  // ../shared/src/internal/middleware/types.ts
+  var isValidSessionPropertyKey = (key) => typeof key === "string" && key.length > 0;
+  var isValidSessionPropertyValue = (value) => typeof value === "number" || typeof value === "string" || typeof value === "boolean";
+  var isListBlock = (block) => block.type === "survey_list";
+  var hasConditionalActionsBlock = (block) => {
+    if (!(block.type === "survey_rating" || block.type === "survey_list" || block.type === "button")) {
+      return false;
+    }
+    if (!block.meta) {
+      return false;
+    }
+    return !!(block.meta.conditionalActions && block.meta.conditionalActions.length > 0 || block.meta.defaultAction && block.meta.defaultAction.type !== "no_action");
+  };
+
+  // ../shared/src/products/nudges/store/rules.ts
+  var RAGE_CLOSE_THRESHOLD = 2e3;
+  var RULES = {
+    generic: {
+      stepsPresentation: "sequential",
+      blockedBy: ["survey", "generic"],
+      includedInCustomThrottles: true,
+      inputs: false,
+      media: true,
+      stopOnSimulateStart: true,
+      canBeActive: true
+    },
+    survey: {
+      stepsPresentation: "sequential",
+      blockedBy: ["survey", "generic"],
+      includedInCustomThrottles: true,
+      inputs: true,
+      media: true,
+      stopOnSimulateStart: true,
+      canBeActive: true
+    },
+    checklist: {
+      stepsPresentation: "all",
+      blockedBy: ["checklist"],
+      includedInCustomThrottles: true,
+      inputs: false,
+      media: false,
+      stopOnSimulateStart: true,
+      canBeActive: true
+    },
+    banner: {
+      stepsPresentation: "single",
+      blockedBy: ["banner"],
+      includedInCustomThrottles: false,
+      inputs: true,
+      media: false,
+      stopOnSimulateStart: true,
+      canBeActive: true
+    },
+    tooltip: {
+      stepsPresentation: "single",
+      blockedBy: [],
+      includedInCustomThrottles: false,
+      inputs: true,
+      media: true,
+      stopOnSimulateStart: false,
+      canBeActive: false
+    }
+  };
+  var getApplicableNudgeType = (nudgeType) => {
+    if (nudgeType in RULES) {
+      return nudgeType;
+    }
+    return "generic";
+  };
+  var isIncludedInCustomThrottles = (nudge) => {
+    return RULES[getApplicableNudgeType(nudge.type)].includedInCustomThrottles;
+  };
+  var canBeActive = (nudge) => {
+    return RULES[getApplicableNudgeType(nudge.type)].canBeActive;
+  };
+  var typeIsIncludedInCustomThrottles = (type10) => {
+    return RULES[getApplicableNudgeType(type10)].includedInCustomThrottles;
+  };
+  var isBlocked = (nudge, renderingNudges) => {
+    const renderingNudgeTypes = new Set(renderingNudges.map(({ type: type10 }) => getApplicableNudgeType(type10)));
+    return RULES[getApplicableNudgeType(nudge.type)].blockedBy.some((element) => renderingNudgeTypes.has(element));
+  };
+  var getBlockingNudge = (nudge, renderingNudges) => {
+    const nudgeType = getApplicableNudgeType(nudge.type);
+    const blockedByTypes = RULES[nudgeType].blockedBy;
+    for (const renderingNudge of renderingNudges) {
+      const renderingNudgeType = getApplicableNudgeType(renderingNudge.type);
+      if (blockedByTypes.includes(renderingNudgeType)) {
+        return renderingNudge;
+      }
+    }
+    return null;
+  };
+  var hasSequentialSteps = (nudge) => {
+    return RULES[getApplicableNudgeType(nudge.type)].stepsPresentation === "sequential";
+  };
+  var shouldStopOnSimulateStart = (nudge) => {
+    return RULES[getApplicableNudgeType(nudge.type)].stopOnSimulateStart;
+  };
+  var usesNavigationStack = (nudge) => {
+    return !nudge.isCarousel;
+  };
+  var closesNudgeOnStepChange = (nudge, event, stepIndex) => {
+    if (!nudge.isCarousel) {
+      return true;
+    }
+    if (event.type === "REGRESS") {
+      return false;
+    } else if (event.type === "ADVANCE") {
+      if (event.action?.type === "go_to_step") {
+        return false;
+      } else if (event.action?.type === "step_forward" && stepIndex !== nudge.steps.length - 1) {
+        return false;
+      }
+    }
+    return true;
+  };
+  var isSurvey = (nudge) => {
+    return nudge.type === "survey";
+  };
+  var getNudgeProductType = (nudge) => {
+    return nudge.type === "survey" ? "survey" : "guide";
+  };
+  var getProductMeta = (nudge) => {
+    const type10 = getNudgeProductType(nudge);
+    return {
+      type: type10,
+      name: getNudgeProductType(nudge) === "guide" ? "Guide" : "Survey"
+    };
+  };
+
+  // ../shared/src/products/nudges/store/utils.ts
+  var urlMatchesConditions = (_, url, conditions, defaultValue = true) => {
+    const pageTarget = {
+      context: {
+        url
+      },
+      result: {}
+    };
+    if (conditions.flat().length === 0) {
+      return defaultValue;
+    }
+    return _.evalEngine.evaluateConditions(pageTarget, conditions);
+  };
+
+  // ../shared/src/sdk/symbols.ts
+  var _analytics = "_analytics";
+  var _configuration = "_configuration";
+
+  // ../shared/src/internal/util/sentry.ts
+  var getSentry = () => {
+    return void 0;
+  };
+
+  // ../shared/node_modules/@amplitude/analytics-types/lib/esm/logger.js
+  var LogLevel;
+  (function(LogLevel2) {
+    LogLevel2[LogLevel2["None"] = 0] = "None";
+    LogLevel2[LogLevel2["Error"] = 1] = "Error";
+    LogLevel2[LogLevel2["Warn"] = 2] = "Warn";
+    LogLevel2[LogLevel2["Verbose"] = 3] = "Verbose";
+    LogLevel2[LogLevel2["Debug"] = 4] = "Debug";
+  })(LogLevel || (LogLevel = {}));
+
+  // ../shared/src/internal/util/LocalStorage.ts
+  var PREFIX = "amplitude.engagement";
+  var set = (label, value) => {
+    try {
+      localStorage.setItem(`${PREFIX}.${label}`, value.toString());
+      return value;
+    } catch (err) {
+      return "";
+    }
+  };
+  var get = (label, defaultValue, prefixOverride) => {
+    let value;
+    const prefix = prefixOverride ?? PREFIX;
+    try {
+      value = localStorage.getItem(`${prefix}.${label}`);
+    } catch (err) {
+      value = null;
+    }
+    if (value === null) {
+      return defaultValue;
+    } else {
+      if (value === "false") return false;
+      if (value === "true") return true;
+      if (+value) return +value;
+      return value;
+    }
+  };
+  var remove = (label) => {
+    try {
+      localStorage.removeItem(`${PREFIX}.${label}`);
+      return;
+    } catch (err) {
+      return;
+    }
+  };
+  var LocalStorage = {
+    set,
+    get,
+    remove
+  };
+  var LocalStorage_default = LocalStorage;
+
+  // ../shared/src/internal/util/Logger.ts
+  var PREFIX2 = "Amplitude Engagement Logger ";
+  var getlocalStorageOverride = () => {
+    const level = parseInt(LocalStorage_default.get("logLevel", ""), 10);
+    if ([0, 1, 2, 3, 4].includes(level)) {
+      return level;
+    }
+    return null;
+  };
+  var DefaultLogger = class {
+    logLevel;
+    constructor() {
+      this.logLevel = getlocalStorageOverride() ?? LogLevel.None;
+    }
+    disable() {
+      this.logLevel = getlocalStorageOverride() ?? LogLevel.None;
+    }
+    enable(logLevel = LogLevel.Warn) {
+      this.logLevel = getlocalStorageOverride() ?? logLevel;
+    }
+    log(...args) {
+      if (this.logLevel < LogLevel.Verbose) {
+        return;
+      }
+      console.log(`${PREFIX2}[Log]:`, ...args);
+    }
+    warn(...args) {
+      if (this.logLevel < LogLevel.Warn) {
+        return;
+      }
+      console.warn(`${PREFIX2}[Warn]:`, ...args);
+    }
+    error(...args) {
+      if (this.logLevel < LogLevel.Error) {
+        return;
+      }
+      console.error(`${PREFIX2}[Error]:`, ...args);
+    }
+    debug(...args) {
+      if (this.logLevel < LogLevel.Debug) {
+        return;
+      }
+      console.log(`${PREFIX2}[Debug]:`, ...args);
+    }
+  };
+  var proxyLogger = {
+    disable: () => {
+    },
+    enable: () => {
+    },
+    log: () => {
+    },
+    warn: () => {
+    },
+    error: () => {
+    },
+    debug: () => {
+    }
+  };
+  var logger = new Proxy(proxyLogger, {
+    get(_target, prop) {
+      const sdkLogger = getSDK()?.[_configuration]?.options?.logger || proxyLogger;
+      return sdkLogger[prop];
+    }
+  });
+
+  // ../shared/src/services/targeting/helpers.ts
+  var getActiveVariantForFlag = (flagKey, decideResult) => {
+    return decideResult?.[flagKey]?.key;
+  };
+  var nudgePassesDecide = (nudge, decideResult) => {
+    if (nudge.platform !== __GS_PLATFORM__) {
+      return false;
+    }
+    const activeVariantForNudge = getActiveVariantForFlag(nudge.flagKey, decideResult);
+    if (!activeVariantForNudge) {
+      logger.error("Nudge does not have a decide result!");
+      return false;
+    }
+    return activeVariantForNudge === nudge.variant;
+  };
+  var getExperimentKey = (nudge, decideResult) => decideResult?.[nudge.flagKey]?.metadata?.experimentKey;
+
+  // ../shared/src/products/nudges/store/selectors.ts
+  var normalizePlainFalsyValues = (record5) => {
+    let updatedRecord = null;
+    for (const [key, value] of Object.entries(record5)) {
+      if (value === 0 || value === false) {
+        if (!updatedRecord) {
+          updatedRecord = { ...record5 };
+        }
+        updatedRecord[key] = value === 0 ? "0" : "false";
+      }
+    }
+    return updatedRecord ?? record5;
+  };
+  var isAnalyticsEventTrigger = (trigger) => trigger.type === "analytics_event";
+  var getTriggerWithNormalizedProperties = (trigger) => {
+    if (!trigger || !isAnalyticsEventTrigger(trigger) || !trigger.data.properties) {
+      return trigger;
+    }
+    const normalizedProperties = normalizePlainFalsyValues(trigger.data.properties);
+    if (normalizedProperties === trigger.data.properties) {
+      return trigger;
+    }
+    return {
+      ...trigger,
+      data: {
+        ...trigger.data,
+        properties: normalizedProperties
+      }
+    };
+  };
+  var getAllNudgeActors = (_) => _.nudgesManager?.getSnapshot()?.context.nudgeMachines;
+  var getNudgeActor = (_, id) => _.nudgesManager?.getSnapshot().context.nudgeMachines.get(id.toString());
+  var getDebugActor = (_) => {
+    const debuggingNudge = _.nudgesManager?.getSnapshot()?.context.debugMode.currentNudge;
+    if (debuggingNudge) {
+      return getNudgeActor(_, debuggingNudge.variantId);
+    }
+  };
+  var getNudgeActorSnapshot = (_, id) => getNudgeActor(_, id)?.getSnapshot();
+  var passesBuiltInThrottles = (_, nudge) => {
+    const nudgesInRenderLoop = getNudgesInRenderLoop(_);
+    return !isBlocked(nudge, nudgesInRenderLoop);
+  };
+  var passesCustomThrottles = (_, nudge) => {
+    if (!_.organization) return true;
+    const nudgesState = getAllNudgeDataFromUserStore(_);
+    const nudgeProductType = getNudgeProductType(nudge);
+    if (!nudgesState) return true;
+    const throttleConfig = nudgeProductType === "survey" ? _.organization.surveyThrottle : _.organization.guideThrottle;
+    let limits = throttleConfig.limits;
+    if (!limits && throttleConfig.limit) {
+      limits = [throttleConfig.limit];
+    }
+    const { productTypeCounts, tagThrottleCounts, secondsSinceLastActivation } = getAllActivationCounts(
+      nudgesState,
+      _.sessionStart,
+      nudgeProductType,
+      throttleConfig.limits
+    );
+    const nudgeStateTarget = {
+      context: {
+        derivedNudgeState: {
+          activationCounts: {
+            ...productTypeCounts,
+            ...tagThrottleCounts
+          },
+          secondsSinceLastActivation
+        }
+      },
+      result: {}
+    };
+    const applicableConditions = throttleConfig.conditions.map((andGroup) => {
+      return andGroup.filter((condition) => {
+        const hasTagThrottle = condition.selector.some((part) => part.startsWith("tagThrottle_"));
+        if (!hasTagThrottle) {
+          return true;
+        }
+        const tagThrottlePart = condition.selector.find((part) => part.startsWith("tagThrottle_"));
+        if (tagThrottlePart) {
+          const tagIds = tagThrottlePart.replace("tagThrottle_", "").split("_").map(Number);
+          return tagIds.some((tagId) => nudge.tags?.some((tag) => tag.id === tagId));
+        }
+        return false;
+      });
+    }).filter((andGroup) => andGroup.length > 0);
+    const passed = applicableConditions.flat().length == 0 || _.evalEngine.evaluateConditions(nudgeStateTarget, applicableConditions);
+    if (!passed) {
+      return false;
+    }
+    return true;
+  };
+  var countGreaterThan = (epoch, timestamps) => {
+    return timestamps.filter((ts) => ts > epoch).length;
+  };
+  var countForPeriod = (timestamps, sessionStart, period, periodCount = 1) => {
+    const currentEpoch = Date.now();
+    const dayInMillis = 1e3 * 60 * 60 * 24;
+    let startEpoch;
+    switch (period) {
+      case "session":
+        startEpoch = sessionStart;
+        break;
+      case "day":
+        startEpoch = currentEpoch - dayInMillis * periodCount;
+        break;
+      case "week":
+        startEpoch = currentEpoch - dayInMillis * 7 * periodCount;
+        break;
+      case "month":
+        startEpoch = currentEpoch - dayInMillis * 30 * periodCount;
+        break;
+      case "quarter":
+        startEpoch = currentEpoch - dayInMillis * 90 * periodCount;
+        break;
+      case "year":
+        startEpoch = currentEpoch - dayInMillis * 365 * periodCount;
+        break;
+      case "ever":
+        return `${timestamps.length}`;
+      default:
+        startEpoch = currentEpoch;
+    }
+    return `${countGreaterThan(startEpoch, timestamps)}`;
+  };
+  var countsByTimeWindow = (timestamps, sessionStart) => {
+    const currentEpoch = Date.now();
+    const dayInMillis = 1e3 * 60 * 60 * 24;
+    const thresholds = {
+      session: sessionStart,
+      day: currentEpoch - dayInMillis,
+      week: currentEpoch - dayInMillis * 7,
+      month: currentEpoch - dayInMillis * 30,
+      quarter: currentEpoch - dayInMillis * 90,
+      year: currentEpoch - dayInMillis * 365
+    };
+    const counts = {
+      session: 0,
+      day: 0,
+      week: 0,
+      month: 0,
+      quarter: 0,
+      year: 0,
+      ever: timestamps.length
+    };
+    for (const timestamp of timestamps) {
+      if (timestamp > thresholds.session) counts.session++;
+      if (timestamp > thresholds.day) counts.day++;
+      if (timestamp > thresholds.week) counts.week++;
+      if (timestamp > thresholds.month) counts.month++;
+      if (timestamp > thresholds.quarter) counts.quarter++;
+      if (timestamp > thresholds.year) counts.year++;
+    }
+    return {
+      // TODO: return numbers directly once bug in evalengine with number value 0 is fixed
+      session: `${counts.session}`,
+      day: `${counts.day}`,
+      week: `${counts.week}`,
+      month: `${counts.month}`,
+      quarter: `${counts.quarter}`,
+      year: `${counts.year}`,
+      ever: `${counts.ever}`
+    };
+  };
+  var getTagThrottleKey = (tagIds) => {
+    const sortedTagIds = [...tagIds].sort((a, b) => a - b);
+    return `tagThrottle_${sortedTagIds.join("_")}`;
+  };
+  var getAllActivationCounts = (nudgesState, sessionStart, targetProductType, limits) => {
+    if (!nudgesState) {
+      return {
+        productTypeCounts: { session: "0", day: "0", week: "0", month: "0", quarter: "0", year: "0", ever: "0" },
+        tagThrottleCounts: {}
+      };
+    }
+    const currentEpoch = Date.now();
+    const dayInMillis = 1e3 * 60 * 60 * 24;
+    const thresholds = {
+      session: sessionStart,
+      day: currentEpoch - dayInMillis,
+      week: currentEpoch - dayInMillis * 7,
+      month: currentEpoch - dayInMillis * 30,
+      quarter: currentEpoch - dayInMillis * 90,
+      year: currentEpoch - dayInMillis * 365
+    };
+    let lastActivationTs = 0;
+    const productTypeCounts = {
+      session: 0,
+      day: 0,
+      week: 0,
+      month: 0,
+      quarter: 0,
+      year: 0,
+      ever: 0
+    };
+    const tagThrottleCounters = {};
+    const tagThrottles = limits.filter((limit) => limit.tagIds?.length);
+    tagThrottles.forEach((throttle) => {
+      if (throttle.tagIds) {
+        const throttleKey = getTagThrottleKey(throttle.tagIds);
+        tagThrottleCounters[throttleKey] = {
+          session: 0,
+          day: 0,
+          week: 0,
+          month: 0,
+          quarter: 0,
+          year: 0,
+          ever: 0
+        };
+      }
+    });
+    for (const nudgeState of Object.values(nudgesState)) {
+      if (nudgeState?.activatedTs?.length && nudgeState.type) {
+        const stateNudgeProductType = nudgeState.type === "survey" ? "survey" : "guide";
+        const matchingTagThrottles = [];
+        if (nudgeState?.tagIds?.length) {
+          tagThrottles.forEach((throttle) => {
+            if (throttle.tagIds && throttle.tagIds.some((tagId) => nudgeState.tagIds.includes(tagId))) {
+              const throttleKey = getTagThrottleKey(throttle.tagIds);
+              if (throttleKey in tagThrottleCounters) {
+                matchingTagThrottles.push(throttleKey);
+              }
+            }
+          });
+        }
+        for (const timestamp of nudgeState.activatedTs) {
+          if (stateNudgeProductType === targetProductType && typeIsIncludedInCustomThrottles(nudgeState.type)) {
+            if (timestamp > lastActivationTs) lastActivationTs = timestamp;
+            productTypeCounts.ever++;
+            if (timestamp > thresholds.session) productTypeCounts.session++;
+            if (timestamp > thresholds.day) productTypeCounts.day++;
+            if (timestamp > thresholds.week) productTypeCounts.week++;
+            if (timestamp > thresholds.month) productTypeCounts.month++;
+            if (timestamp > thresholds.quarter) productTypeCounts.quarter++;
+            if (timestamp > thresholds.year) productTypeCounts.year++;
+          }
+          for (const throttleKey of matchingTagThrottles) {
+            tagThrottleCounters[throttleKey].ever++;
+            if (timestamp > thresholds.session) tagThrottleCounters[throttleKey].session++;
+            if (timestamp > thresholds.day) tagThrottleCounters[throttleKey].day++;
+            if (timestamp > thresholds.week) tagThrottleCounters[throttleKey].week++;
+            if (timestamp > thresholds.month) tagThrottleCounters[throttleKey].month++;
+            if (timestamp > thresholds.quarter) tagThrottleCounters[throttleKey].quarter++;
+            if (timestamp > thresholds.year) tagThrottleCounters[throttleKey].year++;
+          }
+        }
+      }
+    }
+    const productTypeCountsFormatted = {
+      session: `${productTypeCounts.session}`,
+      day: `${productTypeCounts.day}`,
+      week: `${productTypeCounts.week}`,
+      month: `${productTypeCounts.month}`,
+      quarter: `${productTypeCounts.quarter}`,
+      year: `${productTypeCounts.year}`,
+      ever: `${productTypeCounts.ever}`
+    };
+    const tagThrottleCounts = {};
+    for (const [throttleKey, counts] of Object.entries(tagThrottleCounters)) {
+      tagThrottleCounts[throttleKey] = {
+        session: `${counts.session}`,
+        day: `${counts.day}`,
+        week: `${counts.week}`,
+        month: `${counts.month}`,
+        quarter: `${counts.quarter}`,
+        year: `${counts.year}`,
+        ever: `${counts.ever}`
+      };
+    }
+    const secondsSinceLastActivation = lastActivationTs ? Math.floor((currentEpoch - lastActivationTs) / 1e3) : Number.MAX_SAFE_INTEGER;
+    return {
+      productTypeCounts: productTypeCountsFormatted,
+      tagThrottleCounts,
+      secondsSinceLastActivation: `${secondsSinceLastActivation}`
+    };
+  };
+  var passesCooldown = (_, nudge) => {
+    const nudgeState = getNudgeDataFromUserStore(_, nudge.variantId);
+    const timestamps = nudgeState?.activatedTs ?? [];
+    const activationCounts = {};
+    const legacyCounts = countsByTimeWindow(timestamps, _.sessionStart);
+    Object.assign(activationCounts, legacyCounts);
+    for (const cooldownLimit of nudge.lifecycleConfig.cooldownLimits) {
+      if (cooldownLimit.period) {
+        const periodCount = cooldownLimit.periodCount ?? 1;
+        const key = `${periodCount}_${cooldownLimit.period}`;
+        activationCounts[key] = countForPeriod(timestamps, _.sessionStart, cooldownLimit.period, periodCount);
+      }
+    }
+    const nudgeStateTarget = {
+      context: {
+        derivedNudgeState: { activationCounts },
+        nudgeState
+      },
+      result: {}
+    };
+    const retval = _.evalEngine.evaluateConditions(nudgeStateTarget, nudge.lifecycleConfig.conditions);
+    return retval;
+  };
+  var passesSnoozedConditions = (_, nudge) => {
+    const snoozedUntilTs = getNudgeDataFromUserStore(_, nudge.variantId)?.snoozedUntilTs;
+    return !(snoozedUntilTs && snoozedUntilTs > Date.now());
+  };
+  var passesPageTargeting = (_, nudge) => {
+    return urlMatchesConditions(_, _.location.href, nudge.pageTargeting.conditions);
+  };
+  var passesClickedElement = (_, nudge, triggerEvent) => {
+    if (triggerEvent?.trigger.type === "element_clicked" && nudge.triggerConfig.type === "element_clicked") {
+      return triggerEvent.trigger.match(nudge.triggerConfig.data.selector);
+    }
+    return true;
+  };
+  var passesTriggerElement = async (_, nudge, triggerEvent, nudgeSeenThisSessionTs) => {
+    if (triggerEvent?.trigger.type == "element_appeared" && nudge.triggerConfig.type == "element_appeared") {
+      if (nudgeSeenThisSessionTs.length > 0) {
+        return false;
+      }
+      const elementToAppearIsVisible = await _.services.isElementVisible(nudge.triggerConfig.data.selector);
+      if (!elementToAppearIsVisible) return false;
+    }
+    return true;
+  };
+  var shouldTemporarilyHide = (_, nudge) => {
+    if (nudge.hideIfPageTargetingNotMet) {
+      return !passesPageTargeting(_, nudge);
+    } else {
+      return urlMatchesConditions(_, _.location.href, nudge.temporarilyHideTargeting.conditions, false);
+    }
+  };
+  var getAllNudgeDataFromUserStore = (_) => {
+    return _.endUserStore.data.nudgeInteractions;
+  };
+  var getNudgeDataFromUserStore = (_, variantId) => getAllNudgeDataFromUserStore(_)?.[Number(variantId)];
+  var getSessionPropertyConditions = (conditionGroups) => conditionGroups.map((andGroup) => andGroup.filter((condition) => condition.selector.includes("sessionProperties"))).filter((sessionOnlyAndGroup) => sessionOnlyAndGroup.length > 0);
+  var passesSessionProperties = (_, sessionPropertyConditions) => {
+    if (sessionPropertyConditions.flat().length === 0) {
+      return true;
+    }
+    const normalizedSessionProperties = _.sessionProperties ? normalizePlainFalsyValues(_.sessionProperties) : {};
+    const sessionPropertyEvalTarget = {
+      context: {
+        sessionProperties: normalizedSessionProperties
+      },
+      result: {}
+    };
+    return _.evalEngine.evaluateConditions(sessionPropertyEvalTarget, sessionPropertyConditions);
+  };
+  var passesTriggerMatch = (_, nudge, triggerEvent) => {
+    if (!triggerEvent) return false;
+    if (triggerEvent.overrides?.excludeNudgeIds?.includes(nudge.variantId)) {
+      return false;
+    }
+    const nudgeState = getNudgeActorSnapshot(_, nudge.variantId);
+    if (triggerEvent.trigger.type === "active" && isNudgeActive(_, nudge)) {
+      return true;
+    }
+    if (nudgeState?.status !== "done") {
+      const normalizedTrigger = getTriggerWithNormalizedProperties(triggerEvent.trigger);
+      const normalizedSessionProperties = normalizePlainFalsyValues(_.sessionProperties);
+      const evalTarget = {
+        context: {
+          ...normalizedTrigger ?? {},
+          sessionProperties: normalizedSessionProperties
+        },
+        result: {}
+      };
+      let conditionsToEvaluate = nudge.triggerConfig.conditions;
+      if (triggerEvent?.overrides?.triggerFilters && conditionsToEvaluate?.[0]?.length > 0) {
+        conditionsToEvaluate = [[conditionsToEvaluate[0][0]]];
+      }
+      if (!_.evalEngine.evaluateConditions(evalTarget, conditionsToEvaluate)) {
+        return false;
+      }
+      return true;
+    }
+    return false;
+  };
+  var isNudgeActive = (_, nudge) => !!getNudgeDataFromUserStore(_, nudge.variantId)?.activelifeCycleUuid;
+  var passesPinnedElement = async (_, nudge, stepIndex) => {
+    const step = getNudgeStep(nudge, stepIndex);
+    if (!step) return false;
+    if (isAnchorableStep(step)) {
+      return _.services.isElementVisible(step.formFactor.anchorSelector || step.formFactor.anchor);
+    }
+    return true;
+  };
+  var hasRemainingSteps = (nudge) => ({ stepIndex }) => stepIndex < nudge.steps.length - 1;
+  var shouldBypassCustomThrottles = (_, nudge) => nudge.priority === 4 /* Urgent */ || !isIncludedInCustomThrottles(nudge) || _.nudgeDebugToolBar.visible && _.nudgeDebugToolBar.bypassCustomThrottles || isTestNudge(_, nudge);
+  var checkBuiltInThrottle = (_, nudge) => {
+    const { type: type10 } = getProductMeta(nudge);
+    const result = passesBuiltInThrottles(_, nudge);
+    const nudgesInRenderLoop = getNudgesInRenderLoop(_);
+    const blockingNudge = getBlockingNudge(nudge, nudgesInRenderLoop);
+    let explanation = `This ${type10} is blocked by another currently rendered guide or survey.`;
+    if (result) {
+      explanation = `This ${type10} is not blocked by other guides or surveys.`;
+    }
+    if (blockingNudge?.variantId === nudge.variantId) {
+      explanation = "This nudge is alreadying rendering.";
+    }
+    if (blockingNudge) {
+      explanation = `This ${type10} is blocked by '${blockingNudge.title} - ${blockingNudge.variant}'.`;
+    }
+    return {
+      result,
+      explanation,
+      detail: {
+        blockingNudge
+      }
+    };
+  };
+  var getGlobalChecks = (_, nudge) => {
+    const { type: type10 } = getProductMeta(nudge);
+    const builtInThrottlesCheck = checkBuiltInThrottle(_, nudge);
+    const globalChecks = {
+      builtInThrottles: builtInThrottlesCheck,
+      customThrottles: {
+        result: shouldBypassCustomThrottles(_, nudge) || passesCustomThrottles(_, nudge),
+        explanation: `The custom throttle for ${type10}s of this type prevents further guides or surveys from being shown.`,
+        detail: {
+          throttles: type10 === "survey" ? _.organization?.surveyThrottle : _.organization?.guideThrottle
+        }
+      }
+    };
+    return globalChecks;
+  };
+  var getNudgeChecks = (_, nudge, skipChecks = []) => {
+    const { name } = getProductMeta(nudge);
+    const sessionPropertyConditions = getSessionPropertyConditions(nudge.triggerConfig.conditions);
+    const nudgeChecks = {
+      ...skipChecks.includes("limits") ? {} : {
+        limits: {
+          result: passesCooldown(_, nudge),
+          explanation: `${name} has been seen the maximum number of times.`,
+          detail: {
+            limits: nudge.lifecycleConfig
+          }
+        }
+      },
+      ...skipChecks.includes("userTargeting") ? {} : {
+        userTargeting: {
+          result: nudgePassesDecide(nudge, _.decide),
+          explanation: "Booted user is not targeted by this flag.",
+          detail: {
+            userTargeting: nudge.flagKey
+          }
+        }
+      },
+      ...skipChecks.includes("page") ? {} : {
+        page: {
+          result: passesPageTargeting(_, nudge),
+          explanation: `${name} is not shown on this page.`,
+          detail: {
+            page: nudge.pageTargeting.conditions
+          }
+        }
+      },
+      ...skipChecks.includes("snooze") ? {} : {
+        snooze: {
+          result: passesSnoozedConditions(_, nudge),
+          explanation: `${name} is snoozed.`,
+          detail: {
+            isSnoozable: nudge.isSnoozable,
+            isSnoozableOnAllSteps: nudge.isSnoozableOnAllSteps,
+            snoozeDuration: nudge.snoozeDuration
+          }
+        }
+      },
+      ...skipChecks.includes("sessionProperties") ? {} : {
+        sessionProperties: {
+          result: passesSessionProperties(_, sessionPropertyConditions),
+          explanation: "Session properties do not match the conditions.",
+          detail: {
+            conditions: sessionPropertyConditions,
+            sessionProperties: _.sessionProperties
+          }
+        }
+      }
+    };
+    return nudgeChecks;
+  };
+  var getStepChecks = async (_, nudge, stepIndex) => {
+    const nudgeActorContext = getNudgeActorSnapshot(_, nudge.variantId)?.context;
+    const currentStep = stepIndex ?? nudgeActorContext?.stepIndex ?? 0;
+    const step = nudgeActorContext ? getNudgeStep(nudgeActorContext.nudge, currentStep) : void 0;
+    const stepChecks = {
+      element: {
+        result: await passesPinnedElement(_, nudge, currentStep),
+        explanation: "Pinned element is not visible on the page.",
+        detail: {
+          element: isAnchorableStep(step) ? step?.formFactor.anchor : "unknown"
+        }
+      }
+    };
+    return stepChecks;
+  };
+  var getNudgeById = (_, id) => getNudgeActorSnapshot(_, id)?.context.nudge;
+  var getNudgeByFlagKey = (_, flagKey) => getAllNudges(_).find((nudge) => nudge.flagKey === flagKey);
+  var getAllNudges = (_) => {
+    const nudgeActors = getAllNudgeActors(_);
+    return Array.from(nudgeActors?.values() ?? []).map((actor) => actor.getSnapshot()?.context?.nudge);
+  };
+  var getDebuggedNudge = (_, options = { getOriginal: false }) => {
+    const debuggingNudge = options.getOriginal ? _.nudgesManager?.getSnapshot()?.context.debugMode.originalNudge : _.nudgesManager?.getSnapshot()?.context.debugMode.currentNudge;
+    if (debuggingNudge) {
+      return getNudgeById(_, debuggingNudge.variantId);
+    }
+  };
+  var getNudgesInRenderLoop = (_) => {
+    const nudgesInRenderLoop = [];
+    if (_.activeChecklist) {
+      nudgesInRenderLoop.push(_.activeChecklist.nudge);
+    }
+    const nudgeActors = getAllNudgeActors(_);
+    if (!nudgeActors) {
+      return nudgesInRenderLoop;
+    }
+    for (const actor of nudgeActors.values()) {
+      const nudgeMachineState = actor.getSnapshot();
+      if (nudgeMachineState.matches({ Step: "Render Loop" })) {
+        nudgesInRenderLoop.push(nudgeMachineState.context.nudge);
+      }
+    }
+    return nudgesInRenderLoop;
+  };
+  var getSmartNudges = (nudges) => {
+    return {
+      rageClick: nudges.filter((nudge) => nudge.triggerConfig.type === "rage_click"),
+      smartDelay: nudges.filter((nudge) => nudge.triggerConfig.type === "smart_delay"),
+      userConfusion: nudges.filter((nudge) => nudge.triggerConfig.type === "user_confusion")
+    };
+  };
+  var getNudgeStep = (nudge, stepIndex) => (0, import_get.default)(nudge.steps, stepIndex, void 0);
+  var isTestNudge = (_, nudge) => !!_?.decide?.[nudge.flagKey]?.metadata?.testInstrumentation;
+  var generateUserKey = (_) => {
+    if (_.user?.user_id) {
+      return `uid_${_.user.user_id}`;
+    }
+    if (_.user?.device_id) {
+      return `did_${_.user.device_id}`;
+    }
+    if (_.user?.getSessionId?.()) {
+      return `sid_${_.user.getSessionId()}`;
+    }
+    return "anonymous";
+  };
+  var buildEvaluationContext = (_, event, conditions) => {
+    const surveyResponse = {};
+    if (event.surveyResponses && conditions) {
+      const surveyConditions = conditions.filter((c2) => c2.type === "survey_response");
+      for (const condition of surveyConditions) {
+        const value = Object.values(event.surveyResponses)[0]?.value;
+        surveyResponse[condition.field] = typeof value === "number" ? String(value) : value;
+      }
+    }
+    return {
+      context: {
+        user: _.user ?? {},
+        surveyResponse,
+        location: _.location ?? {}
+      },
+      result: {}
+    };
+  };
+  var evaluateCondition = (_, condition, event, options) => {
+    if (condition.v2?.evaluationConditions) {
+      const evalContext = buildEvaluationContext(_, event, condition.v2.conditions);
+      const result = _.evalEngine.evaluateConditions(evalContext, condition.v2.evaluationConditions);
+      return result;
+    }
+    const surveyResponses = Object.values(event.surveyResponses ?? {});
+    const surveyResponse = surveyResponses[0];
+    if (surveyResponse) {
+      switch (condition.operator) {
+        case "eq":
+          return surveyResponse?.value === (typeof condition.operand === "string" ? options?.findIndex((option) => option === condition.operand) : condition.operand);
+        case "neq":
+          return surveyResponse?.value !== (typeof condition.operand === "string" ? options?.findIndex((option) => option === condition.operand) : condition.operand);
+        case "gt":
+          return typeof surveyResponse?.value === "number" && typeof condition.operand === "number" && surveyResponse?.value > condition.operand;
+        case "lt":
+          return typeof surveyResponse?.value === "number" && typeof condition.operand === "number" && surveyResponse?.value < condition.operand;
+        default:
+          return false;
+      }
+    }
+    return false;
+  };
+  var getImmediateAction = (buttonMeta) => {
+    if (buttonMeta?.buttonType === "snooze") {
+      return { type: "snooze" };
+    }
+    const buttonAction = buttonMeta?.action;
+    if (buttonAction && buttonAction?.type !== "no_action") {
+      return buttonAction;
+    }
+    return null;
+  };
+  var getActionBasedOnConditions = (_, step, event, buttonType) => {
+    const options = step.content.find(isListBlock)?.meta.options;
+    const surveyBlocks = step.content.filter(hasConditionalActionsBlock).filter((block) => block.type === "survey_rating" || block.type === "survey_list");
+    if (buttonType && surveyBlocks.length > 0) {
+      const surveyBlock = surveyBlocks[0];
+      const conditionalActions2 = surveyBlock.meta.conditionalActions;
+      const defaultAction2 = surveyBlock.meta.defaultAction;
+      if (conditionalActions2) {
+        for (let i2 = 0; i2 < conditionalActions2.length; i2++) {
+          const conditionalAction = conditionalActions2[i2];
+          if (evaluateCondition(_, conditionalAction, event, options)) {
+            const selectedAction = conditionalAction.v2?.action || conditionalAction.action || null;
+            return selectedAction;
+          }
+        }
+      }
+      return defaultAction2 ?? null;
+    }
+    const conditionalActions = step.content.find(hasConditionalActionsBlock)?.meta.conditionalActions;
+    const defaultAction = step.content.find(hasConditionalActionsBlock)?.meta.defaultAction;
+    if (conditionalActions) {
+      for (let i2 = 0; i2 < conditionalActions.length; i2++) {
+        const conditionalAction = conditionalActions[i2];
+        if (evaluateCondition(_, conditionalAction, event, options)) {
+          const selectedAction = conditionalAction.v2?.action || conditionalAction.action || null;
+          return selectedAction;
+        }
+      }
+    }
+    return defaultAction ?? null;
+  };
+  var getActionBasedOnButtonConditions = (_, buttonBlock, event) => {
+    const { conditionalActions, defaultAction } = buttonBlock.meta || {};
+    if (conditionalActions) {
+      for (let i2 = 0; i2 < conditionalActions.length; i2++) {
+        const conditionalAction = conditionalActions[i2];
+        if (evaluateCondition(_, conditionalAction, event)) {
+          const selectedAction = conditionalAction.v2?.action || conditionalAction.action || null;
+          return selectedAction;
+        }
+      }
+    }
+    return defaultAction ?? null;
+  };
+  var determineAction = (_, step, event) => {
+    const immediateAction = getImmediateAction(event.buttonMeta);
+    if (event.buttonMeta?.buttonType !== "snooze") {
+      const buttonBlocks = step.content.filter(
+        (block) => block.type === "button"
+      );
+      const clickedButtonBlock = buttonBlocks.find((block) => {
+        return block.meta?.buttonType === event.buttonMeta?.buttonType && block.meta?.label === event.buttonMeta?.label;
+      });
+      if (clickedButtonBlock && hasConditionalActionsBlock(clickedButtonBlock)) {
+        return getActionBasedOnButtonConditions(_, clickedButtonBlock, event);
+      }
+    }
+    if (event.buttonMeta?.action?.type === "use_conditional_logic") {
+      return getActionBasedOnConditions(_, step, event, event.buttonMeta?.buttonType);
+    }
+    if (immediateAction) {
+      return immediateAction;
+    }
+    return getActionBasedOnConditions(_, step, event);
+  };
+  var isTooltipNudge = (nudge) => nudge?.type === "tooltip" || nudge?.steps[0]?.formFactor.type === "tooltip";
+  var isTooltipStep = (step) => step?.formFactor.type === "tooltip";
+  var isPinStep = (step) => step?.formFactor.type === "pin";
+  var isAnchorableStep = (step) => isPinStep(step) || isTooltipStep(step);
+  var passesLocalization = (_, nudge, currentLocale) => {
+    const localizationSettings = _.organization?.localization;
+    const translationStatus = nudge.translationStatus;
+    if (!localizationSettings?.enabled) {
+      return true;
+    }
+    if (!translationStatus?.status) {
+      return true;
+    }
+    switch (translationStatus.status) {
+      case "missing":
+        if (currentLocale === localizationSettings.defaultLocale) {
+          return true;
+        }
+        return localizationSettings.translationUnavailable === "showDefault";
+      case "outdated":
+        return localizationSettings.translationOutdated === "showDefault" || localizationSettings.translationOutdated === "showOutOfDate";
+      case "up-to-date":
+        return true;
+      default:
+        return true;
+    }
+  };
+  var getCurrentLocale = (_) => {
+    const sdkLocale = getSDK()?.[_configuration].locale;
+    if (_ && _.nudgeDebugToolBar.bypassUserLocale && _.nudgeDebugToolBar.previewLocale) {
+      return _.nudgeDebugToolBar.previewLocale;
+    }
+    return sdkLocale;
+  };
+  var getAppliedNudgeLocale = (nudge, localizationSettings) => {
+    if (!localizationSettings || !localizationSettings.enabled || !nudge.translationStatus) {
+      return void 0;
+    }
+    if (nudge.translationStatus.translated) {
+      return getCurrentLocale();
+    } else {
+      return localizationSettings.defaultLocale;
+    }
+  };
 
   // ../shared/node_modules/xstate/dev/dist/xstate-dev.esm.js
   function getGlobal() {
@@ -15605,10 +16604,6 @@ ${err.message}`);
     nudgeInteractions: NudgeInteractionsV
   });
 
-  // ../shared/src/sdk/symbols.ts
-  var _analytics = "_analytics";
-  var _configuration = "_configuration";
-
   // ../shared/src/internal/middleware/getBaseURL.ts
   var getServerUrl = () => {
     const apiEndpoint = getSDK()?.[_configuration]?.serverUrl;
@@ -15623,11 +16618,6 @@ ${err.message}`);
     }
   };
   var getBaseURL_default = getServerUrl;
-
-  // ../shared/src/internal/util/sentry.ts
-  var getSentry = () => {
-    return void 0;
-  };
 
   // ../shared/src/internal/middleware/network.ts
   var MAX_WAIT_TIME_MS = 3e4;
@@ -15648,7 +16638,7 @@ ${err.message}`);
     }
   };
   var post = (url, data = void 0, options = {}) => _fetch("POST", url, data, options);
-  var get = (url, options = {}) => _fetch("GET", url, void 0, options);
+  var get3 = (url, options = {}) => _fetch("GET", url, void 0, options);
   var _fetch = async (method, path, data, options = {}, numRetries = 5) => {
     const _baseURL = getBaseURL_default();
     let json, response;
@@ -15732,126 +16722,6 @@ ${err.message}`);
   var import_function = __toESM(require_function());
   var import_Either = __toESM(require_Either());
   var import_io_ts_reporters = __toESM(require_src());
-
-  // ../shared/node_modules/@amplitude/analytics-types/lib/esm/logger.js
-  var LogLevel;
-  (function(LogLevel2) {
-    LogLevel2[LogLevel2["None"] = 0] = "None";
-    LogLevel2[LogLevel2["Error"] = 1] = "Error";
-    LogLevel2[LogLevel2["Warn"] = 2] = "Warn";
-    LogLevel2[LogLevel2["Verbose"] = 3] = "Verbose";
-    LogLevel2[LogLevel2["Debug"] = 4] = "Debug";
-  })(LogLevel || (LogLevel = {}));
-
-  // ../shared/src/internal/util/LocalStorage.ts
-  var PREFIX = "amplitude.engagement";
-  var set = (label, value) => {
-    try {
-      localStorage.setItem(`${PREFIX}.${label}`, value.toString());
-      return value;
-    } catch (err) {
-      return "";
-    }
-  };
-  var get2 = (label, defaultValue, prefixOverride) => {
-    let value;
-    const prefix = prefixOverride ?? PREFIX;
-    try {
-      value = localStorage.getItem(`${prefix}.${label}`);
-    } catch (err) {
-      value = null;
-    }
-    if (value === null) {
-      return defaultValue;
-    } else {
-      if (value === "false") return false;
-      if (value === "true") return true;
-      if (+value) return +value;
-      return value;
-    }
-  };
-  var remove = (label) => {
-    try {
-      localStorage.removeItem(`${PREFIX}.${label}`);
-      return;
-    } catch (err) {
-      return;
-    }
-  };
-  var LocalStorage = {
-    set,
-    get: get2,
-    remove
-  };
-  var LocalStorage_default = LocalStorage;
-
-  // ../shared/src/internal/util/Logger.ts
-  var PREFIX2 = "Amplitude Engagement Logger ";
-  var getlocalStorageOverride = () => {
-    const level = parseInt(LocalStorage_default.get("logLevel", ""), 10);
-    if ([0, 1, 2, 3, 4].includes(level)) {
-      return level;
-    }
-    return null;
-  };
-  var DefaultLogger = class {
-    logLevel;
-    constructor() {
-      this.logLevel = getlocalStorageOverride() ?? LogLevel.None;
-    }
-    disable() {
-      this.logLevel = getlocalStorageOverride() ?? LogLevel.None;
-    }
-    enable(logLevel = LogLevel.Warn) {
-      this.logLevel = getlocalStorageOverride() ?? logLevel;
-    }
-    log(...args) {
-      if (this.logLevel < LogLevel.Verbose) {
-        return;
-      }
-      console.log(`${PREFIX2}[Log]:`, ...args);
-    }
-    warn(...args) {
-      if (this.logLevel < LogLevel.Warn) {
-        return;
-      }
-      console.warn(`${PREFIX2}[Warn]:`, ...args);
-    }
-    error(...args) {
-      if (this.logLevel < LogLevel.Error) {
-        return;
-      }
-      console.error(`${PREFIX2}[Error]:`, ...args);
-    }
-    debug(...args) {
-      if (this.logLevel < LogLevel.Debug) {
-        return;
-      }
-      console.log(`${PREFIX2}[Debug]:`, ...args);
-    }
-  };
-  var proxyLogger = {
-    disable: () => {
-    },
-    enable: () => {
-    },
-    log: () => {
-    },
-    warn: () => {
-    },
-    error: () => {
-    },
-    debug: () => {
-    }
-  };
-  var logger = new Proxy(proxyLogger, {
-    get(_target, prop) {
-      const sdkLogger = getSDK()?.[_configuration]?.options?.logger || proxyLogger;
-      return sdkLogger[prop];
-    }
-  });
-
-  // ../shared/src/types/decode.ts
   var ALLOWED_NUDGE_INTERACTION_DEFAULTS = {
     lastSeenDeviceId: "",
     lastSeenSessionId: -1,
@@ -15985,7 +16855,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       if (!endUser) return;
       const { apiKey } = getSDK()._configuration;
       const userJsonBase64 = jsonBase64Encoder(endUser);
-      const response = await get("/sdk/v1/state", {
+      const response = await get3("/sdk/v1/state", {
         headers: {
           Authorization: `Api-Key ${apiKey}`,
           "X-Amp-User": userJsonBase64
@@ -16093,863 +16963,6 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     stopDebugSession: () => stopDebugSession,
     updateNudgeStepForPreview: () => updateNudgeStepForPreview
   });
-
-  // ../shared/src/products/nudges/store/selectors.ts
-  var import_get = __toESM(require_get());
-
-  // ../shared/src/internal/middleware/types.ts
-  var isValidSessionPropertyKey = (key) => typeof key === "string" && key.length > 0;
-  var isValidSessionPropertyValue = (value) => typeof value === "number" || typeof value === "string" || typeof value === "boolean";
-  var isListBlock = (block) => block.type === "survey_list";
-  var hasConditionalActionsBlock = (block) => {
-    if (!(block.type === "survey_rating" || block.type === "survey_list" || block.type === "button")) {
-      return false;
-    }
-    if (!block.meta) {
-      return false;
-    }
-    return !!(block.meta.conditionalActions && block.meta.conditionalActions.length > 0 || block.meta.defaultAction && block.meta.defaultAction.type !== "no_action");
-  };
-
-  // ../shared/src/products/nudges/store/rules.ts
-  var RAGE_CLOSE_THRESHOLD = 2e3;
-  var RULES = {
-    generic: {
-      stepsPresentation: "sequential",
-      blockedBy: ["survey", "generic"],
-      includedInCustomThrottles: true,
-      inputs: false,
-      media: true,
-      stopOnSimulateStart: true,
-      canBeActive: true
-    },
-    survey: {
-      stepsPresentation: "sequential",
-      blockedBy: ["survey", "generic"],
-      includedInCustomThrottles: true,
-      inputs: true,
-      media: true,
-      stopOnSimulateStart: true,
-      canBeActive: true
-    },
-    checklist: {
-      stepsPresentation: "all",
-      blockedBy: ["checklist"],
-      includedInCustomThrottles: true,
-      inputs: false,
-      media: false,
-      stopOnSimulateStart: true,
-      canBeActive: true
-    },
-    banner: {
-      stepsPresentation: "single",
-      blockedBy: ["banner"],
-      includedInCustomThrottles: false,
-      inputs: true,
-      media: false,
-      stopOnSimulateStart: true,
-      canBeActive: true
-    },
-    tooltip: {
-      stepsPresentation: "single",
-      blockedBy: [],
-      includedInCustomThrottles: false,
-      inputs: true,
-      media: true,
-      stopOnSimulateStart: false,
-      canBeActive: false
-    }
-  };
-  var getApplicableNudgeType = (nudgeType) => {
-    if (nudgeType in RULES) {
-      return nudgeType;
-    }
-    return "generic";
-  };
-  var isIncludedInCustomThrottles = (nudge) => {
-    return RULES[getApplicableNudgeType(nudge.type)].includedInCustomThrottles;
-  };
-  var canBeActive = (nudge) => {
-    return RULES[getApplicableNudgeType(nudge.type)].canBeActive;
-  };
-  var typeIsIncludedInCustomThrottles = (type10) => {
-    return RULES[getApplicableNudgeType(type10)].includedInCustomThrottles;
-  };
-  var isBlocked = (nudge, renderingNudges) => {
-    const renderingNudgeTypes = new Set(renderingNudges.map(({ type: type10 }) => getApplicableNudgeType(type10)));
-    return RULES[getApplicableNudgeType(nudge.type)].blockedBy.some((element) => renderingNudgeTypes.has(element));
-  };
-  var getBlockingNudge = (nudge, renderingNudges) => {
-    const nudgeType = getApplicableNudgeType(nudge.type);
-    const blockedByTypes = RULES[nudgeType].blockedBy;
-    for (const renderingNudge of renderingNudges) {
-      const renderingNudgeType = getApplicableNudgeType(renderingNudge.type);
-      if (blockedByTypes.includes(renderingNudgeType)) {
-        return renderingNudge;
-      }
-    }
-    return null;
-  };
-  var hasSequentialSteps = (nudge) => {
-    return RULES[getApplicableNudgeType(nudge.type)].stepsPresentation === "sequential";
-  };
-  var shouldStopOnSimulateStart = (nudge) => {
-    return RULES[getApplicableNudgeType(nudge.type)].stopOnSimulateStart;
-  };
-  var usesNavigationStack = (nudge) => {
-    return !nudge.isCarousel;
-  };
-  var closesNudgeOnStepChange = (nudge, stepIndex, eventType) => {
-    if (!nudge.isCarousel) {
-      return true;
-    }
-    const isLastStep = stepIndex >= nudge.steps.length - 1;
-    return isLastStep && eventType === "ADVANCE";
-  };
-  var isSurvey = (nudge) => {
-    return nudge.type === "survey";
-  };
-  var getNudgeProductType = (nudge) => {
-    return nudge.type === "survey" ? "survey" : "guide";
-  };
-  var getProductMeta = (nudge) => {
-    const type10 = getNudgeProductType(nudge);
-    return {
-      type: type10,
-      name: getNudgeProductType(nudge) === "guide" ? "Guide" : "Survey"
-    };
-  };
-
-  // ../shared/src/products/nudges/store/utils.ts
-  var urlMatchesConditions = (_, url, conditions, defaultValue = true) => {
-    const pageTarget = {
-      context: {
-        url
-      },
-      result: {}
-    };
-    if (conditions.flat().length === 0) {
-      return defaultValue;
-    }
-    return _.evalEngine.evaluateConditions(pageTarget, conditions);
-  };
-
-  // ../shared/src/services/targeting/helpers.ts
-  var getActiveVariantForFlag = (flagKey, decideResult) => {
-    return decideResult?.[flagKey]?.key;
-  };
-  var nudgePassesDecide = (nudge, decideResult) => {
-    if (nudge.platform !== __GS_PLATFORM__) {
-      return false;
-    }
-    const activeVariantForNudge = getActiveVariantForFlag(nudge.flagKey, decideResult);
-    if (!activeVariantForNudge) {
-      logger.error("Nudge does not have a decide result!");
-      return false;
-    }
-    return activeVariantForNudge === nudge.variant;
-  };
-  var getExperimentKey = (nudge, decideResult) => decideResult?.[nudge.flagKey]?.metadata?.experimentKey;
-
-  // ../shared/src/products/nudges/store/selectors.ts
-  var normalizePlainFalsyValues = (record5) => {
-    let updatedRecord = null;
-    for (const [key, value] of Object.entries(record5)) {
-      if (value === 0 || value === false) {
-        if (!updatedRecord) {
-          updatedRecord = { ...record5 };
-        }
-        updatedRecord[key] = value === 0 ? "0" : "false";
-      }
-    }
-    return updatedRecord ?? record5;
-  };
-  var isAnalyticsEventTrigger = (trigger) => trigger.type === "analytics_event";
-  var getTriggerWithNormalizedProperties = (trigger) => {
-    if (!trigger || !isAnalyticsEventTrigger(trigger) || !trigger.data.properties) {
-      return trigger;
-    }
-    const normalizedProperties = normalizePlainFalsyValues(trigger.data.properties);
-    if (normalizedProperties === trigger.data.properties) {
-      return trigger;
-    }
-    return {
-      ...trigger,
-      data: {
-        ...trigger.data,
-        properties: normalizedProperties
-      }
-    };
-  };
-  var getAllNudgeActors = (_) => _.nudgesManager?.getSnapshot()?.context.nudgeMachines;
-  var getNudgeActor = (_, id) => _.nudgesManager?.getSnapshot().context.nudgeMachines.get(id.toString());
-  var getDebugActor = (_) => {
-    const debuggingNudge = _.nudgesManager?.getSnapshot()?.context.debugMode.currentNudge;
-    if (debuggingNudge) {
-      return getNudgeActor(_, debuggingNudge.variantId);
-    }
-  };
-  var getNudgeActorSnapshot = (_, id) => getNudgeActor(_, id)?.getSnapshot();
-  var passesBuiltInThrottles = (_, nudge) => {
-    const nudgesInRenderLoop = getNudgesInRenderLoop(_);
-    return !isBlocked(nudge, nudgesInRenderLoop);
-  };
-  var passesCustomThrottles = (_, nudge) => {
-    if (!_.organization) return true;
-    const nudgesState = getAllNudgeDataFromUserStore(_);
-    const nudgeProductType = getNudgeProductType(nudge);
-    if (!nudgesState) return true;
-    const throttleConfig = nudgeProductType === "survey" ? _.organization.surveyThrottle : _.organization.guideThrottle;
-    let limits = throttleConfig.limits;
-    if (!limits && throttleConfig.limit) {
-      limits = [throttleConfig.limit];
-    }
-    const { productTypeCounts, tagThrottleCounts, secondsSinceLastActivation } = getAllActivationCounts(
-      nudgesState,
-      _.sessionStart,
-      nudgeProductType,
-      throttleConfig.limits
-    );
-    const nudgeStateTarget = {
-      context: {
-        derivedNudgeState: {
-          activationCounts: {
-            ...productTypeCounts,
-            ...tagThrottleCounts
-          },
-          secondsSinceLastActivation
-        }
-      },
-      result: {}
-    };
-    const applicableConditions = throttleConfig.conditions.map((andGroup) => {
-      return andGroup.filter((condition) => {
-        const hasTagThrottle = condition.selector.some((part) => part.startsWith("tagThrottle_"));
-        if (!hasTagThrottle) {
-          return true;
-        }
-        const tagThrottlePart = condition.selector.find((part) => part.startsWith("tagThrottle_"));
-        if (tagThrottlePart) {
-          const tagIds = tagThrottlePart.replace("tagThrottle_", "").split("_").map(Number);
-          return tagIds.some((tagId) => nudge.tags?.some((tag) => tag.id === tagId));
-        }
-        return false;
-      });
-    }).filter((andGroup) => andGroup.length > 0);
-    const passed = applicableConditions.flat().length == 0 || _.evalEngine.evaluateConditions(nudgeStateTarget, applicableConditions);
-    if (!passed) {
-      return false;
-    }
-    return true;
-  };
-  var countGreaterThan = (epoch, timestamps) => {
-    return timestamps.filter((ts) => ts > epoch).length;
-  };
-  var countForPeriod = (timestamps, sessionStart, period, periodCount = 1) => {
-    const currentEpoch = Date.now();
-    const dayInMillis = 1e3 * 60 * 60 * 24;
-    let startEpoch;
-    switch (period) {
-      case "session":
-        startEpoch = sessionStart;
-        break;
-      case "day":
-        startEpoch = currentEpoch - dayInMillis * periodCount;
-        break;
-      case "week":
-        startEpoch = currentEpoch - dayInMillis * 7 * periodCount;
-        break;
-      case "month":
-        startEpoch = currentEpoch - dayInMillis * 30 * periodCount;
-        break;
-      case "quarter":
-        startEpoch = currentEpoch - dayInMillis * 90 * periodCount;
-        break;
-      case "year":
-        startEpoch = currentEpoch - dayInMillis * 365 * periodCount;
-        break;
-      case "ever":
-        return `${timestamps.length}`;
-      default:
-        startEpoch = currentEpoch;
-    }
-    return `${countGreaterThan(startEpoch, timestamps)}`;
-  };
-  var countsByTimeWindow = (timestamps, sessionStart) => {
-    const currentEpoch = Date.now();
-    const dayInMillis = 1e3 * 60 * 60 * 24;
-    const thresholds = {
-      session: sessionStart,
-      day: currentEpoch - dayInMillis,
-      week: currentEpoch - dayInMillis * 7,
-      month: currentEpoch - dayInMillis * 30,
-      quarter: currentEpoch - dayInMillis * 90,
-      year: currentEpoch - dayInMillis * 365
-    };
-    const counts = {
-      session: 0,
-      day: 0,
-      week: 0,
-      month: 0,
-      quarter: 0,
-      year: 0,
-      ever: timestamps.length
-    };
-    for (const timestamp of timestamps) {
-      if (timestamp > thresholds.session) counts.session++;
-      if (timestamp > thresholds.day) counts.day++;
-      if (timestamp > thresholds.week) counts.week++;
-      if (timestamp > thresholds.month) counts.month++;
-      if (timestamp > thresholds.quarter) counts.quarter++;
-      if (timestamp > thresholds.year) counts.year++;
-    }
-    return {
-      // TODO: return numbers directly once bug in evalengine with number value 0 is fixed
-      session: `${counts.session}`,
-      day: `${counts.day}`,
-      week: `${counts.week}`,
-      month: `${counts.month}`,
-      quarter: `${counts.quarter}`,
-      year: `${counts.year}`,
-      ever: `${counts.ever}`
-    };
-  };
-  var getTagThrottleKey = (tagIds) => {
-    const sortedTagIds = [...tagIds].sort((a, b) => a - b);
-    return `tagThrottle_${sortedTagIds.join("_")}`;
-  };
-  var getAllActivationCounts = (nudgesState, sessionStart, targetProductType, limits) => {
-    if (!nudgesState) {
-      return {
-        productTypeCounts: { session: "0", day: "0", week: "0", month: "0", quarter: "0", year: "0", ever: "0" },
-        tagThrottleCounts: {}
-      };
-    }
-    const currentEpoch = Date.now();
-    const dayInMillis = 1e3 * 60 * 60 * 24;
-    const thresholds = {
-      session: sessionStart,
-      day: currentEpoch - dayInMillis,
-      week: currentEpoch - dayInMillis * 7,
-      month: currentEpoch - dayInMillis * 30,
-      quarter: currentEpoch - dayInMillis * 90,
-      year: currentEpoch - dayInMillis * 365
-    };
-    let lastActivationTs = 0;
-    const productTypeCounts = {
-      session: 0,
-      day: 0,
-      week: 0,
-      month: 0,
-      quarter: 0,
-      year: 0,
-      ever: 0
-    };
-    const tagThrottleCounters = {};
-    const tagThrottles = limits.filter((limit) => limit.tagIds?.length);
-    tagThrottles.forEach((throttle) => {
-      if (throttle.tagIds) {
-        const throttleKey = getTagThrottleKey(throttle.tagIds);
-        tagThrottleCounters[throttleKey] = {
-          session: 0,
-          day: 0,
-          week: 0,
-          month: 0,
-          quarter: 0,
-          year: 0,
-          ever: 0
-        };
-      }
-    });
-    for (const nudgeState of Object.values(nudgesState)) {
-      if (nudgeState?.activatedTs?.length && nudgeState.type) {
-        const stateNudgeProductType = nudgeState.type === "survey" ? "survey" : "guide";
-        const matchingTagThrottles = [];
-        if (nudgeState?.tagIds?.length) {
-          tagThrottles.forEach((throttle) => {
-            if (throttle.tagIds && throttle.tagIds.some((tagId) => nudgeState.tagIds.includes(tagId))) {
-              const throttleKey = getTagThrottleKey(throttle.tagIds);
-              if (throttleKey in tagThrottleCounters) {
-                matchingTagThrottles.push(throttleKey);
-              }
-            }
-          });
-        }
-        for (const timestamp of nudgeState.activatedTs) {
-          if (stateNudgeProductType === targetProductType && typeIsIncludedInCustomThrottles(nudgeState.type)) {
-            if (timestamp > lastActivationTs) lastActivationTs = timestamp;
-            productTypeCounts.ever++;
-            if (timestamp > thresholds.session) productTypeCounts.session++;
-            if (timestamp > thresholds.day) productTypeCounts.day++;
-            if (timestamp > thresholds.week) productTypeCounts.week++;
-            if (timestamp > thresholds.month) productTypeCounts.month++;
-            if (timestamp > thresholds.quarter) productTypeCounts.quarter++;
-            if (timestamp > thresholds.year) productTypeCounts.year++;
-          }
-          for (const throttleKey of matchingTagThrottles) {
-            tagThrottleCounters[throttleKey].ever++;
-            if (timestamp > thresholds.session) tagThrottleCounters[throttleKey].session++;
-            if (timestamp > thresholds.day) tagThrottleCounters[throttleKey].day++;
-            if (timestamp > thresholds.week) tagThrottleCounters[throttleKey].week++;
-            if (timestamp > thresholds.month) tagThrottleCounters[throttleKey].month++;
-            if (timestamp > thresholds.quarter) tagThrottleCounters[throttleKey].quarter++;
-            if (timestamp > thresholds.year) tagThrottleCounters[throttleKey].year++;
-          }
-        }
-      }
-    }
-    const productTypeCountsFormatted = {
-      session: `${productTypeCounts.session}`,
-      day: `${productTypeCounts.day}`,
-      week: `${productTypeCounts.week}`,
-      month: `${productTypeCounts.month}`,
-      quarter: `${productTypeCounts.quarter}`,
-      year: `${productTypeCounts.year}`,
-      ever: `${productTypeCounts.ever}`
-    };
-    const tagThrottleCounts = {};
-    for (const [throttleKey, counts] of Object.entries(tagThrottleCounters)) {
-      tagThrottleCounts[throttleKey] = {
-        session: `${counts.session}`,
-        day: `${counts.day}`,
-        week: `${counts.week}`,
-        month: `${counts.month}`,
-        quarter: `${counts.quarter}`,
-        year: `${counts.year}`,
-        ever: `${counts.ever}`
-      };
-    }
-    const secondsSinceLastActivation = lastActivationTs ? Math.floor((currentEpoch - lastActivationTs) / 1e3) : Number.MAX_SAFE_INTEGER;
-    return {
-      productTypeCounts: productTypeCountsFormatted,
-      tagThrottleCounts,
-      secondsSinceLastActivation: `${secondsSinceLastActivation}`
-    };
-  };
-  var passesCooldown = (_, nudge) => {
-    const nudgeState = getNudgeDataFromUserStore(_, nudge.variantId);
-    const timestamps = nudgeState?.activatedTs ?? [];
-    const activationCounts = {};
-    const legacyCounts = countsByTimeWindow(timestamps, _.sessionStart);
-    Object.assign(activationCounts, legacyCounts);
-    for (const cooldownLimit of nudge.lifecycleConfig.cooldownLimits) {
-      if (cooldownLimit.period) {
-        const periodCount = cooldownLimit.periodCount ?? 1;
-        const key = `${periodCount}_${cooldownLimit.period}`;
-        activationCounts[key] = countForPeriod(timestamps, _.sessionStart, cooldownLimit.period, periodCount);
-      }
-    }
-    const nudgeStateTarget = {
-      context: {
-        derivedNudgeState: { activationCounts },
-        nudgeState
-      },
-      result: {}
-    };
-    const retval = _.evalEngine.evaluateConditions(nudgeStateTarget, nudge.lifecycleConfig.conditions);
-    return retval;
-  };
-  var passesSnoozedConditions = (_, nudge) => {
-    const snoozedUntilTs = getNudgeDataFromUserStore(_, nudge.variantId)?.snoozedUntilTs;
-    return !(snoozedUntilTs && snoozedUntilTs > Date.now());
-  };
-  var passesPageTargeting = (_, nudge) => {
-    return urlMatchesConditions(_, _.location.href, nudge.pageTargeting.conditions);
-  };
-  var passesClickedElement = (_, nudge, triggerEvent) => {
-    if (triggerEvent?.trigger.type === "element_clicked" && nudge.triggerConfig.type === "element_clicked") {
-      return triggerEvent.trigger.match(nudge.triggerConfig.data.selector);
-    }
-    return true;
-  };
-  var passesTriggerElement = async (_, nudge, triggerEvent, nudgeSeenThisSessionTs) => {
-    if (triggerEvent?.trigger.type == "element_appeared" && nudge.triggerConfig.type == "element_appeared") {
-      if (nudgeSeenThisSessionTs.length > 0) {
-        return false;
-      }
-      const elementToAppearIsVisible = await _.services.isElementVisible(nudge.triggerConfig.data.selector);
-      if (!elementToAppearIsVisible) return false;
-    }
-    return true;
-  };
-  var shouldTemporarilyHide = (_, nudge) => {
-    if (nudge.hideIfPageTargetingNotMet) {
-      return !passesPageTargeting(_, nudge);
-    } else {
-      return urlMatchesConditions(_, _.location.href, nudge.temporarilyHideTargeting.conditions, false);
-    }
-  };
-  var getAllNudgeDataFromUserStore = (_) => {
-    return _.endUserStore.data.nudgeInteractions;
-  };
-  var getNudgeDataFromUserStore = (_, variantId) => getAllNudgeDataFromUserStore(_)?.[Number(variantId)];
-  var getSessionPropertyConditions = (conditionGroups) => conditionGroups.map((andGroup) => andGroup.filter((condition) => condition.selector.includes("sessionProperties"))).filter((sessionOnlyAndGroup) => sessionOnlyAndGroup.length > 0);
-  var passesSessionProperties = (_, sessionPropertyConditions) => {
-    if (sessionPropertyConditions.flat().length === 0) {
-      return true;
-    }
-    const normalizedSessionProperties = _.sessionProperties ? normalizePlainFalsyValues(_.sessionProperties) : {};
-    const sessionPropertyEvalTarget = {
-      context: {
-        sessionProperties: normalizedSessionProperties
-      },
-      result: {}
-    };
-    return _.evalEngine.evaluateConditions(sessionPropertyEvalTarget, sessionPropertyConditions);
-  };
-  var passesTriggerMatch = (_, nudge, triggerEvent) => {
-    if (!triggerEvent) return false;
-    if (triggerEvent.overrides?.excludeNudgeIds?.includes(nudge.variantId)) {
-      return false;
-    }
-    const nudgeState = getNudgeActorSnapshot(_, nudge.variantId);
-    if (triggerEvent.trigger.type === "active" && isNudgeActive(_, nudge)) {
-      return true;
-    }
-    if (nudgeState?.status !== "done") {
-      const normalizedTrigger = getTriggerWithNormalizedProperties(triggerEvent.trigger);
-      const normalizedSessionProperties = normalizePlainFalsyValues(_.sessionProperties);
-      const evalTarget = {
-        context: {
-          ...normalizedTrigger ?? {},
-          sessionProperties: normalizedSessionProperties
-        },
-        result: {}
-      };
-      let conditionsToEvaluate = nudge.triggerConfig.conditions;
-      if (triggerEvent?.overrides?.triggerFilters && conditionsToEvaluate?.[0]?.length > 0) {
-        conditionsToEvaluate = [[conditionsToEvaluate[0][0]]];
-      }
-      if (!_.evalEngine.evaluateConditions(evalTarget, conditionsToEvaluate)) {
-        return false;
-      }
-      return true;
-    }
-    return false;
-  };
-  var isNudgeActive = (_, nudge) => !!getNudgeDataFromUserStore(_, nudge.variantId)?.activelifeCycleUuid;
-  var passesPinnedElement = async (_, nudge, stepIndex) => {
-    const step = getNudgeStep(nudge, stepIndex);
-    if (!step) return false;
-    if (isAnchorableStep(step)) {
-      return _.services.isElementVisible(step.formFactor.anchorSelector || step.formFactor.anchor);
-    }
-    return true;
-  };
-  var hasRemainingSteps = (nudge) => ({ stepIndex }) => stepIndex < nudge.steps.length - 1;
-  var shouldBypassCustomThrottles = (_, nudge) => nudge.priority === 4 /* Urgent */ || !isIncludedInCustomThrottles(nudge) || _.nudgeDebugToolBar.visible && _.nudgeDebugToolBar.bypassCustomThrottles || isTestNudge(_, nudge);
-  var checkBuiltInThrottle = (_, nudge) => {
-    const { type: type10 } = getProductMeta(nudge);
-    const result = passesBuiltInThrottles(_, nudge);
-    const nudgesInRenderLoop = getNudgesInRenderLoop(_);
-    const blockingNudge = getBlockingNudge(nudge, nudgesInRenderLoop);
-    let explanation = `This ${type10} is blocked by another currently rendered guide or survey.`;
-    if (result) {
-      explanation = `This ${type10} is not blocked by other guides or surveys.`;
-    }
-    if (blockingNudge?.variantId === nudge.variantId) {
-      explanation = "This nudge is alreadying rendering.";
-    }
-    if (blockingNudge) {
-      explanation = `This ${type10} is blocked by '${blockingNudge.title} - ${blockingNudge.variant}'.`;
-    }
-    return {
-      result,
-      explanation,
-      detail: {
-        blockingNudge
-      }
-    };
-  };
-  var getGlobalChecks = (_, nudge) => {
-    const { type: type10 } = getProductMeta(nudge);
-    const builtInThrottlesCheck = checkBuiltInThrottle(_, nudge);
-    const globalChecks = {
-      builtInThrottles: builtInThrottlesCheck,
-      customThrottles: {
-        result: shouldBypassCustomThrottles(_, nudge) || passesCustomThrottles(_, nudge),
-        explanation: `The custom throttle for ${type10}s of this type prevents further guides or surveys from being shown.`,
-        detail: {
-          throttles: type10 === "survey" ? _.organization?.surveyThrottle : _.organization?.guideThrottle
-        }
-      }
-    };
-    return globalChecks;
-  };
-  var getNudgeChecks = (_, nudge, skipChecks = []) => {
-    const { name } = getProductMeta(nudge);
-    const sessionPropertyConditions = getSessionPropertyConditions(nudge.triggerConfig.conditions);
-    const nudgeChecks = {
-      ...skipChecks.includes("limits") ? {} : {
-        limits: {
-          result: passesCooldown(_, nudge),
-          explanation: `${name} has been seen the maximum number of times.`,
-          detail: {
-            limits: nudge.lifecycleConfig
-          }
-        }
-      },
-      ...skipChecks.includes("userTargeting") ? {} : {
-        userTargeting: {
-          result: nudgePassesDecide(nudge, _.decide),
-          explanation: "Booted user is not targeted by this flag.",
-          detail: {
-            userTargeting: nudge.flagKey
-          }
-        }
-      },
-      ...skipChecks.includes("page") ? {} : {
-        page: {
-          result: passesPageTargeting(_, nudge),
-          explanation: `${name} is not shown on this page.`,
-          detail: {
-            page: nudge.pageTargeting.conditions
-          }
-        }
-      },
-      ...skipChecks.includes("snooze") ? {} : {
-        snooze: {
-          result: passesSnoozedConditions(_, nudge),
-          explanation: `${name} is snoozed.`,
-          detail: {
-            isSnoozable: nudge.isSnoozable,
-            isSnoozableOnAllSteps: nudge.isSnoozableOnAllSteps,
-            snoozeDuration: nudge.snoozeDuration
-          }
-        }
-      },
-      ...skipChecks.includes("sessionProperties") ? {} : {
-        sessionProperties: {
-          result: passesSessionProperties(_, sessionPropertyConditions),
-          explanation: "Session properties do not match the conditions.",
-          detail: {
-            conditions: sessionPropertyConditions,
-            sessionProperties: _.sessionProperties
-          }
-        }
-      }
-    };
-    return nudgeChecks;
-  };
-  var getStepChecks = async (_, nudge, stepIndex) => {
-    const nudgeActorContext = getNudgeActorSnapshot(_, nudge.variantId)?.context;
-    const currentStep = stepIndex ?? nudgeActorContext?.stepIndex ?? 0;
-    const step = nudgeActorContext ? getNudgeStep(nudgeActorContext.nudge, currentStep) : void 0;
-    const stepChecks = {
-      element: {
-        result: await passesPinnedElement(_, nudge, currentStep),
-        explanation: "Pinned element is not visible on the page.",
-        detail: {
-          element: isAnchorableStep(step) ? step?.formFactor.anchor : "unknown"
-        }
-      }
-    };
-    return stepChecks;
-  };
-  var getNudgeById = (_, id) => getNudgeActorSnapshot(_, id)?.context.nudge;
-  var getNudgeByFlagKey = (_, flagKey) => getAllNudges(_).find((nudge) => nudge.flagKey === flagKey);
-  var getAllNudges = (_) => {
-    const nudgeActors = getAllNudgeActors(_);
-    return Array.from(nudgeActors?.values() ?? []).map((actor) => actor.getSnapshot()?.context?.nudge);
-  };
-  var getDebuggedNudge = (_, options = { getOriginal: false }) => {
-    const debuggingNudge = options.getOriginal ? _.nudgesManager?.getSnapshot()?.context.debugMode.originalNudge : _.nudgesManager?.getSnapshot()?.context.debugMode.currentNudge;
-    if (debuggingNudge) {
-      return getNudgeById(_, debuggingNudge.variantId);
-    }
-  };
-  var getNudgesInRenderLoop = (_) => {
-    const nudgesInRenderLoop = [];
-    if (_.activeChecklist) {
-      nudgesInRenderLoop.push(_.activeChecklist.nudge);
-    }
-    const nudgeActors = getAllNudgeActors(_);
-    if (!nudgeActors) {
-      return nudgesInRenderLoop;
-    }
-    for (const actor of nudgeActors.values()) {
-      const nudgeMachineState = actor.getSnapshot();
-      if (nudgeMachineState.matches({ Step: "Render Loop" })) {
-        nudgesInRenderLoop.push(nudgeMachineState.context.nudge);
-      }
-    }
-    return nudgesInRenderLoop;
-  };
-  var getSmartNudges = (nudges) => {
-    return {
-      rageClick: nudges.filter((nudge) => nudge.triggerConfig.type === "rage_click"),
-      smartDelay: nudges.filter((nudge) => nudge.triggerConfig.type === "smart_delay"),
-      userConfusion: nudges.filter((nudge) => nudge.triggerConfig.type === "user_confusion")
-    };
-  };
-  var getNudgeStep = (nudge, stepIndex) => (0, import_get.default)(nudge.steps, stepIndex, void 0);
-  var isTestNudge = (_, nudge) => !!_?.decide?.[nudge.flagKey]?.metadata?.testInstrumentation;
-  var generateUserKey = (_) => {
-    if (_.user?.user_id) {
-      return `uid_${_.user.user_id}`;
-    }
-    if (_.user?.device_id) {
-      return `did_${_.user.device_id}`;
-    }
-    if (_.user?.getSessionId?.()) {
-      return `sid_${_.user.getSessionId()}`;
-    }
-    return "anonymous";
-  };
-  var buildEvaluationContext = (_, event, conditions) => {
-    const surveyResponse = {};
-    if (event.surveyResponse && conditions) {
-      const surveyConditions = conditions.filter((c2) => c2.type === "survey_response");
-      for (const condition of surveyConditions) {
-        surveyResponse[condition.field] = event.surveyResponse.value;
-      }
-    }
-    return {
-      context: {
-        user: _.user ?? {},
-        surveyResponse,
-        location: _.location ?? {}
-      },
-      result: {}
-    };
-  };
-  var evaluateCondition = (_, condition, event, options) => {
-    if (condition.v2?.evaluationConditions) {
-      const evalContext = buildEvaluationContext(_, event, condition.v2.conditions);
-      const result = _.evalEngine.evaluateConditions(evalContext, condition.v2.evaluationConditions);
-      return result;
-    }
-    if (event.surveyResponse) {
-      switch (condition.operator) {
-        case "eq":
-          return event.surveyResponse?.value === (typeof condition.operand === "string" ? options?.findIndex((option) => option === condition.operand) : condition.operand);
-        case "neq":
-          return event.surveyResponse?.value !== (typeof condition.operand === "string" ? options?.findIndex((option) => option === condition.operand) : condition.operand);
-        case "gt":
-          return typeof event.surveyResponse?.value === "number" && typeof condition.operand === "number" && event.surveyResponse?.value > condition.operand;
-        case "lt":
-          return typeof event.surveyResponse?.value === "number" && typeof condition.operand === "number" && event.surveyResponse?.value < condition.operand;
-        default:
-          return false;
-      }
-    }
-    return false;
-  };
-  var getImmediateAction = (buttonMeta) => {
-    if (buttonMeta?.buttonType === "snooze") {
-      return { type: "snooze" };
-    }
-    const buttonAction = buttonMeta?.action;
-    if (buttonAction && buttonAction?.type !== "no_action") {
-      return buttonAction;
-    }
-    return null;
-  };
-  var getActionBasedOnConditions = (_, step, event, buttonType) => {
-    const options = step.content.find(isListBlock)?.meta.options;
-    const surveyBlocks = step.content.filter(hasConditionalActionsBlock).filter((block) => block.type === "survey_rating" || block.type === "survey_list");
-    if (buttonType && surveyBlocks.length > 0) {
-      const surveyBlock = surveyBlocks[0];
-      const conditionalActions2 = surveyBlock.meta.conditionalActions;
-      const defaultAction2 = surveyBlock.meta.defaultAction;
-      if (conditionalActions2) {
-        for (let i2 = 0; i2 < conditionalActions2.length; i2++) {
-          const conditionalAction = conditionalActions2[i2];
-          if (evaluateCondition(_, conditionalAction, event, options)) {
-            const selectedAction = conditionalAction.v2?.action || conditionalAction.action || null;
-            return selectedAction;
-          }
-        }
-      }
-      return defaultAction2 ?? null;
-    }
-    const conditionalActions = step.content.find(hasConditionalActionsBlock)?.meta.conditionalActions;
-    const defaultAction = step.content.find(hasConditionalActionsBlock)?.meta.defaultAction;
-    if (conditionalActions) {
-      for (let i2 = 0; i2 < conditionalActions.length; i2++) {
-        const conditionalAction = conditionalActions[i2];
-        if (evaluateCondition(_, conditionalAction, event, options)) {
-          const selectedAction = conditionalAction.v2?.action || conditionalAction.action || null;
-          return selectedAction;
-        }
-      }
-    }
-    return defaultAction ?? null;
-  };
-  var getActionBasedOnButtonConditions = (_, buttonBlock, event) => {
-    const { conditionalActions, defaultAction } = buttonBlock.meta || {};
-    if (conditionalActions) {
-      for (let i2 = 0; i2 < conditionalActions.length; i2++) {
-        const conditionalAction = conditionalActions[i2];
-        if (evaluateCondition(_, conditionalAction, event)) {
-          const selectedAction = conditionalAction.v2?.action || conditionalAction.action || null;
-          return selectedAction;
-        }
-      }
-    }
-    return defaultAction ?? null;
-  };
-  var determineAction = (_, step, event) => {
-    const immediateAction = getImmediateAction(event.buttonMeta);
-    if (event.buttonMeta?.buttonType !== "snooze") {
-      const buttonBlocks = step.content.filter(
-        (block) => block.type === "button"
-      );
-      const clickedButtonBlock = buttonBlocks.find((block) => {
-        return block.meta?.buttonType === event.buttonMeta?.buttonType && block.meta?.label === event.buttonMeta?.label;
-      });
-      if (clickedButtonBlock && hasConditionalActionsBlock(clickedButtonBlock)) {
-        return getActionBasedOnButtonConditions(_, clickedButtonBlock, event);
-      }
-    }
-    if (event.buttonMeta?.action?.type === "use_conditional_logic") {
-      return getActionBasedOnConditions(_, step, event, event.buttonMeta?.buttonType);
-    }
-    if (immediateAction) {
-      return immediateAction;
-    }
-    return getActionBasedOnConditions(_, step, event);
-  };
-  var isTooltipNudge = (nudge) => nudge?.type === "tooltip" || nudge?.steps[0]?.formFactor.type === "tooltip";
-  var isTooltipStep = (step) => step?.formFactor.type === "tooltip";
-  var isPinStep = (step) => step?.formFactor.type === "pin";
-  var isAnchorableStep = (step) => isPinStep(step) || isTooltipStep(step);
-  var passesLocalization = (_, nudge, currentLocale) => {
-    const localizationSettings = _.organization?.localization;
-    const translationStatus = nudge.translationStatus;
-    if (!localizationSettings?.enabled) {
-      return true;
-    }
-    if (!translationStatus?.status) {
-      return true;
-    }
-    switch (translationStatus.status) {
-      case "missing":
-        if (currentLocale === localizationSettings.defaultLocale) {
-          return true;
-        }
-        return localizationSettings.translationUnavailable === "showDefault";
-      case "outdated":
-        return localizationSettings.translationOutdated === "showDefault" || localizationSettings.translationOutdated === "showOutOfDate";
-      case "up-to-date":
-        return true;
-      default:
-        return true;
-    }
-  };
-  var getCurrentLocale = () => {
-    return getSDK()?.[_configuration].locale;
-  };
-  var getAppliedNudgeLocale = (nudge, localizationSettings) => {
-    if (!localizationSettings || !localizationSettings.enabled || !nudge.translationStatus) {
-      return void 0;
-    }
-    if (nudge.translationStatus.translated) {
-      return getCurrentLocale();
-    } else {
-      return localizationSettings.defaultLocale;
-    }
-  };
 
   // ../shared/src/util/Interpolate.ts
   var import_get2 = __toESM(require_get());
@@ -17153,7 +17166,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       return {};
     }
     const userJsonBase64 = jsonBase64Encoder(user);
-    const result = await get(`/sdk/v1/decide`, {
+    const result = await get3(`/sdk/v1/decide`, {
       headers: {
         Authorization: `Api-Key ${apiKey}`,
         "X-Amp-User": userJsonBase64
@@ -17642,6 +17655,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         const value = response?.value;
         getClient()?.trackEvent?.(getEventNameCreator(nudge)(eventName), {
           ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
+          ["[Guides-Surveys] Question UUID" /* QuestionUuid */]: response.blockId,
           ["[Guides-Surveys] Survey Response" /* SurveyResponse */]: value,
           ["[Guides-Surveys] Survey Response String" /* SurveyResponseString */]: getEmojiOrStringValue(response) ?? null,
           ["[Guides-Surveys] Survey Response Number" /* SurveyResponseNumber */]: response.type === "number" ? value : null,
@@ -18647,6 +18661,17 @@ when parsing ${JSON.stringify(input, null, 2)}`);
               type: t10.literal("modal")
             }),
             t10.partial({
+              position: t10.union([
+                t10.literal("top-left"),
+                t10.literal("top-center"),
+                t10.literal("top-right"),
+                t10.literal("bottom-left"),
+                t10.literal("bottom-center"),
+                t10.literal("bottom-right"),
+                t10.literal("left-center"),
+                t10.literal("right-center"),
+                t10.literal("center")
+              ]),
               textAnimation: t10.literal("typewriter"),
               canClickOutsideToClose: t10.boolean
             }),
@@ -19105,7 +19130,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       path += `?locale=${locale}`;
     }
     if (isEditorPreview) return null;
-    const result = await get(path, {
+    const result = await get3(path, {
       headers: {
         Authorization: `Api-Key ${apiKey}`
       }
@@ -19116,7 +19141,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     try {
       const path = `/sdk/v1/resource_center`;
       if (isEditorPreview) return [];
-      const result = await get(path, {
+      const result = await get3(path, {
         headers: {
           Authorization: `Api-Key ${apiKey}`
         }
@@ -19154,7 +19179,33 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       return [];
     }
   }
+  function sanitizeLocale(locale) {
+    let sanitized = locale.replace(/_/g, "-");
+    const standardLocalePattern = /^[a-z]{2}(-[A-Z]{2})?$/;
+    if (!standardLocalePattern.test(sanitized)) {
+      logger.warn(`Unusual locale format detected: "${locale}". Expected format: xx-XX (e.g., en-US)`);
+    }
+    const parts = sanitized.split("-");
+    if (parts.length === 2) {
+      sanitized = `${parts[0].toLowerCase()}-${parts[1].toUpperCase()}`;
+    } else if (parts.length === 1) {
+      sanitized = parts[0].toLowerCase();
+    } else {
+      logger.warn(`Locale "${locale}" has unexpected number of parts. Expected format: xx or xx-XX (e.g., en or en-US)`);
+    }
+    if (locale !== sanitized) {
+      logger.log(`Locale converted from "${locale}" to "${sanitized}"`);
+    }
+    return sanitized;
+  }
   async function getConfig(apiKey, isAdmin = false, locale = void 0, isEditorPreview = false) {
+    if (locale) {
+      locale = sanitizeLocale(locale);
+      const sdk = getSDK();
+      if (sdk && sdk[_configuration] !== void 0 && sdk[_configuration].locale !== locale) {
+        sdk[_configuration].locale = locale;
+      }
+    }
     if (isEditorPreview) {
       return {
         organization: defaults,
@@ -19235,11 +19286,12 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       resourceCenters
     };
   }
-  async function getPreviewConfig(apiKey, isEditorPreview = false) {
+  async function getPreviewConfig(apiKey, isEditorPreview = false, locale) {
     if (!apiKey) {
       return;
     }
-    return getConfig(apiKey, true, getSDK()?.[_configuration].locale, isEditorPreview);
+    const previewLocale = locale ?? getSDK()?.[_configuration].locale;
+    return getConfig(apiKey, true, previewLocale, isEditorPreview);
   }
   async function getEndUserConfig(apiKey, isEditorPreview = false) {
     return getConfig(apiKey, false, getSDK()?.[_configuration].locale, isEditorPreview);
@@ -19386,15 +19438,20 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       });
     });
     _.messageBus.subscribe("start_debug", (message) => {
-      startDebugSession(_, message.event.data.experience.nudge, { toStepIndex: 0 });
+      const { experience } = message.event.data;
+      startDebugSession(_, experience.nudge, {
+        toStepIndex: 0,
+        locale: experience.locale
+      });
     });
     _.messageBus.subscribe("start_recorder", async (message) => {
       shutdownNudges(_);
       closeAllNudgeMocks(_);
       _.nudgeRecorderToolBar.visible = true;
       _.nudgeRecorderToolBar.experience = message.event.data.experience;
+      const { experience } = message.event.data;
       const configuration = getSDK()?.[_configuration];
-      const previewConfig = await getPreviewConfig(configuration?.apiKey);
+      const previewConfig = await getPreviewConfig(configuration?.apiKey, _.isEditorPreview, experience.locale);
       if (previewConfig?.nudges) {
         await getSDK()?._reloadNudges(previewConfig);
       }
@@ -19521,7 +19578,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var import_dayjs2 = __toESM(require_dayjs_min());
 
   // ../shared/src/store/end-user/responses.ts
-  var submitSurveyResponse = async (_, variantId, nudgeStepId, response) => {
+  var submitSurveyResponse = async (_, variantId, nudgeStepId, blockId, response) => {
     const { apiKey } = getSDK()[_configuration];
     const userJsonBase64 = jsonBase64Encoder(_.user);
     try {
@@ -19532,6 +19589,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
             {
               lifecycleId: getNudgeDataFromUserStore(_, variantId)?.activelifeCycleUuid,
               nudgeStepId,
+              blockId,
               response: {
                 value: response.value,
                 stringResponse: response.stringResponse,
@@ -19623,7 +19681,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       },
       passesClicked: ({ context }) => passesClickedElement(globalStore, context.nudge, context.triggerEvent),
       passesCustomThrottles: ({ context }) => shouldBypassCustomThrottles(globalStore, context.nudge) || context.triggerEvent?.overrides?.customThrottles || passesCustomThrottles(globalStore, context.nudge),
-      passesLocalization: ({ context }) => context.triggerEvent?.overrides?.localization || passesLocalization(globalStore, context.nudge, getCurrentLocale()),
+      passesLocalization: ({ context }) => context.triggerEvent?.overrides?.localization || passesLocalization(globalStore, context.nudge, getCurrentLocale(globalStore)),
       passesExperimentVariant: ({ context }) => context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode || nudgePassesDecide(context.nudge, globalStore.decide),
       // step specific
       remainingSteps: ({ context }) => hasRemainingSteps(context.nudge)(context),
@@ -19735,13 +19793,15 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       reportSurveyResponse: ({ context }) => {
         const step = getNudgeStep(context.nudge, context.stepIndex);
         if (!step) return;
-        const surveyResponse = context?.surveyResponses[step.id];
-        if (!surveyResponse) return;
-        submitSurveyResponse(globalStore, context.nudge.variantId, step.id, surveyResponse);
-        Track.nudge.surveySubmitted(context.nudge, context.stepIndex, {
-          ...context,
-          interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
-          response: surveyResponse
+        const stepResponses = context?.surveyResponses[step.id];
+        if (!stepResponses || Object.keys(stepResponses).length === 0) return;
+        Object.values(stepResponses).forEach((surveyResponse) => {
+          submitSurveyResponse(globalStore, context.nudge.variantId, step.id, surveyResponse.blockId, surveyResponse);
+          Track.nudge.surveySubmitted(context.nudge, context.stepIndex, {
+            ...context,
+            interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
+            response: surveyResponse
+          });
         });
       },
       reportCompleted: ({ context }) => {
@@ -19760,11 +19820,14 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           });
         }
         const step = getNudgeStep(context.nudge, context.stepIndex);
-        if (step && context.surveyResponses[step.id]) {
-          Track.nudge.surveyAbandoned(context.nudge, context.stepIndex, {
-            ...context,
-            interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
-            response: context.surveyResponses[step.id]
+        const stepResponses = step ? context.surveyResponses[step.id] : void 0;
+        if (stepResponses && Object.keys(stepResponses).length > 0) {
+          Object.values(stepResponses).forEach((surveyResponse) => {
+            Track.nudge.surveyAbandoned(context.nudge, context.stepIndex, {
+              ...context,
+              interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
+              response: surveyResponse
+            });
           });
         }
         Track.nudge.dismissed(context.nudge, context.stepIndex, {
@@ -19868,6 +19931,16 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       }),
       resetSurveyResponses: assign({
         surveyResponses: ({ context }, params) => {
+          if (params?.blockId) {
+            const step = getNudgeStep(context.nudge, context.stepIndex);
+            if (!step) return context.surveyResponses;
+            const stepResponses = { ...context.surveyResponses[step.id] || {} };
+            delete stepResponses[params.blockId];
+            return {
+              ...context.surveyResponses,
+              [step.id]: stepResponses
+            };
+          }
           if (params?.step && params.step >= 0 && params.step < context.nudge.steps.length) {
             const newRespones = { ...context.surveyResponses };
             for (let index = params.step; index < context.nudge.steps.length; index++) {
@@ -20213,16 +20286,10 @@ This ensures only the right variant is shown for experiment nudges.`
                   }
                   enqueue({ type: "reportExposure" });
                 }),
-                exit: enqueueActions(({ context, event, enqueue, check }) => {
-                  const isStepChange = event.type === "ADVANCE" || event.type === "REGRESS";
-                  if (isStepChange && !closesNudgeOnStepChange(context.nudge, context.stepIndex, event.type)) {
-                    const tryingToGoBeyondFirst = event.type === "REGRESS" && !check({ type: "canStepBack" });
-                    if (tryingToGoBeyondFirst) {
-                      enqueue({ type: "closeStep" });
-                    }
-                    return;
+                exit: enqueueActions(({ context, event, enqueue }) => {
+                  if (closesNudgeOnStepChange(context.nudge, event, context.stepIndex)) {
+                    enqueue({ type: "closeStep" });
                   }
-                  enqueue({ type: "closeStep" });
                 }),
                 on: {
                   ADVANCE: {
@@ -20989,8 +21056,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     _.nudgesManager?.send({
       type: "TRIGGER",
       trigger: { type: "direct" },
-      nudgeId: nudge.variantId,
       ...triggerEventPayload,
+      nudgeId: nudge.variantId,
       overrides: {
         ...defaultOverrides,
         ...triggerEventPayload.overrides
@@ -20999,9 +21066,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   };
   var sendDirectedTrigger = (_, nudge, triggerEventPayload) => {
     _.nudgesManager?.send({
+      ...triggerEventPayload,
       type: "TRIGGER",
-      nudgeId: nudge.variantId,
-      ...triggerEventPayload
+      nudgeId: nudge.variantId
     });
   };
   var refreshDecideResult = async (_) => {
@@ -21013,7 +21080,18 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   };
   var startDebugSession = async (_, nudge, options = { refreshDecide: true }) => {
     const configuration = getSDK()?.[_configuration];
-    const previewConfig = await getPreviewConfig(configuration?.apiKey);
+    if (options.locale) {
+      const wasPreviewLocaleSet = !!_.nudgeDebugToolBar.previewLocale;
+      _.nudgeDebugToolBar.previewLocale = options.locale;
+      if (!wasPreviewLocaleSet) {
+        _.nudgeDebugToolBar.bypassUserLocale = true;
+      }
+    } else {
+      _.nudgeDebugToolBar.previewLocale = void 0;
+      _.nudgeDebugToolBar.bypassUserLocale = false;
+    }
+    const localeForConfig = _.nudgeDebugToolBar.bypassUserLocale && _.nudgeDebugToolBar.previewLocale ? _.nudgeDebugToolBar.previewLocale : _.nudgeDebugToolBar.originalInitLocale;
+    const previewConfig = await getPreviewConfig(configuration?.apiKey, _.isEditorPreview, localeForConfig);
     if (previewConfig?.nudges) {
       await getSDK()?._reloadNudges(previewConfig);
     }
@@ -21053,10 +21131,15 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var restartDebugSession = async (_, options = { resetToOriginalDebugNudge: true }) => {
     const debugNudge = getDebuggedNudge(_, { getOriginal: !!options.resetToOriginalDebugNudge });
     if (debugNudge) {
+      const previewLocale = _.nudgeDebugToolBar.previewLocale;
       await stopDebugSession(_, { refreshDecide: false });
       resetNudge(_, debugNudge.variantId);
       setTimeout(() => {
-        startDebugSession(_, debugNudge, { toStepIndex: options.toStepIndex, refreshDecide: false });
+        startDebugSession(_, debugNudge, {
+          toStepIndex: options.toStepIndex,
+          refreshDecide: false,
+          locale: previewLocale
+        });
       }, 50);
     }
   };
@@ -21384,7 +21467,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     (step, buttonMeta, surveyResponse) => {
       return determineAction(window.engagement._, step, {
         buttonMeta,
-        surveyResponse
+        surveyResponses: surveyResponse ? { [surveyResponse.blockId]: surveyResponse } : void 0
       });
     }
   );
@@ -21392,7 +21475,24 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     "updateSurveyResponse",
     (variantId, surveyResponse) => {
       const actor = getNudgeActor(window.engagement._, variantId);
-      actor?.send({ type: "UPDATE_SURVEY_RESPONSE", surveyResponse });
+      actor?.send({
+        type: "UPDATE_SURVEY_RESPONSE",
+        surveyResponse: surveyResponse ? { [surveyResponse.blockId]: surveyResponse } : void 0
+      });
+    }
+  );
+  nudgeActionsBridge.function(
+    "handleLinkTap",
+    (nudgeVariantId, stepIndex, url) => {
+      const actor = getNudgeActor(window.engagement._, nudgeVariantId);
+      const nudge = actor?.getSnapshot().context.nudge;
+      if (nudge) {
+        Track.nudge.engaged(nudge, stepIndex, {
+          ...actor?.getSnapshot().context,
+          source: { type: "link", url },
+          interactionState: getNudgeDataFromUserStore(window.engagement._, nudgeVariantId)
+        });
+      }
     }
   );
 
@@ -23017,7 +23117,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   };
 
   // ../shared/src/sdk/sdk.ts
-  var _reloadTargets = ["reloadOrganization", "reloadNudges", "reloadThemes"];
+  var _reloadTargets = ["_reloadOrganization", "_reloadNudges", "_reloadThemes"];
   var DEFAULT_OPTIONS = {};
   var EngagementSDK = class {
     _;
@@ -23037,6 +23137,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     _fingerprint;
     _sentry;
     _debouncedDecide;
+    _autoRefreshTimer = null;
     constructor(_, sdkConfig) {
       this._ = _;
       this.nudgeActions = bindActions(_, service_actions_exports);
@@ -23246,7 +23347,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         }
       },
       /**
-       * Force 3 all active guides and surveys
+       * Force close all active guides and surveys
        * Analytics events will not be sent for guides or surveys that are closed this way.
        */
       closeAll: () => {
@@ -23316,10 +23417,59 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
     shutdown() {
       this._analytics.setBootStatus(false);
+      this._clearAutoRefreshTimer();
       this._.integrations = [];
       this._.decide = void 0;
       this._.user = void 0;
       this._.endUserStore.reset();
+    }
+    /**
+     * Sets the auto-refresh interval. Can be called after boot to change or disable the refresh interval.
+     * @param intervalSeconds The interval in seconds. If not specified, 0, or negative, auto-refresh is disabled.
+     * Must be greater than 60 seconds if enabled.
+     *
+     * @example
+     * // Set refresh interval to 1 hour
+     * sdk.setAutoRefreshInterval(3600);
+     *
+     * // Disable auto-refresh
+     * sdk.setAutoRefreshInterval(0);
+     */
+    setAutoRefreshInterval(intervalSeconds) {
+      this._clearAutoRefreshTimer();
+      if (intervalSeconds && intervalSeconds >= 60) {
+        const autoRefreshIntervalMs = intervalSeconds * 1e3;
+        const scheduleRefresh = () => {
+          this._autoRefreshTimer = setTimeout(async () => {
+            logger.log("Auto-refreshing due to timeout");
+            await this.refresh();
+            scheduleRefresh();
+          }, autoRefreshIntervalMs);
+        };
+        scheduleRefresh();
+        logger.debug(`Auto-refresh interval set to ${intervalSeconds} seconds`);
+      } else if (intervalSeconds !== void 0 && intervalSeconds < 60) {
+        logger.warn("Auto-refresh interval must be greater or equal to 60 seconds - auto-refresh disabled");
+      }
+    }
+    _clearAutoRefreshTimer() {
+      if (this._autoRefreshTimer) {
+        clearTimeout(this._autoRefreshTimer);
+        this._autoRefreshTimer = null;
+      }
+    }
+    async refresh() {
+      const visibleNudges = this.gs.list().filter((nudge) => nudge.status === "visible");
+      if (visibleNudges.length > 0) {
+        logger.debug("Skipping refresh because guides or surveys are currently visible and we don't want to close them", {
+          visibleNudges: visibleNudges.map((n) => ({ id: n.id, key: n.key }))
+        });
+        return;
+      }
+      await this.decide();
+      await this._.endUserStore.fetchData();
+      await this._reload();
+      this.nudgeActions.sendConstantTriggers();
     }
     /**
      * Make Guides and Surveys available to the user. They will not be available before `.boot` is called, even if the
@@ -23366,10 +23516,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         });
       }
       this._.user = user;
-      this._.integrations = [];
-      options.integrations?.forEach((integration) => {
-        this.addIntegration(integration);
-      });
+      if (options.integrations != void 0) {
+        this._.integrations = [];
+        options.integrations?.forEach((integration) => {
+          this.addIntegration(integration);
+        });
+      }
       try {
         await this.decide();
         logger.debug("Decide data fetched successfully");
@@ -23382,6 +23534,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         if (this._.endUserStore.initializedSuccessfully) {
           this._analytics.setBootStatus(true);
           this._.hasBooted = true;
+          if (options.autoRefreshIntervalSeconds !== void 0) {
+            this.setAutoRefreshInterval(options.autoRefreshIntervalSeconds);
+          }
           this._.nudgesManager?.send({ type: "END_USER_STORE_LOADED" });
           logger.debug("End user state loaded successfully");
         }
@@ -23481,14 +23636,17 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           logger.error(`registerAction: No button with type ${action.buttonType} found in step ${currentStepIndex}`);
           return;
         }
-        if (action.surveyResponse) {
-          actor?.send({ type: "UPDATE_SURVEY_RESPONSE", surveyResponse: action.surveyResponse });
+        if (action.surveyResponses) {
+          actor?.send({
+            type: "UPDATE_SURVEY_RESPONSE",
+            surveyResponse: action.surveyResponses
+          });
         }
         const snapshot = actor?.getSnapshot();
         const storedSurveyResponse = snapshot?.context?.surveyResponses?.[currentStep.id];
-        const surveyResponse = storedSurveyResponse ?? action.surveyResponse;
+        const surveyResponses = storedSurveyResponse ?? action.surveyResponses;
         const meta = buttonBlock.meta;
-        const buttonAction = determineAction(this._, currentStep, { buttonMeta: meta, surveyResponse });
+        const buttonAction = determineAction(this._, currentStep, { buttonMeta: meta, surveyResponses });
         execNudgeAction(this._, buttonAction, meta, 0 /* DEFAULT */, actor);
       } else {
         logger.error(
@@ -23532,7 +23690,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         const symbol = method;
         const fn = this[symbol];
         if (fn instanceof Function) {
-          fn(config);
+          fn.call(this, config);
         }
       }
     }
@@ -23670,18 +23828,21 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             const { name } = getProductMeta(nudge);
             const message = `${name} debug snapshot: ${snapshot.guideOrSurvey.title} - ${snapshot.guideOrSurvey.variant}`;
             console.log(message, snapshot);
+            return snapshot;
           }
         }
         return;
       }
       const nudges = getAllNudges(this._);
+      const snapshots = [];
       for (const nudge of nudges) {
         const snapshot = await getDebugSnapshot(this._, nudge);
         const { name } = getProductMeta(nudge);
         const message = `${name} debug snapshot: ${snapshot.guideOrSurvey.title} - ${snapshot.guideOrSurvey.variant}`;
         console.log(message, snapshot);
+        snapshots.push(snapshot);
       }
-      return;
+      return snapshots;
     }
     _debugStatus() {
       console.log({
@@ -25068,7 +25229,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         visible: false,
         closeTabWhenToolbarClosed: false,
         bypassCustomThrottles: true,
-        position: "bottom"
+        position: "bottom",
+        originalInitLocale: void 0,
+        bypassUserLocale: false,
+        previewLocale: void 0
       },
       nudgeRecorderToolBar: {
         visible: false
