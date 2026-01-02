@@ -14,7 +14,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		FPeo6F201Wv8qkbGtJ8EbUUIOeY=
+		PaLOwir4HgBrFK9iM1ssqrKFDic=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -29,10 +29,6 @@
 	<dict>
 		<key>Headers/quickjs-libc.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			mhs1x22FxKNbsBCw3LN7CxmWNlg=
-			</data>
 			<key>hash2</key>
 			<data>
 			z7Smq5UzRhqKv4CD99n5qE1rsmySp91xiYSnod3XVOs=
@@ -40,10 +36,6 @@
 		</dict>
 		<key>Headers/quickjs.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			mvOOnfWoUeCHYY8dOy5KE0MlLVU=
-			</data>
 			<key>hash2</key>
 			<data>
 			rTRVyvq1agNuW5TI5pFeZToJ9I4y5yy2bw0HdQR6e7U=
@@ -51,10 +43,6 @@
 		</dict>
 		<key>Modules/module.modulemap</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			8vKRwW5b+3eTO6u3sBRUIWmaJYU=
-			</data>
 			<key>hash2</key>
 			<data>
 			3gW9lz9fzZHKjUmQl6MmhvInn6QjTpi4mj94xhXRplA=
@@ -62,10 +50,6 @@
 		</dict>
 		<key>VERSION</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			TShGXo+s+iuJjvRw9XbA4v2zwqg=
-			</data>
 			<key>hash2</key>
 			<data>
 			FkvriEMVeonddPBpmEIpcJtx/PstYXdMBpXTBDKlAUM=

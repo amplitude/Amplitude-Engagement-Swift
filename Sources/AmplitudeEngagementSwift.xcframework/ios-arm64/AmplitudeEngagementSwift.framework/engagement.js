@@ -1356,7 +1356,7 @@
         };
       }
       exports.untupled = untupled;
-      function pipe4(a, ab, bc, cd, de, ef, fg, gh, hi, ij, jk, kl, lm, mn, no, op, pq, qr, rs, st) {
+      function pipe3(a, ab, bc, cd, de, ef, fg, gh, hi, ij, jk, kl, lm, mn, no, op, pq, qr, rs, st) {
         switch (arguments.length) {
           case 1:
             return a;
@@ -1401,7 +1401,7 @@
         }
         return;
       }
-      exports.pipe = pipe4;
+      exports.pipe = pipe3;
       exports.hole = absurd;
     }
   });
@@ -4820,13 +4820,13 @@
       exports.getJoinSemigroup = exports.max;
       exports.getMeetSemigroup = exports.min;
       exports.getIntercalateSemigroup = exports.intercalate;
-      function fold3(S) {
+      function fold2(S) {
         var concatAllS = exports.concatAll(S);
         return function(startWith, as) {
           return as === void 0 ? concatAllS(startWith) : concatAllS(startWith)(as);
         };
       }
-      exports.fold = fold3;
+      exports.fold = fold2;
       exports.semigroupAll = {
         concat: function(x, y2) {
           return x && y2;
@@ -10134,7 +10134,7 @@
         }));
       };
       exports.formatValidationErrors = formatValidationErrors;
-      var reporter3 = function(validation, options) {
+      var reporter2 = function(validation, options) {
         return pipeable_1.pipe(validation, E.mapLeft(function(errors) {
           return exports.formatValidationErrors(errors, options);
         }), E.fold(function(errors) {
@@ -10143,7 +10143,7 @@
           return [];
         }));
       };
-      exports.reporter = reporter3;
+      exports.reporter = reporter2;
       var prettyReporter = { report: exports.reporter };
       exports.default = prettyReporter;
     }
@@ -12138,18 +12138,8 @@
   var RULES = {
     generic: {
       stepsPresentation: "sequential",
-      blockedBy: ["survey", "generic"],
+      blockedBy: ["generic"],
       includedInCustomThrottles: true,
-      inputs: false,
-      media: true,
-      stopOnSimulateStart: true,
-      canBeActive: true
-    },
-    survey: {
-      stepsPresentation: "sequential",
-      blockedBy: ["survey", "generic"],
-      includedInCustomThrottles: true,
-      inputs: true,
       media: true,
       stopOnSimulateStart: true,
       canBeActive: true
@@ -12158,7 +12148,6 @@
       stepsPresentation: "all",
       blockedBy: ["checklist"],
       includedInCustomThrottles: true,
-      inputs: false,
       media: false,
       stopOnSimulateStart: true,
       canBeActive: true
@@ -12167,7 +12156,6 @@
       stepsPresentation: "single",
       blockedBy: ["banner"],
       includedInCustomThrottles: false,
-      inputs: true,
       media: false,
       stopOnSimulateStart: true,
       canBeActive: true
@@ -12176,36 +12164,46 @@
       stepsPresentation: "single",
       blockedBy: [],
       includedInCustomThrottles: false,
-      inputs: true,
       media: true,
       stopOnSimulateStart: false,
       canBeActive: false
+    },
+    card: {
+      stepsPresentation: "sequential",
+      blockedBy: [],
+      includedInCustomThrottles: false,
+      media: true,
+      stopOnSimulateStart: false,
+      canBeActive: true
     }
   };
-  var getApplicableNudgeType = (nudgeType) => {
-    if (nudgeType in RULES) {
-      return nudgeType;
+  var getApplicableNudgeTypeForStrings = (formFactor) => {
+    if (formFactor in RULES) {
+      return formFactor;
     }
     return "generic";
   };
+  var getApplicableNudgeType = (nudge) => {
+    return getApplicableNudgeTypeForStrings(nudge.steps[0].formFactor.type);
+  };
   var isIncludedInCustomThrottles = (nudge) => {
-    return RULES[getApplicableNudgeType(nudge.type)].includedInCustomThrottles;
+    return RULES[getApplicableNudgeType(nudge)].includedInCustomThrottles;
   };
   var canBeActive = (nudge) => {
-    return RULES[getApplicableNudgeType(nudge.type)].canBeActive;
+    return RULES[getApplicableNudgeType(nudge)].canBeActive;
   };
-  var typeIsIncludedInCustomThrottles = (type10) => {
-    return RULES[getApplicableNudgeType(type10)].includedInCustomThrottles;
+  var typeIsIncludedInCustomThrottles = (formFactor) => {
+    return RULES[getApplicableNudgeTypeForStrings(formFactor)].includedInCustomThrottles;
   };
   var isBlocked = (nudge, renderingNudges) => {
-    const renderingNudgeTypes = new Set(renderingNudges.map(({ type: type10 }) => getApplicableNudgeType(type10)));
-    return RULES[getApplicableNudgeType(nudge.type)].blockedBy.some((element) => renderingNudgeTypes.has(element));
+    const renderingNudgeTypes = new Set(renderingNudges.map((n) => getApplicableNudgeType(n)));
+    return RULES[getApplicableNudgeType(nudge)].blockedBy.some((element) => renderingNudgeTypes.has(element));
   };
   var getBlockingNudge = (nudge, renderingNudges) => {
-    const nudgeType = getApplicableNudgeType(nudge.type);
+    const nudgeType = getApplicableNudgeType(nudge);
     const blockedByTypes = RULES[nudgeType].blockedBy;
     for (const renderingNudge of renderingNudges) {
-      const renderingNudgeType = getApplicableNudgeType(renderingNudge.type);
+      const renderingNudgeType = getApplicableNudgeType(renderingNudge);
       if (blockedByTypes.includes(renderingNudgeType)) {
         return renderingNudge;
       }
@@ -12213,15 +12211,23 @@
     return null;
   };
   var hasSequentialSteps = (nudge) => {
-    return RULES[getApplicableNudgeType(nudge.type)].stepsPresentation === "sequential";
+    return RULES[getApplicableNudgeType(nudge)].stepsPresentation === "sequential";
   };
   var shouldStopOnSimulateStart = (nudge) => {
-    return RULES[getApplicableNudgeType(nudge.type)].stopOnSimulateStart;
+    return RULES[getApplicableNudgeType(nudge)].stopOnSimulateStart;
   };
   var usesNavigationStack = (nudge) => {
     return !nudge.isCarousel;
   };
   var closesNudgeOnStepChange = (nudge, event, stepIndex) => {
+    if (isCardNudge(nudge)) {
+      if (event.type === "REGRESS") {
+        return false;
+      }
+      if (event.type === "ADVANCE" && stepIndex !== nudge.steps.length - 1) {
+        return false;
+      }
+    }
     if (!nudge.isCarousel) {
       return true;
     }
@@ -12632,8 +12638,9 @@
             }
           });
         }
+        const formFactor = nudgeState.formFactor || nudgeState.type;
         for (const timestamp of nudgeState.activatedTs) {
-          if (stateNudgeProductType === targetProductType && typeIsIncludedInCustomThrottles(nudgeState.type)) {
+          if (stateNudgeProductType === targetProductType && typeIsIncludedInCustomThrottles(formFactor)) {
             if (timestamp > lastActivationTs) lastActivationTs = timestamp;
             productTypeCounts.ever++;
             if (timestamp > thresholds.session) productTypeCounts.session++;
@@ -12957,8 +12964,9 @@
     const surveyResponse = {};
     if (event.surveyResponses && conditions) {
       const surveyConditions = conditions.filter((c2) => c2.type === "survey_response");
+      const surveyResponses = Object.values(event.surveyResponses);
       for (const condition of surveyConditions) {
-        const value = Object.values(event.surveyResponses)[0]?.value;
+        const value = event.surveyResponses[condition.field]?.value ?? surveyResponses[0]?.value;
         surveyResponse[condition.field] = typeof value === "number" ? String(value) : value;
       }
     }
@@ -13051,29 +13059,28 @@
   };
   var determineAction = (_, step, event) => {
     const immediateAction = getImmediateAction(event.buttonMeta);
-    if (event.buttonMeta?.buttonType !== "snooze") {
-      const buttonBlocks = step.content.filter(
-        (block) => block.type === "button"
-      );
-      const clickedButtonBlock = buttonBlocks.find((block) => {
-        return block.meta?.buttonType === event.buttonMeta?.buttonType && block.meta?.label === event.buttonMeta?.label;
-      });
-      if (clickedButtonBlock && hasConditionalActionsBlock(clickedButtonBlock)) {
-        return getActionBasedOnButtonConditions(_, clickedButtonBlock, event);
-      }
-    }
     if (event.buttonMeta?.action?.type === "use_conditional_logic") {
+      if (event.buttonMeta?.buttonType !== "snooze") {
+        const buttonBlocks = step.content.filter(
+          (block) => block.type === "button"
+        );
+        const clickedButtonBlock = buttonBlocks.find((block) => {
+          return block.meta?.buttonType === event.buttonMeta?.buttonType && block.meta?.label === event.buttonMeta?.label;
+        });
+        if (clickedButtonBlock && hasConditionalActionsBlock(clickedButtonBlock)) {
+          return getActionBasedOnButtonConditions(_, clickedButtonBlock, event);
+        }
+      }
       return getActionBasedOnConditions(_, step, event, event.buttonMeta?.buttonType);
     }
-    if (immediateAction) {
-      return immediateAction;
-    }
-    return getActionBasedOnConditions(_, step, event);
+    return immediateAction;
   };
   var isTooltipNudge = (nudge) => nudge?.type === "tooltip" || nudge?.steps[0]?.formFactor.type === "tooltip";
   var isTooltipStep = (step) => step?.formFactor.type === "tooltip";
   var isPinStep = (step) => step?.formFactor.type === "pin";
-  var isAnchorableStep = (step) => isPinStep(step) || isTooltipStep(step);
+  var isCardStep = (step) => step?.formFactor.type === "card";
+  var isCardNudge = (nudge) => nudge.steps.some((step) => step.formFactor.type === "card");
+  var isAnchorableStep = (step) => isPinStep(step) || isTooltipStep(step) || isCardStep(step);
   var passesLocalization = (_, nudge, currentLocale) => {
     const localizationSettings = _.organization?.localization;
     const translationStatus = nudge.translationStatus;
@@ -16566,41 +16573,185 @@ ${err.message}`);
   var v4_default = v4;
 
   // ../shared/src/types/entities/endUser.ts
+  var t4 = __toESM(require_lib());
+
+  // ../shared/node_modules/fp-ts/es6/function.js
+  function pipe(a, ab, bc, cd, de, ef, fg, gh, hi, ij, jk, kl, lm, mn, no, op, pq, qr, rs, st) {
+    switch (arguments.length) {
+      case 1:
+        return a;
+      case 2:
+        return ab(a);
+      case 3:
+        return bc(ab(a));
+      case 4:
+        return cd(bc(ab(a)));
+      case 5:
+        return de(cd(bc(ab(a))));
+      case 6:
+        return ef(de(cd(bc(ab(a)))));
+      case 7:
+        return fg(ef(de(cd(bc(ab(a))))));
+      case 8:
+        return gh(fg(ef(de(cd(bc(ab(a)))))));
+      case 9:
+        return hi(gh(fg(ef(de(cd(bc(ab(a))))))));
+      case 10:
+        return ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))));
+      case 11:
+        return jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))));
+      case 12:
+        return kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))));
+      case 13:
+        return lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))));
+      case 14:
+        return mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))));
+      case 15:
+        return no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))));
+      case 16:
+        return op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))));
+      case 17:
+        return pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))))));
+      case 18:
+        return qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))))));
+      case 19:
+        return rs(qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))))))));
+      case 20:
+        return st(rs(qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))))))));
+    }
+    return;
+  }
+
+  // ../shared/node_modules/fp-ts/es6/Functor.js
+  function flap(F) {
+    return function(a) {
+      return function(fab) {
+        return F.map(fab, function(f) {
+          return f(a);
+        });
+      };
+    };
+  }
+
+  // ../shared/node_modules/fp-ts/es6/internal.js
+  var isLeft = function(ma) {
+    return ma._tag === "Left";
+  };
+
+  // ../shared/node_modules/fp-ts/es6/Either.js
+  var isLeft2 = isLeft;
+  var right = function(a) {
+    return { _tag: "Right", right: a };
+  };
+  var orElseW = function(onLeft) {
+    return function(ma) {
+      return isLeft2(ma) ? onLeft(ma.left) : ma;
+    };
+  };
+  var orElse = orElseW;
+  var _map = function(fa, f) {
+    return pipe(fa, map(f));
+  };
+  var map = function(f) {
+    return function(fa) {
+      return isLeft2(fa) ? fa : right(f(fa.right));
+    };
+  };
+  var URI = "Either";
+  var Functor = {
+    URI,
+    map: _map
+  };
+  var flap2 = (
+    /*#_PURE_*/
+    flap(Functor)
+  );
+
+  // ../shared/node_modules/io-ts-types/es6/clone.js
+  function clone(t13) {
+    var r = Object.create(Object.getPrototypeOf(t13));
+    Object.assign(r, t13);
+    return r;
+  }
+
+  // ../shared/node_modules/io-ts-types/es6/withFallback.js
+  var t3 = __toESM(require_lib());
+
+  // ../shared/node_modules/io-ts-types/es6/withValidate.js
   var t2 = __toESM(require_lib());
-  var NudgeInteractionStateV = t2.type({
-    type: t2.union([
-      t2.literal("survey"),
-      t2.literal("tour"),
-      t2.literal("banner"),
-      t2.literal("tooltip"),
-      t2.literal("checklist"),
-      t2.string
+  function withValidate(codec, validate2, name) {
+    if (name === void 0) {
+      name = codec.name;
+    }
+    var r = clone(codec);
+    r.validate = validate2;
+    r.decode = function(i2) {
+      return validate2(i2, t2.getDefaultContext(r));
+    };
+    r.name = name;
+    return r;
+  }
+
+  // ../shared/node_modules/io-ts-types/es6/withFallback.js
+  function withFallback(codec, a, name) {
+    if (name === void 0) {
+      name = "withFallback(" + codec.name + ")";
+    }
+    return withValidate(codec, function(u, c2) {
+      return orElse(function() {
+        return t3.success(a);
+      })(codec.validate(u, c2));
+    }, name);
+  }
+
+  // ../shared/src/types/entities/endUser.ts
+  var NudgeInteractionStateV = t4.type({
+    type: t4.union([
+      t4.literal("survey"),
+      t4.literal("tour"),
+      t4.literal("banner"),
+      t4.literal("tooltip"),
+      t4.literal("checklist"),
+      t4.string
     ]),
-    activelifeCycleUuid: t2.union([t2.string, t2.literal("")]),
-    activatedTs: t2.array(t2.number),
-    dismissedTs: t2.array(t2.number),
-    isDismissed: t2.boolean,
-    completedTs: t2.array(t2.number),
-    isCompleted: t2.boolean,
-    lastSeenTs: t2.union([t2.number, t2.literal(-1)]),
-    lastSeenSessionId: t2.number,
-    lastSeenDeviceId: t2.string,
-    snoozedUntilTs: t2.union([t2.number, t2.literal(-1)]),
-    stepIndexStack: t2.array(t2.number),
-    currentStep: t2.number,
-    isChecklistExpanded: t2.boolean,
-    steps: t2.record(
-      t2.string,
-      t2.type({
-        completedTs: t2.union([t2.number, t2.literal(-1)])
+    formFactor: withFallback(
+      t4.union([
+        t4.literal("modal"),
+        t4.literal("checklist"),
+        t4.literal("popover"),
+        t4.literal("banner"),
+        t4.literal("pin"),
+        t4.literal("tooltip"),
+        t4.literal("card"),
+        t4.literal("")
+      ]),
+      ""
+    ),
+    activelifeCycleUuid: t4.union([t4.string, t4.literal("")]),
+    activatedTs: t4.array(t4.number),
+    dismissedTs: t4.array(t4.number),
+    isDismissed: t4.boolean,
+    completedTs: t4.array(t4.number),
+    isCompleted: t4.boolean,
+    lastSeenTs: t4.union([t4.number, t4.literal(-1)]),
+    lastSeenSessionId: withFallback(t4.number, -1),
+    lastSeenDeviceId: withFallback(t4.string, ""),
+    snoozedUntilTs: t4.union([t4.number, t4.literal(-1)]),
+    stepIndexStack: t4.array(t4.number),
+    currentStep: t4.number,
+    isChecklistExpanded: t4.boolean,
+    steps: t4.record(
+      t4.string,
+      t4.type({
+        completedTs: t4.union([t4.number, t4.literal(-1)])
         // only used for checklists
       })
     ),
-    tagIds: t2.array(t2.number)
+    tagIds: withFallback(t4.array(t4.number), [])
     // Tag IDs associated with this nudge
   });
-  var NudgeInteractionsV = t2.record(t2.string, NudgeInteractionStateV);
-  var EndUserStoreDataV = t2.type({
+  var NudgeInteractionsV = t4.record(t4.string, NudgeInteractionStateV);
+  var EndUserStoreDataV = t4.type({
     nudgeInteractions: NudgeInteractionsV
   });
 
@@ -16718,64 +16869,22 @@ ${err.message}`);
     };
   };
 
-  // ../shared/src/types/decode.ts
-  var import_function = __toESM(require_function());
-  var import_Either = __toESM(require_Either());
+  // ../shared/src/internal/middleware/generics.ts
   var import_io_ts_reporters = __toESM(require_src());
-  var ALLOWED_NUDGE_INTERACTION_DEFAULTS = {
-    lastSeenDeviceId: "",
-    lastSeenSessionId: -1,
-    tagIds: []
-  };
-  function decodeEndUserStoreData(input) {
-    const result = EndUserStoreDataV.decode(input);
-    return (0, import_function.pipe)(
-      result,
-      (0, import_Either.fold)(
-        (_errors) => {
-          const messages = import_io_ts_reporters.default.report(result);
-          logger.error(`${messages.join("\n")}
-when parsing ${JSON.stringify(input, null, 2)}`);
-          getSentry()?.captureException(
-            new Error(`${messages.join("\n")}
-when parsing ${JSON.stringify(input, null, 2)}`)
-          );
-          const handledErrors = /* @__PURE__ */ new Set();
-          const nudgeInteractions = input.nudgeInteractions || {};
-          for (const key in nudgeInteractions) {
-            const interaction = nudgeInteractions[key];
-            const interactionErrors = _errors.filter((error) => error.context.some((ctx) => ctx.key === key));
-            for (const error of interactionErrors) {
-              const lastError = error.context[error.context.length - 1];
-              if (lastError && lastError.key in ALLOWED_NUDGE_INTERACTION_DEFAULTS) {
-                interaction[lastError.key] = ALLOWED_NUDGE_INTERACTION_DEFAULTS[lastError.key];
-                handledErrors.add(error);
-              }
-            }
-          }
-          const unhandledErrors = _errors.filter((error) => !handledErrors.has(error));
-          if (unhandledErrors.length > 0) {
-            throw new Error(`${messages.join("\n")}
-when parsing ${JSON.stringify(input, null, 2)}`);
-          }
-          return {
-            ...input,
-            nudgeInteractions
-          };
-        },
-        (value) => value
-      )
-    );
-  }
+  var import_function2 = __toESM(require_function());
+  var import_Either2 = __toESM(require_Either());
   function decodeThrowing(validator, input) {
     const result = validator.decode(input);
-    return (0, import_function.pipe)(
+    return (0, import_function2.pipe)(
       result,
-      (0, import_Either.fold)(
+      (0, import_Either2.fold)(
         (_errors) => {
           const messages = import_io_ts_reporters.default.report(result);
-          throw new Error(`${messages.join("\n")}
-when parsing ${JSON.stringify(input, null, 2)}`);
+          const errorMessage = `${messages.join("\n")}
+when parsing ${JSON.stringify(input, null, 2)}`;
+          logger.debug(JSON.stringify(_errors));
+          getSentry()?.captureException(new Error(errorMessage));
+          throw new Error(errorMessage);
         },
         (value) => value
       )
@@ -16801,6 +16910,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var createDefaultNudgeInteractionState = () => {
     return {
       type: "__unknown__",
+      formFactor: "",
       activelifeCycleUuid: "",
       activatedTs: [],
       dismissedTs: [],
@@ -16861,7 +16971,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           "X-Amp-User": userJsonBase64
         }
       });
-      this.data = decodeEndUserStoreData(response.data);
+      this.data = decodeThrowing(EndUserStoreDataV, response.data);
       this.initializedSuccessfully = true;
     }
     async pushData() {
@@ -16919,7 +17029,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     }
     async fetchData() {
       const data = JSON.parse(LocalStorage_default.get(this.getEUSKey(), JSON.stringify(emptyEndUserStoreData())));
-      this.data = decodeEndUserStoreData(data);
+      this.data = decodeThrowing(EndUserStoreDataV, data);
       this.initializedSuccessfully = true;
     }
     async pushData() {
@@ -17953,6 +18063,12 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         LocalStorage_default.set(`${apiKey}-${key}`, value);
       }
     }
+    remove(key) {
+      const apiKey = window.engagement?.[_configuration].apiKey;
+      if (apiKey) {
+        LocalStorage_default.remove(`${apiKey}-${key}`);
+      }
+    }
   };
 
   // ../shared/src/store/resource-center-storage-manager.ts
@@ -18002,59 +18118,59 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   };
 
   // ../shared/src/internal/middleware/organization.ts
-  var t4 = __toESM(require_lib());
+  var t6 = __toESM(require_lib());
 
   // ../shared/src/internal/middleware/evaluation.ts
-  var t3 = __toESM(require_lib());
-  var EvaluationConditionV = t3.type({
-    selector: t3.array(t3.string),
-    op: t3.string,
-    values: t3.array(t3.string)
+  var t5 = __toESM(require_lib());
+  var EvaluationConditionV = t5.type({
+    selector: t5.array(t5.string),
+    op: t5.string,
+    values: t5.array(t5.string)
   });
 
   // ../shared/src/internal/middleware/organization.ts
-  var ThrottleV = t4.intersection([
-    t4.type({
-      max: t4.number,
-      period: t4.string
+  var ThrottleV = t6.intersection([
+    t6.type({
+      max: t6.number,
+      period: t6.string
     }),
-    t4.partial({
-      tagIds: t4.array(t4.number),
+    t6.partial({
+      tagIds: t6.array(t6.number),
       // if it's a tag throttle, this will be set, otherwise the throttle is for all nudge interactions
-      periodCount: t4.union([t4.number, t4.undefined]),
-      type: t4.union([t4.literal("time-between"), t4.literal("basic")])
+      periodCount: t6.union([t6.number, t6.undefined]),
+      type: t6.union([t6.literal("time-between"), t6.literal("basic")])
     })
   ]);
-  var CustomThrottleV = t4.intersection([
-    t4.type({
-      limits: t4.array(ThrottleV),
-      conditions: t4.array(t4.array(EvaluationConditionV))
+  var CustomThrottleV = t6.intersection([
+    t6.type({
+      limits: t6.array(ThrottleV),
+      conditions: t6.array(t6.array(EvaluationConditionV))
     }),
-    t4.partial({
-      enabled: t4.boolean,
+    t6.partial({
+      enabled: t6.boolean,
       limit: ThrottleV
     })
   ]);
-  var TranslationBehaviorV = t4.keyof({
+  var TranslationBehaviorV = t6.keyof({
     showDefault: null,
     showOutOfDate: null,
     dontShow: null
   });
-  var LocalizationV = t4.type({
-    enabled: t4.boolean,
-    defaultLocale: t4.string,
-    addedLocales: t4.array(t4.string),
+  var LocalizationV = t6.type({
+    enabled: t6.boolean,
+    defaultLocale: t6.string,
+    addedLocales: t6.array(t6.string),
     translationUnavailable: TranslationBehaviorV,
     translationOutdated: TranslationBehaviorV
   });
-  var OrganizationV = t4.intersection([
-    t4.type({
-      branding: t4.string,
-      shareLinkParam: t4.string,
+  var OrganizationV = t6.intersection([
+    t6.type({
+      branding: t6.string,
+      shareLinkParam: t6.string,
       guideThrottle: CustomThrottleV,
       surveyThrottle: CustomThrottleV
     }),
-    t4.partial({
+    t6.partial({
       localization: LocalizationV
     })
   ]);
@@ -18091,154 +18207,6 @@ when parsing ${JSON.stringify(input, null, 2)}`);
 
   // ../shared/src/internal/middleware/nudge.ts
   var t10 = __toESM(require_lib());
-
-  // ../shared/node_modules/fp-ts/es6/function.js
-  function pipe2(a, ab, bc, cd, de, ef, fg, gh, hi, ij, jk, kl, lm, mn, no, op, pq, qr, rs, st) {
-    switch (arguments.length) {
-      case 1:
-        return a;
-      case 2:
-        return ab(a);
-      case 3:
-        return bc(ab(a));
-      case 4:
-        return cd(bc(ab(a)));
-      case 5:
-        return de(cd(bc(ab(a))));
-      case 6:
-        return ef(de(cd(bc(ab(a)))));
-      case 7:
-        return fg(ef(de(cd(bc(ab(a))))));
-      case 8:
-        return gh(fg(ef(de(cd(bc(ab(a)))))));
-      case 9:
-        return hi(gh(fg(ef(de(cd(bc(ab(a))))))));
-      case 10:
-        return ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))));
-      case 11:
-        return jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))));
-      case 12:
-        return kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))));
-      case 13:
-        return lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))));
-      case 14:
-        return mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))));
-      case 15:
-        return no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))));
-      case 16:
-        return op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))));
-      case 17:
-        return pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))))));
-      case 18:
-        return qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))))));
-      case 19:
-        return rs(qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))))))));
-      case 20:
-        return st(rs(qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))))))));
-    }
-    return;
-  }
-
-  // ../shared/node_modules/fp-ts/es6/Functor.js
-  function flap(F) {
-    return function(a) {
-      return function(fab) {
-        return F.map(fab, function(f) {
-          return f(a);
-        });
-      };
-    };
-  }
-
-  // ../shared/node_modules/fp-ts/es6/internal.js
-  var isLeft = function(ma) {
-    return ma._tag === "Left";
-  };
-
-  // ../shared/node_modules/fp-ts/es6/Either.js
-  var isLeft2 = isLeft;
-  var right = function(a) {
-    return { _tag: "Right", right: a };
-  };
-  var orElseW = function(onLeft) {
-    return function(ma) {
-      return isLeft2(ma) ? onLeft(ma.left) : ma;
-    };
-  };
-  var orElse = orElseW;
-  var _map = function(fa, f) {
-    return pipe2(fa, map(f));
-  };
-  var map = function(f) {
-    return function(fa) {
-      return isLeft2(fa) ? fa : right(f(fa.right));
-    };
-  };
-  var URI = "Either";
-  var Functor = {
-    URI,
-    map: _map
-  };
-  var flap2 = (
-    /*#_PURE_*/
-    flap(Functor)
-  );
-
-  // ../shared/node_modules/io-ts-types/es6/clone.js
-  function clone(t13) {
-    var r = Object.create(Object.getPrototypeOf(t13));
-    Object.assign(r, t13);
-    return r;
-  }
-
-  // ../shared/node_modules/io-ts-types/es6/withFallback.js
-  var t6 = __toESM(require_lib());
-
-  // ../shared/node_modules/io-ts-types/es6/withValidate.js
-  var t5 = __toESM(require_lib());
-  function withValidate(codec, validate2, name) {
-    if (name === void 0) {
-      name = codec.name;
-    }
-    var r = clone(codec);
-    r.validate = validate2;
-    r.decode = function(i2) {
-      return validate2(i2, t5.getDefaultContext(r));
-    };
-    r.name = name;
-    return r;
-  }
-
-  // ../shared/node_modules/io-ts-types/es6/withFallback.js
-  function withFallback(codec, a, name) {
-    if (name === void 0) {
-      name = "withFallback(" + codec.name + ")";
-    }
-    return withValidate(codec, function(u, c2) {
-      return orElse(function() {
-        return t6.success(a);
-      })(codec.validate(u, c2));
-    }, name);
-  }
-
-  // ../shared/src/internal/middleware/generics.ts
-  var import_io_ts_reporters2 = __toESM(require_src());
-  var import_function3 = __toESM(require_function());
-  var import_Either3 = __toESM(require_Either());
-  function decodeThrowing2(validator, input) {
-    const result = validator.decode(input);
-    return (0, import_function3.pipe)(
-      result,
-      (0, import_Either3.fold)(
-        (_errors) => {
-          const messages = import_io_ts_reporters2.default.report(result);
-          logger.debug(JSON.stringify(_errors));
-          throw new Error(messages.join("\n\n"));
-        },
-        (value) => value
-      )
-    );
-  }
 
   // ../shared/src/types/entities/nudge/actions.ts
   var t7 = __toESM(require_lib());
@@ -18528,7 +18496,11 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var NudgeContentSurveyTextBlockV = t10.type({
     uuid: t10.string,
     type: t10.literal("survey_text"),
-    meta: t10.intersection([t10.type({ prompt: t10.string }), SurveyValidation, t10.partial({ ariaLabel: t10.string })])
+    meta: t10.intersection([
+      t10.type({ prompt: t10.string }),
+      SurveyValidation,
+      t10.partial({ label: t10.string, ariaLabel: t10.string })
+    ])
   });
   var NudgeStepContentSurveyTextShortBlockTypeV = t10.type({
     uuid: t10.string,
@@ -18539,7 +18511,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         t10.partial({ prefill: t10.type({ enabled: t10.boolean, userProperty: t10.string }) })
       ]),
       SurveyValidation,
-      t10.partial({ ariaLabel: t10.string })
+      t10.partial({ label: t10.string, ariaLabel: t10.string })
     ])
   });
   var NudgeContentListBlockV = t10.type({
@@ -18561,6 +18533,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           label: t10.string,
           placeholderLabel: t10.string
         }),
+        label: t10.string,
         ariaLabel: t10.string
       })
     ])
@@ -18600,6 +18573,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       t10.partial({
         conditionalActions: t10.array(NudgeConditionalActionV),
         defaultAction: NudgeButtonActionV,
+        label: t10.string,
         ariaLabel: t10.string
       })
     ])
@@ -18810,6 +18784,35 @@ when parsing ${JSON.stringify(input, null, 2)}`);
             }),
             NudgeStepLayoutConfigV,
             NudgeStepFooterLayoutConfigV
+          ]),
+          t10.intersection([
+            t10.type({
+              type: t10.literal("card"),
+              anchor: t10.string,
+              position: t10.union([
+                t10.literal("prepend"),
+                t10.literal("append"),
+                t10.literal("replace"),
+                t10.literal("before"),
+                t10.literal("after")
+              ])
+            }),
+            t10.partial({
+              anchorSelector: ElementSelectorV,
+              textAnimation: t10.literal("typewriter"),
+              zIndexOverride: t10.union([t10.undefined, t10.null, t10.number]),
+              alignment: t10.union([t10.literal("start"), t10.literal("center"), t10.literal("end")]),
+              cardWidth: t10.type({
+                type: t10.union([t10.literal("auto"), t10.literal("fixed"), t10.literal("full")]),
+                value: t10.union([t10.number, t10.undefined])
+              }),
+              cardHeight: t10.type({
+                type: t10.union([t10.literal("auto"), t10.literal("fixed"), t10.literal("full")]),
+                value: t10.union([t10.number, t10.undefined])
+              })
+            }),
+            NudgeStepLayoutConfigV,
+            NudgeStepFooterLayoutConfigV
           ])
         ])
       }),
@@ -18958,7 +18961,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       pageTargeting: PageTargetingConfigV,
       hideIfPageTargetingNotMet: t10.boolean,
       temporarilyHideTargeting: PageTargetingConfigV,
-      translationStatus: t10.union([TranslationStatusV, t10.null, t10.undefined])
+      translationStatus: t10.union([TranslationStatusV, t10.null, t10.undefined]),
+      breakingFeatures: t10.union([t10.string, t10.null, t10.undefined])
     },
     "NudgeAdditional"
   );
@@ -18988,19 +18992,54 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     temporarilyHideTargeting: {
       conditions: [[]],
       configs: []
-    }
+    },
+    breakingFeatures: null
   };
   var NudgeV = t10.intersection([NudgeBaseV, NudgeAdditionalV], "Nudge");
+  var createUnsupportedFeatureNudge = (data) => {
+    return {
+      title: data.title || "Unsupported Feature",
+      variantId: data.variantId,
+      flagKey: data.flagKey,
+      steps: [],
+      triggerConfig: {
+        type: "none",
+        conditions: [[]],
+        data: null
+      },
+      lifecycleConfig: {
+        conditions: [[]],
+        cooldownLimits: [],
+        stopShowingIfCompleted: false,
+        stopShowingIfDismissed: false
+      },
+      ...defaults2,
+      breakingFeatures: data.breakingFeatures
+    };
+  };
+  var hasUnsupportedBreakingFeatures = (data, supportedBreakingFeatures) => {
+    if (!supportedBreakingFeatures || !data.breakingFeatures) {
+      return false;
+    }
+    const breakingFeatures = typeof data.breakingFeatures === "string" ? data.breakingFeatures.split(",").map((f) => f.trim()).filter((f) => f.length > 0) : [];
+    return breakingFeatures.some((feature) => !supportedBreakingFeatures.includes(feature));
+  };
   var Nudge = class {
-    static decode = (data) => {
+    static decode = (data, supportedBreakingFeatures) => {
+      if (hasUnsupportedBreakingFeatures(data, supportedBreakingFeatures)) {
+        logger.debug(
+          `Nudge variant ${data.variantId} uses breaking features not supported by this platform. Breaking features used: ${JSON.stringify(data.breakingFeatures)}, Supported features: ${JSON.stringify(supportedBreakingFeatures)}`
+        );
+        return decodeThrowing(NudgeV, createUnsupportedFeatureNudge(data));
+      }
       try {
-        return decodeThrowing2(NudgeV, data);
+        return decodeThrowing(NudgeV, data);
       } catch (e2) {
         if (e2 instanceof Error) {
           logger.debug("Error decoding guide or survey", e2.message);
         }
         getSentry()?.captureException(e2);
-        return decodeThrowing2(NudgeV, {
+        return decodeThrowing(NudgeV, {
           ...defaults2,
           ...data,
           steps: (data.steps || []).map((step) => ({ ...stepDefaults, ...step }))
@@ -19039,6 +19078,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
     },
     "ThemeBase"
   );
+  var ProductV = t11.union([t11.literal("guides-surveys"), t11.literal("assistant")]);
   var PlatformV = t11.type({
     type: t11.union([
       t11.literal("web"),
@@ -19051,7 +19091,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   });
   var ThemeObjectAdditionalV = t11.partial(
     {
-      platform: PlatformV
+      platform: PlatformV,
+      product: ProductV
     },
     "ThemeAdditional"
   );
@@ -19059,13 +19100,13 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   var defaults3 = {};
   var decode2 = (data) => {
     try {
-      return decodeThrowing2(ThemeObjectV, data);
+      return decodeThrowing(ThemeObjectV, data);
     } catch (e2) {
       if (e2 instanceof Error) {
         logger.error("Error decoding theme", e2.message);
       }
       getSentry()?.captureException(e2);
-      return decodeThrowing2(ThemeObjectV, { ...defaults3, ...data });
+      return decodeThrowing(ThemeObjectV, { ...defaults3, ...data });
     }
   };
 
@@ -19099,12 +19140,14 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       key: t12.union([t12.string, t12.null, t12.undefined]),
       mobileLauncher: t12.union([LauncherV, t12.null]),
       desktopLauncher: t12.union([LauncherV, t12.null]),
-      customTheme: t12.union([t12.number, t12.null])
+      customTheme: t12.union([t12.number, t12.null]),
+      chatEnabled: t12.boolean,
+      resourceCenterEnabled: t12.boolean
     })
   ]);
   var ResourceCenter = class {
     static decode = (data) => {
-      return decodeThrowing2(ResourceCenterV, data);
+      return decodeThrowing(ResourceCenterV, data);
     };
   };
 
@@ -19140,17 +19183,14 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   async function fetchResourceCenters(apiKey, isEditorPreview = false) {
     try {
       const path = `/sdk/v1/resource_center`;
-      if (isEditorPreview) return [];
+      if (isEditorPreview) return { resourceCenters: [], themes: [] };
       const result = await get3(path, {
         headers: {
           Authorization: `Api-Key ${apiKey}`
         }
       });
       const data = result.data;
-      if (!data?.resourceCenters) {
-        return [];
-      }
-      const resourceCenters = data.resourceCenters.map((rc) => {
+      const resourceCenters = data?.resourceCenters ? data.resourceCenters.map((rc) => {
         try {
           return ResourceCenter.decode(rc);
         } catch (e2) {
@@ -19169,14 +19209,15 @@ when parsing ${JSON.stringify(input, null, 2)}`);
           }
           return void 0;
         }
-      }).filter((rc) => Boolean(rc));
-      return resourceCenters;
+      }).filter((rc) => Boolean(rc)) : [];
+      const themes = data?.themes ?? [];
+      return { resourceCenters, themes };
     } catch (error) {
       getSentry()?.captureException(error);
       if (error instanceof Error) {
         logger.error("Error fetching resource center settings. Continuing with empty data.", error.message);
       }
-      return [];
+      return { resourceCenters: [], themes: [] };
     }
   }
   function sanitizeLocale(locale) {
@@ -19201,9 +19242,9 @@ when parsing ${JSON.stringify(input, null, 2)}`);
   async function getConfig(apiKey, isAdmin = false, locale = void 0, isEditorPreview = false) {
     if (locale) {
       locale = sanitizeLocale(locale);
-      const sdk = getSDK();
-      if (sdk && sdk[_configuration] !== void 0 && sdk[_configuration].locale !== locale) {
-        sdk[_configuration].locale = locale;
+      const sdk2 = getSDK();
+      if (sdk2 && sdk2[_configuration] !== void 0 && sdk2[_configuration].locale !== locale) {
+        sdk2[_configuration].locale = locale;
       }
     }
     if (isEditorPreview) {
@@ -19215,7 +19256,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         resourceCenters: []
       };
     }
-    const [data, resourceCenters, flags] = await Promise.all([
+    const [data, resourceCenterData, flags] = await Promise.all([
       fetchConfig(apiKey, isEditorPreview, isAdmin, locale).catch((error) => {
         if (error instanceof Error) {
           logger.error("Error fetching config. Continuing with empty data.", error.message);
@@ -19230,9 +19271,11 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       logger.error("Error decoding config response. It is empty.");
     }
     const { organization, nudges, themes } = data || {};
+    const sdk = getSDK();
+    const supportedBreakingFeatures = sdk?._?.services?.supportedBreakingFeatures;
     const decodedNudges = nudges?.flatMap((nudge) => {
       try {
-        return [Nudge.decode(nudge)];
+        return [Nudge.decode(nudge, supportedBreakingFeatures)];
       } catch (e2) {
         getSentry()?.captureException(e2);
         if (e2 instanceof Error) {
@@ -19250,7 +19293,8 @@ when parsing ${JSON.stringify(input, null, 2)}`);
         return [];
       }
     });
-    const decodedThemes = themes?.flatMap((theme) => {
+    const allThemes = [...themes ?? [], ...resourceCenterData.themes ?? []];
+    const decodedThemes = allThemes.flatMap((theme) => {
       try {
         return [decode2(theme)];
       } catch (e2) {
@@ -19281,9 +19325,9 @@ when parsing ${JSON.stringify(input, null, 2)}`);
       ),
       flags,
       themes: (decodedThemes ?? []).flatMap(
-        (theme) => guard({ apiKey, field: `themes[id=${theme?.id}]` }, () => [decode2(theme)], [])
+        (theme) => guard({ apiKey, field: `themes[id=${theme?.id}]` }, () => [theme], [])
       ),
-      resourceCenters
+      resourceCenters: resourceCenterData.resourceCenters
     };
   }
   async function getPreviewConfig(apiKey, isEditorPreview = false, locale) {
@@ -19941,7 +19985,7 @@ when parsing ${JSON.stringify(input, null, 2)}`);
               [step.id]: stepResponses
             };
           }
-          if (params?.step && params.step >= 0 && params.step < context.nudge.steps.length) {
+          if (params?.step !== void 0 && params.step >= 0 && params.step < context.nudge.steps.length) {
             const newRespones = { ...context.surveyResponses };
             for (let index = params.step; index < context.nudge.steps.length; index++) {
               const step = getNudgeStep(context.nudge, index);
@@ -20778,42 +20822,6 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
             target: ".",
             actions: [{ type: "updateSmartNudges", params: ({ event }) => ({ nudge: event.nudge }) }]
           },
-          REFRESH_FROM_CONFIG: {
-            target: "Forwarding Triggers",
-            actions: enqueueActions(({ context, enqueue, event }) => {
-              const refreshedNudgeIds = event.nudges.map((nudge) => nudge.variantId.toString());
-              const currentNudgeIds = Array.from(context.nudgeMachines.keys());
-              if ((0, import_isEqual3.default)(refreshedNudgeIds, currentNudgeIds)) {
-                for (const machine of context.nudgeMachines.values()) {
-                  const nudge = event.nudges.find(
-                    (nudge2) => nudge2.variantId === machine.getSnapshot()?.context.nudge.variantId
-                  );
-                  if (nudge) {
-                    enqueue.sendTo(machine, { type: "REFRESH_NUDGE", nudge });
-                  }
-                }
-              }
-              for (const nudgeMachine of context.nudgeMachines.values()) {
-                nudgeMachine.send({ type: "STOP" });
-                stopChild(nudgeMachine);
-              }
-              enqueue.assign(({ context: context2, spawn, self: self2 }) => ({
-                ...context2,
-                nudgeMachines: new Map(
-                  event.nudges.map((nudge) => [
-                    nudge.variantId.toString(),
-                    // @ts-expect-error HACK: specifying the id is legal but makes this type error
-                    spawn(NudgeMachine(globalStore, nudge), {
-                      id: nudge.variantId.toString(),
-                      input: {
-                        parentRef: self2
-                      }
-                    })
-                  ])
-                )
-              }));
-            })
-          },
           REFRESH_SIMULATED_NUDGE: {
             actions: [{ type: "refreshSimulatedNudge", params: ({ event }) => ({ nudge: event.nudge }) }]
           },
@@ -20934,6 +20942,41 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           enqueue({ type: "unsetTriggerEvent" });
           enqueue({ type: "cleanupSmartNudges" });
           enqueue({ type: "stopAllNudgeMachines" });
+        })
+      },
+      REFRESH_FROM_CONFIG: {
+        actions: enqueueActions(({ context, enqueue, event }) => {
+          const refreshedNudgeIds = event.nudges.map((nudge) => nudge.variantId.toString());
+          const currentNudgeIds = Array.from(context.nudgeMachines.keys());
+          if ((0, import_isEqual3.default)(refreshedNudgeIds, currentNudgeIds)) {
+            for (const machine of context.nudgeMachines.values()) {
+              const nudge = event.nudges.find(
+                (nudge2) => nudge2.variantId === machine.getSnapshot()?.context.nudge.variantId
+              );
+              if (nudge) {
+                enqueue.sendTo(machine, { type: "REFRESH_NUDGE", nudge });
+              }
+            }
+          }
+          for (const nudgeMachine of context.nudgeMachines.values()) {
+            nudgeMachine.send({ type: "STOP" });
+            stopChild(nudgeMachine);
+          }
+          enqueue.assign(({ context: context2, spawn, self: self2 }) => ({
+            ...context2,
+            nudgeMachines: new Map(
+              event.nudges.map((nudge) => [
+                nudge.variantId.toString(),
+                // @ts-expect-error HACK: specifying the id is legal but makes this type error
+                spawn(NudgeMachine(globalStore, nudge), {
+                  id: nudge.variantId.toString(),
+                  input: {
+                    parentRef: self2
+                  }
+                })
+              ])
+            )
+          }));
         })
       },
       START_DEBUG: {
@@ -21224,6 +21267,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     const updatedContext = {
       [Number(nudge.variantId)]: {
         type: type10,
+        formFactor: nudge?.steps?.[0]?.formFactor?.type ?? "",
         currentStep: stepIndex,
         stepIndexStack,
         lastSeenTs: markSeen ? Date.now() : void 0,
@@ -21699,6 +21743,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var viewHierarchyMutationActionsBridge = registerJSBridge("viewHierarchyMutationActions");
   viewHierarchyMutationActionsBridge.function("publishViewHierarchyMutation", () => {
     window.engagement._.messageBus.publish("dom_mutation");
+  });
+
+  // src/actions/share-link.ts
+  var shareLinkActionsBridge = registerJSBridge("shareLinkActions");
+  shareLinkActionsBridge.function("handleShareLink", (flagKey) => {
+    window.engagement._.nudgesManager?.send({ type: "HANDLE_SHARE_LINK", flagKey });
   });
 
   // node_modules/@floating-ui/utils/dist/floating-ui.utils.mjs
@@ -23151,8 +23201,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       if (this._configuration.options.logger) {
         this._configuration.options.logger.enable(this._configuration.options.logLevel ?? 2);
       }
-      this._debouncedDecide = (0, import_debounce.default)(() => {
-        this.decide();
+      this._debouncedDecide = (0, import_debounce.default)(async () => {
+        await this.decide();
+        this.nudgeActions.sendConstantTriggers();
       }, 1e4);
     }
     /**
@@ -23250,10 +23301,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
        * @param id The id of the nudge to reset
        * @param step The step to reset the nudge to
        */
-      reset: (flagKey, step) => {
-        const nudge = getNudgeByFlagKey(this._, flagKey);
+      reset: (key, step) => {
+        const nudge = getNudgeByFlagKey(this._, key);
         if (!nudge) {
-          logger.warn(`gs.reset: Guide or survey with flagKey: ${flagKey} not found`);
+          logger.warn(`gs.reset: Guide or survey with flagKey: ${key} not found`);
           return;
         }
         this.nudgeActions.resetNudge(nudge?.variantId, { step });
@@ -25185,7 +25236,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     },
     appReviewExecutable: (..._args) => {
       return;
-    }
+    },
+    supportedBreakingFeatures: []
   };
   var DEFAULT_OPTIONS2 = {
     isEditorPreview: false,
@@ -25221,7 +25273,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       platform,
       trackedAppEvents: /* @__PURE__ */ new Set(),
       showWidgetTableau: false,
-      widgetTableauSelection: { widgets: ["guide", "survey", "resourceCenter"] },
+      widgetTableauSelection: { widgets: ["guide", "survey", "resourceCenter", "assistant"] },
       themeMode: "lightMode",
       themes: [],
       messageBus: new MessageBus(),
@@ -25324,12 +25376,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   };
 
   // ../shared/src/internal/util/theme.ts
-  var findDefaultTheme = (themes) => {
-    const platformSpecificDefault = themes.find(
+  var findDefaultTheme = (themes, productType) => {
+    const productFilteredThemes = themes.filter(({ product }) => product === productType);
+    const platformSpecificDefault = productFilteredThemes.find(
       ({ isDefault, platform }) => isDefault && platform?.type === __GS_PLATFORM__
     )?.theme;
     if (!platformSpecificDefault) {
-      return themes.find(({ isDefault, platform }) => isDefault && !platform)?.theme;
+      return productFilteredThemes.find(({ isDefault, platform }) => isDefault && !platform)?.theme;
     }
     return platformSpecificDefault;
   };
@@ -25372,7 +25425,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
       if (!theme) {
         theme = {
-          theme: findDefaultTheme(_.themes),
+          theme: findDefaultTheme(_.themes, "guides-surveys"),
           mode: themeMode
         };
       }
@@ -25389,6 +25442,14 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   // src/services/index.ts
   var nudgeServicesBridge2 = registerNativeBridge("nudgeServices");
   var matchesSelector = (targetElement, identifier) => targetElement?.identifier === identifier;
+  var DEFAULT_SUPPORTED_BREAKING_FEATURES = [];
+  var getSupportedBreakingFeatures = () => {
+    try {
+      return nudgeServicesBridge2.function("supportedBreakingFeatures").call() ?? DEFAULT_SUPPORTED_BREAKING_FEATURES;
+    } catch {
+      return DEFAULT_SUPPORTED_BREAKING_FEATURES;
+    }
+  };
   var services = {
     ...NOOP_SERVICES,
     ...nudge_default,
@@ -25400,7 +25461,11 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     clickElement: (selector) => nudgeServicesBridge2.function("clickElement").call(selector),
     isElementVisible: async (selector) => nudgeServicesBridge2.function("isElementVisible").promise({ selector: typeof selector === "string" ? selector : selector.selector || selector.text }),
     matchesSelector,
-    appReviewExecutable: (_, action) => nudgeServicesBridge2.function("appReviewExecutable").call(JSON.stringify(action))
+    appReviewExecutable: (_, action) => nudgeServicesBridge2.function("appReviewExecutable").call(JSON.stringify(action)),
+    // Mobile native has limited support for breaking features
+    // Features are identified by four-digit numbers (e.g., '0001')
+    // Fetched from native SDK, with fallback for older versions that don't expose this function
+    supportedBreakingFeatures: getSupportedBreakingFeatures()
   };
 
   // src/logger.ts
