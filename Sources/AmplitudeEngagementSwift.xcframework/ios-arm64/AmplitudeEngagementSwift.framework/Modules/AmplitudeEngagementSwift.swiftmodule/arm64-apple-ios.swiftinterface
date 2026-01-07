@@ -269,7 +269,7 @@ public enum AmplitudeServerZone : Swift.String, Swift.Codable {
 public struct AmplitudeInitOptions : Swift.Codable {
   public func toString() -> Swift.String
   #if compiler(>=5.3) && $NonescapableTypes
-  public init(serverZone: AmplitudeEngagementSwift.AmplitudeServerZone? = nil, locale: Swift.String? = nil, logLevel: AmplitudeEngagementSwift.AmplitudeLogLevel? = nil, serverUrl: Swift.String? = nil, cdnUrl: Swift.String? = nil, mediaUrl: Swift.String? = nil)
+  public init(serverZone: AmplitudeEngagementSwift.AmplitudeServerZone? = nil, locale: Swift.String? = nil, logLevel: AmplitudeEngagementSwift.AmplitudeLogLevel? = nil, serverUrl: Swift.String? = nil, cdnUrl: Swift.String? = nil, mediaUrl: Swift.String? = nil, ignoreAnalyticsAutomaticScreenTracking: Swift.Bool? = nil)
   #endif
   public func encode(to encoder: any Swift.Encoder) throws
   public init(from decoder: any Swift.Decoder) throws
