@@ -818,13 +818,6 @@
             "printedName": "Sendable",
             "usr": "s:s8SendableP",
             "mangledName": "$ss8SendableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "SendableMetatype",
-            "printedName": "SendableMetatype",
-            "usr": "s:s16SendableMetatypeP",
-            "mangledName": "$ss16SendableMetatypeP"
           }
         ]
       },
@@ -8813,13 +8806,6 @@
           },
           {
             "kind": "Conformance",
-            "name": "SendableMetatype",
-            "printedName": "SendableMetatype",
-            "usr": "s:s16SendableMetatypeP",
-            "mangledName": "$ss16SendableMetatypeP"
-          },
-          {
-            "kind": "Conformance",
             "name": "_ExpressibleByBuiltinUnicodeScalarLiteral",
             "printedName": "_ExpressibleByBuiltinUnicodeScalarLiteral",
             "usr": "s:s41_ExpressibleByBuiltinUnicodeScalarLiteralP",
@@ -9534,13 +9520,6 @@
           },
           {
             "kind": "Conformance",
-            "name": "SendableMetatype",
-            "printedName": "SendableMetatype",
-            "usr": "s:s16SendableMetatypeP",
-            "mangledName": "$ss16SendableMetatypeP"
-          },
-          {
-            "kind": "Conformance",
             "name": "SIMDScalar",
             "printedName": "SIMDScalar",
             "children": [
@@ -9711,35 +9690,6 @@
             ],
             "usr": "s:7SwiftUI18_FormatSpecifiableP",
             "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "NetworkFixedWidthInteger",
-            "printedName": "NetworkFixedWidthInteger",
-            "usr": "s:7Network0A17FixedWidthIntegerP",
-            "mangledName": "$s7Network0A17FixedWidthIntegerP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "AtomicRepresentable",
-            "printedName": "AtomicRepresentable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "AtomicRepresentation",
-                "printedName": "AtomicRepresentation",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "_Atomic32BitStorage",
-                    "printedName": "Synchronization._Atomic32BitStorage",
-                    "usr": "s:15Synchronization19_Atomic32BitStorageV"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:15Synchronization19AtomicRepresentableP",
-            "mangledName": "$s15Synchronization19AtomicRepresentableP"
           }
         ]
       },
@@ -9972,13 +9922,6 @@
           },
           {
             "kind": "Conformance",
-            "name": "SendableMetatype",
-            "printedName": "SendableMetatype",
-            "usr": "s:s16SendableMetatypeP",
-            "mangledName": "$ss16SendableMetatypeP"
-          },
-          {
-            "kind": "Conformance",
             "name": "SIMDScalar",
             "printedName": "SIMDScalar",
             "children": [
@@ -10149,35 +10092,6 @@
             ],
             "usr": "s:7SwiftUI18_FormatSpecifiableP",
             "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "NetworkFixedWidthInteger",
-            "printedName": "NetworkFixedWidthInteger",
-            "usr": "s:7Network0A17FixedWidthIntegerP",
-            "mangledName": "$s7Network0A17FixedWidthIntegerP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "AtomicRepresentable",
-            "printedName": "AtomicRepresentable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "AtomicRepresentation",
-                "printedName": "AtomicRepresentation",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "_Atomic32BitStorage",
-                    "printedName": "Synchronization._Atomic32BitStorage",
-                    "usr": "s:15Synchronization19_Atomic32BitStorageV"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:15Synchronization19AtomicRepresentableP",
-            "mangledName": "$s15Synchronization19AtomicRepresentableP"
           }
         ]
       },
@@ -10424,13 +10338,6 @@
           },
           {
             "kind": "Conformance",
-            "name": "SendableMetatype",
-            "printedName": "SendableMetatype",
-            "usr": "s:s16SendableMetatypeP",
-            "mangledName": "$ss16SendableMetatypeP"
-          },
-          {
-            "kind": "Conformance",
             "name": "SIMDScalar",
             "printedName": "SIMDScalar",
             "children": [
@@ -10601,35 +10508,6 @@
             ],
             "usr": "s:7SwiftUI18_FormatSpecifiableP",
             "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "NetworkFixedWidthInteger",
-            "printedName": "NetworkFixedWidthInteger",
-            "usr": "s:7Network0A17FixedWidthIntegerP",
-            "mangledName": "$s7Network0A17FixedWidthIntegerP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "AtomicRepresentable",
-            "printedName": "AtomicRepresentable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "AtomicRepresentation",
-                "printedName": "AtomicRepresentation",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "_Atomic64BitStorage",
-                    "printedName": "Synchronization._Atomic64BitStorage",
-                    "usr": "s:15Synchronization19_Atomic64BitStorageV"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:15Synchronization19AtomicRepresentableP",
-            "mangledName": "$s15Synchronization19AtomicRepresentableP"
           }
         ]
       },
@@ -10883,13 +10761,6 @@
           },
           {
             "kind": "Conformance",
-            "name": "SendableMetatype",
-            "printedName": "SendableMetatype",
-            "usr": "s:s16SendableMetatypeP",
-            "mangledName": "$ss16SendableMetatypeP"
-          },
-          {
-            "kind": "Conformance",
             "name": "SIMDScalar",
             "printedName": "SIMDScalar",
             "children": [
@@ -11060,28 +10931,6 @@
             ],
             "usr": "s:7SwiftUI18_FormatSpecifiableP",
             "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "AtomicRepresentable",
-            "printedName": "AtomicRepresentable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "AtomicRepresentation",
-                "printedName": "AtomicRepresentation",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "_Atomic64BitStorage",
-                    "printedName": "Synchronization._Atomic64BitStorage",
-                    "usr": "s:15Synchronization19_Atomic64BitStorageV"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:15Synchronization19AtomicRepresentableP",
-            "mangledName": "$s15Synchronization19AtomicRepresentableP"
           }
         ]
       },
@@ -11314,13 +11163,6 @@
           },
           {
             "kind": "Conformance",
-            "name": "SendableMetatype",
-            "printedName": "SendableMetatype",
-            "usr": "s:s16SendableMetatypeP",
-            "mangledName": "$ss16SendableMetatypeP"
-          },
-          {
-            "kind": "Conformance",
             "name": "SIMDScalar",
             "printedName": "SIMDScalar",
             "children": [
@@ -11491,28 +11333,6 @@
             ],
             "usr": "s:7SwiftUI18_FormatSpecifiableP",
             "mangledName": "$s7SwiftUI18_FormatSpecifiableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "AtomicRepresentable",
-            "printedName": "AtomicRepresentable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "AtomicRepresentation",
-                "printedName": "AtomicRepresentation",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "_Atomic64BitStorage",
-                    "printedName": "Synchronization._Atomic64BitStorage",
-                    "usr": "s:15Synchronization19_Atomic64BitStorageV"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:15Synchronization19AtomicRepresentableP",
-            "mangledName": "$s15Synchronization19AtomicRepresentableP"
           }
         ]
       },
@@ -11801,13 +11621,6 @@
           },
           {
             "kind": "Conformance",
-            "name": "SendableMetatype",
-            "printedName": "SendableMetatype",
-            "usr": "s:s16SendableMetatypeP",
-            "mangledName": "$ss16SendableMetatypeP"
-          },
-          {
-            "kind": "Conformance",
             "name": "Strideable",
             "printedName": "Strideable",
             "children": [
@@ -12036,28 +11849,6 @@
             ],
             "usr": "s:7SwiftUI10AnimatableP",
             "mangledName": "$s7SwiftUI10AnimatableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "AtomicRepresentable",
-            "printedName": "AtomicRepresentable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "AtomicRepresentation",
-                "printedName": "AtomicRepresentation",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "_Atomic64BitStorage",
-                    "printedName": "Synchronization._Atomic64BitStorage",
-                    "usr": "s:15Synchronization19_Atomic64BitStorageV"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:15Synchronization19AtomicRepresentableP",
-            "mangledName": "$s15Synchronization19AtomicRepresentableP"
           }
         ]
       },
@@ -12080,13 +11871,6 @@
             "printedName": "Sendable",
             "usr": "s:s8SendableP",
             "mangledName": "$ss8SendableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "SendableMetatype",
-            "printedName": "SendableMetatype",
-            "usr": "s:s16SendableMetatypeP",
-            "mangledName": "$ss16SendableMetatypeP"
           },
           {
             "kind": "Conformance",
@@ -12222,28 +12006,6 @@
             ],
             "usr": "s:s21_ObjectiveCBridgeableP",
             "mangledName": "$ss21_ObjectiveCBridgeableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "AtomicRepresentable",
-            "printedName": "AtomicRepresentable",
-            "children": [
-              {
-                "kind": "TypeWitness",
-                "name": "AtomicRepresentation",
-                "printedName": "AtomicRepresentation",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "_Atomic8BitStorage",
-                    "printedName": "Synchronization._Atomic8BitStorage",
-                    "usr": "s:15Synchronization18_Atomic8BitStorageV"
-                  }
-                ]
-              }
-            ],
-            "usr": "s:15Synchronization19AtomicRepresentableP",
-            "mangledName": "$s15Synchronization19AtomicRepresentableP"
           }
         ]
       },
@@ -12331,7 +12093,6 @@
         "intro_watchOS": "6.0",
         "declAttributes": [
           "Preconcurrency",
-          "TypeEraser",
           "TypeEraser",
           "OriginallyDefinedIn",
           "OriginallyDefinedIn",
@@ -12443,13 +12204,6 @@
             "printedName": "Equatable",
             "usr": "s:SQ",
             "mangledName": "$sSQ"
-          },
-          {
-            "kind": "Conformance",
-            "name": "SendableMetatype",
-            "printedName": "SendableMetatype",
-            "usr": "s:s16SendableMetatypeP",
-            "mangledName": "$ss16SendableMetatypeP"
           },
           {
             "kind": "Conformance",
@@ -16095,7 +15849,7 @@
       "kind": "StringLiteral",
       "offset": 421,
       "length": 7,
-      "value": "\"2.0.0\""
+      "value": "\"2.0.1\""
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/EngagementWindowManager.swift",

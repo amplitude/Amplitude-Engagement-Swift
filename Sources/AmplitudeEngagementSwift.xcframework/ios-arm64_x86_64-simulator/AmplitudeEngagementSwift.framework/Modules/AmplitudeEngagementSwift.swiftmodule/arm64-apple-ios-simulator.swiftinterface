@@ -1,7 +1,6 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 6.2.3 effective-5.10 (swiftlang-6.2.3.3.21 clang-1700.6.3.2)
-// swift-module-flags: -target arm64-apple-ios15.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name AmplitudeEngagementSwift
-// swift-module-flags-ignorable:  -formal-cxx-interoperability-mode=off -interface-compiler-version 6.2.3
+// swift-compiler-version: Apple Swift version 6.0.3 effective-5.10 (swiftlang-6.0.3.1.10 clang-1600.0.30.1)
+// swift-module-flags: -target arm64-apple-ios15.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name AmplitudeEngagementSwift
 import AVKit
 import AmplitudeCore
 import Combine
@@ -25,7 +24,6 @@ import _Concurrency
 import _StoreKit_SwiftUI
 import _StringProcessing
 import _SwiftConcurrencyShims
-import _WebKit_SwiftUI
 public enum AmplitudeEngagementError : Swift.Error {
   case networkRequestFailed(Swift.String)
   case httpError(Swift.Int)
@@ -59,9 +57,7 @@ public enum ThemeMode : Swift.String {
   case auto
   case dark
   case light
-  #if compiler(>=5.3) && $NonescapableTypes
   public init?(rawValue: Swift.String)
-  #endif
   public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
     get
@@ -70,9 +66,7 @@ public enum ThemeMode : Swift.String {
 public enum GuideOrSurveyStatus : Swift.String, Swift.Codable {
   case visible
   case active
-  #if compiler(>=5.3) && $NonescapableTypes
   public init?(rawValue: Swift.String)
-  #endif
   public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
     get
@@ -104,9 +98,7 @@ public enum AmplitudeLogLevel : Swift.Int, Swift.Codable {
   case warn
   case verbose
   case debug
-  #if compiler(>=5.3) && $NonescapableTypes
   public init?(rawValue: Swift.Int)
-  #endif
   public typealias RawValue = Swift.Int
   public var rawValue: Swift.Int {
     get
@@ -127,9 +119,7 @@ public enum DebugStatus : Swift.String, Swift.CaseIterable {
   case warning
   case error
   case info
-  #if compiler(>=5.3) && $NonescapableTypes
   public init?(rawValue: Swift.String)
-  #endif
   public typealias AllCases = [AmplitudeEngagementSwift.DebugStatus]
   public typealias RawValue = Swift.String
   nonisolated public static var allCases: [AmplitudeEngagementSwift.DebugStatus] {
@@ -140,10 +130,8 @@ public enum DebugStatus : Swift.String, Swift.CaseIterable {
   }
 }
 extension SwiftUICore.View {
-  #if compiler(>=5.3) && $NonescapableTypes
   @_Concurrency.MainActor @preconcurrency public func amplitudeView(_ identifier: Swift.String, onTrigger: (() -> Swift.Void)? = nil) -> some SwiftUICore.View
   
-  #endif
 }
 
 
@@ -151,9 +139,7 @@ public enum DevelopmentPlatform : Swift.String {
   case reactNative
   case flutter
   case ios
-  #if compiler(>=5.3) && $NonescapableTypes
   public init?(rawValue: Swift.String)
-  #endif
   public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
     get
@@ -162,9 +148,7 @@ public enum DevelopmentPlatform : Swift.String {
 public protocol AmplitudeEngagementProtocol : AnyObject {
   var config: AmplitudeEngagementSwift.AmplitudeEngagementConfig { get }
   func getPlugin() -> any AmplitudeCore.UniversalPlugin
-  #if compiler(>=5.3) && $NonescapableTypes
   func boot(_ user_id: Swift.String, device_id: Swift.String?)
-  #endif
   func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
   func shutdown()
   func setThemeMode(themeMode: AmplitudeEngagementSwift.ThemeMode)
@@ -185,9 +169,7 @@ public class AmplitudeEngagement : Observation.Observable, AmplitudeEngagementSw
   public static var logger: any AmplitudeEngagementSwift.AmplitudeLogger
   public init(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions())
   public func getPlugin() -> any AmplitudeCore.UniversalPlugin
-  #if compiler(>=5.3) && $NonescapableTypes
   public func boot(_ user_id: Swift.String, device_id: Swift.String? = nil)
-  #endif
   public func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
   public func shutdown()
   public func setThemeMode(themeMode: AmplitudeEngagementSwift.ThemeMode)
@@ -218,14 +200,10 @@ public struct AmplitudeEndUser {
   public var user_id: Swift.String?
   public var device_id: Swift.String?
   public var user_properties: [Swift.String : Any]
-  #if compiler(>=5.3) && $NonescapableTypes
   public init(user_id: Swift.String? = nil, device_id: Swift.String? = nil, user_properties: [Swift.String : Any] = [:])
-  #endif
 }
 public struct AmplitudeBootOptions {
-  #if compiler(>=5.3) && $NonescapableTypes
   public init(user_id: Swift.String?, device_id: Swift.String? = nil, integrations: [(_ eventType: Swift.String, _ eventProperties: [Swift.String : Any]) -> Swift.Void] = [], user_properties: [Swift.String : Any] = [:])
-  #endif
   public init(user: AmplitudeEngagementSwift.AmplitudeEndUser, integrations: [(_ eventType: Swift.String, _ eventProperties: [Swift.String : Any]) -> Swift.Void] = [])
 }
 public enum Roboto : Swift.String, Swift.CaseIterable {
@@ -235,9 +213,7 @@ public enum Roboto : Swift.String, Swift.CaseIterable {
   case black
   case medium
   case regular
-  #if compiler(>=5.3) && $NonescapableTypes
   public init?(rawValue: Swift.String)
-  #endif
   public typealias AllCases = [AmplitudeEngagementSwift.Roboto]
   public typealias RawValue = Swift.String
   nonisolated public static var allCases: [AmplitudeEngagementSwift.Roboto] {
@@ -258,9 +234,7 @@ public struct FontLoader {
 public enum AmplitudeServerZone : Swift.String, Swift.Codable {
   case EU
   case US
-  #if compiler(>=5.3) && $NonescapableTypes
   public init?(rawValue: Swift.String)
-  #endif
   public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
     get
@@ -268,9 +242,7 @@ public enum AmplitudeServerZone : Swift.String, Swift.Codable {
 }
 public struct AmplitudeInitOptions : Swift.Codable {
   public func toString() -> Swift.String
-  #if compiler(>=5.3) && $NonescapableTypes
   public init(serverZone: AmplitudeEngagementSwift.AmplitudeServerZone? = nil, locale: Swift.String? = nil, logLevel: AmplitudeEngagementSwift.AmplitudeLogLevel? = nil, serverUrl: Swift.String? = nil, cdnUrl: Swift.String? = nil, mediaUrl: Swift.String? = nil, ignoreAnalyticsAutomaticScreenTracking: Swift.Bool? = nil)
-  #endif
   public func encode(to encoder: any Swift.Encoder) throws
   public init(from decoder: any Swift.Decoder) throws
 }
