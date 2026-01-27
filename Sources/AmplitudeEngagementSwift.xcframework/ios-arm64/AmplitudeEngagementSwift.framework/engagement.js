@@ -17167,7 +17167,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       throw new InternalError(`Cannot find element to click: [${value}]`);
     }
   };
-  var executeAction = (_, action, executionEventSource, forceOpenLinkInNewTab) => {
+  var executeAction = (_, action, executionEventSource, forceOpenLinkInNewTab, e2) => {
     switch (action?.type) {
       case "click": {
         clickExecutable(_, action);
@@ -17192,9 +17192,13 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       case "nudge": {
         const nudge = getNudgeById(_, action.value);
         if (nudge) {
+          const x = e2?.clientX;
+          const y2 = e2?.clientY;
+          const startingPosition = x && y2 ? [x, y2] : void 0;
           activatePushExperience(_, nudge, {
             type: "nudge",
-            id: executionEventSource
+            id: executionEventSource,
+            position: startingPosition
           });
         }
         break;
@@ -17876,6 +17880,23 @@ when parsing ${JSON.stringify(input, null, 2)}`;
           ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount,
           ["[Guides-Surveys] Message Resolution" /* MessageResolution */]: resolution,
           "Has Tool Calls": hasToolCalls
+        });
+      },
+      /**
+       * Fired whenever feedback is submitted for a chat message.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message receiving feedback
+       * @param feedbackType The type of feedback (positive, negative, or cleared)
+       * @param messageCount The total number of messages in the session
+       * @param reason The reason for negative feedback (if applicable)
+       */
+      feedbackSubmitted: (sessionId, messageId, feedbackType, messageCount, reason) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Feedback Submitted", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount,
+          ["[Guides-Surveys] Feedback Type" /* FeedbackType */]: feedbackType,
+          ...reason ? { ["[Guides-Surveys] Feedback Reason" /* FeedbackReason */]: reason } : {}
         });
       },
       /**
@@ -18948,6 +18969,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       isDismissible: t10.boolean,
       isSnoozable: t10.boolean,
       isSnoozableOnAllSteps: t10.boolean,
+      assistantIntro: t10.boolean,
       snoozeLabel: t10.string,
       doneLabel: t10.string,
       snoozeDuration: t10.type({
@@ -18973,6 +18995,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     isDismissible: true,
     isSnoozable: false,
     isSnoozableOnAllSteps: true,
+    assistantIntro: false,
     snoozeLabel: "Snooze",
     doneLabel: "Done",
     snoozeDuration: {
@@ -19734,6 +19757,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       canStepBack: ({ context }) => usesNavigationStack(context.nudge) ? context.stepIndexStack.length > 0 : context.stepIndex > 0,
       isTooltipNudge: ({ context }) => !!isTooltipNudge(context.nudge),
       isPinStep: ({ context }) => !!isPinStep(getNudgeStep(context.nudge, context.stepIndex)),
+      isCardStep: ({ context }) => !!isCardStep(getNudgeStep(context.nudge, context.stepIndex)),
       isWebPlatform: ({ context }) => context.nudge.platform === "web",
       hasSurveyResponse: (_, params) => "surveyResponse" in params.event,
       hasSequentialSteps: ({ context }) => hasSequentialSteps(context.nudge),
@@ -19760,7 +19784,12 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       }),
       // step specific
       renderStep: ({ context }) => {
-        globalStore.services.renderNudge(globalStore, context.nudge, context.stepIndex, { context });
+        const triggerSource = context.triggerEvent?.source;
+        const startPosition = triggerSource?.type === "nudge" ? triggerSource.position : void 0;
+        globalStore.services.renderNudge(globalStore, context.nudge, context.stepIndex, {
+          context,
+          source: startPosition ? { animateIn: true, startPosition } : void 0
+        });
       },
       incrementStep: assign({
         stepIndex: ({ context }) => context.stepIndex + 1,
@@ -20315,7 +20344,8 @@ This ensures only the right variant is shown for experiment nudges.`
           "Render Loop": {
             entry: enqueueActions(({ enqueue, check }) => {
               enqueue({ type: "sendEnterRenderLoop" });
-              if (!(check({ type: "isPinStep" }) && check({ type: "isWebPlatform" }))) {
+              const isPinOnWeb = check({ type: "isPinStep" }) && check({ type: "isWebPlatform" });
+              if (!isPinOnWeb && !check({ type: "isCardStep" })) {
                 enqueue({ type: "markSeen" });
                 enqueue({ type: "saveSeen" });
               }
@@ -20325,7 +20355,8 @@ This ensures only the right variant is shown for experiment nudges.`
                 entry: enqueueActions(({ enqueue, check }) => {
                   enqueue({ type: "renderStep" });
                   enqueue({ type: "reevaluateChecklistItemGoals" });
-                  if (!check({ type: "isTooltipNudge" }) && !(check({ type: "isPinStep" }) && check({ type: "isWebPlatform" }))) {
+                  const isPinOnWeb = check({ type: "isPinStep" }) && check({ type: "isWebPlatform" });
+                  if (!check({ type: "isTooltipNudge" }) && !isPinOnWeb && !check({ type: "isCardStep" })) {
                     enqueue({ type: "reportSeen" });
                   }
                   enqueue({ type: "reportExposure" });
@@ -25434,7 +25465,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         forceOpen: options?.forceOpen,
         anchorOverride: options?.anchorOverride
       };
-      nudgeServicesBridge.function("renderNudge").call(JSON.stringify({ nudge, stepIndex, options: _options, theme }));
+      const actor = getNudgeActor(_, nudge.variantId);
+      const currentStep = nudge.steps[stepIndex];
+      const surveyResponses = actor?.getSnapshot()?.context?.surveyResponses?.[currentStep?.id] || {};
+      nudgeServicesBridge.function("renderNudge").call(JSON.stringify({ nudge, stepIndex, options: _options, theme, surveyResponses }));
     }
   };
   var nudge_default = nudgeService;
