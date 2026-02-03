@@ -12274,11 +12274,6 @@
   var _analytics = "_analytics";
   var _configuration = "_configuration";
 
-  // ../shared/src/internal/util/sentry.ts
-  var getSentry = () => {
-    return void 0;
-  };
-
   // ../shared/node_modules/@amplitude/analytics-types/lib/esm/logger.js
   var LogLevel;
   (function(LogLevel2) {
@@ -13072,6 +13067,14 @@
         }
       }
       return getActionBasedOnConditions(_, step, event, event.buttonMeta?.buttonType);
+    }
+    if (event.buttonMeta?.action?.type === "no_action") {
+      const surveyBlockWithConditions = step.content.find(
+        (block) => (block.type === "survey_rating" || block.type === "survey_list") && hasConditionalActionsBlock(block)
+      );
+      if (surveyBlockWithConditions) {
+        return getActionBasedOnConditions(_, step, event, event.buttonMeta?.buttonType);
+      }
     }
     return immediateAction;
   };
@@ -16777,32 +16780,12 @@ ${err.message}`);
     const shouldRetryForEndpoint = ["/decide", "/config", "/state"].some((s2) => path.includes(s2));
     return shouldRetryForMethod && shouldRetryForEndpoint;
   };
-  var getBreadcrumbLogLevelFromHttpStatusCode = (statusCode) => {
-    if (statusCode === void 0) {
-      return void 0;
-    } else if (statusCode >= 400 && statusCode < 500) {
-      return "warning";
-    } else if (statusCode >= 500) {
-      return "error";
-    } else {
-      return void 0;
-    }
-  };
   var post = (url, data = void 0, options = {}) => _fetch("POST", url, data, options);
   var get3 = (url, options = {}) => _fetch("GET", url, void 0, options);
   var _fetch = async (method, path, data, options = {}, numRetries = 5) => {
     const _baseURL = getBaseURL_default();
     let json, response;
     while (path.startsWith("/")) path = path.slice(1);
-    getSentry()?.addBreadcrumb({
-      category: "fetch",
-      data: {
-        method,
-        url: _baseURL + "/" + path
-      },
-      level: "info",
-      type: "http"
-    });
     let dataString = "";
     if (data !== void 0 && typeof data !== "string") {
       dataString = JSON.stringify(data);
@@ -16823,15 +16806,6 @@ ${err.message}`);
       });
       let shouldRetry = false;
       if (!response.ok) {
-        getSentry()?.addBreadcrumb({
-          category: "fetch",
-          data: {
-            method,
-            url: _baseURL + "/" + path
-          },
-          level: getBreadcrumbLogLevelFromHttpStatusCode(response.status),
-          type: "http"
-        });
         if (isRetryable({ method, path })) {
           shouldRetry = true;
         } else {
@@ -16883,7 +16857,6 @@ ${err.message}`);
           const errorMessage = `${messages.join("\n")}
 when parsing ${JSON.stringify(input, null, 2)}`;
           logger.debug(JSON.stringify(_errors));
-          getSentry()?.captureException(new Error(errorMessage));
           throw new Error(errorMessage);
         },
         (value) => value
@@ -17063,6 +17036,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     initNudges: () => initNudges,
     resetNudge: () => resetNudge,
     resetTimedTriggers: () => resetTimedTriggers,
+    restorePreviewSession: () => restorePreviewSession,
     sendConstantTriggers: () => sendConstantTriggers,
     sendDirectedTrigger: () => sendDirectedTrigger,
     sendIndirectTrigger: () => sendIndirectTrigger,
@@ -17163,7 +17137,6 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     const value = interpolateUserProperties(action.value, _, true);
     const success2 = _.services.clickElement(value);
     if (!success2) {
-      getSentry()?.captureMessage(`Click failed`);
       throw new InternalError(`Cannot find element to click: [${value}]`);
     }
   };
@@ -17211,7 +17184,11 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         callback();
         break;
       }
-      case "document":
+      case "document": {
+        _.services.showResourceCenter(_, true);
+        _.services.setCurrentContentId(_, action.value);
+        break;
+      }
       case "video": {
         _.services.setCurrentContentId(_, action.value);
         break;
@@ -18221,7 +18198,6 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       return decodeThrowing(OrganizationV, data);
     } catch (e2) {
       logger.error("Error decoding project settings", { error: e2 });
-      getSentry()?.captureException(e2);
       return decodeThrowing(OrganizationV, { ...defaults, ...data });
     }
   };
@@ -18414,6 +18390,33 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   });
 
   // ../shared/src/internal/middleware/nudge.ts
+  var ModalPositionV = t10.union([
+    t10.literal("top-left"),
+    t10.literal("top-center"),
+    t10.literal("top-right"),
+    t10.literal("bottom-left"),
+    t10.literal("bottom-center"),
+    t10.literal("bottom-right"),
+    t10.literal("left-center"),
+    t10.literal("right-center"),
+    t10.literal("center")
+  ]);
+  var PopoverPositionV = ModalPositionV;
+  var BannerPositionV = t10.union([t10.literal("top"), t10.literal("bottom")]);
+  var PinPositionV = t10.union([
+    t10.literal("auto"),
+    t10.literal("top"),
+    t10.literal("bottom"),
+    t10.literal("left"),
+    t10.literal("right")
+  ]);
+  var CardPositionV = t10.union([
+    t10.literal("prepend"),
+    t10.literal("append"),
+    t10.literal("replace"),
+    t10.literal("before"),
+    t10.literal("after")
+  ]);
   var NudgeContentMarkdownBlockV = t10.type({
     type: t10.literal("markdown"),
     meta: t10.type({ value: t10.string })
@@ -18621,7 +18624,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   var NudgeStepLayoutConfigV = t10.intersection([
     t10.union([
       t10.partial({
-        layout: t10.union([t10.literal("classic"), t10.literal("vertical")])
+        layout: t10.union([t10.literal("classic"), t10.literal("vertical"), t10.literal("showcase")])
       }),
       t10.partial({
         layout: t10.literal("horizontal"),
@@ -18656,17 +18659,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
               type: t10.literal("modal")
             }),
             t10.partial({
-              position: t10.union([
-                t10.literal("top-left"),
-                t10.literal("top-center"),
-                t10.literal("top-right"),
-                t10.literal("bottom-left"),
-                t10.literal("bottom-center"),
-                t10.literal("bottom-right"),
-                t10.literal("left-center"),
-                t10.literal("right-center"),
-                t10.literal("center")
-              ]),
+              position: ModalPositionV,
               textAnimation: t10.literal("typewriter"),
               canClickOutsideToClose: t10.boolean
             }),
@@ -18684,17 +18677,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
           t10.intersection([
             t10.type({
               type: t10.literal("popover"),
-              position: t10.union([
-                t10.literal("top-left"),
-                t10.literal("top-center"),
-                t10.literal("top-right"),
-                t10.literal("right-center"),
-                t10.literal("bottom-right"),
-                t10.literal("bottom-center"),
-                t10.literal("bottom-left"),
-                t10.literal("left-center"),
-                t10.literal("center")
-              ])
+              position: PopoverPositionV
             }),
             t10.partial({
               textAnimation: t10.literal("typewriter"),
@@ -18706,7 +18689,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
           t10.intersection([
             t10.type({
               type: t10.literal("banner"),
-              position: t10.union([t10.literal("top"), t10.literal("bottom")]),
+              position: BannerPositionV,
               placement: t10.union([t10.literal("default"), t10.literal("overlay")]),
               sticky: t10.boolean
             }),
@@ -18731,13 +18714,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
                 x: t10.string,
                 y: t10.string
               }),
-              position: t10.union([
-                t10.literal("auto"),
-                t10.literal("top"),
-                t10.literal("bottom"),
-                t10.literal("left"),
-                t10.literal("right")
-              ]),
+              position: PinPositionV,
               alignment: t10.union([
                 t10.literal("center"),
                 t10.literal("top"),
@@ -18810,13 +18787,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
             t10.type({
               type: t10.literal("card"),
               anchor: t10.string,
-              position: t10.union([
-                t10.literal("prepend"),
-                t10.literal("append"),
-                t10.literal("replace"),
-                t10.literal("before"),
-                t10.literal("after")
-              ])
+              position: CardPositionV
             }),
             t10.partial({
               anchorSelector: ElementSelectorV,
@@ -19021,9 +18992,9 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   var NudgeV = t10.intersection([NudgeBaseV, NudgeAdditionalV], "Nudge");
   var createUnsupportedFeatureNudge = (data) => {
     return {
-      title: data.title || "Unsupported Feature",
-      variantId: data.variantId,
-      flagKey: data.flagKey,
+      title: data?.title || "Unsupported Feature",
+      variantId: data?.variantId ?? 0,
+      flagKey: data?.flagKey || "unsupported",
       steps: [],
       triggerConfig: {
         type: "none",
@@ -19037,7 +19008,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         stopShowingIfDismissed: false
       },
       ...defaults2,
-      breakingFeatures: data.breakingFeatures
+      breakingFeatures: data?.breakingFeatures ?? null
     };
   };
   var hasUnsupportedBreakingFeatures = (data, supportedBreakingFeatures) => {
@@ -19049,24 +19020,31 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   };
   var Nudge = class {
     static decode = (data, supportedBreakingFeatures) => {
+      const variantId = data?.variantId ?? "unknown";
       if (hasUnsupportedBreakingFeatures(data, supportedBreakingFeatures)) {
         logger.debug(
-          `Nudge variant ${data.variantId} uses breaking features not supported by this platform. Breaking features used: ${JSON.stringify(data.breakingFeatures)}, Supported features: ${JSON.stringify(supportedBreakingFeatures)}`
+          `Nudge variant ${variantId} uses breaking features not supported by this platform. Breaking features used: ${JSON.stringify(data?.breakingFeatures)}, Supported features: ${JSON.stringify(supportedBreakingFeatures)}`
         );
         return decodeThrowing(NudgeV, createUnsupportedFeatureNudge(data));
       }
       try {
         return decodeThrowing(NudgeV, data);
       } catch (e2) {
-        if (e2 instanceof Error) {
-          logger.debug("Error decoding guide or survey", e2.message);
+        const errorMessage = e2 instanceof Error ? e2.message : String(e2);
+        logger.debug(`Error decoding nudge variant ${variantId}. Error: ${errorMessage}.`);
+        try {
+          return decodeThrowing(NudgeV, {
+            ...defaults2,
+            ...data,
+            steps: (data?.steps || []).map((step) => ({ ...stepDefaults, ...step }))
+          });
+        } catch (fallbackError) {
+          const fallbackErrorMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
+          logger.debug(
+            `Error decoding nudge variant ${variantId} with fallback values. Error: ${errorMessage}. Fallback error: ${fallbackErrorMessage}.`
+          );
+          return decodeThrowing(NudgeV, createUnsupportedFeatureNudge(data));
         }
-        getSentry()?.captureException(e2);
-        return decodeThrowing(NudgeV, {
-          ...defaults2,
-          ...data,
-          steps: (data.steps || []).map((step) => ({ ...stepDefaults, ...step }))
-        });
       }
     };
   };
@@ -19128,7 +19106,6 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       if (e2 instanceof Error) {
         logger.error("Error decoding theme", e2.message);
       }
-      getSentry()?.captureException(e2);
       return decodeThrowing(ThemeObjectV, { ...defaults3, ...data });
     }
   };
@@ -19181,7 +19158,6 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       if (result === void 0) return defaultValue;
       return result;
     } catch (e2) {
-      getSentry()?.captureException(e2);
       logger.error(`Error decoding config response (${meta.apiKey}). Using default value for '${meta.field}'`, {
         error: e2,
         field: meta.field,
@@ -19217,7 +19193,6 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         try {
           return ResourceCenter.decode(rc);
         } catch (e2) {
-          getSentry()?.captureException(e2);
           if (e2 instanceof Error) {
             logger.error(
               `Decoding resource center: ${rc?.key ?? "unknown"}
@@ -19236,7 +19211,6 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       const themes = data?.themes ?? [];
       return { resourceCenters, themes };
     } catch (error) {
-      getSentry()?.captureException(error);
       if (error instanceof Error) {
         logger.error("Error fetching resource center settings. Continuing with empty data.", error.message);
       }
@@ -19300,7 +19274,6 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       try {
         return [Nudge.decode(nudge, supportedBreakingFeatures)];
       } catch (e2) {
-        getSentry()?.captureException(e2);
         if (e2 instanceof Error) {
           logger.error(
             `Decoding nudge variant: ${nudge?.variantId ?? "unknown"}
@@ -19321,7 +19294,6 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       try {
         return [decode2(theme)];
       } catch (e2) {
-        getSentry()?.captureException(e2);
         if (e2 instanceof Error) {
           logger.error(
             `Decoding theme: ${theme?.id ?? "unknown"}
@@ -19674,7 +19646,6 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         }
       );
     } catch (error) {
-      getSentry()?.captureException(error);
       logger.debug("Error submitting response:", error);
     }
   };
@@ -19961,6 +19932,12 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       },
       markSeen: assign({
         nudgeSeenThisSessionTs: ({ context }) => [...context.nudgeSeenThisSessionTs, Date.now()]
+      }),
+      resetStepViewed: assign({
+        hasReportedStepViewed: () => false
+      }),
+      markStepViewed: assign({
+        hasReportedStepViewed: () => true
       }),
       setStepIndexWithHistory: assign(({ context }, params) => {
         if (params.step === void 0 || !(params.step >= 0 && params.step < context.nudge.steps.length)) {
@@ -20299,6 +20276,10 @@ when parsing ${JSON.stringify(input, null, 2)}`;
                 }
               ]
             },
+            on: {
+              // Allow closing while waiting for target element (e.g., via closeBlockingNudges)
+              CLOSE: "Done"
+            },
             description: `This is where we check any step specific conditions.
 This includes searching for elements to pin to or checking availability of commands on a CTA.`
           },
@@ -20353,11 +20334,13 @@ This ensures only the right variant is shown for experiment nudges.`
             states: {
               Rendering: {
                 entry: enqueueActions(({ enqueue, check }) => {
+                  enqueue({ type: "resetStepViewed" });
                   enqueue({ type: "renderStep" });
                   enqueue({ type: "reevaluateChecklistItemGoals" });
                   const isPinOnWeb = check({ type: "isPinStep" }) && check({ type: "isWebPlatform" });
                   if (!check({ type: "isTooltipNudge" }) && !isPinOnWeb && !check({ type: "isCardStep" })) {
                     enqueue({ type: "reportSeen" });
+                    enqueue({ type: "markStepViewed" });
                   }
                   enqueue({ type: "reportExposure" });
                 }),
@@ -20418,7 +20401,14 @@ This ensures only the right variant is shown for experiment nudges.`
                     ]
                   },
                   STEP_VISIBLE: {
-                    actions: [{ type: "markSeen" }, { type: "saveSeen" }, { type: "reportSeen" }]
+                    actions: enqueueActions(({ context, enqueue }) => {
+                      enqueue({ type: "markSeen" });
+                      enqueue({ type: "saveSeen" });
+                      if (!context.hasReportedStepViewed) {
+                        enqueue({ type: "reportSeen" });
+                        enqueue({ type: "markStepViewed" });
+                      }
+                    })
                   }
                 }
               },
@@ -20624,6 +20614,7 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
         stepIndexStack,
         surveyResponses,
         nudgeSeenThisSessionTs: [],
+        hasReportedStepViewed: false,
         triggerEvent: null,
         triggerMatch: null,
         prevPassedConditions: false
@@ -20924,7 +20915,7 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
                   if (triggerEvent.overrides?.closeBlockingNudges && triggerEvent.nudgeId) {
                     const nudgeToTrigger = getNudgeById(globalStore, triggerEvent.nudgeId);
                     const nudge = machine.getSnapshot().context.nudge;
-                    if (nudgeToTrigger && nudge.variantId !== nudgeToTrigger.variantId && isBlocked(nudgeToTrigger, [nudge])) {
+                    if (nudgeToTrigger && isBlocked(nudgeToTrigger, [nudge])) {
                       enqueue.sendTo(machine, { type: "CLOSE" });
                     }
                   }
@@ -21033,10 +21024,69 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
   });
 
+  // ../shared/src/store/preview-session-storage-manager.ts
+  var PREVIEW_SESSION_KEY = "previewSession";
+  var savePreviewSession = (state) => {
+    try {
+      SessionStorage_default.set(PREVIEW_SESSION_KEY, JSON.stringify(state));
+    } catch (e2) {
+      logger.error("Error saving preview session state:", e2);
+    }
+  };
+  var getStoredPreviewSession = () => {
+    try {
+      const stored = SessionStorage_default.get(PREVIEW_SESSION_KEY, "");
+      if (stored && typeof stored === "string" && stored !== "") {
+        return JSON.parse(stored);
+      }
+    } catch (e2) {
+      logger.error("Error parsing stored preview session state:", e2);
+    }
+    return null;
+  };
+  var clearPreviewSession = () => {
+    try {
+      SessionStorage_default.remove(PREVIEW_SESSION_KEY);
+    } catch (e2) {
+      logger.error("Error clearing preview session state:", e2);
+    }
+  };
+  var getUrlDebugVariantId = () => {
+    try {
+      if (typeof window !== "undefined" && window.location) {
+        const search = window.location.search;
+        const match = search.match(/[?&]gs-debug-id=(\d+)/);
+        if (match && match[1]) {
+          const variantId = Number(match[1]);
+          if (!isNaN(variantId)) {
+            return variantId;
+          }
+        }
+      }
+    } catch (e2) {
+    }
+    return null;
+  };
+  var getPendingPreviewVariantId = () => {
+    const storedSession = getStoredPreviewSession();
+    if (storedSession) {
+      if (storedSession.inProgress) {
+        return null;
+      }
+      return storedSession.variantId;
+    }
+    return getUrlDebugVariantId();
+  };
+
   // ../shared/src/products/nudges/store/actions.ts
   var shouldDebugNudges = !!LocalStorage_default.get("debug:nudges", false);
   var sendConstantTriggers = (_) => {
     if (getSDK()?.[_configuration]?.options?.headless) return;
+    restorePreviewSession(_);
+    if (getPendingPreviewVariantId() !== null) {
+      logger.debug("Skipping constant triggers due to pending preview session");
+      return;
+    }
     sendIndirectTrigger(_, {
       trigger: { type: "active" },
       source: { type: "active" },
@@ -21100,6 +21150,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     if (simulatedNudge) {
       sendDirectedTrigger(_, simulatedNudge, triggerEventPayload);
     } else {
+      if (getPendingPreviewVariantId() !== null) {
+        logger.debug("Skipping indirect trigger due to pending preview session");
+        return;
+      }
       _.nudgesManager?.send({
         type: "TRIGGER",
         ...triggerEventPayload
@@ -21107,6 +21161,11 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
   };
   var forceTriggerSingleNudge = (_, nudge, triggerEventPayload) => {
+    const pendingPreviewVariantId = getPendingPreviewVariantId();
+    if (pendingPreviewVariantId !== null && pendingPreviewVariantId !== nudge.variantId) {
+      logger.debug("Skipping force trigger - nudge does not match pending preview session");
+      return;
+    }
     const defaultOverrides = {
       // allow admins to trigger nudge outside simulate mode
       admin: true,
@@ -21139,6 +21198,11 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     });
   };
   var sendDirectedTrigger = (_, nudge, triggerEventPayload) => {
+    const pendingPreviewVariantId = getPendingPreviewVariantId();
+    if (pendingPreviewVariantId !== null && pendingPreviewVariantId !== nudge.variantId) {
+      logger.debug("Skipping directed trigger - nudge does not match pending preview session");
+      return;
+    }
     _.nudgesManager?.send({
       ...triggerEventPayload,
       type: "TRIGGER",
@@ -21178,9 +21242,15 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       return;
     }
     _.nudgesManager?.send({ type: "START_DEBUG", nudge: adminNudge });
-    const overrides = {
-      stepIndex: options.toStepIndex
-    };
+    savePreviewSession({
+      variantId: adminNudge.variantId,
+      // toStepIndex intentionally omitted - see note above
+      locale: options.locale,
+      bypassUserLocale: _.nudgeDebugToolBar.bypassUserLocale,
+      bypassCustomThrottles: _.nudgeDebugToolBar.bypassCustomThrottles,
+      inProgress: true
+    });
+    const overrides = options.toStepIndex !== void 0 ? { stepIndex: options.toStepIndex } : {};
     setupTimedTriggers(_, [adminNudge]);
     sendDirectedTrigger(_, adminNudge, {
       trigger: { type: "active" },
@@ -21223,14 +21293,41 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       if (options.refreshDecide) {
         await refreshDecideResult(_);
       }
+      clearPreviewSession();
       _.nudgesManager?.send({ type: "STOP_DEBUG" });
     }
+  };
+  var restorePreviewSession = async (_) => {
+    if (getDebuggedNudge(_)) {
+      logger.debug("Skipping session storage restoration - already in debug mode");
+      return;
+    }
+    const storedSession = getStoredPreviewSession();
+    if (!storedSession) {
+      return;
+    }
+    if (storedSession.bypassUserLocale !== void 0) {
+      _.nudgeDebugToolBar.bypassUserLocale = storedSession.bypassUserLocale;
+    }
+    if (storedSession.bypassCustomThrottles !== void 0) {
+      _.nudgeDebugToolBar.bypassCustomThrottles = storedSession.bypassCustomThrottles;
+    }
+    logger.debug("Restoring preview session from session storage", storedSession);
+    await startDebugSession(
+      _,
+      { variantId: storedSession.variantId },
+      {
+        toStepIndex: storedSession.toStepIndex,
+        locale: storedSession.locale,
+        refreshDecide: false
+      }
+    );
   };
   var showStepMock = (_, nudge, stepIndex, options) => {
     _.services.renderNudge(_, nudge, stepIndex ?? 0, {
       renderMode: 1 /* MOCK */,
       forceOpen: options?.forceOpen,
-      anchorOverride: options?.anchorOverride
+      overrides: options?.overrides
     });
   };
   var shutdownNudges = (_) => {
@@ -21317,13 +21414,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     try {
       updateEndUserStore(_.endUserStore, updatedContext);
     } catch (e2) {
-      getSentry()?.captureException(e2, {
-        captureContext: {
-          tags: {
-            product: "nudges"
-          }
-        }
-      });
       logger.error("Unable to save end-user state to remote", e2);
     }
   };
@@ -22821,7 +22911,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           ...existingProxy?._configuration?.options
         }
       },
-      _sentry: void 0,
       /**
        * Initializes Guides and Surveys, mounting parent containers to the document body. This will **not** make them available right away.
        * You must use `window.engagement.boot('user')` to identify the end user first.
@@ -23185,11 +23274,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             });
           });
         } catch (e2) {
-          getSentry()?.captureException(e2);
+          logger.error("Unexpected error tracking event; ignoring", { error: e2 });
         }
       } catch (error) {
         logger.error("Unexpected error logging event; ignoring", { error });
-        getSentry()?.captureException(error);
       }
     }
     setBootStatus(hasBooted) {
@@ -23216,7 +23304,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     _initStarted = false;
     _isProxy = false;
     _fingerprint;
-    _sentry;
     _debouncedDecide;
     _autoRefreshTimer = null;
     constructor(_, sdkConfig) {
@@ -23609,7 +23696,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         logger.debug("Decide data fetched successfully");
       } catch (e2) {
         logger.error("Failed to fetch decide data", e2);
-        getSentry()?.captureException(e2);
       }
       try {
         await this._.endUserStore.fetchData();
@@ -23624,7 +23710,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         }
       } catch (e2) {
         logger.error("Failed to fetch end user state", e2);
-        getSentry()?.captureException(e2);
       }
       this.nudgeActions.sendConstantTriggers();
     }
@@ -23714,10 +23799,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         const buttonBlock = currentStep.content.find(
           (block) => block.type === "button" && block.meta?.buttonType === action.buttonType
         );
-        if (!buttonBlock) {
-          logger.error(`registerAction: No button with type ${action.buttonType} found in step ${currentStepIndex}`);
-          return;
-        }
         if (action.surveyResponses) {
           actor?.send({
             type: "UPDATE_SURVEY_RESPONSE",
@@ -23727,7 +23808,11 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         const snapshot = actor?.getSnapshot();
         const storedSurveyResponse = snapshot?.context?.surveyResponses?.[currentStep.id];
         const surveyResponses = storedSurveyResponse ?? action.surveyResponses;
-        const meta = buttonBlock.meta;
+        const meta = buttonBlock?.meta ?? {
+          buttonType: action.buttonType,
+          action: { type: "no_action" },
+          label: ""
+        };
         const buttonAction = determineAction(this._, currentStep, { buttonMeta: meta, surveyResponses });
         execNudgeAction(this._, buttonAction, meta, 0 /* DEFAULT */, actor);
       } else {
@@ -23738,11 +23823,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
     /** Internal SDK methods **/
     async _configUser() {
-      getSentry()?.addBreadcrumb({
-        level: "debug",
-        category: "internal",
-        message: "_configUser called"
-      });
       const { organization, nudges, flags, themes, resourceCenters } = await getEndUserConfig(
         this._configuration.apiKey,
         this._.isEditorPreview
@@ -25463,7 +25543,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       const _options = {
         renderMode: options?.renderMode,
         forceOpen: options?.forceOpen,
-        anchorOverride: options?.anchorOverride
+        overrides: options?.overrides
       };
       const actor = getNudgeActor(_, nudge.variantId);
       const currentStep = nudge.steps[stepIndex];

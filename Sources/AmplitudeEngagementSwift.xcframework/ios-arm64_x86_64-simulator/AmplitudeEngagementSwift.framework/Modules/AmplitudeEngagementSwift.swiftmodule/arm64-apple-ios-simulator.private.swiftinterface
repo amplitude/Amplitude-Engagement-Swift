@@ -148,7 +148,7 @@ public enum DevelopmentPlatform : Swift.String {
 public protocol AmplitudeEngagementProtocol : AnyObject {
   var config: AmplitudeEngagementSwift.AmplitudeEngagementConfig { get }
   func getPlugin() -> any AmplitudeCore.UniversalPlugin
-  func boot(_ user_id: Swift.String, device_id: Swift.String?)
+  func boot(_ user_id: Swift.String, device_id: Swift.String?, autoRefreshIntervalSeconds: Swift.Int)
   func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
   func shutdown()
   func setThemeMode(themeMode: AmplitudeEngagementSwift.ThemeMode)
@@ -169,7 +169,7 @@ public class AmplitudeEngagement : Observation.Observable, AmplitudeEngagementSw
   public static var logger: any AmplitudeEngagementSwift.AmplitudeLogger
   public init(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions())
   public func getPlugin() -> any AmplitudeCore.UniversalPlugin
-  public func boot(_ user_id: Swift.String, device_id: Swift.String? = nil)
+  public func boot(_ user_id: Swift.String, device_id: Swift.String? = nil, autoRefreshIntervalSeconds: Swift.Int = 0)
   public func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
   public func shutdown()
   public func setThemeMode(themeMode: AmplitudeEngagementSwift.ThemeMode)
@@ -180,6 +180,8 @@ public class AmplitudeEngagement : Observation.Observable, AmplitudeEngagementSw
   public func closeAll()
   public func forwardEvent(_ eventProperties: [Swift.String : Any])
   public func addCallback(_ key: Swift.String, _ function: @escaping () -> Swift.Void)
+  public func refresh()
+  public func setAutoRefreshInterval(seconds: Swift.Int)
   public func handleUrl(_ url: Foundation.URL) -> Swift.Bool
   public func updateLanguage(_ locale: Swift.String)
   public func resetSmartInteractions()
@@ -203,8 +205,8 @@ public struct AmplitudeEndUser {
   public init(user_id: Swift.String? = nil, device_id: Swift.String? = nil, user_properties: [Swift.String : Any] = [:])
 }
 public struct AmplitudeBootOptions {
-  public init(user_id: Swift.String?, device_id: Swift.String? = nil, integrations: [(_ eventType: Swift.String, _ eventProperties: [Swift.String : Any]) -> Swift.Void] = [], user_properties: [Swift.String : Any] = [:])
-  public init(user: AmplitudeEngagementSwift.AmplitudeEndUser, integrations: [(_ eventType: Swift.String, _ eventProperties: [Swift.String : Any]) -> Swift.Void] = [])
+  public init(user_id: Swift.String?, device_id: Swift.String? = nil, integrations: [(_ eventType: Swift.String, _ eventProperties: [Swift.String : Any]) -> Swift.Void] = [], user_properties: [Swift.String : Any] = [:], autoRefreshIntervalSeconds: Swift.Int = 0)
+  public init(user: AmplitudeEngagementSwift.AmplitudeEndUser, integrations: [(_ eventType: Swift.String, _ eventProperties: [Swift.String : Any]) -> Swift.Void] = [], autoRefreshIntervalSeconds: Swift.Int = 0)
 }
 public enum Roboto : Swift.String, Swift.CaseIterable {
   case thin
