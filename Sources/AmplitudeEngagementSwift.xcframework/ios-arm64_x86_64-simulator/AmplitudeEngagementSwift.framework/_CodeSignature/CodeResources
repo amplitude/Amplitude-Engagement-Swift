@@ -18,7 +18,7 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		VCsIMspYo0aYgICsPHj1Q/syaaE=
+		gGiW3B/5vQ1KAG6IU2HmlKBr1aI=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -34,11 +34,11 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		rDMp8QWx6F5w89tAVJauL77hZzU=
+		u9MWhL6JuFu5weOElDHOtQssG50=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		VCsIMspYo0aYgICsPHj1Q/syaaE=
+		gGiW3B/5vQ1KAG6IU2HmlKBr1aI=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -54,7 +54,7 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		f0ZeWZOgXxBb8NzPV0+zeboCVAU=
+		JJ83f2J90nLeVXqevr8TVISGbWw=
 		</data>
 		<key>Roboto-Black.ttf</key>
 		<data>
@@ -153,7 +153,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			h9YZmDGuzKBHYAjLTDbzDYf46UTIEDVwGWwYXq5pAFU=
+			0920wqOp/SRSrT+sMV11VPGEwLvWEpDS5JEUGkyYixg=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
@@ -181,14 +181,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			wgoV/dHYE2Br1HHBmpdS7wRnlYM3zGmzfA4xTiYO6p4=
+			tapJtxDrhIdW6T+VcrDHcrhya3KH3N/5ybcAAUVZ9ls=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			h9YZmDGuzKBHYAjLTDbzDYf46UTIEDVwGWwYXq5pAFU=
+			0920wqOp/SRSrT+sMV11VPGEwLvWEpDS5JEUGkyYixg=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
@@ -216,7 +216,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Twdwg7lYt/F/sFrx4c3ulE7ewlUTEjgVayqOQ+9f3Rc=
+			lh4eA4P906AbsajvyW9TKc0cezucx7WDB8ztXabsp3Y=
 			</data>
 		</dict>
 		<key>Roboto-Black.ttf</key>
