@@ -145,33 +145,59 @@ public enum DevelopmentPlatform : Swift.String {
     get
   }
 }
-public protocol AmplitudeEngagementProtocol : AnyObject {
+public protocol AmplitudeEngagement : AnyObject {
   var config: AmplitudeEngagementSwift.AmplitudeEngagementConfig { get }
   func getPlugin() -> any AmplitudeCore.UniversalPlugin
+  func handleUrl(_ url: Foundation.URL) -> Swift.Bool
+  func boot(_ user_id: Swift.String)
+  func boot(_ user_id: Swift.String, device_id: Swift.String?)
   func boot(_ user_id: Swift.String, device_id: Swift.String?, autoRefreshIntervalSeconds: Swift.Int)
   func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
   func shutdown()
+  func enable()
+  func disable()
+  func refresh()
+  func setAutoRefreshInterval(seconds: Swift.Int)
   func setThemeMode(themeMode: AmplitudeEngagementSwift.ThemeMode)
-  func reset(key: Swift.String, stepIndex: Swift.Int)
-  func list() -> [AmplitudeEngagementSwift.GuideOrSurvey]
-  func show(key: Swift.String, stepIndex: Swift.Int)
-  func closeAll()
-  func screen(_ screenName: Swift.String)
-  func updateLanguage(_ locale: Swift.String)
-  func forwardEvent(_ eventProperties: [Swift.String : Any])
-  func addCallback(_ key: Swift.String, _ function: @escaping () -> Swift.Void)
   func setRouter(_ router: @escaping (Swift.String) -> Swift.Void)
   func unsetRouter()
+  func reset(key: Swift.String)
+  func reset(key: Swift.String, stepIndex: Swift.Int)
+  func list() -> [AmplitudeEngagementSwift.GuideOrSurvey]
+  func show(key: Swift.String)
+  func show(key: Swift.String, stepIndex: Swift.Int)
+  func screen(_ screenName: Swift.String)
+  func closeAll()
+  func forwardEvent(_ eventProperties: [Swift.String : Any])
+  func addCallback(_ key: Swift.String, _ function: @escaping () -> Swift.Void)
+  func updateLanguage(_ locale: Swift.String)
+  func resetSmartInteractions()
   func _setUserProperties(_ userProperties: [Swift.String : Any])
 }
-public class AmplitudeEngagement : Observation.Observable, AmplitudeEngagementSwift.AmplitudeEngagementProtocol {
-  public var config: AmplitudeEngagementSwift.AmplitudeEngagementConfig
+extension AmplitudeEngagementSwift.AmplitudeEngagement {
+  public func boot(_ user_id: Swift.String)
+  public func boot(_ user_id: Swift.String, device_id: Swift.String?)
+  public func reset(key: Swift.String)
+  public func show(key: Swift.String)
+}
+public enum AmplitudeEngagementFactory {
+  public static func make(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions(), settingsTimeout: Foundation.TimeInterval = 1.25) -> any AmplitudeEngagementSwift.AmplitudeEngagement
+}
+public enum __Flutter__AESDK_Factory {
+  public static func make(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions(), settingsTimeout: Foundation.TimeInterval = 1.25) -> any AmplitudeEngagementSwift.AmplitudeEngagement
+}
+public enum __ReactNative__AESDK_Factory {
+  public static func make(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions(), settingsTimeout: Foundation.TimeInterval = 1.25) -> any AmplitudeEngagementSwift.AmplitudeEngagement
+}
+@_hasMissingDesignatedInitializers public class AmplitudeEngagementImpl : Observation.Observable, AmplitudeEngagementSwift.AmplitudeEngagement {
   public static var logger: any AmplitudeEngagementSwift.AmplitudeLogger
-  public init(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions())
+  public var config: AmplitudeEngagementSwift.AmplitudeEngagementConfig
   public func getPlugin() -> any AmplitudeCore.UniversalPlugin
   public func boot(_ user_id: Swift.String, device_id: Swift.String? = nil, autoRefreshIntervalSeconds: Swift.Int = 0)
   public func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
   public func shutdown()
+  public func enable()
+  public func disable()
   public func setThemeMode(themeMode: AmplitudeEngagementSwift.ThemeMode)
   public func reset(key: Swift.String, stepIndex: Swift.Int = 0)
   public func list() -> [AmplitudeEngagementSwift.GuideOrSurvey]
@@ -190,12 +216,39 @@ public class AmplitudeEngagement : Observation.Observable, AmplitudeEngagementSw
   public func _setUserProperties(_ userProperties: [Swift.String : Any])
   @objc deinit
 }
-@_inheritsConvenienceInitializers public class __ReactNative__AESDK : AmplitudeEngagementSwift.AmplitudeEngagement {
-  override public init(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = super)
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers public class __ReactNative__AESDK : AmplitudeEngagementSwift.AmplitudeEngagementImpl {
   @objc deinit
 }
-@_inheritsConvenienceInitializers public class __Flutter__AESDK : AmplitudeEngagementSwift.AmplitudeEngagement {
-  override public init(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = super)
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers public class __Flutter__AESDK : AmplitudeEngagementSwift.AmplitudeEngagementImpl {
+  @objc deinit
+}
+final public class AmplitudeEngagementNoOpStub : AmplitudeEngagementSwift.AmplitudeEngagement {
+  final public var config: AmplitudeEngagementSwift.AmplitudeEngagementConfig {
+    get
+  }
+  public init(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions())
+  final public func getPlugin() -> any AmplitudeCore.UniversalPlugin
+  final public func boot(_ user_id: Swift.String, device_id: Swift.String?, autoRefreshIntervalSeconds: Swift.Int)
+  final public func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
+  final public func shutdown()
+  final public func enable()
+  final public func disable()
+  final public func setThemeMode(themeMode: AmplitudeEngagementSwift.ThemeMode)
+  final public func reset(key: Swift.String, stepIndex: Swift.Int)
+  final public func list() -> [AmplitudeEngagementSwift.GuideOrSurvey]
+  final public func show(key: Swift.String, stepIndex: Swift.Int)
+  final public func closeAll()
+  final public func screen(_ screenName: Swift.String)
+  final public func updateLanguage(_ locale: Swift.String)
+  final public func forwardEvent(_ eventProperties: [Swift.String : Any])
+  final public func addCallback(_ key: Swift.String, _ function: @escaping () -> Swift.Void)
+  final public func setRouter(_ router: @escaping (Swift.String) -> Swift.Void)
+  final public func unsetRouter()
+  final public func handleUrl(_ url: Foundation.URL) -> Swift.Bool
+  final public func resetSmartInteractions()
+  final public func refresh()
+  final public func setAutoRefreshInterval(seconds: Swift.Int)
+  final public func _setUserProperties(_ userProperties: [Swift.String : Any])
   @objc deinit
 }
 public struct AmplitudeEndUser {

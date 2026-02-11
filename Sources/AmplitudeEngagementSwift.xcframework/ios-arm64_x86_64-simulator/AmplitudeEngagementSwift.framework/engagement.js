@@ -11722,7 +11722,7 @@
       var FUNC_ERROR_TEXT = "Expected a function";
       var nativeMax = Math.max;
       var nativeMin = Math.min;
-      function debounce2(func, wait, options) {
+      function debounce(func, wait, options) {
         var lastArgs, lastThis, maxWait, result, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
         if (typeof func != "function") {
           throw new TypeError(FUNC_ERROR_TEXT);
@@ -11803,7 +11803,32 @@
         debounced.flush = flush;
         return debounced;
       }
-      module.exports = debounce2;
+      module.exports = debounce;
+    }
+  });
+
+  // ../shared/node_modules/lodash/throttle.js
+  var require_throttle = __commonJS({
+    "../shared/node_modules/lodash/throttle.js"(exports, module) {
+      var debounce = require_debounce();
+      var isObject2 = require_isObject();
+      var FUNC_ERROR_TEXT = "Expected a function";
+      function throttle2(func, wait, options) {
+        var leading = true, trailing = true;
+        if (typeof func != "function") {
+          throw new TypeError(FUNC_ERROR_TEXT);
+        }
+        if (isObject2(options)) {
+          leading = "leading" in options ? !!options.leading : leading;
+          trailing = "trailing" in options ? !!options.trailing : trailing;
+        }
+        return debounce(func, wait, {
+          "leading": leading,
+          "maxWait": wait,
+          "trailing": trailing
+        });
+      }
+      module.exports = throttle2;
     }
   });
 
@@ -12605,9 +12630,9 @@
     };
     const tagThrottleCounters = {};
     const tagThrottles = limits.filter((limit) => limit.tagIds?.length);
-    tagThrottles.forEach((throttle) => {
-      if (throttle.tagIds) {
-        const throttleKey = getTagThrottleKey(throttle.tagIds);
+    tagThrottles.forEach((throttle2) => {
+      if (throttle2.tagIds) {
+        const throttleKey = getTagThrottleKey(throttle2.tagIds);
         tagThrottleCounters[throttleKey] = {
           session: 0,
           day: 0,
@@ -12624,9 +12649,9 @@
         const stateNudgeProductType = nudgeState.type === "survey" ? "survey" : "guide";
         const matchingTagThrottles = [];
         if (nudgeState?.tagIds?.length) {
-          tagThrottles.forEach((throttle) => {
-            if (throttle.tagIds && throttle.tagIds.some((tagId) => nudgeState.tagIds.includes(tagId))) {
-              const throttleKey = getTagThrottleKey(throttle.tagIds);
+          tagThrottles.forEach((throttle2) => {
+            if (throttle2.tagIds && throttle2.tagIds.some((tagId) => nudgeState.tagIds.includes(tagId))) {
+              const throttleKey = getTagThrottleKey(throttle2.tagIds);
               if (throttleKey in tagThrottleCounters) {
                 matchingTagThrottles.push(throttleKey);
               }
@@ -13107,19 +13132,12 @@
         return true;
     }
   };
-  var getCurrentLocale = (_) => {
-    const sdkLocale = getSDK()?.[_configuration].locale;
-    if (_ && _.nudgeDebugToolBar.bypassUserLocale && _.nudgeDebugToolBar.previewLocale) {
-      return _.nudgeDebugToolBar.previewLocale;
-    }
-    return sdkLocale;
-  };
   var getAppliedNudgeLocale = (nudge, localizationSettings) => {
     if (!localizationSettings || !localizationSettings.enabled || !nudge.translationStatus) {
       return void 0;
     }
     if (nudge.translationStatus.translated) {
-      return getCurrentLocale();
+      return getSDK()?.[_configuration].locale;
     } else {
       return localizationSettings.defaultLocale;
     }
@@ -17033,9 +17051,11 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     forceTriggerSingleNudge: () => forceTriggerSingleNudge,
     getDebugSnapshot: () => getDebugSnapshot,
     getDebugSnapshotForHeadless: () => getDebugSnapshotForHeadless,
+    getDebuggedNudge: () => getDebuggedNudge,
     initNudges: () => initNudges,
     resetNudge: () => resetNudge,
     resetTimedTriggers: () => resetTimedTriggers,
+    restartDebugSession: () => restartDebugSession,
     restorePreviewSession: () => restorePreviewSession,
     sendConstantTriggers: () => sendConstantTriggers,
     sendDirectedTrigger: () => sendDirectedTrigger,
@@ -17303,6 +17323,102 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       },
       !async
     );
+  };
+
+  // ../shared/src/internal/util/SessionStorage.ts
+  var PREFIX3 = "amplitude.engagement";
+  var set2 = (label, value) => {
+    try {
+      sessionStorage.setItem(`${PREFIX3}.${label}`, value.toString());
+      return value;
+    } catch (err) {
+      return "";
+    }
+  };
+  var get4 = (label, defaultValue, prefixOverride) => {
+    let value;
+    const prefix = prefixOverride ?? PREFIX3;
+    try {
+      value = sessionStorage.getItem(`${prefix}.${label}`);
+    } catch (err) {
+      value = null;
+    }
+    if (value === null) {
+      return defaultValue;
+    } else {
+      if (value === "false") return false;
+      if (value === "true") return true;
+      if (+value) return +value;
+      return value;
+    }
+  };
+  var remove2 = (label) => {
+    try {
+      sessionStorage.removeItem(`${PREFIX3}.${label}`);
+      return;
+    } catch (err) {
+      return;
+    }
+  };
+  var SessionStorage = {
+    set: set2,
+    get: get4,
+    remove: remove2
+  };
+  var SessionStorage_default = SessionStorage;
+
+  // ../shared/src/store/preview-session-storage-manager.ts
+  var PREVIEW_SESSION_KEY = "previewSession";
+  var savePreviewSession = (state) => {
+    try {
+      SessionStorage_default.set(PREVIEW_SESSION_KEY, JSON.stringify(state));
+    } catch (e2) {
+      logger.error("Error saving preview session state:", e2);
+    }
+  };
+  var getStoredPreviewSession = () => {
+    try {
+      const stored = SessionStorage_default.get(PREVIEW_SESSION_KEY, "");
+      if (stored && typeof stored === "string" && stored !== "") {
+        return JSON.parse(stored);
+      }
+    } catch (e2) {
+      logger.error("Error parsing stored preview session state:", e2);
+    }
+    return null;
+  };
+  var clearPreviewSession = () => {
+    try {
+      SessionStorage_default.remove(PREVIEW_SESSION_KEY);
+    } catch (e2) {
+      logger.error("Error clearing preview session state:", e2);
+    }
+  };
+  var getUrlDebugVariantId = () => {
+    try {
+      if (typeof window !== "undefined" && window.location) {
+        const search = window.location.search;
+        const match = search.match(/[?&]gs-debug-id=(\d+)/);
+        if (match && match[1]) {
+          const variantId = Number(match[1]);
+          if (!isNaN(variantId)) {
+            return variantId;
+          }
+        }
+      }
+    } catch (e2) {
+    }
+    return null;
+  };
+  var getPendingPreviewVariantId = (_) => {
+    if (getDebuggedNudge(_)) {
+      return null;
+    }
+    const storedSession = getStoredPreviewSession();
+    if (storedSession) {
+      return storedSession.variantId;
+    }
+    return getUrlDebugVariantId();
   };
 
   // ../shared/src/store/util/logChanges.ts
@@ -17631,7 +17747,8 @@ when parsing ${JSON.stringify(input, null, 2)}`;
           ["[Guides-Surveys] Is From Debug Mode" /* IsFromDebugMode */]: !!context?.triggerEvent?.overrides?.simulateMode,
           ["[Guides-Surveys] Is From Test Mode" /* IsFromTestMode */]: isTestNudge(_, nudge),
           ["[Guides-Surveys] App Type" /* AppType */]: nudge.platform,
-          ["[Guides-Surveys] Localization Language" /* LocalizationLanguage */]: getAppliedNudgeLocale(nudge, _?.organization?.localization)
+          ["[Guides-Surveys] Localization Language" /* LocalizationLanguage */]: getAppliedNudgeLocale(nudge, _?.organization?.localization),
+          ["[Guides-Surveys] History Version" /* HistoryVersion */]: nudge.version ?? null
         };
       },
       /**
@@ -18071,14 +18188,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
 
   // ../shared/src/store/resource-center-storage-manager.ts
   var STORAGE_KEY = "resourceCenter";
-  var PERSISTED_FIELDS = [
-    "visible",
-    "minimized",
-    "scrollPosition",
-    "query",
-    "isAdditionalResourcesExpanded",
-    "currentChatSession"
-  ];
+  var PERSISTED_FIELDS = ["visible", "minimized", "scrollPosition", "query", "isAdditionalResourcesExpanded"];
   var retrieveStoredResourceCenterState = () => {
     const obj = {};
     const storage = new CustomStorageStore();
@@ -18905,7 +19015,9 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         priority: t10.number,
         dir: t10.union([t10.literal("ltr"), t10.literal("rtl")]),
         stepCounterFormat: t10.union([t10.literal("numeric"), t10.literal("verbose")]),
-        tags: t10.array(TagV)
+        tags: t10.array(TagV),
+        version: t10.number,
+        latestVersion: t10.number
       })
     ],
     "NudgeBase"
@@ -19478,10 +19590,17 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     });
     _.messageBus.subscribe("start_debug", (message) => {
       const { experience } = message.event.data;
-      startDebugSession(_, experience.nudge, {
+      if (getPendingPreviewVariantId(_) != null) {
+        return;
+      }
+      savePreviewSession({
+        variantId: experience.nudge.variantId,
         toStepIndex: 0,
         locale: experience.locale
       });
+      if (_.endUserStore.initializedSuccessfully) {
+        restorePreviewSession(_);
+      }
     });
     _.messageBus.subscribe("start_recorder", async (message) => {
       shutdownNudges(_);
@@ -19650,48 +19769,6 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     }
   };
 
-  // ../shared/src/internal/util/SessionStorage.ts
-  var PREFIX3 = "amplitude.engagement";
-  var set2 = (label, value) => {
-    try {
-      sessionStorage.setItem(`${PREFIX3}.${label}`, value.toString());
-      return value;
-    } catch (err) {
-      return "";
-    }
-  };
-  var get4 = (label, defaultValue, prefixOverride) => {
-    let value;
-    const prefix = prefixOverride ?? PREFIX3;
-    try {
-      value = sessionStorage.getItem(`${prefix}.${label}`);
-    } catch (err) {
-      value = null;
-    }
-    if (value === null) {
-      return defaultValue;
-    } else {
-      if (value === "false") return false;
-      if (value === "true") return true;
-      if (+value) return +value;
-      return value;
-    }
-  };
-  var remove2 = (label) => {
-    try {
-      sessionStorage.removeItem(`${PREFIX3}.${label}`);
-      return;
-    } catch (err) {
-      return;
-    }
-  };
-  var SessionStorage = {
-    set: set2,
-    get: get4,
-    remove: remove2
-  };
-  var SessionStorage_default = SessionStorage;
-
   // ../shared/src/products/nudges/store/nudgeMachine.ts
   var NudgeMachine = (globalStore, nudge) => setup({
     types: {},
@@ -19719,7 +19796,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       },
       passesClicked: ({ context }) => passesClickedElement(globalStore, context.nudge, context.triggerEvent),
       passesCustomThrottles: ({ context }) => shouldBypassCustomThrottles(globalStore, context.nudge) || context.triggerEvent?.overrides?.customThrottles || passesCustomThrottles(globalStore, context.nudge),
-      passesLocalization: ({ context }) => context.triggerEvent?.overrides?.localization || passesLocalization(globalStore, context.nudge, getCurrentLocale(globalStore)),
+      passesLocalization: ({ context }) => context.triggerEvent?.overrides?.localization || passesLocalization(globalStore, context.nudge, getSDK()?.[_configuration].locale),
       passesExperimentVariant: ({ context }) => context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode || nudgePassesDecide(context.nudge, globalStore.decide),
       // step specific
       remainingSteps: ({ context }) => hasRemainingSteps(context.nudge)(context),
@@ -19735,6 +19812,10 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       isDismissal: (_, params) => params.isDismissAction
     },
     actions: {
+      setPinGraceUntil: assign({
+        pinGraceUntil: (_, params) => params.until,
+        pinGraceStepIndex: (_, params) => params.stepIndex
+      }),
       setTriggerEvent: assign({
         triggerEvent: (_, params) => params.triggerEvent
       }),
@@ -19764,11 +19845,15 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       },
       incrementStep: assign({
         stepIndex: ({ context }) => context.stepIndex + 1,
-        stepIndexStack: ({ context }) => [context.stepIndex, ...context.stepIndexStack]
+        stepIndexStack: ({ context }) => [context.stepIndex, ...context.stepIndexStack],
+        pinGraceUntil: () => void 0,
+        pinGraceStepIndex: () => void 0
       }),
       decrementStep: assign({
         stepIndex: ({ context }) => usesNavigationStack(context.nudge) ? context.stepIndexStack[0] : context.stepIndex - 1,
-        stepIndexStack: ({ context }) => usesNavigationStack(context.nudge) ? context.stepIndexStack.slice(1) : context.stepIndexStack
+        stepIndexStack: ({ context }) => usesNavigationStack(context.nudge) ? context.stepIndexStack.slice(1) : context.stepIndexStack,
+        pinGraceUntil: () => void 0,
+        pinGraceStepIndex: () => void 0
       }),
       closeStep: ({ context }) => {
         globalStore.services.closeStep(globalStore, context.nudge, context.stepIndex);
@@ -19965,7 +20050,9 @@ when parsing ${JSON.stringify(input, null, 2)}`;
             return params.step;
           }
           return context.triggerEvent?.overrides?.stepIndex ?? context.stepIndex;
-        }
+        },
+        pinGraceUntil: () => void 0,
+        pinGraceStepIndex: () => void 0
       }),
       setSurveyResponses: assign({
         surveyResponses: ({ context }, params) => {
@@ -20617,10 +20704,23 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
         hasReportedStepViewed: false,
         triggerEvent: null,
         triggerMatch: null,
-        prevPassedConditions: false
+        prevPassedConditions: false,
+        pinGraceUntil: void 0,
+        pinGraceStepIndex: void 0
       };
     },
     on: {
+      PIN_GRACE: {
+        actions: [
+          {
+            type: "setPinGraceUntil",
+            params: ({ event }) => ({
+              until: event.until,
+              stepIndex: event.stepIndex
+            })
+          }
+        ]
+      },
       RESET_STATE: {
         description: "This event is dispatched when calling the sdk method `resetNudge(id: INudgeType['id'], stepIndex?: number)`.",
         target: ".Idle",
@@ -20733,6 +20833,9 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
         },
         triggerEvent: ({ context }) => context.triggerEventQueue[0]
       }),
+      clearTriggerQueue: assign({
+        triggerEventQueue: () => []
+      }),
       showDebugToolbar: () => {
         setDebugToolBarVisibility(globalStore, true);
       },
@@ -20807,10 +20910,11 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
       }
     },
     guards: {
-      passesUser: () => !globalStore.isEditorPreview
+      passesUser: () => !globalStore.isEditorPreview,
+      hasDecideResults: () => !!globalStore.decide
     }
   }).createMachine({
-    /** @xstate-layout N4IgpgJg5mDOIC5QDkCu04FkCGA7bMATgMQDKAKgPIAKA+gCICiAQgKoDiA2gAwC6ioAA4B7WAEsALmOG4BIAB6IArAHYANCACeiACxKAjADoAnKYBMSgMzcdl-feMBfRxrQZYOfETLkAggCVyBhYOHn4kEBFxKRk5RQRVDW0EnQAOQz0zSwA2M25clR1uJxcQNxgPPAIwEgAqMLkoyWlZCPjjSxVDVMs8-TMVYx19bKGkxH1uJTMMlR7jAxVufpLXdArPasJDXwB3bGbcKAACVlga49IJYUIwYnJ-AEl2dkZ-BoimmNbQeNT1LSIFS5QwqfSDHojMymbKpZxrdybIg7faHE5nC5XG53RjIei0VikN60CiUfyMWgAGUoviY9A+QlEzVibV0lkshm4XO4FiUo0GSiU4wQqWMRlGmSsS2ywPhZXWWCqyIAYjd9oQIGIjsdyIQxFAiLBiABhSmMXzIVh0UiYAJBS30V6kBmRJnfOITMxFEypVJmX3caw6MEA5I6GWGdkWexpVL6BZTOXlRVeGqGVWEdWa7W6-WG4jk5Xk0gACVoRcomFoxsoyGVzxdXxaHoQ-R0xm6qRlZgGOXBOWFnW43UGnQ6llS3FSVmySYVlVT2wzWa1J1zBpqRsLxbLpEemFYlN85EY+Idr0bbubrNbWWHxl9-pUdh78bMwoGOgyZlywf0-2MFQ+VnUpkwXLZ0zVbANVXHU9Q3QgjVxE9-Fock8WJakaEvaJr1+T0lA7MVlhUUjsn-dtsmFcEukAux9CUQM5myQiVDnRElTTZdoOzNd4PzRgAA1HiCdCmFQrDqBw5kfgUT1YU5UVp0IyZgzGQERSMAxTD9X1SL5HR2I2TilygmCc34zdDEpMRYAkMBcFXe4nheN5pPdG9jGWTkGOyHQf2yTpLB0HRhS7LpuBUMxJkDGx9GGNjQPnJEuLM3i4LzKz1yIJz3LwuTW1hYdwynPzyPbfRhVGGZ41q8NCmhQMjJTCDuPMvjMsQwxjQACzAABjABrWCMRIPKWXwwrA0MQL-WCvIemisK5gyYZRX-VJ-I6ECEWMxdIMzHjYOyqzeoG4btVG4hOH0cJGVwiaCqGdJBlhOYeXbYNQo0v0jEi6KQv6INLBKUpcGECA4DkMCUsIRor0e9phQAWiUH1uQxzHDKSjj9r2A4pEu85CEua5bnhh7ZPieLskMHsfzBYw-M2wV3w0sU0fBex-0A8iFjMZrwJVNLjssxCKZklsZQ7fJozjPyJ0GKqbBmsV-hYtJ9E6JRBdhg6VwszrYGs2z7Mco4JY8yaooi3IDHl2wALCvkZsYn8Obsaw4RxvbWpFw2EONk69Qtz4EapiZ9MMJRwz9Cwp22sKQdBICfy7KZVCA3WTP1o6A8Nbq+qGkbict-Lqe5mbeknWLpdsML7FWt9+3-YpnGcIA */
+    /** @xstate-layout N4IgpgJg5mDOIC5QDkCu04FkCGA7bMATgMQASAgsgCIAyAogPoDKFASozQJLIDSA2gAYAuolAAHAPawAlgBdpE3KJAAPRAEYALAGYAnADpdAJiMB2ABwDdAVms6rAGhABPRAFpNpw0YHWBmgDZPU3Vza10AXwinNAxYHHwiYiYAFQB5AAUGKjoAIQBVAHFBESQQSRl5RWU1BG0An31Nc3NjAV8BLW1NJ1cEIIF9cwDTU21hzSNzLqiY9Bh4vAIwEnYAMXYWBg20zAYAYTTkNc5i4WUKuQUlMtr1XW1tQ1aja2mLIy0jXvdPbw7AsFQuFZiBYgsEssSKlyKwUtk8kUShcpFdqrdEPVdF51KYjHpugEBKZrAEfghTAEng9TMSprpzKZPNZQeCsEskix8ikqGkAOrIZFlS5VG6gO54gL6WwCfGaN547TkjxeNp+QGjYGRaJg+bsxIrYgAKiF4lRopqGh8UvUb3aAipdi0pmVgSaPms6ntjPlpICrL1iwNhH05AA7tgrrgoAACfKwFYxpiyCSEMDEFKsU6FOisU3lc3XS0Uh36V5ad7E0KvcnaIwGRkCR7WKYhfFGANxSFEUMRqOx+OJ5Op9N0agMfJMXPMdLsBg0NLkHJUfMiosYhDqLfU2zqAIBOyadT4skuRCU6z6PHmemafyaYzaTsQjkrfQ0CTYCCQOMJwhJlM02IfZ6EofIsiYTBYXhZB8ioHMmFXQt0XFDQmSMaVmjrR5jybJUz03EkpRCSxWgCe5rG6cxn31KF30-b8IF-IdANHZAUmndhqGnBdMiQyp11QhAjB0BtbGGXROjvIJyVxUkr1CAQyIoqiaKDOiPy-H9B3-YcgLoAANTh4S4nJWHnNI+POYVkLFVREE+XxpX3MIiWMYZ8L6OTiMU5SbFUnU2XUntNMY5jdNY4gcn2TgcgYdgAEV8joVI6BXayzQElD7OEowRmlWlaUk+U8JdAj6kGOw-F0EYlLCTRNDU7s31C7S-wAkde0jeRoxjKgwAAY2kb8oroGK4oXJc0v4tE7NqExcSvFsj3lBp1E889OmlFomUoukm1MJrXxDVqmJ0jq0y6-s+sG4b02i2LGFzVg0jzDKCyyuaHP3DDmneAJdBsGwSXJQJzGlExdAah1xkmHQjuDeitLO9q9LAK6etjfqhpGzNs1zGaLQ3V4STLLFwm6bRbXlWtbH0bRaTrCxRjyyYEY0hi2pYzrw266Reuxu7iBUWBZGwWR0ewAAzCXCAACm0e0BAASmIILmpOzmUe5y7eeuwXv0JwScpE2lpUeUxjA9SxsXJIJNCGBoTBJMYH39QLAw1pGwvOtH9BSQhpCgIgYw-CQxGIdZNlIZhOEwfIaHIDiqAYWD4LoI3stqOs3n0XxQhaKYGcLu2AnBu8odeNzj2GdmQq18KLvRgOg5DsOxHfaRRbAXB+agDMs0KHM3tKTLZuLSHBjvMYtzLkT7jKrz-EGKGoZ9S2Rk+OuWob33WP9wPg8TduD9blY++ITOvrqHwvCZeptEo6ZOm+Ajj1Jsw-tbPLHm3zXkcbn7FuR9-wn32AAC0GgAaz7uFS+701xZwcm2aU61zANVeA1LQskMHSgZA8WU0kmx-29lzCKnVgFtwkOHfQEDoGwJ0pfdQo8Prj2JiELwvgphBCZmXPcsliQGAPK8T060txHmoh7Lsx1SHa3IZdOhA0YEC1uiNK+xY9yA3pgSciDpKLjHJFDB2jNhhMhqvuOsJDTqAP3oo5RWNVHpj4MwlEn0NF4nUFeB88pKRfDrKePofgvAmCJCSN4NgRKNVBLgCQ354BlHVsdVxbChIHnBuWZouIqw3msIYqUjZ6hUjGADJS7s5jSMRnrTGNiRzJKJkJQGXhmhBC9Iye+DJyR+EGFocIpJbSSRvFE8pL5EbWL3rUmybiNy2lLPuJk8pJJ5UGbJdB9NGa2B8K8TotcpEjI5gA8Zus+zVINmAOpxt5rHnyabB0FEbDqFBlSMseVl6USJJ4dQVjd6o33qcmMaxIwABtIDnKQcJGqTSYboPCBYmsBFAhPBCa8iqngOy7NovXA5PyKGHyoeHUF18fBaM+BTEYVyGbkhvODW0JNdD3G6A1IZuoKn7J9tiy6lDj7UI7jQLuEte7RgJcWRWpYLAHiqn4Y8oQBGhH0MIokoiy50skcMjFO8sU62brirlNDOWB0FZMlJOURXEWGLYX0L9pVvwZp49BLRGR+nQmi1VwV1Vss1afEBoduW0MgUohhf4hXE2dGWfp9Q2xFNkgzS8VhWhKU8HDboXyNXyPRnY2Bpyg1CVtHYOVIwGrhFlHPHob9BF5y3BRHNVMRJRCiEAA */
     id: NUDGES_MANAGER_ID,
     context: {
       nudgeMachines: /* @__PURE__ */ new Map(),
@@ -20826,6 +20930,7 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
     },
     states: {
       "Awaiting User Store": {
+        description: "Initial state while the end user store (EUS) is loading. Trigger events are queued during this period so they can be replayed once the store is ready. The queue is cleared after 30s to prevent unbounded queue growth.",
         on: {
           TRIGGER: {
             actions: [{ type: "enqueueTrigger", params: ({ event }) => ({ triggerEvent: event }) }],
@@ -20833,115 +20938,167 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
             description: "Only triggers that match any of the spawned nudge actors' triggers will be enqueued."
           },
           END_USER_STORE_LOADED: {
-            target: "Forwarding Triggers",
+            target: "Loaded User Store",
             actions: [{ type: "spawnNudgeMachines" }]
           }
         }
       },
-      "Forwarding Triggers": {
+      "Loaded User Store": {
+        description: "Main operational state after the EUS has loaded. Routes through a decide check before entering the trigger loop. Can re-enter the decide flow when new decide requests arrive.",
         on: {
           CLEANUP_SMART_NUDGES: {
             target: ".",
             actions: [{ type: "updateSmartNudges", params: ({ event }) => ({ nudge: event.nudge }) }]
-          },
-          REFRESH_SIMULATED_NUDGE: {
-            actions: [{ type: "refreshSimulatedNudge", params: ({ event }) => ({ nudge: event.nudge }) }]
           },
           ENTER_RENDER_LOOP: {
             actions: [{ type: "setActiveNudge", params: ({ event }) => ({ nudge: event.nudge }) }]
           },
           EXIT_RENDER_LOOP: {
             actions: [{ type: "clearActiveNudge" }]
-          }
+          },
+          DECIDE_REQUESTED: ".Awaiting Decide"
         },
         states: {
-          Listening: {
+          "Awaiting Decide": {
+            description: "Waiting for the decide API response. Triggers are queued during this period (same as Awaiting User Store). The queue is cleared after 30s as a safety valve.",
             on: {
-              TRIGGER: {
-                target: "Checking User",
-                actions: [
-                  { type: "setTriggerEvent", params: ({ event }) => ({ triggerEvent: event }) },
-                  {
-                    type: "setDebuggingNudgeId",
-                    params: ({ event }) => ({ eventType: event.type, nudgeId: event.nudgeId })
-                  }
-                ]
-              }
-            },
-            entry: enqueueActions(({ context, enqueue }) => {
-              const { triggerEventQueue } = context;
-              const triggerEvent = triggerEventQueue.shift();
-              if (triggerEvent) {
-                enqueue.raise(triggerEvent);
-              }
-            })
-          },
-          Triggering: {
-            entry: enqueueActions(({ context, enqueue }) => {
-              const { triggerEvent, debugMode, nudgeMachines } = context;
-              if (debugMode.currentNudge && triggerEvent) {
-                const debugEvent = {
-                  ...triggerEvent,
-                  overrides: {
-                    ...triggerEvent?.overrides,
-                    simulateMode: true
-                  }
-                };
-                for (const machine of nudgeMachines.values()) {
-                  enqueue.sendTo(machine, debugEvent);
-                }
-              } else if (triggerEvent) {
-                const sortedMachines = Array.from(nudgeMachines.values()).sort((a, b) => {
-                  const priorityA = a.getSnapshot()?.context.nudge.priority ?? 2 /* Medium */;
-                  const priorityB = b.getSnapshot()?.context.nudge.priority ?? 2 /* Medium */;
-                  if (priorityA === priorityB) {
-                    const userStoreNudgeDataA = getNudgeDataFromUserStore(
-                      globalStore,
-                      a.getSnapshot()?.context.nudge?.variantId
-                    );
-                    const lastSeenA = userStoreNudgeDataA?.lastSeenTs;
-                    const userStoreNudgeDataB = getNudgeDataFromUserStore(
-                      globalStore,
-                      b.getSnapshot()?.context.nudge?.variantId
-                    );
-                    const lastSeenB = userStoreNudgeDataB?.lastSeenTs;
-                    if (lastSeenA && lastSeenB) {
-                      return lastSeenB - lastSeenA;
-                    }
-                  }
-                  return priorityB - priorityA;
-                });
-                for (const machine of sortedMachines) {
-                  if (triggerEvent.overrides?.closeBlockingNudges && triggerEvent.nudgeId) {
-                    const nudgeToTrigger = getNudgeById(globalStore, triggerEvent.nudgeId);
-                    const nudge = machine.getSnapshot().context.nudge;
-                    if (nudgeToTrigger && isBlocked(nudgeToTrigger, [nudge])) {
-                      enqueue.sendTo(machine, { type: "CLOSE" });
-                    }
-                  }
-                }
-                for (const machine of sortedMachines) {
-                  enqueue.sendTo(machine, triggerEvent);
-                }
-              }
-            }),
-            always: "Listening"
-          },
-          "Checking User": {
-            always: [
-              {
-                target: "Triggering",
-                guard: "passesUser",
+              DECIDE_LOADED: "Trigger Loop",
+              DECIDE_ERROR: {
+                target: "Decide Failed",
+                actions: ["clearTriggerQueue", "unsetTriggerEvent"],
                 reenter: true
               },
-              "Listening"
-            ],
-            description: `By default, we will only forward triggers for non-admins. This prevents nudges from popping up while using the application while logged into the editor.
+              TRIGGER: {
+                target: "Awaiting Decide",
+                actions: [{ type: "enqueueTrigger", params: ({ event }) => ({ triggerEvent: event }) }]
+              }
+            },
+            after: {
+              "30000": {
+                target: "Awaiting Decide",
+                actions: "clearTriggerQueue",
+                description: "Safety valve: clears queued triggers after 30s to prevent stale triggers from firing if the decide API takes too long."
+              }
+            }
+          },
+          "Decide Failed": {
+            description: "Terminal state when the decide API fails. No triggers will be processed. A new DECIDE_REQUESTED event from the parent state will re-enter the decide flow."
+          },
+          "Trigger Loop": {
+            description: "Core trigger processing loop. Drains the trigger queue on entry to Listening, then forwards each trigger to nudge machines after passing the user check. In debug mode, triggers are sent with simulate overrides.",
+            initial: "Listening",
+            states: {
+              Listening: {
+                description: "Idle state that drains one queued trigger on entry via raise(). This creates a self-sustaining loop: enter Listening \u2192 drain queue \u2192 raise trigger \u2192 Checking User \u2192 Triggering \u2192 back to Listening.",
+                on: {
+                  TRIGGER: {
+                    target: "Checking User",
+                    actions: [
+                      { type: "setTriggerEvent", params: ({ event }) => ({ triggerEvent: event }) },
+                      {
+                        type: "setDebuggingNudgeId",
+                        params: ({ event }) => ({ eventType: event.type, nudgeId: event.nudgeId })
+                      }
+                    ]
+                  }
+                },
+                entry: enqueueActions(({ context, enqueue }) => {
+                  const { triggerEventQueue } = context;
+                  const triggerEvent = triggerEventQueue.shift();
+                  if (triggerEvent) {
+                    enqueue.raise(triggerEvent);
+                  }
+                })
+              },
+              Triggering: {
+                description: "Forwards the current trigger to all nudge machines. In debug mode, all machines receive the trigger with simulate overrides. In normal mode, machines are sorted by priority (then by last seen timestamp) and blocking nudges are closed if the trigger requests it.",
+                entry: enqueueActions(({ context, enqueue }) => {
+                  const { triggerEvent, debugMode, nudgeMachines } = context;
+                  if (debugMode.currentNudge && triggerEvent) {
+                    const debugEvent = {
+                      ...triggerEvent,
+                      overrides: {
+                        ...triggerEvent?.overrides,
+                        simulateMode: true
+                      }
+                    };
+                    for (const machine of nudgeMachines.values()) {
+                      enqueue.sendTo(machine, debugEvent);
+                    }
+                  } else if (triggerEvent) {
+                    const sortedMachines = Array.from(nudgeMachines.values()).sort((a, b) => {
+                      const priorityA = a.getSnapshot()?.context.nudge.priority ?? 2 /* Medium */;
+                      const priorityB = b.getSnapshot()?.context.nudge.priority ?? 2 /* Medium */;
+                      if (priorityA === priorityB) {
+                        const userStoreNudgeDataA = getNudgeDataFromUserStore(
+                          globalStore,
+                          a.getSnapshot()?.context.nudge?.variantId
+                        );
+                        const lastSeenA = userStoreNudgeDataA?.lastSeenTs;
+                        const userStoreNudgeDataB = getNudgeDataFromUserStore(
+                          globalStore,
+                          b.getSnapshot()?.context.nudge?.variantId
+                        );
+                        const lastSeenB = userStoreNudgeDataB?.lastSeenTs;
+                        if (lastSeenA && lastSeenB) {
+                          return lastSeenB - lastSeenA;
+                        }
+                      }
+                      return priorityB - priorityA;
+                    });
+                    for (const machine of sortedMachines) {
+                      if (triggerEvent.overrides?.closeBlockingNudges && triggerEvent.nudgeId) {
+                        const nudgeToTrigger = getNudgeById(globalStore, triggerEvent.nudgeId);
+                        const nudge = machine.getSnapshot().context.nudge;
+                        if (nudgeToTrigger && isBlocked(nudgeToTrigger, [nudge])) {
+                          enqueue.sendTo(machine, { type: "CLOSE" });
+                        }
+                      }
+                    }
+                    for (const machine of sortedMachines) {
+                      enqueue.sendTo(machine, triggerEvent);
+                    }
+                  }
+                }),
+                always: "Listening"
+              },
+              "Checking User": {
+                always: [
+                  {
+                    target: "Triggering",
+                    guard: "passesUser",
+                    reenter: true
+                  },
+                  "Listening"
+                ],
+                description: `By default, we will only forward triggers for non-admins. This prevents nudges from popping up while using the application while logged into the editor.
 
 This can be bypassed by setting the debug or admin overrride on a trigger.`
+              }
+            },
+            on: {
+              REFRESH_SIMULATED_NUDGE: {
+                actions: [{ type: "refreshSimulatedNudge", params: ({ event }) => ({ nudge: event.nudge }) }],
+                target: "Trigger Loop"
+              }
+            }
+          },
+          "Checking Decide": {
+            description: "Routing state on entry to Loaded User Store. If decide results already exist (e.g. from a prior fetch), skips directly to the Trigger Loop. Otherwise, waits for the decide API.",
+            always: [
+              {
+                target: "Trigger Loop",
+                guard: "hasDecideResults",
+                reenter: true
+              },
+              {
+                target: "Awaiting Decide",
+                reenter: true
+              }
+            ]
           }
         },
-        initial: "Listening"
+        initial: "Checking Decide"
       }
     },
     initial: "Awaiting User Store",
@@ -20953,7 +21110,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         actions: [{ type: "handleShareLink", params: ({ event }) => ({ flagKey: event.flagKey }) }]
       },
       STOP_DEBUG: {
-        target: ".Forwarding Triggers",
+        target: ".Loaded User Store",
         actions: enqueueActions(({ context, enqueue }) => {
           const nudgeActors = context.nudgeMachines.values();
           for (const nudgeMachine of nudgeActors) {
@@ -20979,6 +21136,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
                 enqueue.sendTo(machine, { type: "REFRESH_NUDGE", nudge });
               }
             }
+            return;
           }
           for (const nudgeMachine of context.nudgeMachines.values()) {
             nudgeMachine.send({ type: "STOP" });
@@ -21002,8 +21160,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         })
       },
       START_DEBUG: {
-        target: ".Forwarding Triggers",
+        target: ".Loaded User Store.Trigger Loop",
         actions: [
+          { type: "clearTriggerQueue" },
           { type: "setDebuggingNudge", params: ({ event }) => ({ nudge: event.nudge }) },
           { type: "setOriginalDebuggingNudge", params: ({ event }) => ({ nudge: event.nudge }) },
           { type: "stopNudgeMachines" },
@@ -21024,66 +21183,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
   });
 
-  // ../shared/src/store/preview-session-storage-manager.ts
-  var PREVIEW_SESSION_KEY = "previewSession";
-  var savePreviewSession = (state) => {
-    try {
-      SessionStorage_default.set(PREVIEW_SESSION_KEY, JSON.stringify(state));
-    } catch (e2) {
-      logger.error("Error saving preview session state:", e2);
-    }
-  };
-  var getStoredPreviewSession = () => {
-    try {
-      const stored = SessionStorage_default.get(PREVIEW_SESSION_KEY, "");
-      if (stored && typeof stored === "string" && stored !== "") {
-        return JSON.parse(stored);
-      }
-    } catch (e2) {
-      logger.error("Error parsing stored preview session state:", e2);
-    }
-    return null;
-  };
-  var clearPreviewSession = () => {
-    try {
-      SessionStorage_default.remove(PREVIEW_SESSION_KEY);
-    } catch (e2) {
-      logger.error("Error clearing preview session state:", e2);
-    }
-  };
-  var getUrlDebugVariantId = () => {
-    try {
-      if (typeof window !== "undefined" && window.location) {
-        const search = window.location.search;
-        const match = search.match(/[?&]gs-debug-id=(\d+)/);
-        if (match && match[1]) {
-          const variantId = Number(match[1]);
-          if (!isNaN(variantId)) {
-            return variantId;
-          }
-        }
-      }
-    } catch (e2) {
-    }
-    return null;
-  };
-  var getPendingPreviewVariantId = () => {
-    const storedSession = getStoredPreviewSession();
-    if (storedSession) {
-      if (storedSession.inProgress) {
-        return null;
-      }
-      return storedSession.variantId;
-    }
-    return getUrlDebugVariantId();
-  };
-
   // ../shared/src/products/nudges/store/actions.ts
   var shouldDebugNudges = !!LocalStorage_default.get("debug:nudges", false);
   var sendConstantTriggers = (_) => {
     if (getSDK()?.[_configuration]?.options?.headless) return;
     restorePreviewSession(_);
-    if (getPendingPreviewVariantId() !== null) {
+    if (getPendingPreviewVariantId(_) !== null) {
       logger.debug("Skipping constant triggers due to pending preview session");
       return;
     }
@@ -21150,7 +21255,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     if (simulatedNudge) {
       sendDirectedTrigger(_, simulatedNudge, triggerEventPayload);
     } else {
-      if (getPendingPreviewVariantId() !== null) {
+      if (getPendingPreviewVariantId(_) !== null) {
         logger.debug("Skipping indirect trigger due to pending preview session");
         return;
       }
@@ -21161,7 +21266,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
   };
   var forceTriggerSingleNudge = (_, nudge, triggerEventPayload) => {
-    const pendingPreviewVariantId = getPendingPreviewVariantId();
+    const pendingPreviewVariantId = getPendingPreviewVariantId(_);
     if (pendingPreviewVariantId !== null && pendingPreviewVariantId !== nudge.variantId) {
       logger.debug("Skipping force trigger - nudge does not match pending preview session");
       return;
@@ -21198,7 +21303,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     });
   };
   var sendDirectedTrigger = (_, nudge, triggerEventPayload) => {
-    const pendingPreviewVariantId = getPendingPreviewVariantId();
+    const pendingPreviewVariantId = getPendingPreviewVariantId(_);
     if (pendingPreviewVariantId !== null && pendingPreviewVariantId !== nudge.variantId) {
       logger.debug("Skipping directed trigger - nudge does not match pending preview session");
       return;
@@ -21218,17 +21323,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   };
   var startDebugSession = async (_, nudge, options = { refreshDecide: true }) => {
     const configuration = getSDK()?.[_configuration];
-    if (options.locale) {
-      const wasPreviewLocaleSet = !!_.nudgeDebugToolBar.previewLocale;
-      _.nudgeDebugToolBar.previewLocale = options.locale;
-      if (!wasPreviewLocaleSet) {
-        _.nudgeDebugToolBar.bypassUserLocale = true;
-      }
-    } else {
-      _.nudgeDebugToolBar.previewLocale = void 0;
-      _.nudgeDebugToolBar.bypassUserLocale = false;
-    }
-    const localeForConfig = _.nudgeDebugToolBar.bypassUserLocale && _.nudgeDebugToolBar.previewLocale ? _.nudgeDebugToolBar.previewLocale : _.nudgeDebugToolBar.originalInitLocale;
+    const localeForConfig = options.locale ?? _.nudgeDebugToolBar.originalInitLocale;
     const previewConfig = await getPreviewConfig(configuration?.apiKey, _.isEditorPreview, localeForConfig);
     if (previewConfig?.nudges) {
       await getSDK()?._reloadNudges(previewConfig);
@@ -21245,10 +21340,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     savePreviewSession({
       variantId: adminNudge.variantId,
       // toStepIndex intentionally omitted - see note above
-      locale: options.locale,
-      bypassUserLocale: _.nudgeDebugToolBar.bypassUserLocale,
-      bypassCustomThrottles: _.nudgeDebugToolBar.bypassCustomThrottles,
-      inProgress: true
+      locale: localeForConfig,
+      bypassCustomThrottles: _.nudgeDebugToolBar.bypassCustomThrottles
     });
     const overrides = options.toStepIndex !== void 0 ? { stepIndex: options.toStepIndex } : {};
     setupTimedTriggers(_, [adminNudge]);
@@ -21272,17 +21365,18 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
     });
   };
-  var restartDebugSession = async (_, options = { resetToOriginalDebugNudge: true }) => {
+  var restartDebugSession = async (_, options = {
+    resetToOriginalDebugNudge: true
+  }) => {
     const debugNudge = getDebuggedNudge(_, { getOriginal: !!options.resetToOriginalDebugNudge });
     if (debugNudge) {
-      const previewLocale = _.nudgeDebugToolBar.previewLocale;
       await stopDebugSession(_, { refreshDecide: false });
       resetNudge(_, debugNudge.variantId);
       setTimeout(() => {
         startDebugSession(_, debugNudge, {
           toStepIndex: options.toStepIndex,
           refreshDecide: false,
-          locale: previewLocale
+          locale: options.locale ?? getSDK()?.[_configuration].locale
         });
       }, 50);
     }
@@ -21295,6 +21389,15 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
       clearPreviewSession();
       _.nudgesManager?.send({ type: "STOP_DEBUG" });
+      if (options.restoreTriggers) {
+        const sdk = getSDK();
+        const originalLocale = _.nudgeDebugToolBar.originalInitLocale;
+        if (originalLocale && sdk[_configuration].locale !== originalLocale) {
+          sdk[_configuration].locale = originalLocale;
+          await sdk._reloadNudges();
+        }
+        sendConstantTriggers(_);
+      }
     }
   };
   var restorePreviewSession = async (_) => {
@@ -21305,9 +21408,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     const storedSession = getStoredPreviewSession();
     if (!storedSession) {
       return;
-    }
-    if (storedSession.bypassUserLocale !== void 0) {
-      _.nudgeDebugToolBar.bypassUserLocale = storedSession.bypassUserLocale;
     }
     if (storedSession.bypassCustomThrottles !== void 0) {
       _.nudgeDebugToolBar.bypassCustomThrottles = storedSession.bypassCustomThrottles;
@@ -23173,7 +23273,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   };
 
   // ../shared/src/sdk/sdk.ts
-  var import_debounce = __toESM(require_debounce());
+  var import_throttle = __toESM(require_throttle());
 
   // ../shared/src/products/resource-center/service-actions.ts
   var service_actions_exports2 = {};
@@ -23182,8 +23282,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     previewContentItem: () => previewContentItem,
     previewRecSet: () => previewRecSet,
     previewResourceCenter: () => previewResourceCenter,
-    setCurrentChatSession: () => setCurrentChatSession,
     setInitialPage: () => setInitialPage,
+    setResourceCenterFilter: () => setResourceCenterFilter,
     showResourceCenter: () => showResourceCenter
   });
 
@@ -23206,8 +23306,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var setInitialPage = (_, navigateTo) => {
     _.resourceCenter.initialPage = navigateTo;
   };
-  var setCurrentChatSession = (_, sessionId, messages, isReviewMode = false) => {
-    _.resourceCenter.currentChatSession = { sessionId, messages, isReviewMode };
+  var setResourceCenterFilter = (_, filter) => {
+    _.resourceCenter.filter = filter;
   };
 
   // ../shared/src/services/analytics/client.ts
@@ -23304,8 +23404,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     _initStarted = false;
     _isProxy = false;
     _fingerprint;
-    _debouncedDecide;
+    _throttledDecide;
     _autoRefreshTimer = null;
+    _isDisabled = false;
+    _lastUsedBootOptions;
     constructor(_, sdkConfig) {
       this._ = _;
       this.nudgeActions = bindActions(_, service_actions_exports);
@@ -23319,7 +23421,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       if (this._configuration.options.logger) {
         this._configuration.options.logger.enable(this._configuration.options.logLevel ?? 2);
       }
-      this._debouncedDecide = (0, import_debounce.default)(async () => {
+      this._throttledDecide = (0, import_throttle.default)(async () => {
         await this.decide();
         this.nudgeActions.sendConstantTriggers();
       }, 1e4);
@@ -23581,16 +23683,45 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         logger.error("API key must be set before calling decide");
         return;
       }
-      this._.decide = await decide_default.decide(this._configuration.apiKey, this._.user, this._.isEditorPreview);
-      return this._.decide;
+      try {
+        this._.nudgesManager?.send({ type: "DECIDE_REQUESTED" });
+        this._.decide = await decide_default.decide(this._configuration.apiKey, this._.user, this._.isEditorPreview);
+        this._.nudgesManager?.send({ type: "DECIDE_LOADED" });
+        return this._.decide;
+      } catch (e2) {
+        logger.error("Failed to fetch decide data", e2);
+        this._.nudgesManager?.send({ type: "DECIDE_ERROR" });
+      }
     }
-    shutdown() {
+    enable() {
+      if (!this._isDisabled) {
+        logger.warn("enable() called, but Engagement SDK is already enabled. This is a no-op.");
+        return;
+      }
+      if (!this._lastUsedBootOptions) {
+        logger.debug(
+          "enable() called before boot() was ever called; there are no boot options to use. Will not boot() right now."
+        );
+        return;
+      }
+      this._isDisabled = false;
+      this.boot(this._lastUsedBootOptions);
+    }
+    disable() {
+      this._isDisabled = true;
+      this.shutdownWithoutClearingBootOptions();
+    }
+    shutdownWithoutClearingBootOptions() {
       this._analytics.setBootStatus(false);
       this._clearAutoRefreshTimer();
       this._.integrations = [];
       this._.decide = void 0;
       this._.user = void 0;
       this._.endUserStore.reset();
+    }
+    shutdown() {
+      this.shutdownWithoutClearingBootOptions();
+      this._lastUsedBootOptions = void 0;
     }
     /**
      * Sets the auto-refresh interval. Can be called after boot to change or disable the refresh interval.
@@ -23645,6 +23776,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
      * snippet has been run on the page they are on.
      */
     async boot(options) {
+      if (this._isDisabled) {
+        logger.debug(
+          "boot() called while Engagement SDK is disabled; updating boot options but not booting until enable() is called"
+        );
+        this._lastUsedBootOptions = options;
+        return;
+      }
       if (this._.user) {
         logger.warn(
           "User already booted, ignoring additional boot call. Call shutdown first if you want to boot a different user."
@@ -23685,6 +23823,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         });
       }
       this._.user = user;
+      this._lastUsedBootOptions = options;
       if (options.integrations != void 0) {
         this._.integrations = [];
         options.integrations?.forEach((integration) => {
@@ -23891,7 +24030,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         return;
       }
       this._.user.user_properties = { ...this._.user.user_properties, ...properties };
-      this._debouncedDecide();
+      this._.nudgesManager?.send({ type: "DECIDE_REQUESTED" });
+      this._throttledDecide();
     }
     _shareConfig() {
       return {
@@ -23925,15 +24065,25 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         this.resourceCenterActions.previewContentItem(options.contentItemId);
       }
     }
+    /**
+     * Sets a filter to restrict Resource Center content by tags.
+     * Applies to Resource Center search and Autopilot recommendations.
+     */
+    setResourceCenterFilter(filter) {
+      this.resourceCenterActions.setResourceCenterFilter(filter);
+    }
     _startChat(sessionId, messages) {
-      if (sessionId && sessionId !== "behavior-settings" && messages && messages.length > 0) {
-        this.resourceCenterActions.setCurrentChatSession(sessionId, messages, true);
-      }
       this.resourceCenterActions.setInitialPage({ item: { page: "assistant", params: {} } });
       this.resourceCenterActions.showResourceCenter(true);
+      if (window.engagement?.assistant?._startChat) {
+        window.engagement.assistant._startChat(sessionId, messages);
+      }
     }
     _shareCurrentChatSession() {
-      return this._.resourceCenter.currentChatSession;
+      if (window.engagement?.assistant?._shareCurrentChatSession) {
+        return window.engagement.assistant._shareCurrentChatSession();
+      }
+      return { sessionId: null, messages: [], isReviewMode: false };
     }
     /**
      * Logs debug snapshots for guides and surveys in the system.
@@ -24117,12 +24267,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       },
       trys: [],
       ops: []
-    }, f, y2, t13, g;
-    return g = {
-      next: verb(0),
-      "throw": verb(1),
-      "return": verb(2)
-    }, typeof Symbol === "function" && (g[Symbol.iterator] = function() {
+    }, f, y2, t13, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() {
       return this;
     }), g;
     function verb(n) {
@@ -24392,7 +24538,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         if (e_1) throw e_1.error;
       }
     }
-    if (!selectable) {
+    if (selectable === void 0 || selectable === null) {
       return void 0;
     } else {
       return selectable;
@@ -24575,7 +24721,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       };
       EvaluationEngine2.prototype.matchCondition = function(target, condition) {
         var propValue = select(target, condition.selector);
-        if (!propValue) {
+        if (propValue === void 0 || propValue === null) {
           return this.matchNull(condition.op, condition.values);
         } else if (this.isSetOperator(condition.op)) {
           var propValueStringList = this.coerceStringArray(propValue);
@@ -24935,10 +25081,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       return EvaluationEngine2;
     }()
   );
-  var version = "3.7.5";
+  var version = "3.7.7";
   var VERSION = version;
-  var _hasatob = typeof atob === "function";
-  var _hasbtoa = typeof btoa === "function";
   var _hasBuffer = typeof Buffer === "function";
   var _TD = typeof TextDecoder === "function" ? new TextDecoder() : void 0;
   var _TE = typeof TextEncoder === "function" ? new TextEncoder() : void 0;
@@ -24964,7 +25108,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
     return pad ? asc.slice(0, pad - 3) + "===".substring(pad) : asc;
   };
-  var _btoa = _hasbtoa ? (bin) => btoa(bin) : _hasBuffer ? (bin) => Buffer.from(bin, "binary").toString("base64") : btoaPolyfill;
+  var _btoa = typeof btoa === "function" ? (bin) => btoa(bin) : _hasBuffer ? (bin) => Buffer.from(bin, "binary").toString("base64") : btoaPolyfill;
   var _fromUint8Array = _hasBuffer ? (u8a) => Buffer.from(u8a).toString("base64") : (u8a) => {
     const maxargs = 4096;
     let strs = [];
@@ -25012,7 +25156,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
     return bin;
   };
-  var _atob = _hasatob ? (asc) => atob(_tidyB64(asc)) : _hasBuffer ? (asc) => Buffer.from(asc, "base64").toString("binary") : atobPolyfill;
+  var _atob = typeof atob === "function" ? (asc) => atob(_tidyB64(asc)) : _hasBuffer ? (asc) => Buffer.from(asc, "base64").toString("binary") : atobPolyfill;
   var _toUint8Array = _hasBuffer ? (a) => _U8Afrom(Buffer.from(a, "base64")) : (a) => _U8Afrom(_atob(a).split("").map((c2) => c2.charCodeAt(0)));
   var toUint8Array = (a) => _toUint8Array(_unURI(a));
   var _decode = _hasBuffer ? (a) => Buffer.from(a, "base64").toString("utf8") : _TD ? (a) => _TD.decode(_toUint8Array(a)) : (a) => btou(_atob(a));
@@ -25137,6 +25281,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
                 if (options === null || options === void 0 ? void 0 : options.trackingOption) {
                   headers["X-Amp-Exp-Track"] = options.trackingOption;
                 }
+                if (options === null || options === void 0 ? void 0 : options.exposureTrackingOption) {
+                  headers["X-Amp-Exp-Exposure-Track"] = options.exposureTrackingOption;
+                }
                 url = new URL("".concat(this.serverUrl, "/sdk/v2/vardata?v=0"));
                 if (options === null || options === void 0 ? void 0 : options.evaluationMode) {
                   url.searchParams.append("eval_mode", options === null || options === void 0 ? void 0 : options.evaluationMode);
@@ -25183,8 +25330,11 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
                 if ((options === null || options === void 0 ? void 0 : options.libraryName) && (options === null || options === void 0 ? void 0 : options.libraryVersion)) {
                   headers["X-Amp-Exp-Library"] = "".concat(options.libraryName, "/").concat(options.libraryVersion);
                 }
+                if (options === null || options === void 0 ? void 0 : options.user) {
+                  headers["X-Amp-Exp-User"] = gBase64.encodeURL(JSON.stringify(options.user));
+                }
                 return [4, this.httpClient.request({
-                  requestUrl: "".concat(this.serverUrl, "/sdk/v2/flags"),
+                  requestUrl: "".concat(this.serverUrl, "/sdk/v2/flags") + ((options === null || options === void 0 ? void 0 : options.deliveryMethod) ? "?delivery_method=".concat(options.deliveryMethod) : ""),
                   method: "GET",
                   headers,
                   timeoutMillis: options === null || options === void 0 ? void 0 : options.timeoutMillis
@@ -25234,13 +25384,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   );
 
   // ../shared/src/store/MessageBus.ts
-  var import_debounce2 = __toESM(require_debounce());
+  var import_debounce = __toESM(require_debounce());
   var MessageBus = class {
     messageToSubscriberGroup;
     debounce;
-    constructor(debounce2 = import_debounce2.default) {
+    constructor(debounce = import_debounce.default) {
       this.messageToSubscriberGroup = /* @__PURE__ */ new Map();
-      this.debounce = debounce2;
+      this.debounce = debounce;
     }
     // Register a subscriber with optional ID (for unsubscribing) and optional debounce timeout (no debounce if not provided)
     subscribe(messageType, listener, listenerId = void 0, debounceTimeout = void 0) {
@@ -25362,6 +25512,16 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     services: NOOP_SERVICES,
     persistResourceCenter: true
   };
+  var SESSION_START_KEY = "sessionStart";
+  var getOrCreateSessionStart = () => {
+    const stored = SessionStorage_default.get(SESSION_START_KEY, 0);
+    if (stored && typeof stored === "number" && stored > 0) {
+      return stored;
+    }
+    const now = Date.now();
+    SessionStorage_default.set(SESSION_START_KEY, now);
+    return now;
+  };
   var emptyGlobalStore = (optionsPartial) => {
     const options = { ...DEFAULT_OPTIONS2, ...optionsPartial };
     const { isEditorPreview, platform, isAssistantPreview } = options;
@@ -25393,9 +25553,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         closeTabWhenToolbarClosed: false,
         bypassCustomThrottles: true,
         position: "bottom",
-        originalInitLocale: void 0,
-        bypassUserLocale: false,
-        previewLocale: void 0
+        originalInitLocale: void 0
       },
       nudgeRecorderToolBar: {
         visible: false
@@ -25404,7 +25562,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       editorPreviewDevice: "desktop",
       isEditorPreview,
       isAssistantPreview,
-      sessionStart: Date.now(),
+      sessionStart: getOrCreateSessionStart(),
       integrations: [],
       resourceCenter: {
         renderKey: 0,
@@ -25428,11 +25586,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         showQuickLinks: false,
         isAdditionalResourcesExpanded: true,
         shouldPersistOnReload: true,
-        currentChatSession: {
-          sessionId: null,
-          messages: [],
-          isReviewMode: false
-        }
+        filter: null
       }
     };
   };

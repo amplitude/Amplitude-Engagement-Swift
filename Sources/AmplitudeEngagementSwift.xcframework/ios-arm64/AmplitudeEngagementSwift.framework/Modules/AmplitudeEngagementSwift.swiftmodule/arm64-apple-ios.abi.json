@@ -141,6 +141,13 @@
       },
       {
         "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AmplitudeEngagementSwift"
+      },
+      {
+        "kind": "Import",
         "name": "SafariServices",
         "printedName": "SafariServices",
         "declKind": "Import",
@@ -4036,6 +4043,16 @@
         "name": "Foundation",
         "printedName": "Foundation",
         "declKind": "Import",
+        "moduleName": "AmplitudeEngagementSwift",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
         "moduleName": "AmplitudeEngagementSwift"
       },
       {
@@ -5301,8 +5318,8 @@
       },
       {
         "kind": "TypeDecl",
-        "name": "AmplitudeEngagementProtocol",
-        "printedName": "AmplitudeEngagementProtocol",
+        "name": "AmplitudeEngagement",
+        "printedName": "AmplitudeEngagement",
         "children": [
           {
             "kind": "Var",
@@ -5317,8 +5334,8 @@
               }
             ],
             "declKind": "Var",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP6configAA0aB6ConfigVvp",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP6configAA0aB6ConfigVvp",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P6configAA0aB6ConfigVvp",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P6configAA0aB6ConfigVvp",
             "moduleName": "AmplitudeEngagementSwift",
             "protocolReq": true,
             "declAttributes": [
@@ -5338,11 +5355,11 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP6configAA0aB6ConfigVvg",
-                "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP6configAA0aB6ConfigVvg",
+                "usr": "s:24AmplitudeEngagementSwift0aB0P6configAA0aB6ConfigVvg",
+                "mangledName": "$s24AmplitudeEngagementSwift0aB0P6configAA0aB6ConfigVvg",
                 "moduleName": "AmplitudeEngagementSwift",
-                "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-                "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
+                "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+                "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
                 "protocolReq": true,
                 "reqNewWitnessTableEntry": true,
                 "accessorKind": "get"
@@ -5362,11 +5379,116 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP9getPlugin0A4Core09UniversalF0_pyF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP9getPlugin0A4Core09UniversalF0_pyF",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P9getPlugin0A4Core09UniversalE0_pyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P9getPlugin0A4Core09UniversalE0_pyF",
             "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "handleUrl",
+            "printedName": "handleUrl(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P9handleUrlySb10Foundation3URLVF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P9handleUrlySb10Foundation3URLVF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "boot",
+            "printedName": "boot(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P4bootyySSF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P4bootyySSF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "boot",
+            "printedName": "boot(_:device_id:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P4boot_9device_idySS_SSSgtF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P4boot_9device_idySS_SSSgtF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
             "protocolReq": true,
             "declAttributes": [
               "RawDocComment"
@@ -5412,11 +5534,11 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP4boot_9device_id26autoRefreshIntervalSecondsySS_SSSgSitF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP4boot_9device_id26autoRefreshIntervalSecondsySS_SSSgSitF",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P4boot_9device_id26autoRefreshIntervalSecondsySS_SSSgSitF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P4boot_9device_id26autoRefreshIntervalSecondsySS_SSSgSitF",
             "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
             "protocolReq": true,
             "declAttributes": [
               "RawDocComment"
@@ -5442,12 +5564,15 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP4boot7optionsyAA0A11BootOptionsV_tF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP4boot7optionsyAA0A11BootOptionsV_tF",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P4boot7optionsyAA0A11BootOptionsV_tF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P4boot7optionsyAA0A11BootOptionsV_tF",
             "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
             "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
             "reqNewWitnessTableEntry": true,
             "funcSelfKind": "NonMutating"
           },
@@ -5463,12 +5588,117 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP8shutdownyyF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP8shutdownyyF",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P8shutdownyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P8shutdownyyF",
             "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
             "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "enable",
+            "printedName": "enable()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P6enableyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P6enableyyF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "disable",
+            "printedName": "disable()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P7disableyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P7disableyyF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "refresh",
+            "printedName": "refresh()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P7refreshyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P7refreshyyF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "setAutoRefreshInterval",
+            "printedName": "setAutoRefreshInterval(seconds:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P22setAutoRefreshInterval7secondsySi_tF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P22setAutoRefreshInterval7secondsySi_tF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
             "reqNewWitnessTableEntry": true,
             "funcSelfKind": "NonMutating"
           },
@@ -5490,11 +5720,107 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP12setThemeMode05themeG0yAA0fG0O_tF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP12setThemeMode05themeG0yAA0fG0O_tF",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P12setThemeMode05themeF0yAA0eF0O_tF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P12setThemeMode05themeF0yAA0eF0O_tF",
             "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "setRouter",
+            "printedName": "setRouter(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.String) -> ()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ]
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P9setRouteryyySScF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P9setRouteryyySScF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "unsetRouter",
+            "printedName": "unsetRouter()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P11unsetRouteryyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P11unsetRouteryyF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "reset",
+            "printedName": "reset(key:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P5reset3keyySS_tF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P5reset3keyySS_tF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
             "protocolReq": true,
             "declAttributes": [
               "RawDocComment"
@@ -5526,11 +5852,11 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP5reset3key9stepIndexySS_SitF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP5reset3key9stepIndexySS_SitF",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P5reset3key9stepIndexySS_SitF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P5reset3key9stepIndexySS_SitF",
             "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
             "protocolReq": true,
             "declAttributes": [
               "RawDocComment"
@@ -5559,12 +5885,45 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP4listSayAA13GuideOrSurveyVGyF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP4listSayAA13GuideOrSurveyVGyF",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P4listSayAA13GuideOrSurveyVGyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P4listSayAA13GuideOrSurveyVGyF",
             "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
             "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "show",
+            "printedName": "show(key:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P4show3keyySS_tF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P4show3keyySS_tF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
             "reqNewWitnessTableEntry": true,
             "funcSelfKind": "NonMutating"
           },
@@ -5592,33 +5951,15 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP4show3key9stepIndexySS_SitF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP4show3key9stepIndexySS_SitF",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P4show3key9stepIndexySS_SitF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P4show3key9stepIndexySS_SitF",
             "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
             "protocolReq": true,
-            "reqNewWitnessTableEntry": true,
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Function",
-            "name": "closeAll",
-            "printedName": "closeAll()",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Void",
-                "printedName": "()"
-              }
+            "declAttributes": [
+              "RawDocComment"
             ],
-            "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP8closeAllyyF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP8closeAllyyF",
-            "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "protocolReq": true,
             "reqNewWitnessTableEntry": true,
             "funcSelfKind": "NonMutating"
           },
@@ -5640,11 +5981,11 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP6screenyySSF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP6screenyySSF",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P6screenyySSF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P6screenyySSF",
             "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
             "protocolReq": true,
             "declAttributes": [
               "RawDocComment"
@@ -5654,28 +5995,25 @@
           },
           {
             "kind": "Function",
-            "name": "updateLanguage",
-            "printedName": "updateLanguage(_:)",
+            "name": "closeAll",
+            "printedName": "closeAll()",
             "children": [
               {
                 "kind": "TypeNominal",
                 "name": "Void",
                 "printedName": "()"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "String",
-                "printedName": "Swift.String",
-                "usr": "s:SS"
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP14updateLanguageyySSF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP14updateLanguageyySSF",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P8closeAllyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P8closeAllyyF",
             "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
             "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
             "reqNewWitnessTableEntry": true,
             "funcSelfKind": "NonMutating"
           },
@@ -5710,11 +6048,11 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP12forwardEventyySDySSypGF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP12forwardEventyySDySSypGF",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P12forwardEventyySDySSypGF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P12forwardEventyySDySSypGF",
             "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
             "protocolReq": true,
             "declAttributes": [
               "RawDocComment"
@@ -5757,50 +6095,11 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP11addCallbackyySS_yyctF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP11addCallbackyySS_yyctF",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P11addCallbackyySS_yyctF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P11addCallbackyySS_yyctF",
             "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "protocolReq": true,
-            "reqNewWitnessTableEntry": true,
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Function",
-            "name": "setRouter",
-            "printedName": "setRouter(_:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Void",
-                "printedName": "()"
-              },
-              {
-                "kind": "TypeFunc",
-                "name": "Function",
-                "printedName": "(Swift.String) -> ()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Void",
-                    "printedName": "()"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "String",
-                    "printedName": "Swift.String",
-                    "usr": "s:SS"
-                  }
-                ]
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP9setRouteryyySScF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP9setRouteryyySScF",
-            "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
             "protocolReq": true,
             "declAttributes": [
               "RawDocComment"
@@ -5810,8 +6109,38 @@
           },
           {
             "kind": "Function",
-            "name": "unsetRouter",
-            "printedName": "unsetRouter()",
+            "name": "updateLanguage",
+            "printedName": "updateLanguage(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P14updateLanguageyySSF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P14updateLanguageyySSF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "resetSmartInteractions",
+            "printedName": "resetSmartInteractions()",
             "children": [
               {
                 "kind": "TypeNominal",
@@ -5820,12 +6149,15 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP11unsetRouteryyF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP11unsetRouteryyF",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P22resetSmartInteractionsyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P22resetSmartInteractionsyyF",
             "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
             "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
             "reqNewWitnessTableEntry": true,
             "funcSelfKind": "NonMutating"
           },
@@ -5860,22 +6192,152 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP18_setUserPropertiesyySDySSypGF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP18_setUserPropertiesyySDySSypGF",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P18_setUserPropertiesyySDySSypGF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P18_setUserPropertiesyySDySSypGF",
             "moduleName": "AmplitudeEngagementSwift",
-            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
-            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagementProtocol>",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
             "protocolReq": true,
             "declAttributes": [
               "RawDocComment"
             ],
             "reqNewWitnessTableEntry": true,
             "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "boot",
+            "printedName": "boot(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0PAAE4bootyySSF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0PAAE4bootyySSF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "isFromExtension": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "boot",
+            "printedName": "boot(_:device_id:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0PAAE4boot_9device_idySS_SSSgtF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0PAAE4boot_9device_idySS_SSSgtF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "isFromExtension": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "reset",
+            "printedName": "reset(key:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0PAAE5reset3keyySS_tF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0PAAE5reset3keyySS_tF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "isFromExtension": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "show",
+            "printedName": "show(key:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB0PAAE4show3keyySS_tF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0PAAE4show3keyySS_tF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "genericSig": "<τ_0_0 where τ_0_0 : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "sugared_genericSig": "<Self where Self : AmplitudeEngagementSwift.AmplitudeEngagement>",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "isFromExtension": true,
+            "funcSelfKind": "NonMutating"
           }
         ],
         "declKind": "Protocol",
-        "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP",
-        "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP",
+        "usr": "s:24AmplitudeEngagementSwift0aB0P",
+        "mangledName": "$s24AmplitudeEngagementSwift0aB0P",
         "moduleName": "AmplitudeEngagementSwift",
         "genericSig": "<τ_0_0 : AnyObject>",
         "sugared_genericSig": "<Self : AnyObject>",
@@ -5901,94 +6363,226 @@
       },
       {
         "kind": "TypeDecl",
-        "name": "AmplitudeEngagement",
-        "printedName": "AmplitudeEngagement",
+        "name": "AmplitudeEngagementFactory",
+        "printedName": "AmplitudeEngagementFactory",
         "children": [
           {
-            "kind": "Var",
-            "name": "config",
-            "printedName": "config",
+            "kind": "Function",
+            "name": "make",
+            "printedName": "make(_:_:settingsTimeout:)",
             "children": [
               {
                 "kind": "TypeNominal",
-                "name": "AmplitudeEngagementConfig",
-                "printedName": "AmplitudeEngagementSwift.AmplitudeEngagementConfig",
-                "usr": "s:24AmplitudeEngagementSwift0aB6ConfigV"
+                "name": "AmplitudeEngagement",
+                "printedName": "any AmplitudeEngagementSwift.AmplitudeEngagement",
+                "usr": "s:24AmplitudeEngagementSwift0aB0P"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AmplitudeInitOptions",
+                "printedName": "AmplitudeEngagementSwift.AmplitudeInitOptions",
+                "hasDefaultArg": true,
+                "usr": "s:24AmplitudeEngagementSwift0A11InitOptionsV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Double",
+                "printedName": "Swift.Double",
+                "hasDefaultArg": true,
+                "usr": "s:Sd"
               }
             ],
-            "declKind": "Var",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C6configAA0aB6ConfigVvp",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C6configAA0aB6ConfigVvp",
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB7FactoryO4make__15settingsTimeoutAA0aB0_pSS_AA0A11InitOptionsVSdtFZ",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB7FactoryO4make__15settingsTimeoutAA0aB0_pSS_AA0A11InitOptionsVSdtFZ",
             "moduleName": "AmplitudeEngagementSwift",
+            "static": true,
             "declAttributes": [
-              "HasStorage",
               "AccessControl"
             ],
-            "hasStorage": true,
-            "accessors": [
-              {
-                "kind": "Accessor",
-                "name": "Get",
-                "printedName": "Get()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "AmplitudeEngagementConfig",
-                    "printedName": "AmplitudeEngagementSwift.AmplitudeEngagementConfig",
-                    "usr": "s:24AmplitudeEngagementSwift0aB6ConfigV"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "s:24AmplitudeEngagementSwift0aB0C6configAA0aB6ConfigVvg",
-                "mangledName": "$s24AmplitudeEngagementSwift0aB0C6configAA0aB6ConfigVvg",
-                "moduleName": "AmplitudeEngagementSwift",
-                "implicit": true,
-                "accessorKind": "get"
-              },
-              {
-                "kind": "Accessor",
-                "name": "Set",
-                "printedName": "Set()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Void",
-                    "printedName": "()"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "AmplitudeEngagementConfig",
-                    "printedName": "AmplitudeEngagementSwift.AmplitudeEngagementConfig",
-                    "usr": "s:24AmplitudeEngagementSwift0aB6ConfigV"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "s:24AmplitudeEngagementSwift0aB0C6configAA0aB6ConfigVvs",
-                "mangledName": "$s24AmplitudeEngagementSwift0aB0C6configAA0aB6ConfigVvs",
-                "moduleName": "AmplitudeEngagementSwift",
-                "implicit": true,
-                "accessorKind": "set"
-              },
-              {
-                "kind": "Accessor",
-                "name": "Modify",
-                "printedName": "Modify()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Void",
-                    "printedName": "()"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "s:24AmplitudeEngagementSwift0aB0C6configAA0aB6ConfigVvM",
-                "mangledName": "$s24AmplitudeEngagementSwift0aB0C6configAA0aB6ConfigVvM",
-                "moduleName": "AmplitudeEngagementSwift",
-                "implicit": true,
-                "accessorKind": "_modify"
-              }
-            ]
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Enum",
+        "usr": "s:24AmplitudeEngagementSwift0aB7FactoryO",
+        "mangledName": "$s24AmplitudeEngagementSwift0aB7FactoryO",
+        "moduleName": "AmplitudeEngagementSwift",
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
           },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "__Flutter__AESDK_Factory",
+        "printedName": "__Flutter__AESDK_Factory",
+        "children": [
+          {
+            "kind": "Function",
+            "name": "make",
+            "printedName": "make(_:_:settingsTimeout:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AmplitudeEngagement",
+                "printedName": "any AmplitudeEngagementSwift.AmplitudeEngagement",
+                "usr": "s:24AmplitudeEngagementSwift0aB0P"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AmplitudeInitOptions",
+                "printedName": "AmplitudeEngagementSwift.AmplitudeInitOptions",
+                "hasDefaultArg": true,
+                "usr": "s:24AmplitudeEngagementSwift0A11InitOptionsV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Double",
+                "printedName": "Swift.Double",
+                "hasDefaultArg": true,
+                "usr": "s:Sd"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift24__Flutter__AESDK_FactoryO4make__15settingsTimeoutAA0aB0_pSS_AA0A11InitOptionsVSdtFZ",
+            "mangledName": "$s24AmplitudeEngagementSwift24__Flutter__AESDK_FactoryO4make__15settingsTimeoutAA0aB0_pSS_AA0A11InitOptionsVSdtFZ",
+            "moduleName": "AmplitudeEngagementSwift",
+            "static": true,
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Enum",
+        "usr": "s:24AmplitudeEngagementSwift24__Flutter__AESDK_FactoryO",
+        "mangledName": "$s24AmplitudeEngagementSwift24__Flutter__AESDK_FactoryO",
+        "moduleName": "AmplitudeEngagementSwift",
+        "declAttributes": [
+          "AccessControl",
+          "RawDocComment"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "__ReactNative__AESDK_Factory",
+        "printedName": "__ReactNative__AESDK_Factory",
+        "children": [
+          {
+            "kind": "Function",
+            "name": "make",
+            "printedName": "make(_:_:settingsTimeout:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AmplitudeEngagement",
+                "printedName": "any AmplitudeEngagementSwift.AmplitudeEngagement",
+                "usr": "s:24AmplitudeEngagementSwift0aB0P"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AmplitudeInitOptions",
+                "printedName": "AmplitudeEngagementSwift.AmplitudeInitOptions",
+                "hasDefaultArg": true,
+                "usr": "s:24AmplitudeEngagementSwift0A11InitOptionsV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Double",
+                "printedName": "Swift.Double",
+                "hasDefaultArg": true,
+                "usr": "s:Sd"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift28__ReactNative__AESDK_FactoryO4make__15settingsTimeoutAA0aB0_pSS_AA0A11InitOptionsVSdtFZ",
+            "mangledName": "$s24AmplitudeEngagementSwift28__ReactNative__AESDK_FactoryO4make__15settingsTimeoutAA0aB0_pSS_AA0A11InitOptionsVSdtFZ",
+            "moduleName": "AmplitudeEngagementSwift",
+            "static": true,
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Enum",
+        "usr": "s:24AmplitudeEngagementSwift28__ReactNative__AESDK_FactoryO",
+        "mangledName": "$s24AmplitudeEngagementSwift28__ReactNative__AESDK_FactoryO",
+        "moduleName": "AmplitudeEngagementSwift",
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "AmplitudeEngagementImpl",
+        "printedName": "AmplitudeEngagementImpl",
+        "children": [
           {
             "kind": "Var",
             "name": "logger",
@@ -6002,8 +6596,8 @@
               }
             ],
             "declKind": "Var",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C6loggerAA0A6Logger_pvpZ",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C6loggerAA0A6Logger_pvpZ",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC6loggerAA0A6Logger_pvpZ",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC6loggerAA0A6Logger_pvpZ",
             "moduleName": "AmplitudeEngagementSwift",
             "static": true,
             "declAttributes": [
@@ -6027,8 +6621,8 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:24AmplitudeEngagementSwift0aB0C6loggerAA0A6Logger_pvgZ",
-                "mangledName": "$s24AmplitudeEngagementSwift0aB0C6loggerAA0A6Logger_pvgZ",
+                "usr": "s:24AmplitudeEngagementSwift0aB4ImplC6loggerAA0A6Logger_pvgZ",
+                "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC6loggerAA0A6Logger_pvgZ",
                 "moduleName": "AmplitudeEngagementSwift",
                 "static": true,
                 "implicit": true,
@@ -6055,8 +6649,8 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:24AmplitudeEngagementSwift0aB0C6loggerAA0A6Logger_pvsZ",
-                "mangledName": "$s24AmplitudeEngagementSwift0aB0C6loggerAA0A6Logger_pvsZ",
+                "usr": "s:24AmplitudeEngagementSwift0aB4ImplC6loggerAA0A6Logger_pvsZ",
+                "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC6loggerAA0A6Logger_pvsZ",
                 "moduleName": "AmplitudeEngagementSwift",
                 "static": true,
                 "implicit": true,
@@ -6077,8 +6671,8 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:24AmplitudeEngagementSwift0aB0C6loggerAA0A6Logger_pvMZ",
-                "mangledName": "$s24AmplitudeEngagementSwift0aB0C6loggerAA0A6Logger_pvMZ",
+                "usr": "s:24AmplitudeEngagementSwift0aB4ImplC6loggerAA0A6Logger_pvMZ",
+                "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC6loggerAA0A6Logger_pvMZ",
                 "moduleName": "AmplitudeEngagementSwift",
                 "static": true,
                 "implicit": true,
@@ -6090,38 +6684,89 @@
             ]
           },
           {
-            "kind": "Constructor",
-            "name": "init",
-            "printedName": "init(_:_:)",
+            "kind": "Var",
+            "name": "config",
+            "printedName": "config",
             "children": [
               {
                 "kind": "TypeNominal",
-                "name": "AmplitudeEngagement",
-                "printedName": "AmplitudeEngagementSwift.AmplitudeEngagement",
-                "usr": "s:24AmplitudeEngagementSwift0aB0C"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "String",
-                "printedName": "Swift.String",
-                "usr": "s:SS"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "AmplitudeInitOptions",
-                "printedName": "AmplitudeEngagementSwift.AmplitudeInitOptions",
-                "hasDefaultArg": true,
-                "usr": "s:24AmplitudeEngagementSwift0A11InitOptionsV"
+                "name": "AmplitudeEngagementConfig",
+                "printedName": "AmplitudeEngagementSwift.AmplitudeEngagementConfig",
+                "usr": "s:24AmplitudeEngagementSwift0aB6ConfigV"
               }
             ],
-            "declKind": "Constructor",
-            "usr": "s:24AmplitudeEngagementSwift0aB0CyACSS_AA0A11InitOptionsVtcfc",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0CyACSS_AA0A11InitOptionsVtcfc",
+            "declKind": "Var",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC6configAA0aB6ConfigVvp",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC6configAA0aB6ConfigVvp",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
+              "HasStorage",
               "AccessControl"
             ],
-            "init_kind": "Designated"
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AmplitudeEngagementConfig",
+                    "printedName": "AmplitudeEngagementSwift.AmplitudeEngagementConfig",
+                    "usr": "s:24AmplitudeEngagementSwift0aB6ConfigV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:24AmplitudeEngagementSwift0aB4ImplC6configAA0aB6ConfigVvg",
+                "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC6configAA0aB6ConfigVvg",
+                "moduleName": "AmplitudeEngagementSwift",
+                "implicit": true,
+                "accessorKind": "get"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Set",
+                "printedName": "Set()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AmplitudeEngagementConfig",
+                    "printedName": "AmplitudeEngagementSwift.AmplitudeEngagementConfig",
+                    "usr": "s:24AmplitudeEngagementSwift0aB6ConfigV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:24AmplitudeEngagementSwift0aB4ImplC6configAA0aB6ConfigVvs",
+                "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC6configAA0aB6ConfigVvs",
+                "moduleName": "AmplitudeEngagementSwift",
+                "implicit": true,
+                "accessorKind": "set"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Modify",
+                "printedName": "Modify()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:24AmplitudeEngagementSwift0aB4ImplC6configAA0aB6ConfigVvM",
+                "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC6configAA0aB6ConfigVvM",
+                "moduleName": "AmplitudeEngagementSwift",
+                "implicit": true,
+                "accessorKind": "_modify"
+              }
+            ]
           },
           {
             "kind": "Function",
@@ -6136,8 +6781,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C9getPlugin0A4Core09UniversalE0_pyF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C9getPlugin0A4Core09UniversalE0_pyF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC9getPlugin0A4Core09UniversalF0_pyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC9getPlugin0A4Core09UniversalF0_pyF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl"
@@ -6184,8 +6829,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C4boot_9device_id26autoRefreshIntervalSecondsySS_SSSgSitF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C4boot_9device_id26autoRefreshIntervalSecondsySS_SSSgSitF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC4boot_9device_id26autoRefreshIntervalSecondsySS_SSSgSitF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC4boot_9device_id26autoRefreshIntervalSecondsySS_SSSgSitF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl",
@@ -6211,8 +6856,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C4boot7optionsyAA0A11BootOptionsV_tF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C4boot7optionsyAA0A11BootOptionsV_tF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC4boot7optionsyAA0A11BootOptionsV_tF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC4boot7optionsyAA0A11BootOptionsV_tF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl"
@@ -6231,8 +6876,50 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C8shutdownyyF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C8shutdownyyF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC8shutdownyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC8shutdownyyF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "enable",
+            "printedName": "enable()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC6enableyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC6enableyyF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "disable",
+            "printedName": "disable()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC7disableyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC7disableyyF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl",
@@ -6258,8 +6945,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C12setThemeMode05themeF0yAA0eF0O_tF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C12setThemeMode05themeF0yAA0eF0O_tF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC12setThemeMode05themeG0yAA0fG0O_tF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC12setThemeMode05themeG0yAA0fG0O_tF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl",
@@ -6292,8 +6979,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C5reset3key9stepIndexySS_SitF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C5reset3key9stepIndexySS_SitF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC5reset3key9stepIndexySS_SitF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC5reset3key9stepIndexySS_SitF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl",
@@ -6322,8 +7009,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C4listSayAA13GuideOrSurveyVGyF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C4listSayAA13GuideOrSurveyVGyF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC4listSayAA13GuideOrSurveyVGyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC4listSayAA13GuideOrSurveyVGyF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl",
@@ -6356,8 +7043,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C4show3key9stepIndexySS_SitF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C4show3key9stepIndexySS_SitF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC4show3key9stepIndexySS_SitF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC4show3key9stepIndexySS_SitF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl",
@@ -6383,8 +7070,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C6screenyySSF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C6screenyySSF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC6screenyySSF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC6screenyySSF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl"
@@ -6403,8 +7090,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C8closeAllyyF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C8closeAllyyF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC8closeAllyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC8closeAllyyF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl",
@@ -6443,8 +7130,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C12forwardEventyySDySSypGF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C12forwardEventyySDySSypGF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC12forwardEventyySDySSypGF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC12forwardEventyySDySSypGF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl",
@@ -6487,8 +7174,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C11addCallbackyySS_yyctF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C11addCallbackyySS_yyctF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC11addCallbackyySS_yyctF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC11addCallbackyySS_yyctF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl",
@@ -6508,8 +7195,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C7refreshyyF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C7refreshyyF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC7refreshyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC7refreshyyF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl",
@@ -6535,8 +7222,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C22setAutoRefreshInterval7secondsySi_tF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C22setAutoRefreshInterval7secondsySi_tF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC22setAutoRefreshInterval7secondsySi_tF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC22setAutoRefreshInterval7secondsySi_tF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl",
@@ -6563,8 +7250,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C9handleUrlySb10Foundation3URLVF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C9handleUrlySb10Foundation3URLVF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC9handleUrlySb10Foundation3URLVF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC9handleUrlySb10Foundation3URLVF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl"
@@ -6589,8 +7276,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C14updateLanguageyySSF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C14updateLanguageyySSF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC14updateLanguageyySSF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC14updateLanguageyySSF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl",
@@ -6610,8 +7297,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C22resetSmartInteractionsyyF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C22resetSmartInteractionsyyF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC22resetSmartInteractionsyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC22resetSmartInteractionsyyF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl",
@@ -6649,8 +7336,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C9setRouteryyySScF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C9setRouteryyySScF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC9setRouteryyySScF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC9setRouteryyySScF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl",
@@ -6670,8 +7357,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C11unsetRouteryyF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C11unsetRouteryyF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC11unsetRouteryyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC11unsetRouteryyF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl"
@@ -6709,8 +7396,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:24AmplitudeEngagementSwift0aB0C18_setUserPropertiesyySDySSypGF",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB0C18_setUserPropertiesyySDySSypGF",
+            "usr": "s:24AmplitudeEngagementSwift0aB4ImplC18_setUserPropertiesyySDySSypGF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC18_setUserPropertiesyySDySSypGF",
             "moduleName": "AmplitudeEngagementSwift",
             "declAttributes": [
               "AccessControl"
@@ -6719,12 +7406,13 @@
           }
         ],
         "declKind": "Class",
-        "usr": "s:24AmplitudeEngagementSwift0aB0C",
-        "mangledName": "$s24AmplitudeEngagementSwift0aB0C",
+        "usr": "s:24AmplitudeEngagementSwift0aB4ImplC",
+        "mangledName": "$s24AmplitudeEngagementSwift0aB4ImplC",
         "moduleName": "AmplitudeEngagementSwift",
         "declAttributes": [
           "AccessControl"
         ],
+        "hasMissingDesignatedInitializers": true,
         "conformances": [
           {
             "kind": "Conformance",
@@ -6749,10 +7437,10 @@
           },
           {
             "kind": "Conformance",
-            "name": "AmplitudeEngagementProtocol",
-            "printedName": "AmplitudeEngagementProtocol",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP"
+            "name": "AmplitudeEngagement",
+            "printedName": "AmplitudeEngagement",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P"
           }
         ]
       },
@@ -6760,44 +7448,6 @@
         "kind": "TypeDecl",
         "name": "__ReactNative__AESDK",
         "printedName": "__ReactNative__AESDK",
-        "children": [
-          {
-            "kind": "Constructor",
-            "name": "init",
-            "printedName": "init(_:_:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "__ReactNative__AESDK",
-                "printedName": "AmplitudeEngagementSwift.__ReactNative__AESDK",
-                "usr": "s:24AmplitudeEngagementSwift20__ReactNative__AESDKC"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "String",
-                "printedName": "Swift.String",
-                "usr": "s:SS"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "AmplitudeInitOptions",
-                "printedName": "AmplitudeEngagementSwift.AmplitudeInitOptions",
-                "hasDefaultArg": true,
-                "usr": "s:24AmplitudeEngagementSwift0A11InitOptionsV"
-              }
-            ],
-            "declKind": "Constructor",
-            "usr": "s:24AmplitudeEngagementSwift20__ReactNative__AESDKCyACSS_AA0A11InitOptionsVtcfc",
-            "mangledName": "$s24AmplitudeEngagementSwift20__ReactNative__AESDKCyACSS_AA0A11InitOptionsVtcfc",
-            "moduleName": "AmplitudeEngagementSwift",
-            "overriding": true,
-            "implicit": true,
-            "declAttributes": [
-              "Override"
-            ],
-            "init_kind": "Designated"
-          }
-        ],
         "declKind": "Class",
         "usr": "s:24AmplitudeEngagementSwift20__ReactNative__AESDKC",
         "mangledName": "$s24AmplitudeEngagementSwift20__ReactNative__AESDKC",
@@ -6805,10 +7455,11 @@
         "declAttributes": [
           "AccessControl"
         ],
-        "superclassUsr": "s:24AmplitudeEngagementSwift0aB0C",
+        "superclassUsr": "s:24AmplitudeEngagementSwift0aB4ImplC",
+        "hasMissingDesignatedInitializers": true,
         "inheritsConvenienceInitializers": true,
         "superclassNames": [
-          "AmplitudeEngagementSwift.AmplitudeEngagement"
+          "AmplitudeEngagementSwift.AmplitudeEngagementImpl"
         ],
         "conformances": [
           {
@@ -6834,10 +7485,10 @@
           },
           {
             "kind": "Conformance",
-            "name": "AmplitudeEngagementProtocol",
-            "printedName": "AmplitudeEngagementProtocol",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP"
+            "name": "AmplitudeEngagement",
+            "printedName": "AmplitudeEngagement",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P"
           }
         ]
       },
@@ -6845,7 +7496,120 @@
         "kind": "TypeDecl",
         "name": "__Flutter__AESDK",
         "printedName": "__Flutter__AESDK",
+        "declKind": "Class",
+        "usr": "s:24AmplitudeEngagementSwift16__Flutter__AESDKC",
+        "mangledName": "$s24AmplitudeEngagementSwift16__Flutter__AESDKC",
+        "moduleName": "AmplitudeEngagementSwift",
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "superclassUsr": "s:24AmplitudeEngagementSwift0aB4ImplC",
+        "hasMissingDesignatedInitializers": true,
+        "inheritsConvenienceInitializers": true,
+        "superclassNames": [
+          "AmplitudeEngagementSwift.AmplitudeEngagementImpl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Observable",
+            "printedName": "Observable",
+            "usr": "s:11Observation10ObservableP",
+            "mangledName": "$s11Observation10ObservableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "AmplitudeEngagement",
+            "printedName": "AmplitudeEngagement",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P"
+          }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "AmplitudeCore",
+        "printedName": "AmplitudeCore",
+        "declKind": "Import",
+        "moduleName": "AmplitudeEngagementSwift",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AmplitudeEngagementSwift"
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "AmplitudeEngagementNoOpStub",
+        "printedName": "AmplitudeEngagementNoOpStub",
         "children": [
+          {
+            "kind": "Var",
+            "name": "config",
+            "printedName": "config",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AmplitudeEngagementConfig",
+                "printedName": "AmplitudeEngagementSwift.AmplitudeEngagementConfig",
+                "usr": "s:24AmplitudeEngagementSwift0aB6ConfigV"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC6configAA0aB6ConfigVvp",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC6configAA0aB6ConfigVvp",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "HasStorage",
+              "SetterAccess",
+              "AccessControl"
+            ],
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AmplitudeEngagementConfig",
+                    "printedName": "AmplitudeEngagementSwift.AmplitudeEngagementConfig",
+                    "usr": "s:24AmplitudeEngagementSwift0aB6ConfigV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC6configAA0aB6ConfigVvg",
+                "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC6configAA0aB6ConfigVvg",
+                "moduleName": "AmplitudeEngagementSwift",
+                "implicit": true,
+                "declAttributes": [
+                  "Final"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
           {
             "kind": "Constructor",
             "name": "init",
@@ -6853,9 +7617,9 @@
             "children": [
               {
                 "kind": "TypeNominal",
-                "name": "__Flutter__AESDK",
-                "printedName": "AmplitudeEngagementSwift.__Flutter__AESDK",
-                "usr": "s:24AmplitudeEngagementSwift16__Flutter__AESDKC"
+                "name": "AmplitudeEngagementNoOpStub",
+                "printedName": "AmplitudeEngagementSwift.AmplitudeEngagementNoOpStub",
+                "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC"
               },
               {
                 "kind": "TypeNominal",
@@ -6872,28 +7636,660 @@
               }
             ],
             "declKind": "Constructor",
-            "usr": "s:24AmplitudeEngagementSwift16__Flutter__AESDKCyACSS_AA0A11InitOptionsVtcfc",
-            "mangledName": "$s24AmplitudeEngagementSwift16__Flutter__AESDKCyACSS_AA0A11InitOptionsVtcfc",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubCyACSS_AA0A11InitOptionsVtcfc",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubCyACSS_AA0A11InitOptionsVtcfc",
             "moduleName": "AmplitudeEngagementSwift",
-            "overriding": true,
-            "implicit": true,
             "declAttributes": [
-              "Override"
+              "AccessControl"
             ],
             "init_kind": "Designated"
+          },
+          {
+            "kind": "Function",
+            "name": "getPlugin",
+            "printedName": "getPlugin()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UniversalPlugin",
+                "printedName": "any AmplitudeCore.UniversalPlugin",
+                "usr": "s:13AmplitudeCore15UniversalPluginP"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC9getPlugin0A4Core09UniversalH0_pyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC9getPlugin0A4Core09UniversalH0_pyF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "boot",
+            "printedName": "boot(_:device_id:autoRefreshIntervalSeconds:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC4boot_9device_id26autoRefreshIntervalSecondsySS_SSSgSitF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC4boot_9device_id26autoRefreshIntervalSecondsySS_SSSgSitF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "boot",
+            "printedName": "boot(options:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AmplitudeBootOptions",
+                "printedName": "AmplitudeEngagementSwift.AmplitudeBootOptions",
+                "usr": "s:24AmplitudeEngagementSwift0A11BootOptionsV"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC4boot7optionsyAA0A11BootOptionsV_tF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC4boot7optionsyAA0A11BootOptionsV_tF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "shutdown",
+            "printedName": "shutdown()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC8shutdownyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC8shutdownyyF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "enable",
+            "printedName": "enable()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC6enableyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC6enableyyF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "disable",
+            "printedName": "disable()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC7disableyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC7disableyyF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "setThemeMode",
+            "printedName": "setThemeMode(themeMode:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ThemeMode",
+                "printedName": "AmplitudeEngagementSwift.ThemeMode",
+                "usr": "s:24AmplitudeEngagementSwift9ThemeModeO"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC12setThemeMode05themeI0yAA0hI0O_tF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC12setThemeMode05themeI0yAA0hI0O_tF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "reset",
+            "printedName": "reset(key:stepIndex:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC5reset3key9stepIndexySS_SitF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC5reset3key9stepIndexySS_SitF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "list",
+            "printedName": "list()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[AmplitudeEngagementSwift.GuideOrSurvey]",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GuideOrSurvey",
+                    "printedName": "AmplitudeEngagementSwift.GuideOrSurvey",
+                    "usr": "s:24AmplitudeEngagementSwift13GuideOrSurveyV"
+                  }
+                ],
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC4listSayAA13GuideOrSurveyVGyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC4listSayAA13GuideOrSurveyVGyF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "show",
+            "printedName": "show(key:stepIndex:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC4show3key9stepIndexySS_SitF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC4show3key9stepIndexySS_SitF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "closeAll",
+            "printedName": "closeAll()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC8closeAllyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC8closeAllyyF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "screen",
+            "printedName": "screen(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC6screenyySSF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC6screenyySSF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "updateLanguage",
+            "printedName": "updateLanguage(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC14updateLanguageyySSF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC14updateLanguageyySSF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "forwardEvent",
+            "printedName": "forwardEvent(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Swift.String : Any]",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ProtocolComposition",
+                    "printedName": "Any"
+                  }
+                ],
+                "usr": "s:SD"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC12forwardEventyySDySSypGF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC12forwardEventyySDySSypGF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "addCallback",
+            "printedName": "addCallback(_:_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "() -> ()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ]
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC11addCallbackyySS_yyctF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC11addCallbackyySS_yyctF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "setRouter",
+            "printedName": "setRouter(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.String) -> ()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ]
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC9setRouteryyySScF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC9setRouteryyySScF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "unsetRouter",
+            "printedName": "unsetRouter()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC11unsetRouteryyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC11unsetRouteryyF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "handleUrl",
+            "printedName": "handleUrl(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC9handleUrlySb10Foundation3URLVF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC9handleUrlySb10Foundation3URLVF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "resetSmartInteractions",
+            "printedName": "resetSmartInteractions()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC22resetSmartInteractionsyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC22resetSmartInteractionsyyF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "refresh",
+            "printedName": "refresh()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC7refreshyyF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC7refreshyyF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "setAutoRefreshInterval",
+            "printedName": "setAutoRefreshInterval(seconds:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC22setAutoRefreshInterval7secondsySi_tF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC22setAutoRefreshInterval7secondsySi_tF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "_setUserProperties",
+            "printedName": "_setUserProperties(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Swift.String : Any]",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ProtocolComposition",
+                    "printedName": "Any"
+                  }
+                ],
+                "usr": "s:SD"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC18_setUserPropertiesyySDySSypGF",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC18_setUserPropertiesyySDySSypGF",
+            "moduleName": "AmplitudeEngagementSwift",
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
           }
         ],
         "declKind": "Class",
-        "usr": "s:24AmplitudeEngagementSwift16__Flutter__AESDKC",
-        "mangledName": "$s24AmplitudeEngagementSwift16__Flutter__AESDKC",
+        "usr": "s:24AmplitudeEngagementSwift0aB8NoOpStubC",
+        "mangledName": "$s24AmplitudeEngagementSwift0aB8NoOpStubC",
         "moduleName": "AmplitudeEngagementSwift",
         "declAttributes": [
+          "Final",
           "AccessControl"
-        ],
-        "superclassUsr": "s:24AmplitudeEngagementSwift0aB0C",
-        "inheritsConvenienceInitializers": true,
-        "superclassNames": [
-          "AmplitudeEngagementSwift.AmplitudeEngagement"
         ],
         "conformances": [
           {
@@ -6912,17 +8308,10 @@
           },
           {
             "kind": "Conformance",
-            "name": "Observable",
-            "printedName": "Observable",
-            "usr": "s:11Observation10ObservableP",
-            "mangledName": "$s11Observation10ObservableP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "AmplitudeEngagementProtocol",
-            "printedName": "AmplitudeEngagementProtocol",
-            "usr": "s:24AmplitudeEngagementSwift0aB8ProtocolP",
-            "mangledName": "$s24AmplitudeEngagementSwift0aB8ProtocolP"
+            "name": "AmplitudeEngagement",
+            "printedName": "AmplitudeEngagement",
+            "usr": "s:24AmplitudeEngagementSwift0aB0P",
+            "mangledName": "$s24AmplitudeEngagementSwift0aB0P"
           }
         ]
       },
@@ -12293,7 +13682,7 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Bridge\/FetchHandler.swift",
       "kind": "StringLiteral",
-      "offset": 344,
+      "offset": 348,
       "length": 7,
       "value": "\"fetch\""
     },
@@ -12307,7 +13696,7 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Bridge\/IsElementVisibleHandler.swift",
       "kind": "StringLiteral",
-      "offset": 151,
+      "offset": 155,
       "length": 18,
       "value": "\"isElementVisible\""
     },
@@ -12321,28 +13710,35 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Bridge\/NativeBridge.swift",
       "kind": "Array",
-      "offset": 5291,
+      "offset": 5319,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Bridge\/NativeBridge.swift",
       "kind": "Array",
-      "offset": 5332,
+      "offset": 5360,
       "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Bridge\/SessionStorageBridge.swift",
+      "kind": "Dictionary",
+      "offset": 486,
+      "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Bridge\/SimulationBridge.swift",
       "kind": "StringLiteral",
-      "offset": 1614,
+      "offset": 1630,
       "length": 18,
       "value": "\"showDebugToolbar\""
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Bridge\/SimulationBridge.swift",
       "kind": "StringLiteral",
-      "offset": 2162,
+      "offset": 2186,
       "length": 18,
       "value": "\"hideDebugToolbar\""
     },
@@ -12475,63 +13871,63 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Plugin\/SmartInteractions.swift",
       "kind": "IntegerLiteral",
-      "offset": 2835,
+      "offset": 2839,
       "length": 1,
       "value": "5"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Plugin\/SmartInteractions.swift",
       "kind": "BooleanLiteral",
-      "offset": 2938,
+      "offset": 2942,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Plugin\/SmartInteractions.swift",
       "kind": "IntegerLiteral",
-      "offset": 3057,
+      "offset": 3061,
       "length": 2,
       "value": "60"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/QuickJS\/JSConsole.swift",
       "kind": "StringLiteral",
-      "offset": 2555,
+      "offset": 2571,
       "length": 8360,
       "value": "\"(function() {\n    const LINE = \"\\n\"\n    const TAB = \"  \"\n    const SPACE = \" \"\n\n    function format(value, opt) {\n        const defaultOpt = {\n            maxStringLength: 10000,\n            depth: 2,\n            maxArrayLength: 100,\n            seen: [],\n            reduceStringLength: 100\n        }\n        if (!opt) {\n            opt = defaultOpt\n        } else {\n            opt = Object.assign(defaultOpt, opt)\n        }\n\n        return formatValue(value, opt, 0)\n    }\n\n    function formatValue(value, opt, recurseTimes) {\n        if (typeof value !== 'object' && typeof value !== 'function') {\n            return formatPrimitive(value, opt)\n        }\n\n        if (value === null) {\n            return 'null'\n        }\n\n        if (typeof value === 'function') {\n            return formatFunction(value)\n        }\n\n        if (typeof value === 'object') {\n            if (opt.seen.includes(value)) {\n                let index = 1\n                if (opt.circular === undefined) {\n                    opt.circular = new Map()\n                    opt.circular.set(value, index)\n                } else {\n                    index = opt.circular.get(value)\n                    if (index === undefined) {\n                        index = opt.circular.size + 1\n                        opt.circular.set(value, index)\n                    }\n                }\n\n                return `[Circular *${index}]`\n            }\n\n            if (opt.depth !== null && ((recurseTimes - 1) === opt.depth)) {\n                if (value instanceof Array) {\n                    return '[Array]'\n                }\n                return '[Object]'\n            }\n\n            recurseTimes++\n            opt.seen.push(value)\n            const string = formatObject(value, opt, recurseTimes)\n            opt.seen.pop()\n            return string\n        }\n    }\n\n    function formatObject(value, opt, recurseTimes) {\n        if (value instanceof RegExp) {\n            return `${value.toString()}`\n        }\n\n        if (value instanceof Error) {\n            return `${value.toString()}`\n        }\n\n        if (value instanceof Promise) {\n            \/\/ quickjs 环境下通过 native 提供的方式获取 Promise 状态\n            if (typeof getPromiseState !== \"undefined\") {\n                const { result, state} = getPromiseState(value)\n                if (state === 'fulfilled') {\n                    return `Promise { ${formatValue(result, opt, recurseTimes)} }`\n                } else if (state === 'rejected'){\n                    return `Promise { <rejected> ${formatValue(result, opt, recurseTimes)} }`\n                } else if (state === 'pending'){\n                    return `Promise { <pending> }`\n                }\n            } else {\n                return `Promise {${formatValue(value, opt, recurseTimes)}}`\n            }\n        }\n\n        if (value instanceof Array) {\n            return formatArray(value, opt, recurseTimes)\n        }\n\n        if (value instanceof Float64Array) {\n            return `Float64Array(1) [ ${value} ]`\n        }\n\n        if (value instanceof BigInt64Array) {\n            return `BigInt64Array(1) [ ${value}n ]`\n        }\n\n        if (value instanceof Map) {\n            return formatMap(value, opt, recurseTimes)\n        }\n\n        return formatProperty(value, opt, recurseTimes)\n    }\n\n    function formatProperty(value, opt, recurseTimes) {\n        let string = ''\n        string += '{'\n        const keys = Object.keys(value)\n        const length = keys.length\n        for (let i = 0; i < length; i++) {\n            if (i === 0) {\n                string += SPACE\n            }\n            string += LINE\n            string += TAB.repeat(recurseTimes)\n\n            const key = keys[i]\n            string += `${key}: `\n            string += formatValue(value[key], opt, recurseTimes)\n            if (i < length -1) {\n                string += ','\n            }\n            string += SPACE\n        }\n\n        string += LINE\n        string += TAB.repeat(recurseTimes - 1)\n        string += '}'\n\n        if (string.length < opt.reduceStringLength) {\n            string = string.replaceAll(LINE, \"\").replaceAll(TAB, \"\")\n        }\n\n        return string\n    }\n\n    function formatMap(value, opt, recurseTimes) {\n        let string = `Map(${value.size}) `\n        string += '{'\n        let isEmpty = true\n        value.forEach((v, k, map) => {\n            isEmpty = false\n            string += ` ${format(k, opt, recurseTimes)} => ${format(v, opt, recurseTimes)}`\n            string += ','\n        })\n\n        if (!isEmpty) {\n            \/\/ 删除最后多余的逗号\n            string = string.substr(0, string.length -1) + ' '\n        }\n\n        string += '}'\n        return string\n    }\n\n    function formatArray(value, opt, recurseTimes) {\n        let string = '['\n        value.forEach((item, index, array) => {\n            if (index === 0) {\n                string += ' '\n            }\n            string += formatValue(item, opt, recurseTimes)\n            if (index === opt.maxArrayLength - 1) {\n                string += `... ${array.length - opt.maxArrayLength} more item${array.length - opt.maxArrayLength > 1 ? 's' : ''}`\n            } else if (index !== array.length - 1) {\n                string += ','\n            }\n            string += ' '\n        })\n        string += ']'\n        return string\n    }\n\n    function formatFunction(value) {\n        let type = 'Function'\n\n        if (value.constructor.name === 'AsyncFunction') {\n            type = 'AsyncFunction'\n        }\n\n        if (value.constructor.name === 'GeneratorFunction') {\n            type = 'GeneratorFunction'\n        }\n\n        if (value.constructor.name === 'AsyncGeneratorFunction') {\n            type = 'AsyncGeneratorFunction'\n        }\n\n        let fn = `${value.name ? `: ${value.name}` : ' (anonymous)'}`\n        return `[${type + fn}]`\n    }\n\n    function formatPrimitive(value, opt) {\n        const type = typeof value\n        switch (type) {\n            case \"string\":\n                return formatString(value, opt)\n            case \"number\":\n                return Object.is(value, -0) ? '-0' : `${value}`\n            case \"bigint\":\n                return `${String(value)}n`\n            case \"boolean\":\n                return `${value}`\n            case \"undefined\":\n                return \"undefined\"\n            case \"symbol\":\n                return `${value.toString()}`\n            default:\n                return value.toString\n        }\n    }\n\n    function formatString(value, opt) {\n        let trailer = ''\n        if (opt.maxStringLength && value.length > opt.maxStringLength) {\n            const remaining = value.length - opt.maxStringLength\n            value = value.slice(0, opt.maxStringLength)\n            trailer = `... ${remaining} more character${remaining > 1 ? 's' : ''}`\n        }\n\n        return `'${value}'${trailer}`\n    }\n\n    globalThis.format = format\n})();\n\n\/\/ Then console init.\n(function() {\n    globalThis.console = {\n        stdout: function (level, msg) {\n            throw new Error(\"When invoke console stuff, you should be set a stdout of platform to console.stdout.\")\n        },\n        log: function (...args) {\n            this.print(\"log\", ...args)\n        },\n        debug: function(...args) {\n            this.print(\"debug\", ...args)\n        },\n        info: function (...args) {\n            this.print(\"info\", ...args)\n        },\n        warn: function (...args) {\n            this.print(\"warn\", ...args)\n        },\n        error: function (...args) {\n            this.print(\"error\", ...args)\n        },\n        print: function (level, ...args) {\n            let msg = ''\n            args.forEach((value, index) => {\n                if (index > 0) {\n                    msg += \", \"\n                }\n\n                msg += globalThis.format(value)\n            })\n\n            this.stdout(level, msg)\n        }\n    }\n})();\""
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/QuickJS\/JSContext.swift",
       "kind": "IntegerLiteral",
-      "offset": 2517,
+      "offset": 2521,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/QuickJS\/JSContext.swift",
       "kind": "IntegerLiteral",
-      "offset": 2537,
+      "offset": 2541,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/QuickJS\/JSContext.swift",
       "kind": "Dictionary",
-      "offset": 4690,
+      "offset": 4694,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/QuickJS\/JSContext.swift",
       "kind": "IntegerLiteral",
-      "offset": 5011,
+      "offset": 5015,
       "length": 2,
       "value": "-1"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/QuickJS\/JSContext.swift",
       "kind": "IntegerLiteral",
-      "offset": 5058,
+      "offset": 5062,
       "length": 1,
       "value": "0"
     },
@@ -15247,7 +16643,7 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/Debug\/DebugOverlay.swift",
       "kind": "IntegerLiteral",
-      "offset": 10246,
+      "offset": 10266,
       "length": 1,
       "value": "0"
     },
@@ -15275,7 +16671,7 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/Debug\/Throttle.swift",
       "kind": "BooleanLiteral",
-      "offset": 771,
+      "offset": 775,
       "length": 5,
       "value": "false"
     },
@@ -15289,21 +16685,21 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/ElementSelector\/ElementSelectorService.swift",
       "kind": "Array",
-      "offset": 10885,
+      "offset": 10935,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/ElementSelector\/ElementSelectorService.swift",
       "kind": "Array",
-      "offset": 15823,
+      "offset": 15873,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/ElementSelector\/ElementSelectorViewController.swift",
       "kind": "IntegerLiteral",
-      "offset": 456,
+      "offset": 460,
       "length": 1,
       "value": "3"
     },
@@ -15324,28 +16720,28 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/FormFactors\/ContentBlocks\/ImageBlockView.swift",
       "kind": "FloatLiteral",
-      "offset": 4040,
+      "offset": 4044,
       "length": 3,
       "value": "1.0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/FormFactors\/ContentBlocks\/ImageBlockView.swift",
       "kind": "IntegerLiteral",
-      "offset": 4116,
+      "offset": 4120,
       "length": 1,
       "value": "2"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/FormFactors\/Layouts\/ClassicLayout.swift",
       "kind": "IntegerLiteral",
-      "offset": 553,
+      "offset": 557,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/FormFactors\/Layouts\/ClassicLayout.swift",
       "kind": "IntegerLiteral",
-      "offset": 612,
+      "offset": 616,
       "length": 1,
       "value": "0"
     },
@@ -15513,7 +16909,7 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/Positioning\/MarkerView.swift",
       "kind": "Array",
-      "offset": 3450,
+      "offset": 3454,
       "length": 2,
       "value": "[]"
     },
@@ -15695,112 +17091,112 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/AnchorTargetView.swift",
       "kind": "BooleanLiteral",
-      "offset": 4856,
+      "offset": 4860,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/AnchorTargetView.swift",
       "kind": "BooleanLiteral",
-      "offset": 11671,
+      "offset": 11715,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/CarouselNudgeView.swift",
       "kind": "IntegerLiteral",
-      "offset": 938,
+      "offset": 946,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/CarouselNudgeView.swift",
       "kind": "IntegerLiteral",
-      "offset": 1076,
+      "offset": 1084,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/CarouselNudgeView.swift",
       "kind": "BooleanLiteral",
-      "offset": 1112,
+      "offset": 1120,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/CarouselNudgeView.swift",
       "kind": "IntegerLiteral",
-      "offset": 1255,
+      "offset": 1267,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/CarouselNudgeView.swift",
       "kind": "BooleanLiteral",
-      "offset": 5606,
+      "offset": 5618,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/NudgeView.swift",
       "kind": "StringLiteral",
-      "offset": 2837,
+      "offset": 2845,
       "length": 21,
       "value": "\"Default Light Theme\""
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/NudgeView.swift",
       "kind": "StringLiteral",
-      "offset": 2941,
+      "offset": 2953,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/NudgeView.swift",
       "kind": "StringLiteral",
-      "offset": 3046,
+      "offset": 3058,
       "length": 20,
       "value": "\"Default Dark Theme\""
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/NudgeView.swift",
       "kind": "StringLiteral",
-      "offset": 3149,
+      "offset": 3165,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/NudgeViewController.swift",
       "kind": "BooleanLiteral",
-      "offset": 673,
+      "offset": 677,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/NudgeViewController.swift",
       "kind": "BooleanLiteral",
-      "offset": 713,
+      "offset": 717,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/NudgeViewController.swift",
       "kind": "Array",
-      "offset": 849,
+      "offset": 853,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/NudgeViewController.swift",
       "kind": "IntegerLiteral",
-      "offset": 1076,
+      "offset": 1084,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/NudgeViewController.swift",
       "kind": "Dictionary",
-      "offset": 1181,
+      "offset": 1189,
       "length": 3,
       "value": "[]"
     },
@@ -15827,66 +17223,101 @@
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
+      "kind": "FloatLiteral",
+      "offset": 7033,
+      "length": 4,
+      "value": "1.25"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
+      "kind": "FloatLiteral",
+      "offset": 7630,
+      "length": 4,
+      "value": "1.25"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
+      "kind": "FloatLiteral",
+      "offset": 8126,
+      "length": 4,
+      "value": "1.25"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
+      "kind": "FloatLiteral",
+      "offset": 8565,
+      "length": 4,
+      "value": "1.25"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
       "kind": "Dictionary",
-      "offset": 2038,
+      "offset": 9379,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
       "kind": "Dictionary",
-      "offset": 2200,
+      "offset": 9541,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
       "kind": "BooleanLiteral",
-      "offset": 2372,
+      "offset": 9713,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
       "kind": "StringLiteral",
-      "offset": 2707,
+      "offset": 10048,
       "length": 21,
       "value": "\"AmplitudeEngagement\""
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
       "kind": "IntegerLiteral",
-      "offset": 4017,
+      "offset": 11364,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
       "kind": "IntegerLiteral",
-      "offset": 7719,
+      "offset": 15766,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
       "kind": "IntegerLiteral",
-      "offset": 9086,
+      "offset": 17145,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
       "kind": "BooleanLiteral",
-      "offset": 22146,
+      "offset": 30301,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
       "kind": "BooleanLiteral",
-      "offset": 27372,
+      "offset": 35567,
       "length": 5,
       "value": "false"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagementNoOpStub.swift",
+      "kind": "StringLiteral",
+      "offset": 323,
+      "length": 37,
+      "value": "\"AmplitudeEngagementNoOpStub[error!]\""
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/BootOptions.swift",
@@ -15905,42 +17336,42 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/BootOptions.swift",
       "kind": "IntegerLiteral",
-      "offset": 1012,
+      "offset": 1016,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/BootOptions.swift",
       "kind": "Array",
-      "offset": 1164,
+      "offset": 1168,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/BootOptions.swift",
       "kind": "Dictionary",
-      "offset": 1205,
+      "offset": 1209,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/BootOptions.swift",
       "kind": "IntegerLiteral",
-      "offset": 1248,
+      "offset": 1252,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/BootOptions.swift",
       "kind": "Array",
-      "offset": 1625,
+      "offset": 1629,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/BootOptions.swift",
       "kind": "IntegerLiteral",
-      "offset": 1667,
+      "offset": 1671,
       "length": 1,
       "value": "0"
     },
@@ -15956,7 +17387,7 @@
       "kind": "StringLiteral",
       "offset": 421,
       "length": 7,
-      "value": "\"2.1.0\""
+      "value": "\"2.1.1\""
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/EngagementWindowManager.swift",
@@ -15968,28 +17399,28 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/EngagementWindowManager.swift",
       "kind": "Dictionary",
-      "offset": 426,
+      "offset": 430,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/EngagementWindowManager.swift",
       "kind": "BooleanLiteral",
-      "offset": 8835,
+      "offset": 8871,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/EngagementWindowManager.swift",
       "kind": "BooleanLiteral",
-      "offset": 17660,
+      "offset": 17763,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/EngagementWindowManager.swift",
       "kind": "FloatLiteral",
-      "offset": 28029,
+      "offset": 28132,
       "length": 3,
       "value": "5.0"
     },
