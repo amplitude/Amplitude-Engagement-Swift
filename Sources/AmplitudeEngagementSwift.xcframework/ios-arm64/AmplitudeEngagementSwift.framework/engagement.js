@@ -19547,6 +19547,11 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       "dom_mutation",
       () => {
         sendIndirectTrigger(_, {
+          trigger: { type: "active" },
+          source: { type: "active" },
+          overrides: { cooldown: true, customThrottles: true, page: true }
+        });
+        sendIndirectTrigger(_, {
           trigger: { type: "element_appeared" },
           source: {
             type: "trigger",
@@ -19736,7 +19741,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   var import_dayjs2 = __toESM(require_dayjs_min());
 
   // ../shared/src/store/end-user/responses.ts
-  var submitSurveyResponse = async (_, variantId, nudgeStepId, blockId, response) => {
+  var submitSurveyResponse = async (_, variantId, nudgeStepId, blockId, response, { isFromTestMode, isFromDebugMode }) => {
     const { apiKey } = getSDK()[_configuration];
     const userJsonBase64 = jsonBase64Encoder(_.user);
     try {
@@ -19755,7 +19760,9 @@ when parsing ${JSON.stringify(input, null, 2)}`;
               }
               // Only send value - can send blockId/type in future if needed
             }
-          ]
+          ],
+          isFromTestMode,
+          isFromDebugMode
         },
         {
           headers: {
@@ -19924,8 +19931,13 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         if (!step) return;
         const stepResponses = context?.surveyResponses[step.id];
         if (!stepResponses || Object.keys(stepResponses).length === 0) return;
+        const isFromDebugMode = !!context.triggerEvent?.overrides?.simulateMode;
+        const isFromTestMode = isTestNudge(globalStore, context.nudge);
         Object.values(stepResponses).forEach((surveyResponse) => {
-          submitSurveyResponse(globalStore, context.nudge.variantId, step.id, surveyResponse.blockId, surveyResponse);
+          submitSurveyResponse(globalStore, context.nudge.variantId, step.id, surveyResponse.blockId, surveyResponse, {
+            isFromTestMode,
+            isFromDebugMode
+          });
           Track.nudge.surveySubmitted(context.nudge, context.stepIndex, {
             ...context,
             interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
@@ -20089,6 +20101,11 @@ when parsing ${JSON.stringify(input, null, 2)}`;
             return newRespones;
           }
           return context.surveyResponses;
+        }
+      }),
+      resetAllSurveyResponses: assign({
+        surveyResponses: () => {
+          return {};
         }
       }),
       resetStep: assign({
@@ -20329,6 +20346,10 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         initial: "Checking Conditions",
         states: {
           Done: {
+            entry: [
+              // Clear persisted survey responses so the next time this survey shows it is fresh
+              { type: "resetAllSurveyResponses" }
+            ],
             always: [
               {
                 target: "#Nudge.Idle"
@@ -21788,11 +21809,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
     });
     sendIndirectTrigger(_, {
-      trigger: { type: "active" },
-      source: { type: "active" },
-      overrides: { cooldown: true, customThrottles: true, page: true }
-    });
-    sendIndirectTrigger(_, {
       trigger: { type: "immediately" },
       source: { type: "trigger", properties: { triggerType: "immediately" } }
     });
@@ -22999,6 +23015,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var DEFAULT_INSTANCE_NAME = "$default_instance";
   function createProxy(loadAsyncScripts) {
     const existingProxy = typeof window !== "undefined" ? window.engagement : void 0;
+    let bundleFailedToLoad = false;
     const proxy2 = {
       _q: existingProxy?._q ?? [],
       _configuration: {
@@ -23049,6 +23066,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         }
         let timeoutId = null;
         const clearQueueAndCleanup = () => {
+          bundleFailedToLoad = true;
           if (timeoutId) {
             clearTimeout(timeoutId);
             timeoutId = null;
@@ -23175,6 +23193,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             return new Promise((resolve, reject) => {
               a.unshift(prop, resolve, reject);
               proxy2._q.push(a);
+              if (bundleFailedToLoad) {
+                resolve(void 0);
+              }
             });
           };
         }
