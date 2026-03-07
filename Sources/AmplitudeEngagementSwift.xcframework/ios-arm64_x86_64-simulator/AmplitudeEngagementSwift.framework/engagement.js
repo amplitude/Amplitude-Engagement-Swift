@@ -12422,9 +12422,6 @@
     return decideResult?.[flagKey]?.key;
   };
   var nudgePassesDecide = (nudge, decideResult) => {
-    if (nudge.platform !== __GS_PLATFORM__) {
-      return false;
-    }
     const activeVariantForNudge = getActiveVariantForFlag(nudge.flagKey, decideResult);
     if (!activeVariantForNudge) {
       logger.error("Nudge does not have a decide result!");
@@ -12433,6 +12430,7 @@
     return activeVariantForNudge === nudge.variant;
   };
   var getExperimentKey = (nudge, decideResult) => decideResult?.[nudge.flagKey]?.metadata?.experimentKey;
+  var getEvaluationId = (nudge, decideResult) => decideResult?.[nudge.flagKey]?.metadata?.evaluationId;
 
   // ../shared/src/products/nudges/store/selectors.ts
   var normalizePlainFalsyValues = (record5) => {
@@ -12473,6 +12471,13 @@
     }
   };
   var getNudgeActorSnapshot = (_, id) => getNudgeActor(_, id)?.getSnapshot();
+  var getEffectiveSessionStart = (_) => {
+    const analyticsSessionStart = _.user?.getSessionId?.();
+    if (typeof analyticsSessionStart === "number" && Number.isFinite(analyticsSessionStart) && analyticsSessionStart > 0) {
+      return analyticsSessionStart;
+    }
+    return _.sessionStart;
+  };
   var passesBuiltInThrottles = (_, nudge) => {
     const nudgesInRenderLoop = getNudgesInRenderLoop(_);
     return !isBlocked(nudge, nudgesInRenderLoop);
@@ -12481,6 +12486,7 @@
     if (!_.organization) return true;
     const nudgesState = getAllNudgeDataFromUserStore(_);
     const nudgeProductType = getNudgeProductType(nudge);
+    const sessionStart = getEffectiveSessionStart(_);
     if (!nudgesState) return true;
     const throttleConfig = nudgeProductType === "survey" ? _.organization.surveyThrottle : _.organization.guideThrottle;
     let limits = throttleConfig.limits;
@@ -12489,7 +12495,7 @@
     }
     const { productTypeCounts, tagThrottleCounts, secondsSinceLastActivation } = getAllActivationCounts(
       nudgesState,
-      _.sessionStart,
+      sessionStart,
       nudgeProductType,
       throttleConfig.limits
     );
@@ -12713,14 +12719,15 @@
   var passesCooldown = (_, nudge) => {
     const nudgeState = getNudgeDataFromUserStore(_, nudge.variantId);
     const timestamps = nudgeState?.activatedTs ?? [];
+    const sessionStart = getEffectiveSessionStart(_);
     const activationCounts = {};
-    const legacyCounts = countsByTimeWindow(timestamps, _.sessionStart);
+    const legacyCounts = countsByTimeWindow(timestamps, sessionStart);
     Object.assign(activationCounts, legacyCounts);
     for (const cooldownLimit of nudge.lifecycleConfig.cooldownLimits) {
       if (cooldownLimit.period) {
         const periodCount = cooldownLimit.periodCount ?? 1;
         const key = `${periodCount}_${cooldownLimit.period}`;
-        activationCounts[key] = countForPeriod(timestamps, _.sessionStart, cooldownLimit.period, periodCount);
+        activationCounts[key] = countForPeriod(timestamps, sessionStart, cooldownLimit.period, periodCount);
       }
     }
     const nudgeStateTarget = {
@@ -12811,7 +12818,7 @@
     }
     return false;
   };
-  var isNudgeActive = (_, nudge) => !!getNudgeDataFromUserStore(_, nudge.variantId)?.activelifeCycleUuid;
+  var isNudgeActive = (_, nudge) => canBeActive(nudge) && !!getNudgeDataFromUserStore(_, nudge.variantId)?.activelifeCycleUuid;
   var passesPinnedElement = async (_, nudge, stepIndex) => {
     const step = getNudgeStep(nudge, stepIndex);
     if (!step) return false;
@@ -16768,8 +16775,9 @@ ${err.message}`);
         // only used for checklists
       })
     ),
-    tagIds: withFallback(t4.array(t4.number), [])
+    tagIds: withFallback(t4.array(t4.number), []),
     // Tag IDs associated with this nudge
+    lastUpdatedTs: withFallback(t4.number, -1)
   });
   var NudgeInteractionsV = t4.record(t4.string, NudgeInteractionStateV);
   var EndUserStoreDataV = t4.type({
@@ -16916,7 +16924,8 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       currentStep: 0,
       isChecklistExpanded: true,
       steps: {},
-      tagIds: []
+      tagIds: [],
+      lastUpdatedTs: -1
     };
   };
   var updateEndUserStore = async (eus, updates, options = { replaceArrays: ["stepIndexStack", "tagIds"] }) => {
@@ -16936,6 +16945,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
             return options.replaceArrays?.includes(key) ? src : obj.concat(src);
           }
         });
+        eusData.nudgeInteractions[variantId].lastUpdatedTs = Date.now();
       }
     });
     await eus.pushData();
@@ -16951,23 +16961,98 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       this.data = emptyEndUserStoreData();
       this.initializedSuccessfully = false;
     }
+    getApiKeyPrefix() {
+      const { apiKey } = getSDK()._configuration;
+      return apiKey.substring(0, 6);
+    }
+    getLocalStorageLabel() {
+      const user = getSDK()._.user;
+      const prefix = this.getApiKeyPrefix();
+      if (user?.user_id) {
+        return `eus.${prefix}.user_id:${user.user_id}`;
+      } else if (user?.device_id) {
+        return `eus.${prefix}.device_id:${user.device_id}`;
+      }
+      return null;
+    }
+    saveToLocalStorage() {
+      const label = this.getLocalStorageLabel();
+      if (!label) return;
+      LocalStorage_default.set(label, JSON.stringify(this.data));
+    }
+    loadFromLocalStorage() {
+      const label = this.getLocalStorageLabel();
+      if (!label) return null;
+      try {
+        const raw = LocalStorage_default.get(label, "");
+        if (!raw) return null;
+        return decodeThrowing(EndUserStoreDataV, JSON.parse(raw));
+      } catch (e2) {
+        return null;
+      }
+    }
+    mergeEndUserStoreData(remote, local) {
+      const allVariantIds = /* @__PURE__ */ new Set([...Object.keys(remote.nudgeInteractions), ...Object.keys(local.nudgeInteractions)]);
+      const mergedInteractions = {};
+      for (const variantId of allVariantIds) {
+        const remoteNudge = remote.nudgeInteractions[variantId];
+        const localNudge = local.nudgeInteractions[variantId];
+        if (remoteNudge && localNudge) {
+          mergedInteractions[variantId] = (localNudge.lastUpdatedTs ?? -1) > (remoteNudge.lastUpdatedTs ?? -1) ? localNudge : remoteNudge;
+        } else if (localNudge) {
+          mergedInteractions[variantId] = localNudge;
+        } else if (remoteNudge) {
+          mergedInteractions[variantId] = remoteNudge;
+        }
+      }
+      return {
+        nudgeInteractions: mergedInteractions
+      };
+    }
+    hasNewerLocalNudges(remote, local) {
+      return Object.entries(local.nudgeInteractions).some(([variantId, localNudge]) => {
+        const remoteNudge = remote.nudgeInteractions[variantId];
+        return !remoteNudge || (localNudge.lastUpdatedTs ?? -1) > (remoteNudge.lastUpdatedTs ?? -1);
+      });
+    }
     async fetchData() {
       const endUser = getSDK()._.user;
       if (!endUser) return;
       const { apiKey } = getSDK()._configuration;
       const userJsonBase64 = jsonBase64Encoder(endUser);
-      const response = await get3("/sdk/v1/state", {
-        headers: {
-          Authorization: `Api-Key ${apiKey}`,
-          "X-Amp-User": userJsonBase64
+      let remoteData = null;
+      try {
+        const response = await get3("/sdk/v1/state", {
+          headers: {
+            Authorization: `Api-Key ${apiKey}`,
+            "X-Amp-User": userJsonBase64
+          }
+        });
+        remoteData = decodeThrowing(EndUserStoreDataV, response.data);
+      } catch (e2) {
+        logger.error("Failed to fetch remote end user store data", { error: e2 });
+      }
+      const localData = this.loadFromLocalStorage();
+      if (remoteData && localData) {
+        this.data = this.mergeEndUserStoreData(remoteData, localData);
+        this.initializedSuccessfully = true;
+        this.saveToLocalStorage();
+        if (this.hasNewerLocalNudges(remoteData, localData)) {
+          this.pushData();
         }
-      });
-      this.data = decodeThrowing(EndUserStoreDataV, response.data);
-      this.initializedSuccessfully = true;
+      } else if (remoteData) {
+        this.data = remoteData;
+        this.initializedSuccessfully = true;
+        this.saveToLocalStorage();
+      } else if (localData) {
+        this.data = localData;
+        this.initializedSuccessfully = true;
+      }
     }
     async pushData() {
       const endUser = getSDK()._.user;
       if (!endUser || !this.initializedSuccessfully) return;
+      this.saveToLocalStorage();
       const { apiKey } = getSDK()[_configuration];
       const userJsonBase64 = jsonBase64Encoder(endUser);
       const validData = decodeThrowing(EndUserStoreDataV, this.data);
@@ -17762,7 +17847,8 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         const source = context?.triggerEvent?.source.type === "nudge" ? { ...context.triggerEvent.source, type: sourceType } : context?.triggerEvent?.source;
         getClient()?.trackEvent?.(getEventNameCreator(nudge)("viewed"), {
           ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
-          ["[Guides-Surveys] Source" /* Source */]: source
+          ["[Guides-Surveys] Source" /* Source */]: source,
+          ["[Guides-Surveys] Evaluation ID" /* EvaluationId */]: context?.evaluationId ?? null
         });
       },
       /**
@@ -18911,6 +18997,12 @@ when parsing ${JSON.stringify(input, null, 2)}`;
               cardHeight: t10.type({
                 type: t10.union([t10.literal("auto"), t10.literal("fixed"), t10.literal("full")]),
                 value: t10.union([t10.number, t10.undefined])
+              }),
+              cardMargin: t10.type({
+                top: t10.number,
+                right: t10.number,
+                bottom: t10.number,
+                left: t10.number
               })
             }),
             NudgeStepLayoutConfigV,
@@ -19252,6 +19344,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       key: t12.union([t12.string, t12.null, t12.undefined]),
       mobileLauncher: t12.union([LauncherV, t12.null]),
       desktopLauncher: t12.union([LauncherV, t12.null]),
+      windowPosition: t12.union([t12.string, t12.null]),
       customTheme: t12.union([t12.number, t12.null]),
       chatEnabled: t12.boolean,
       resourceCenterEnabled: t12.boolean
@@ -19793,7 +19886,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       passesNudgeMatch: ({ context }) => !context.triggerEvent?.nudgeId || context.nudge.variantId === context.triggerEvent.nudgeId,
       passesBuiltInThrottles: ({ context }) => context.triggerEvent?.overrides?.builtInThrottles || passesBuiltInThrottles(globalStore, context.nudge),
       passesTriggerMatch: ({ context }) => context.triggerEvent?.overrides?.triggerMatch || passesTriggerMatch(globalStore, context.nudge, context.triggerEvent),
-      passesCooldown: ({ context }) => context.triggerEvent?.overrides?.cooldown || passesCooldown(globalStore, context.nudge),
+      passesCooldown: ({ context }) => context.triggerEvent?.overrides?.cooldown || isTooltipNudge(context.nudge) || passesCooldown(globalStore, context.nudge),
       passesAudience: ({ context }) => context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode || // In debug/simulate mode we always want our audience guard to pass
       getActiveVariantForFlag(context.nudge.flagKey, globalStore.decide) === "control" || nudgePassesDecide(context.nudge, globalStore.decide),
       passesSnoozed: ({ context }) => context.triggerEvent?.overrides?.snoozed || passesSnoozedConditions(globalStore, context.nudge),
@@ -19831,6 +19924,14 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       }),
       setFailedConditions: assign({
         prevPassedConditions: () => false
+      }),
+      captureEvaluationId: assign({
+        evaluationId: ({ context }) => {
+          const audienceSkipped = context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode;
+          if (audienceSkipped) return null;
+          const id = getEvaluationId(context.nudge, globalStore.decide);
+          return typeof id === "string" ? id : null;
+        }
       }),
       sendEnterRenderLoop: sendTo(({ context }) => context.parentRef, {
         type: "ENTER_RENDER_LOOP",
@@ -20179,7 +20280,10 @@ when parsing ${JSON.stringify(input, null, 2)}`;
               {
                 target: "Checking Custom Throttles",
                 guard: "passesAudience",
-                actions: [{ type: "logCondition", params: { conditionName: "audience", conditionResult: "PASS" } }]
+                actions: [
+                  { type: "captureEvaluationId" },
+                  { type: "logCondition", params: { conditionName: "audience", conditionResult: "PASS" } }
+                ]
               },
               {
                 target: "#Nudge.Idle",
@@ -20727,7 +20831,8 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
         triggerMatch: null,
         prevPassedConditions: false,
         pinGraceUntil: void 0,
-        pinGraceStepIndex: void 0
+        pinGraceStepIndex: void 0,
+        evaluationId: null
       };
     },
     on: {
@@ -21512,7 +21617,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     markSeen
   }) => {
     const type10 = nudge.type;
-    const activelifeCycleUuid = activate ? v4_default() : deactivate ? "" : void 0;
+    const existingLifecycleUuid = getNudgeDataFromUserStore(_, nudge.variantId)?.activelifeCycleUuid;
+    const activelifeCycleUuid = activate ? v4_default() : deactivate ? "" : markSeen && !existingLifecycleUuid ? v4_default() : void 0;
     const updatedContext = {
       [Number(nudge.variantId)]: {
         type: type10,
@@ -23040,6 +23146,22 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           console.log("Engagement SDK has already been initialized. Ignoring additional init call.");
           return;
         }
+        if (initOptions?.useEngagementDomain) {
+          const isEU = (initOptions.serverZone ?? proxy2._configuration.serverZone) === "EU";
+          const domain = "amplitudeengagement.com";
+          if (!initOptions.serverUrl) {
+            initOptions.serverUrl = isEU ? `https://gs.eu.${domain}` : `https://gs.${domain}`;
+          }
+          if (!initOptions.chatUrl) {
+            initOptions.chatUrl = isEU ? `https://houston-chat.eu.${domain}` : `https://houston-chat.${domain}`;
+          }
+          if (!initOptions.mediaUrl) {
+            initOptions.mediaUrl = isEU ? `https://engagement-static.eu.${domain}` : `https://engagement-static.${domain}`;
+          }
+          if (!initOptions.cdnUrl) {
+            initOptions.cdnUrl = isEU ? `https://cdn.eu.${domain}` : `https://cdn.${domain}`;
+          }
+        }
         proxy2._configuration = {
           ...proxy2._configuration,
           ...initOptions,
@@ -24202,11 +24324,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       this.globalActions.addCallbacks({ [callbackKey]: callbackFn });
     }
     _clearNudgeInteractions(variantId) {
+      const now = Date.now();
       if (variantId) {
         this._.endUserStore.data = {
           nudgeInteractions: {
             ...this._.endUserStore.data.nudgeInteractions,
-            [variantId]: createDefaultNudgeInteractionState()
+            [variantId]: { ...createDefaultNudgeInteractionState(), lastUpdatedTs: now }
           }
         };
       } else {
@@ -24214,7 +24337,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           nudgeInteractions: Object.fromEntries(
             Object.keys(this._.endUserStore.data.nudgeInteractions).map((key) => [
               key,
-              createDefaultNudgeInteractionState()
+              { ...createDefaultNudgeInteractionState(), lastUpdatedTs: now }
             ])
           )
         };
@@ -25630,7 +25753,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   };
 
   // ../shared/src/internal/util/proxyMediaUrl.ts
-  var AMPLITUDE_IMAGE_DOMAINS = ["engagement-static.amplitude.com", "engagement-static.eu.amplitude.com"];
+  var AMPLITUDE_IMAGE_DOMAINS = [
+    "engagement-static.amplitude.com",
+    "engagement-static.eu.amplitude.com",
+    "engagement-static.amplitudeengagement.com",
+    "engagement-static.eu.amplitudeengagement.com"
+  ];
   var stripAmplitudeImageDomain = (url) => {
     try {
       for (const domain of AMPLITUDE_IMAGE_DOMAINS) {
