@@ -159,8 +159,8 @@
         if (isArray3(value)) {
           return false;
         }
-        var type10 = typeof value;
-        if (type10 == "number" || type10 == "symbol" || type10 == "boolean" || value == null || isSymbol(value)) {
+        var type11 = typeof value;
+        if (type11 == "number" || type11 == "symbol" || type11 == "boolean" || value == null || isSymbol(value)) {
           return true;
         }
         return reIsPlainProp.test(value) || !reIsDeepProp.test(value) || object != null && value in Object(object);
@@ -173,8 +173,8 @@
   var require_isObject = __commonJS({
     "../shared/node_modules/lodash/isObject.js"(exports, module) {
       function isObject2(value) {
-        var type10 = typeof value;
-        return value != null && (type10 == "object" || type10 == "function");
+        var type11 = typeof value;
+        return value != null && (type11 == "object" || type11 == "function");
       }
       module.exports = isObject2;
     }
@@ -427,10 +427,10 @@
   var require_assocIndexOf = __commonJS({
     "../shared/node_modules/lodash/_assocIndexOf.js"(exports, module) {
       var eq = require_eq();
-      function assocIndexOf(array7, key) {
-        var length = array7.length;
+      function assocIndexOf(array8, key) {
+        var length = array8.length;
         while (length--) {
-          if (eq(array7[length][0], key)) {
+          if (eq(array8[length][0], key)) {
             return length;
           }
         }
@@ -562,8 +562,8 @@
   var require_isKeyable = __commonJS({
     "../shared/node_modules/lodash/_isKeyable.js"(exports, module) {
       function isKeyable(value) {
-        var type10 = typeof value;
-        return type10 == "string" || type10 == "number" || type10 == "symbol" || type10 == "boolean" ? value !== "__proto__" : value === null;
+        var type11 = typeof value;
+        return type11 == "string" || type11 == "number" || type11 == "symbol" || type11 == "boolean" ? value !== "__proto__" : value === null;
       }
       module.exports = isKeyable;
     }
@@ -706,13 +706,13 @@
       var memoizeCapped = require_memoizeCapped();
       var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
       var reEscapeChar = /\\(\\)?/g;
-      var stringToPath = memoizeCapped(function(string10) {
+      var stringToPath = memoizeCapped(function(string11) {
         var result = [];
-        if (string10.charCodeAt(0) === 46) {
+        if (string11.charCodeAt(0) === 46) {
           result.push("");
         }
-        string10.replace(rePropName, function(match, number7, quote, subString) {
-          result.push(quote ? subString.replace(reEscapeChar, "$1") : number7 || match);
+        string11.replace(rePropName, function(match, number8, quote, subString) {
+          result.push(quote ? subString.replace(reEscapeChar, "$1") : number8 || match);
         });
         return result;
       });
@@ -723,10 +723,10 @@
   // ../shared/node_modules/lodash/_arrayMap.js
   var require_arrayMap = __commonJS({
     "../shared/node_modules/lodash/_arrayMap.js"(exports, module) {
-      function arrayMap(array7, iteratee) {
-        var index = -1, length = array7 == null ? 0 : array7.length, result = Array(length);
+      function arrayMap(array8, iteratee) {
+        var index = -1, length = array8 == null ? 0 : array8.length, result = Array(length);
         while (++index < length) {
-          result[index] = iteratee(array7[index], index, array7);
+          result[index] = iteratee(array8[index], index, array8);
         }
         return result;
       }
@@ -831,314 +831,6 @@
         return result === void 0 ? defaultValue : result;
       }
       module.exports = get5;
-    }
-  });
-
-  // ../shared/node_modules/lodash/_defineProperty.js
-  var require_defineProperty = __commonJS({
-    "../shared/node_modules/lodash/_defineProperty.js"(exports, module) {
-      var getNative = require_getNative();
-      var defineProperty = function() {
-        try {
-          var func = getNative(Object, "defineProperty");
-          func({}, "", {});
-          return func;
-        } catch (e2) {
-        }
-      }();
-      module.exports = defineProperty;
-    }
-  });
-
-  // ../shared/node_modules/lodash/_baseAssignValue.js
-  var require_baseAssignValue = __commonJS({
-    "../shared/node_modules/lodash/_baseAssignValue.js"(exports, module) {
-      var defineProperty = require_defineProperty();
-      function baseAssignValue(object, key, value) {
-        if (key == "__proto__" && defineProperty) {
-          defineProperty(object, key, {
-            "configurable": true,
-            "enumerable": true,
-            "value": value,
-            "writable": true
-          });
-        } else {
-          object[key] = value;
-        }
-      }
-      module.exports = baseAssignValue;
-    }
-  });
-
-  // ../shared/node_modules/lodash/_assignValue.js
-  var require_assignValue = __commonJS({
-    "../shared/node_modules/lodash/_assignValue.js"(exports, module) {
-      var baseAssignValue = require_baseAssignValue();
-      var eq = require_eq();
-      var objectProto = Object.prototype;
-      var hasOwnProperty = objectProto.hasOwnProperty;
-      function assignValue(object, key, value) {
-        var objValue = object[key];
-        if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) || value === void 0 && !(key in object)) {
-          baseAssignValue(object, key, value);
-        }
-      }
-      module.exports = assignValue;
-    }
-  });
-
-  // ../shared/node_modules/lodash/_isIndex.js
-  var require_isIndex = __commonJS({
-    "../shared/node_modules/lodash/_isIndex.js"(exports, module) {
-      var MAX_SAFE_INTEGER = 9007199254740991;
-      var reIsUint = /^(?:0|[1-9]\d*)$/;
-      function isIndex(value, length) {
-        var type10 = typeof value;
-        length = length == null ? MAX_SAFE_INTEGER : length;
-        return !!length && (type10 == "number" || type10 != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
-      }
-      module.exports = isIndex;
-    }
-  });
-
-  // ../shared/node_modules/lodash/_baseSet.js
-  var require_baseSet = __commonJS({
-    "../shared/node_modules/lodash/_baseSet.js"(exports, module) {
-      var assignValue = require_assignValue();
-      var castPath = require_castPath();
-      var isIndex = require_isIndex();
-      var isObject2 = require_isObject();
-      var toKey = require_toKey();
-      function baseSet(object, path, value, customizer) {
-        if (!isObject2(object)) {
-          return object;
-        }
-        path = castPath(path, object);
-        var index = -1, length = path.length, lastIndex = length - 1, nested = object;
-        while (nested != null && ++index < length) {
-          var key = toKey(path[index]), newValue = value;
-          if (key === "__proto__" || key === "constructor" || key === "prototype") {
-            return object;
-          }
-          if (index != lastIndex) {
-            var objValue = nested[key];
-            newValue = customizer ? customizer(objValue, key, nested) : void 0;
-            if (newValue === void 0) {
-              newValue = isObject2(objValue) ? objValue : isIndex(path[index + 1]) ? [] : {};
-            }
-          }
-          assignValue(nested, key, newValue);
-          nested = nested[key];
-        }
-        return object;
-      }
-      module.exports = baseSet;
-    }
-  });
-
-  // ../shared/node_modules/lodash/set.js
-  var require_set = __commonJS({
-    "../shared/node_modules/lodash/set.js"(exports, module) {
-      var baseSet = require_baseSet();
-      function set4(object, path, value) {
-        return object == null ? object : baseSet(object, path, value);
-      }
-      module.exports = set4;
-    }
-  });
-
-  // ../shared/node_modules/dayjs/dayjs.min.js
-  var require_dayjs_min = __commonJS({
-    "../shared/node_modules/dayjs/dayjs.min.js"(exports, module) {
-      !function(t13, e2) {
-        "object" == typeof exports && "undefined" != typeof module ? module.exports = e2() : "function" == typeof define && define.amd ? define(e2) : (t13 = "undefined" != typeof globalThis ? globalThis : t13 || self).dayjs = e2();
-      }(exports, function() {
-        "use strict";
-        var t13 = 1e3, e2 = 6e4, n = 36e5, r = "millisecond", i2 = "second", s2 = "minute", u = "hour", a = "day", o = "week", f = "month", h2 = "quarter", c2 = "year", d = "date", $ = "Invalid Date", l2 = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y2 = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M = { name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_") }, m = function(t14, e3, n2) {
-          var r2 = String(t14);
-          return !r2 || r2.length >= e3 ? t14 : "" + Array(e3 + 1 - r2.length).join(n2) + t14;
-        }, g = { s: m, z: function(t14) {
-          var e3 = -t14.utcOffset(), n2 = Math.abs(e3), r2 = Math.floor(n2 / 60), i3 = n2 % 60;
-          return (e3 <= 0 ? "+" : "-") + m(r2, 2, "0") + ":" + m(i3, 2, "0");
-        }, m: function t14(e3, n2) {
-          if (e3.date() < n2.date()) return -t14(n2, e3);
-          var r2 = 12 * (n2.year() - e3.year()) + (n2.month() - e3.month()), i3 = e3.clone().add(r2, f), s3 = n2 - i3 < 0, u2 = e3.clone().add(r2 + (s3 ? -1 : 1), f);
-          return +(-(r2 + (n2 - i3) / (s3 ? i3 - u2 : u2 - i3)) || 0);
-        }, a: function(t14) {
-          return t14 < 0 ? Math.ceil(t14) || 0 : Math.floor(t14);
-        }, p: function(t14) {
-          return { M: f, y: c2, w: o, d: a, D: d, h: u, m: s2, s: i2, ms: r, Q: h2 }[t14] || String(t14 || "").toLowerCase().replace(/s$/, "");
-        }, u: function(t14) {
-          return void 0 === t14;
-        } }, v = "en", D = {};
-        D[v] = M;
-        var p = function(t14) {
-          return t14 instanceof _;
-        }, S = function t14(e3, n2, r2) {
-          var i3;
-          if (!e3) return v;
-          if ("string" == typeof e3) {
-            var s3 = e3.toLowerCase();
-            D[s3] && (i3 = s3), n2 && (D[s3] = n2, i3 = s3);
-            var u2 = e3.split("-");
-            if (!i3 && u2.length > 1) return t14(u2[0]);
-          } else {
-            var a2 = e3.name;
-            D[a2] = e3, i3 = a2;
-          }
-          return !r2 && i3 && (v = i3), i3 || !r2 && v;
-        }, w = function(t14, e3) {
-          if (p(t14)) return t14.clone();
-          var n2 = "object" == typeof e3 ? e3 : {};
-          return n2.date = t14, n2.args = arguments, new _(n2);
-        }, O = g;
-        O.l = S, O.i = p, O.w = function(t14, e3) {
-          return w(t14, { locale: e3.$L, utc: e3.$u, x: e3.$x, $offset: e3.$offset });
-        };
-        var _ = function() {
-          function M2(t14) {
-            this.$L = S(t14.locale, null, true), this.parse(t14);
-          }
-          var m2 = M2.prototype;
-          return m2.parse = function(t14) {
-            this.$d = function(t15) {
-              var e3 = t15.date, n2 = t15.utc;
-              if (null === e3) return /* @__PURE__ */ new Date(NaN);
-              if (O.u(e3)) return /* @__PURE__ */ new Date();
-              if (e3 instanceof Date) return new Date(e3);
-              if ("string" == typeof e3 && !/Z$/i.test(e3)) {
-                var r2 = e3.match(l2);
-                if (r2) {
-                  var i3 = r2[2] - 1 || 0, s3 = (r2[7] || "0").substring(0, 3);
-                  return n2 ? new Date(Date.UTC(r2[1], i3, r2[3] || 1, r2[4] || 0, r2[5] || 0, r2[6] || 0, s3)) : new Date(r2[1], i3, r2[3] || 1, r2[4] || 0, r2[5] || 0, r2[6] || 0, s3);
-                }
-              }
-              return new Date(e3);
-            }(t14), this.$x = t14.x || {}, this.init();
-          }, m2.init = function() {
-            var t14 = this.$d;
-            this.$y = t14.getFullYear(), this.$M = t14.getMonth(), this.$D = t14.getDate(), this.$W = t14.getDay(), this.$H = t14.getHours(), this.$m = t14.getMinutes(), this.$s = t14.getSeconds(), this.$ms = t14.getMilliseconds();
-          }, m2.$utils = function() {
-            return O;
-          }, m2.isValid = function() {
-            return !(this.$d.toString() === $);
-          }, m2.isSame = function(t14, e3) {
-            var n2 = w(t14);
-            return this.startOf(e3) <= n2 && n2 <= this.endOf(e3);
-          }, m2.isAfter = function(t14, e3) {
-            return w(t14) < this.startOf(e3);
-          }, m2.isBefore = function(t14, e3) {
-            return this.endOf(e3) < w(t14);
-          }, m2.$g = function(t14, e3, n2) {
-            return O.u(t14) ? this[e3] : this.set(n2, t14);
-          }, m2.unix = function() {
-            return Math.floor(this.valueOf() / 1e3);
-          }, m2.valueOf = function() {
-            return this.$d.getTime();
-          }, m2.startOf = function(t14, e3) {
-            var n2 = this, r2 = !!O.u(e3) || e3, h3 = O.p(t14), $2 = function(t15, e4) {
-              var i3 = O.w(n2.$u ? Date.UTC(n2.$y, e4, t15) : new Date(n2.$y, e4, t15), n2);
-              return r2 ? i3 : i3.endOf(a);
-            }, l3 = function(t15, e4) {
-              return O.w(n2.toDate()[t15].apply(n2.toDate("s"), (r2 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e4)), n2);
-            }, y3 = this.$W, M3 = this.$M, m3 = this.$D, g2 = "set" + (this.$u ? "UTC" : "");
-            switch (h3) {
-              case c2:
-                return r2 ? $2(1, 0) : $2(31, 11);
-              case f:
-                return r2 ? $2(1, M3) : $2(0, M3 + 1);
-              case o:
-                var v2 = this.$locale().weekStart || 0, D2 = (y3 < v2 ? y3 + 7 : y3) - v2;
-                return $2(r2 ? m3 - D2 : m3 + (6 - D2), M3);
-              case a:
-              case d:
-                return l3(g2 + "Hours", 0);
-              case u:
-                return l3(g2 + "Minutes", 1);
-              case s2:
-                return l3(g2 + "Seconds", 2);
-              case i2:
-                return l3(g2 + "Milliseconds", 3);
-              default:
-                return this.clone();
-            }
-          }, m2.endOf = function(t14) {
-            return this.startOf(t14, false);
-          }, m2.$set = function(t14, e3) {
-            var n2, o2 = O.p(t14), h3 = "set" + (this.$u ? "UTC" : ""), $2 = (n2 = {}, n2[a] = h3 + "Date", n2[d] = h3 + "Date", n2[f] = h3 + "Month", n2[c2] = h3 + "FullYear", n2[u] = h3 + "Hours", n2[s2] = h3 + "Minutes", n2[i2] = h3 + "Seconds", n2[r] = h3 + "Milliseconds", n2)[o2], l3 = o2 === a ? this.$D + (e3 - this.$W) : e3;
-            if (o2 === f || o2 === c2) {
-              var y3 = this.clone().set(d, 1);
-              y3.$d[$2](l3), y3.init(), this.$d = y3.set(d, Math.min(this.$D, y3.daysInMonth())).$d;
-            } else $2 && this.$d[$2](l3);
-            return this.init(), this;
-          }, m2.set = function(t14, e3) {
-            return this.clone().$set(t14, e3);
-          }, m2.get = function(t14) {
-            return this[O.p(t14)]();
-          }, m2.add = function(r2, h3) {
-            var d2, $2 = this;
-            r2 = Number(r2);
-            var l3 = O.p(h3), y3 = function(t14) {
-              var e3 = w($2);
-              return O.w(e3.date(e3.date() + Math.round(t14 * r2)), $2);
-            };
-            if (l3 === f) return this.set(f, this.$M + r2);
-            if (l3 === c2) return this.set(c2, this.$y + r2);
-            if (l3 === a) return y3(1);
-            if (l3 === o) return y3(7);
-            var M3 = (d2 = {}, d2[s2] = e2, d2[u] = n, d2[i2] = t13, d2)[l3] || 1, m3 = this.$d.getTime() + r2 * M3;
-            return O.w(m3, this);
-          }, m2.subtract = function(t14, e3) {
-            return this.add(-1 * t14, e3);
-          }, m2.format = function(t14) {
-            var e3 = this, n2 = this.$locale();
-            if (!this.isValid()) return n2.invalidDate || $;
-            var r2 = t14 || "YYYY-MM-DDTHH:mm:ssZ", i3 = O.z(this), s3 = this.$H, u2 = this.$m, a2 = this.$M, o2 = n2.weekdays, f2 = n2.months, h3 = function(t15, n3, i4, s4) {
-              return t15 && (t15[n3] || t15(e3, r2)) || i4[n3].slice(0, s4);
-            }, c3 = function(t15) {
-              return O.s(s3 % 12 || 12, t15, "0");
-            }, d2 = n2.meridiem || function(t15, e4, n3) {
-              var r3 = t15 < 12 ? "AM" : "PM";
-              return n3 ? r3.toLowerCase() : r3;
-            }, l3 = { YY: String(this.$y).slice(-2), YYYY: this.$y, M: a2 + 1, MM: O.s(a2 + 1, 2, "0"), MMM: h3(n2.monthsShort, a2, f2, 3), MMMM: h3(f2, a2), D: this.$D, DD: O.s(this.$D, 2, "0"), d: String(this.$W), dd: h3(n2.weekdaysMin, this.$W, o2, 2), ddd: h3(n2.weekdaysShort, this.$W, o2, 3), dddd: o2[this.$W], H: String(s3), HH: O.s(s3, 2, "0"), h: c3(1), hh: c3(2), a: d2(s3, u2, true), A: d2(s3, u2, false), m: String(u2), mm: O.s(u2, 2, "0"), s: String(this.$s), ss: O.s(this.$s, 2, "0"), SSS: O.s(this.$ms, 3, "0"), Z: i3 };
-            return r2.replace(y2, function(t15, e4) {
-              return e4 || l3[t15] || i3.replace(":", "");
-            });
-          }, m2.utcOffset = function() {
-            return 15 * -Math.round(this.$d.getTimezoneOffset() / 15);
-          }, m2.diff = function(r2, d2, $2) {
-            var l3, y3 = O.p(d2), M3 = w(r2), m3 = (M3.utcOffset() - this.utcOffset()) * e2, g2 = this - M3, v2 = O.m(this, M3);
-            return v2 = (l3 = {}, l3[c2] = v2 / 12, l3[f] = v2, l3[h2] = v2 / 3, l3[o] = (g2 - m3) / 6048e5, l3[a] = (g2 - m3) / 864e5, l3[u] = g2 / n, l3[s2] = g2 / e2, l3[i2] = g2 / t13, l3)[y3] || g2, $2 ? v2 : O.a(v2);
-          }, m2.daysInMonth = function() {
-            return this.endOf(f).$D;
-          }, m2.$locale = function() {
-            return D[this.$L];
-          }, m2.locale = function(t14, e3) {
-            if (!t14) return this.$L;
-            var n2 = this.clone(), r2 = S(t14, e3, true);
-            return r2 && (n2.$L = r2), n2;
-          }, m2.clone = function() {
-            return O.w(this.$d, this);
-          }, m2.toDate = function() {
-            return new Date(this.valueOf());
-          }, m2.toJSON = function() {
-            return this.isValid() ? this.toISOString() : null;
-          }, m2.toISOString = function() {
-            return this.$d.toISOString();
-          }, m2.toString = function() {
-            return this.$d.toUTCString();
-          }, M2;
-        }(), T = _.prototype;
-        return w.prototype = T, [["$ms", r], ["$s", i2], ["$m", s2], ["$H", u], ["$W", a], ["$M", f], ["$y", c2], ["$D", d]].forEach(function(t14) {
-          T[t14[1]] = function(e3) {
-            return this.$g(e3, t14[0], t14[1]);
-          };
-        }), w.extend = function(t14, e3) {
-          return t14.$i || (t14(e3, _, w), t14.$i = true), w;
-        }, w.locale = S, w.isDayjs = p, w.unix = function(t14) {
-          return w(1e3 * t14);
-        }, w.en = D[v], w.Ls = D, w.p = {}, w;
-      });
     }
   });
 
@@ -1321,11 +1013,11 @@
       }
       exports.flow = flow2;
       function tuple() {
-        var t13 = [];
+        var t14 = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-          t13[_i] = arguments[_i];
+          t14[_i] = arguments[_i];
         }
-        return t13;
+        return t14;
       }
       exports.tuple = tuple;
       function increment(n) {
@@ -2487,13 +2179,13 @@
         };
       }();
       var __assign3 = exports && exports.__assign || function() {
-        __assign3 = Object.assign || function(t13) {
+        __assign3 = Object.assign || function(t14) {
           for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
             s2 = arguments[i2];
             for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p))
-              t13[p] = s2[p];
+              t14[p] = s2[p];
           }
-          return t13;
+          return t14;
         };
         return __assign3.apply(this, arguments);
       };
@@ -2626,8 +2318,8 @@
         } else if (isKeyofC(domain)) {
           return domain.keys;
         } else if (isUnionC(domain)) {
-          var keys = domain.types.map(function(type11) {
-            return getDomainKeys(type11);
+          var keys = domain.types.map(function(type12) {
+            return getDomainKeys(type12);
           });
           return keys.some(undefinedType.is) ? void 0 : Object.assign.apply(Object, __spreadArray2([{}], keys, false));
         }
@@ -2707,8 +2399,8 @@
         }, domain, codomain);
       }
       function getUnionName(codecs) {
-        return "(" + codecs.map(function(type11) {
-          return type11.name;
+        return "(" + codecs.map(function(type12) {
+          return type12.name;
         }).join(" | ") + ")";
       }
       function mergeAll(base, us) {
@@ -2751,8 +2443,8 @@
           case "PartialType":
             return codec.props;
           case "IntersectionType":
-            return codec.types.reduce(function(props, type11) {
-              return Object.assign(props, getProps(type11));
+            return codec.types.reduce(function(props, type12) {
+              return Object.assign(props, getProps(type12));
             }, {});
         }
       }
@@ -3182,9 +2874,9 @@
         /** @class */
         function(_super) {
           __extends2(RefinementType2, _super);
-          function RefinementType2(name, is, validate2, encode2, type11, predicate) {
+          function RefinementType2(name, is, validate2, encode2, type12, predicate) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type11;
+            _this.type = type12;
             _this.predicate = predicate;
             _this._tag = "RefinementType";
             return _this;
@@ -3244,9 +2936,9 @@
         /** @class */
         function(_super) {
           __extends2(ArrayType2, _super);
-          function ArrayType2(name, is, validate2, encode2, type11) {
+          function ArrayType2(name, is, validate2, encode2, type12) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type11;
+            _this.type = type12;
             _this._tag = "ArrayType";
             return _this;
           }
@@ -3254,7 +2946,7 @@
         }(Type)
       );
       exports.ArrayType = ArrayType;
-      function array7(item, name) {
+      function array8(item, name) {
         if (name === void 0) {
           name = "Array<".concat(item.name, ">");
         }
@@ -3289,7 +2981,7 @@
           return a.map(item.encode);
         }, item);
       }
-      exports.array = array7;
+      exports.array = array8;
       var InterfaceType = (
         /** @class */
         function(_super) {
@@ -3304,7 +2996,7 @@
         }(Type)
       );
       exports.InterfaceType = InterfaceType;
-      function type10(props, name) {
+      function type11(props, name) {
         if (name === void 0) {
           name = getInterfaceTypeName(props);
         }
@@ -3363,8 +3055,8 @@
           return s2;
         }, props);
       }
-      exports.type = type10;
-      exports.interface = type10;
+      exports.type = type11;
+      exports.interface = type11;
       var PartialType = (
         /** @class */
         function(_super) {
@@ -3519,8 +3211,8 @@
           }, codecs, tag_1);
         } else {
           return new UnionType(name, function(u) {
-            return codecs.some(function(type11) {
-              return type11.is(u);
+            return codecs.some(function(type12) {
+              return type12.is(u);
             });
           }, function(u, c2) {
             var errors = [];
@@ -3562,14 +3254,14 @@
       exports.IntersectionType = IntersectionType;
       function intersection7(codecs, name) {
         if (name === void 0) {
-          name = "(".concat(codecs.map(function(type11) {
-            return type11.name;
+          name = "(".concat(codecs.map(function(type12) {
+            return type12.name;
           }).join(" & "), ")");
         }
         var len = codecs.length;
         return new IntersectionType(name, function(u) {
-          return codecs.every(function(type11) {
-            return type11.is(u);
+          return codecs.every(function(type12) {
+            return type12.is(u);
           });
         }, codecs.length === 0 ? exports.success : function(u, c2) {
           var us = [];
@@ -3607,14 +3299,14 @@
       exports.TupleType = TupleType;
       function tuple(codecs, name) {
         if (name === void 0) {
-          name = "[".concat(codecs.map(function(type11) {
-            return type11.name;
+          name = "[".concat(codecs.map(function(type12) {
+            return type12.name;
           }).join(", "), "]");
         }
         var len = codecs.length;
         return new TupleType(name, function(u) {
-          return exports.UnknownArray.is(u) && u.length === len && codecs.every(function(type11, i2) {
-            return type11.is(u[i2]);
+          return exports.UnknownArray.is(u) && u.length === len && codecs.every(function(type12, i2) {
+            return type12.is(u[i2]);
           });
         }, function(u, c2) {
           var e2 = exports.UnknownArray.validate(u, c2);
@@ -3642,8 +3334,8 @@
           }
           return errors.length > 0 ? (0, exports.failures)(errors) : (0, exports.success)(as);
         }, useIdentity(codecs) ? exports.identity : function(a) {
-          return codecs.map(function(type11, i2) {
-            return type11.encode(a[i2]);
+          return codecs.map(function(type12, i2) {
+            return type12.encode(a[i2]);
           });
         }, codecs);
       }
@@ -3652,9 +3344,9 @@
         /** @class */
         function(_super) {
           __extends2(ReadonlyType2, _super);
-          function ReadonlyType2(name, is, validate2, encode2, type11) {
+          function ReadonlyType2(name, is, validate2, encode2, type12) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type11;
+            _this.type = type12;
             _this._tag = "ReadonlyType";
             return _this;
           }
@@ -3673,9 +3365,9 @@
         /** @class */
         function(_super) {
           __extends2(ReadonlyArrayType2, _super);
-          function ReadonlyArrayType2(name, is, validate2, encode2, type11) {
+          function ReadonlyArrayType2(name, is, validate2, encode2, type12) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type11;
+            _this.type = type12;
             _this._tag = "ReadonlyArrayType";
             return _this;
           }
@@ -3687,21 +3379,21 @@
         if (name === void 0) {
           name = "ReadonlyArray<".concat(item.name, ">");
         }
-        var codec = array7(item);
+        var codec = array8(item);
         return new ReadonlyArrayType(name, codec.is, codec.validate, codec.encode, item);
       }
       exports.readonlyArray = readonlyArray;
       var strict = function(props, name) {
-        return exact(type10(props), name);
+        return exact(type11(props), name);
       };
       exports.strict = strict;
       var ExactType = (
         /** @class */
         function(_super) {
           __extends2(ExactType2, _super);
-          function ExactType2(name, is, validate2, encode2, type11) {
+          function ExactType2(name, is, validate2, encode2, type12) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type11;
+            _this.type = type12;
             _this._tag = "ExactType";
             return _this;
           }
@@ -6321,8 +6013,8 @@
           shows[_i] = arguments[_i];
         }
         return {
-          show: function(t13) {
-            return "[" + t13.map(function(a, i2) {
+          show: function(t14) {
+            return "[" + t14.map(function(a, i2) {
               return shows[i2].show(a);
             }).join(", ") + "]";
           }
@@ -10043,11 +9735,11 @@
       var O = require_Option();
       var R = require_Record();
       var pipeable_1 = require_pipeable();
-      var t13 = require_lib();
+      var t14 = require_lib();
       var utils_1 = require_utils();
       var isUnionType = function(_a) {
-        var type10 = _a.type;
-        return type10 instanceof t13.UnionType;
+        var type11 = _a.type;
+        return type11 instanceof t14.UnionType;
       };
       var jsToString = function(value) {
         return value === void 0 ? "undefined" : JSON.stringify(value);
@@ -10064,15 +9756,15 @@
         return validation.context;
       };
       exports.TYPE_MAX_LEN = 160;
-      var truncateType = function(type10, options) {
+      var truncateType = function(type11, options) {
         if (options === void 0) {
           options = {};
         }
         var _a = options.truncateLongTypes, truncateLongTypes = _a === void 0 ? true : _a;
-        if (truncateLongTypes && type10.length > exports.TYPE_MAX_LEN) {
-          return type10.slice(0, exports.TYPE_MAX_LEN - 3) + "...";
+        if (truncateLongTypes && type11.length > exports.TYPE_MAX_LEN) {
+          return type11.slice(0, exports.TYPE_MAX_LEN - 3) + "...";
         }
-        return type10;
+        return type11;
       };
       var errorMessageSimple = function(expectedType, path, error, options) {
         return [
@@ -10085,8 +9777,8 @@
       var errorMessageUnion = function(expectedTypes, path, value, options) {
         return [
           "Expecting one of:\n",
-          expectedTypes.map(function(type10) {
-            return "    " + truncateType(type10, options);
+          expectedTypes.map(function(type11) {
+            return "    " + truncateType(type11, options);
           }).join("\n"),
           path === "" ? "\n" : "\nat " + path + " ",
           "but instead got: " + jsToString(value)
@@ -10105,8 +9797,8 @@
           return void 0;
         }));
         var expected = expectedTypes.map(function(_a) {
-          var type10 = _a.type;
-          return type10.name;
+          var type11 = _a.type;
+          return type11.name;
         });
         return expected.length > 0 ? O.some(errorMessageUnion(expected, path, value, options)) : O.none;
       };
@@ -10146,6 +9838,478 @@
       exports.reporter = reporter2;
       var prettyReporter = { report: exports.reporter };
       exports.default = prettyReporter;
+    }
+  });
+
+  // ../shared/node_modules/lodash/_defineProperty.js
+  var require_defineProperty = __commonJS({
+    "../shared/node_modules/lodash/_defineProperty.js"(exports, module) {
+      var getNative = require_getNative();
+      var defineProperty = function() {
+        try {
+          var func = getNative(Object, "defineProperty");
+          func({}, "", {});
+          return func;
+        } catch (e2) {
+        }
+      }();
+      module.exports = defineProperty;
+    }
+  });
+
+  // ../shared/node_modules/lodash/_baseAssignValue.js
+  var require_baseAssignValue = __commonJS({
+    "../shared/node_modules/lodash/_baseAssignValue.js"(exports, module) {
+      var defineProperty = require_defineProperty();
+      function baseAssignValue(object, key, value) {
+        if (key == "__proto__" && defineProperty) {
+          defineProperty(object, key, {
+            "configurable": true,
+            "enumerable": true,
+            "value": value,
+            "writable": true
+          });
+        } else {
+          object[key] = value;
+        }
+      }
+      module.exports = baseAssignValue;
+    }
+  });
+
+  // ../shared/node_modules/lodash/_assignValue.js
+  var require_assignValue = __commonJS({
+    "../shared/node_modules/lodash/_assignValue.js"(exports, module) {
+      var baseAssignValue = require_baseAssignValue();
+      var eq = require_eq();
+      var objectProto = Object.prototype;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      function assignValue(object, key, value) {
+        var objValue = object[key];
+        if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) || value === void 0 && !(key in object)) {
+          baseAssignValue(object, key, value);
+        }
+      }
+      module.exports = assignValue;
+    }
+  });
+
+  // ../shared/node_modules/lodash/_isIndex.js
+  var require_isIndex = __commonJS({
+    "../shared/node_modules/lodash/_isIndex.js"(exports, module) {
+      var MAX_SAFE_INTEGER = 9007199254740991;
+      var reIsUint = /^(?:0|[1-9]\d*)$/;
+      function isIndex(value, length) {
+        var type11 = typeof value;
+        length = length == null ? MAX_SAFE_INTEGER : length;
+        return !!length && (type11 == "number" || type11 != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
+      }
+      module.exports = isIndex;
+    }
+  });
+
+  // ../shared/node_modules/lodash/_baseSet.js
+  var require_baseSet = __commonJS({
+    "../shared/node_modules/lodash/_baseSet.js"(exports, module) {
+      var assignValue = require_assignValue();
+      var castPath = require_castPath();
+      var isIndex = require_isIndex();
+      var isObject2 = require_isObject();
+      var toKey = require_toKey();
+      function baseSet(object, path, value, customizer) {
+        if (!isObject2(object)) {
+          return object;
+        }
+        path = castPath(path, object);
+        var index = -1, length = path.length, lastIndex = length - 1, nested = object;
+        while (nested != null && ++index < length) {
+          var key = toKey(path[index]), newValue = value;
+          if (key === "__proto__" || key === "constructor" || key === "prototype") {
+            return object;
+          }
+          if (index != lastIndex) {
+            var objValue = nested[key];
+            newValue = customizer ? customizer(objValue, key, nested) : void 0;
+            if (newValue === void 0) {
+              newValue = isObject2(objValue) ? objValue : isIndex(path[index + 1]) ? [] : {};
+            }
+          }
+          assignValue(nested, key, newValue);
+          nested = nested[key];
+        }
+        return object;
+      }
+      module.exports = baseSet;
+    }
+  });
+
+  // ../shared/node_modules/lodash/set.js
+  var require_set = __commonJS({
+    "../shared/node_modules/lodash/set.js"(exports, module) {
+      var baseSet = require_baseSet();
+      function set4(object, path, value) {
+        return object == null ? object : baseSet(object, path, value);
+      }
+      module.exports = set4;
+    }
+  });
+
+  // ../shared/node_modules/dayjs/dayjs.min.js
+  var require_dayjs_min = __commonJS({
+    "../shared/node_modules/dayjs/dayjs.min.js"(exports, module) {
+      !function(t14, e2) {
+        "object" == typeof exports && "undefined" != typeof module ? module.exports = e2() : "function" == typeof define && define.amd ? define(e2) : (t14 = "undefined" != typeof globalThis ? globalThis : t14 || self).dayjs = e2();
+      }(exports, function() {
+        "use strict";
+        var t14 = 1e3, e2 = 6e4, n = 36e5, r = "millisecond", i2 = "second", s2 = "minute", u = "hour", a = "day", o = "week", f = "month", h2 = "quarter", c2 = "year", d = "date", $ = "Invalid Date", l2 = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y2 = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M = { name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_") }, m = function(t15, e3, n2) {
+          var r2 = String(t15);
+          return !r2 || r2.length >= e3 ? t15 : "" + Array(e3 + 1 - r2.length).join(n2) + t15;
+        }, g = { s: m, z: function(t15) {
+          var e3 = -t15.utcOffset(), n2 = Math.abs(e3), r2 = Math.floor(n2 / 60), i3 = n2 % 60;
+          return (e3 <= 0 ? "+" : "-") + m(r2, 2, "0") + ":" + m(i3, 2, "0");
+        }, m: function t15(e3, n2) {
+          if (e3.date() < n2.date()) return -t15(n2, e3);
+          var r2 = 12 * (n2.year() - e3.year()) + (n2.month() - e3.month()), i3 = e3.clone().add(r2, f), s3 = n2 - i3 < 0, u2 = e3.clone().add(r2 + (s3 ? -1 : 1), f);
+          return +(-(r2 + (n2 - i3) / (s3 ? i3 - u2 : u2 - i3)) || 0);
+        }, a: function(t15) {
+          return t15 < 0 ? Math.ceil(t15) || 0 : Math.floor(t15);
+        }, p: function(t15) {
+          return { M: f, y: c2, w: o, d: a, D: d, h: u, m: s2, s: i2, ms: r, Q: h2 }[t15] || String(t15 || "").toLowerCase().replace(/s$/, "");
+        }, u: function(t15) {
+          return void 0 === t15;
+        } }, v = "en", D = {};
+        D[v] = M;
+        var p = function(t15) {
+          return t15 instanceof _;
+        }, S = function t15(e3, n2, r2) {
+          var i3;
+          if (!e3) return v;
+          if ("string" == typeof e3) {
+            var s3 = e3.toLowerCase();
+            D[s3] && (i3 = s3), n2 && (D[s3] = n2, i3 = s3);
+            var u2 = e3.split("-");
+            if (!i3 && u2.length > 1) return t15(u2[0]);
+          } else {
+            var a2 = e3.name;
+            D[a2] = e3, i3 = a2;
+          }
+          return !r2 && i3 && (v = i3), i3 || !r2 && v;
+        }, w = function(t15, e3) {
+          if (p(t15)) return t15.clone();
+          var n2 = "object" == typeof e3 ? e3 : {};
+          return n2.date = t15, n2.args = arguments, new _(n2);
+        }, O = g;
+        O.l = S, O.i = p, O.w = function(t15, e3) {
+          return w(t15, { locale: e3.$L, utc: e3.$u, x: e3.$x, $offset: e3.$offset });
+        };
+        var _ = function() {
+          function M2(t15) {
+            this.$L = S(t15.locale, null, true), this.parse(t15);
+          }
+          var m2 = M2.prototype;
+          return m2.parse = function(t15) {
+            this.$d = function(t16) {
+              var e3 = t16.date, n2 = t16.utc;
+              if (null === e3) return /* @__PURE__ */ new Date(NaN);
+              if (O.u(e3)) return /* @__PURE__ */ new Date();
+              if (e3 instanceof Date) return new Date(e3);
+              if ("string" == typeof e3 && !/Z$/i.test(e3)) {
+                var r2 = e3.match(l2);
+                if (r2) {
+                  var i3 = r2[2] - 1 || 0, s3 = (r2[7] || "0").substring(0, 3);
+                  return n2 ? new Date(Date.UTC(r2[1], i3, r2[3] || 1, r2[4] || 0, r2[5] || 0, r2[6] || 0, s3)) : new Date(r2[1], i3, r2[3] || 1, r2[4] || 0, r2[5] || 0, r2[6] || 0, s3);
+                }
+              }
+              return new Date(e3);
+            }(t15), this.$x = t15.x || {}, this.init();
+          }, m2.init = function() {
+            var t15 = this.$d;
+            this.$y = t15.getFullYear(), this.$M = t15.getMonth(), this.$D = t15.getDate(), this.$W = t15.getDay(), this.$H = t15.getHours(), this.$m = t15.getMinutes(), this.$s = t15.getSeconds(), this.$ms = t15.getMilliseconds();
+          }, m2.$utils = function() {
+            return O;
+          }, m2.isValid = function() {
+            return !(this.$d.toString() === $);
+          }, m2.isSame = function(t15, e3) {
+            var n2 = w(t15);
+            return this.startOf(e3) <= n2 && n2 <= this.endOf(e3);
+          }, m2.isAfter = function(t15, e3) {
+            return w(t15) < this.startOf(e3);
+          }, m2.isBefore = function(t15, e3) {
+            return this.endOf(e3) < w(t15);
+          }, m2.$g = function(t15, e3, n2) {
+            return O.u(t15) ? this[e3] : this.set(n2, t15);
+          }, m2.unix = function() {
+            return Math.floor(this.valueOf() / 1e3);
+          }, m2.valueOf = function() {
+            return this.$d.getTime();
+          }, m2.startOf = function(t15, e3) {
+            var n2 = this, r2 = !!O.u(e3) || e3, h3 = O.p(t15), $2 = function(t16, e4) {
+              var i3 = O.w(n2.$u ? Date.UTC(n2.$y, e4, t16) : new Date(n2.$y, e4, t16), n2);
+              return r2 ? i3 : i3.endOf(a);
+            }, l3 = function(t16, e4) {
+              return O.w(n2.toDate()[t16].apply(n2.toDate("s"), (r2 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e4)), n2);
+            }, y3 = this.$W, M3 = this.$M, m3 = this.$D, g2 = "set" + (this.$u ? "UTC" : "");
+            switch (h3) {
+              case c2:
+                return r2 ? $2(1, 0) : $2(31, 11);
+              case f:
+                return r2 ? $2(1, M3) : $2(0, M3 + 1);
+              case o:
+                var v2 = this.$locale().weekStart || 0, D2 = (y3 < v2 ? y3 + 7 : y3) - v2;
+                return $2(r2 ? m3 - D2 : m3 + (6 - D2), M3);
+              case a:
+              case d:
+                return l3(g2 + "Hours", 0);
+              case u:
+                return l3(g2 + "Minutes", 1);
+              case s2:
+                return l3(g2 + "Seconds", 2);
+              case i2:
+                return l3(g2 + "Milliseconds", 3);
+              default:
+                return this.clone();
+            }
+          }, m2.endOf = function(t15) {
+            return this.startOf(t15, false);
+          }, m2.$set = function(t15, e3) {
+            var n2, o2 = O.p(t15), h3 = "set" + (this.$u ? "UTC" : ""), $2 = (n2 = {}, n2[a] = h3 + "Date", n2[d] = h3 + "Date", n2[f] = h3 + "Month", n2[c2] = h3 + "FullYear", n2[u] = h3 + "Hours", n2[s2] = h3 + "Minutes", n2[i2] = h3 + "Seconds", n2[r] = h3 + "Milliseconds", n2)[o2], l3 = o2 === a ? this.$D + (e3 - this.$W) : e3;
+            if (o2 === f || o2 === c2) {
+              var y3 = this.clone().set(d, 1);
+              y3.$d[$2](l3), y3.init(), this.$d = y3.set(d, Math.min(this.$D, y3.daysInMonth())).$d;
+            } else $2 && this.$d[$2](l3);
+            return this.init(), this;
+          }, m2.set = function(t15, e3) {
+            return this.clone().$set(t15, e3);
+          }, m2.get = function(t15) {
+            return this[O.p(t15)]();
+          }, m2.add = function(r2, h3) {
+            var d2, $2 = this;
+            r2 = Number(r2);
+            var l3 = O.p(h3), y3 = function(t15) {
+              var e3 = w($2);
+              return O.w(e3.date(e3.date() + Math.round(t15 * r2)), $2);
+            };
+            if (l3 === f) return this.set(f, this.$M + r2);
+            if (l3 === c2) return this.set(c2, this.$y + r2);
+            if (l3 === a) return y3(1);
+            if (l3 === o) return y3(7);
+            var M3 = (d2 = {}, d2[s2] = e2, d2[u] = n, d2[i2] = t14, d2)[l3] || 1, m3 = this.$d.getTime() + r2 * M3;
+            return O.w(m3, this);
+          }, m2.subtract = function(t15, e3) {
+            return this.add(-1 * t15, e3);
+          }, m2.format = function(t15) {
+            var e3 = this, n2 = this.$locale();
+            if (!this.isValid()) return n2.invalidDate || $;
+            var r2 = t15 || "YYYY-MM-DDTHH:mm:ssZ", i3 = O.z(this), s3 = this.$H, u2 = this.$m, a2 = this.$M, o2 = n2.weekdays, f2 = n2.months, h3 = function(t16, n3, i4, s4) {
+              return t16 && (t16[n3] || t16(e3, r2)) || i4[n3].slice(0, s4);
+            }, c3 = function(t16) {
+              return O.s(s3 % 12 || 12, t16, "0");
+            }, d2 = n2.meridiem || function(t16, e4, n3) {
+              var r3 = t16 < 12 ? "AM" : "PM";
+              return n3 ? r3.toLowerCase() : r3;
+            }, l3 = { YY: String(this.$y).slice(-2), YYYY: this.$y, M: a2 + 1, MM: O.s(a2 + 1, 2, "0"), MMM: h3(n2.monthsShort, a2, f2, 3), MMMM: h3(f2, a2), D: this.$D, DD: O.s(this.$D, 2, "0"), d: String(this.$W), dd: h3(n2.weekdaysMin, this.$W, o2, 2), ddd: h3(n2.weekdaysShort, this.$W, o2, 3), dddd: o2[this.$W], H: String(s3), HH: O.s(s3, 2, "0"), h: c3(1), hh: c3(2), a: d2(s3, u2, true), A: d2(s3, u2, false), m: String(u2), mm: O.s(u2, 2, "0"), s: String(this.$s), ss: O.s(this.$s, 2, "0"), SSS: O.s(this.$ms, 3, "0"), Z: i3 };
+            return r2.replace(y2, function(t16, e4) {
+              return e4 || l3[t16] || i3.replace(":", "");
+            });
+          }, m2.utcOffset = function() {
+            return 15 * -Math.round(this.$d.getTimezoneOffset() / 15);
+          }, m2.diff = function(r2, d2, $2) {
+            var l3, y3 = O.p(d2), M3 = w(r2), m3 = (M3.utcOffset() - this.utcOffset()) * e2, g2 = this - M3, v2 = O.m(this, M3);
+            return v2 = (l3 = {}, l3[c2] = v2 / 12, l3[f] = v2, l3[h2] = v2 / 3, l3[o] = (g2 - m3) / 6048e5, l3[a] = (g2 - m3) / 864e5, l3[u] = g2 / n, l3[s2] = g2 / e2, l3[i2] = g2 / t14, l3)[y3] || g2, $2 ? v2 : O.a(v2);
+          }, m2.daysInMonth = function() {
+            return this.endOf(f).$D;
+          }, m2.$locale = function() {
+            return D[this.$L];
+          }, m2.locale = function(t15, e3) {
+            if (!t15) return this.$L;
+            var n2 = this.clone(), r2 = S(t15, e3, true);
+            return r2 && (n2.$L = r2), n2;
+          }, m2.clone = function() {
+            return O.w(this.$d, this);
+          }, m2.toDate = function() {
+            return new Date(this.valueOf());
+          }, m2.toJSON = function() {
+            return this.isValid() ? this.toISOString() : null;
+          }, m2.toISOString = function() {
+            return this.$d.toISOString();
+          }, m2.toString = function() {
+            return this.$d.toUTCString();
+          }, M2;
+        }(), T = _.prototype;
+        return w.prototype = T, [["$ms", r], ["$s", i2], ["$m", s2], ["$H", u], ["$W", a], ["$M", f], ["$y", c2], ["$D", d]].forEach(function(t15) {
+          T[t15[1]] = function(e3) {
+            return this.$g(e3, t15[0], t15[1]);
+          };
+        }), w.extend = function(t15, e3) {
+          return t15.$i || (t15(e3, _, w), t15.$i = true), w;
+        }, w.locale = S, w.isDayjs = p, w.unix = function(t15) {
+          return w(1e3 * t15);
+        }, w.en = D[v], w.Ls = D, w.p = {}, w;
+      });
+    }
+  });
+
+  // ../shared/node_modules/lodash/now.js
+  var require_now = __commonJS({
+    "../shared/node_modules/lodash/now.js"(exports, module) {
+      var root = require_root();
+      var now = function() {
+        return root.Date.now();
+      };
+      module.exports = now;
+    }
+  });
+
+  // ../shared/node_modules/lodash/_trimmedEndIndex.js
+  var require_trimmedEndIndex = __commonJS({
+    "../shared/node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
+      var reWhitespace = /\s/;
+      function trimmedEndIndex(string11) {
+        var index = string11.length;
+        while (index-- && reWhitespace.test(string11.charAt(index))) {
+        }
+        return index;
+      }
+      module.exports = trimmedEndIndex;
+    }
+  });
+
+  // ../shared/node_modules/lodash/_baseTrim.js
+  var require_baseTrim = __commonJS({
+    "../shared/node_modules/lodash/_baseTrim.js"(exports, module) {
+      var trimmedEndIndex = require_trimmedEndIndex();
+      var reTrimStart = /^\s+/;
+      function baseTrim(string11) {
+        return string11 ? string11.slice(0, trimmedEndIndex(string11) + 1).replace(reTrimStart, "") : string11;
+      }
+      module.exports = baseTrim;
+    }
+  });
+
+  // ../shared/node_modules/lodash/toNumber.js
+  var require_toNumber = __commonJS({
+    "../shared/node_modules/lodash/toNumber.js"(exports, module) {
+      var baseTrim = require_baseTrim();
+      var isObject2 = require_isObject();
+      var isSymbol = require_isSymbol();
+      var NAN = 0 / 0;
+      var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+      var reIsBinary = /^0b[01]+$/i;
+      var reIsOctal = /^0o[0-7]+$/i;
+      var freeParseInt = parseInt;
+      function toNumber(value) {
+        if (typeof value == "number") {
+          return value;
+        }
+        if (isSymbol(value)) {
+          return NAN;
+        }
+        if (isObject2(value)) {
+          var other = typeof value.valueOf == "function" ? value.valueOf() : value;
+          value = isObject2(other) ? other + "" : other;
+        }
+        if (typeof value != "string") {
+          return value === 0 ? value : +value;
+        }
+        value = baseTrim(value);
+        var isBinary = reIsBinary.test(value);
+        return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
+      }
+      module.exports = toNumber;
+    }
+  });
+
+  // ../shared/node_modules/lodash/debounce.js
+  var require_debounce = __commonJS({
+    "../shared/node_modules/lodash/debounce.js"(exports, module) {
+      var isObject2 = require_isObject();
+      var now = require_now();
+      var toNumber = require_toNumber();
+      var FUNC_ERROR_TEXT = "Expected a function";
+      var nativeMax = Math.max;
+      var nativeMin = Math.min;
+      function debounce2(func, wait, options) {
+        var lastArgs, lastThis, maxWait, result, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
+        if (typeof func != "function") {
+          throw new TypeError(FUNC_ERROR_TEXT);
+        }
+        wait = toNumber(wait) || 0;
+        if (isObject2(options)) {
+          leading = !!options.leading;
+          maxing = "maxWait" in options;
+          maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
+          trailing = "trailing" in options ? !!options.trailing : trailing;
+        }
+        function invokeFunc(time) {
+          var args = lastArgs, thisArg = lastThis;
+          lastArgs = lastThis = void 0;
+          lastInvokeTime = time;
+          result = func.apply(thisArg, args);
+          return result;
+        }
+        function leadingEdge(time) {
+          lastInvokeTime = time;
+          timerId = setTimeout(timerExpired, wait);
+          return leading ? invokeFunc(time) : result;
+        }
+        function remainingWait(time) {
+          var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime, timeWaiting = wait - timeSinceLastCall;
+          return maxing ? nativeMin(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting;
+        }
+        function shouldInvoke(time) {
+          var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime;
+          return lastCallTime === void 0 || timeSinceLastCall >= wait || timeSinceLastCall < 0 || maxing && timeSinceLastInvoke >= maxWait;
+        }
+        function timerExpired() {
+          var time = now();
+          if (shouldInvoke(time)) {
+            return trailingEdge(time);
+          }
+          timerId = setTimeout(timerExpired, remainingWait(time));
+        }
+        function trailingEdge(time) {
+          timerId = void 0;
+          if (trailing && lastArgs) {
+            return invokeFunc(time);
+          }
+          lastArgs = lastThis = void 0;
+          return result;
+        }
+        function cancel2() {
+          if (timerId !== void 0) {
+            clearTimeout(timerId);
+          }
+          lastInvokeTime = 0;
+          lastArgs = lastCallTime = lastThis = timerId = void 0;
+        }
+        function flush() {
+          return timerId === void 0 ? result : trailingEdge(now());
+        }
+        function debounced() {
+          var time = now(), isInvoking = shouldInvoke(time);
+          lastArgs = arguments;
+          lastThis = this;
+          lastCallTime = time;
+          if (isInvoking) {
+            if (timerId === void 0) {
+              return leadingEdge(lastCallTime);
+            }
+            if (maxing) {
+              clearTimeout(timerId);
+              timerId = setTimeout(timerExpired, wait);
+              return invokeFunc(lastCallTime);
+            }
+          }
+          if (timerId === void 0) {
+            timerId = setTimeout(timerExpired, wait);
+          }
+          return result;
+        }
+        debounced.cancel = cancel2;
+        debounced.flush = flush;
+        return debounced;
+      }
+      module.exports = debounce2;
     }
   });
 
@@ -10341,13 +10505,13 @@
   // ../shared/node_modules/lodash/_copyArray.js
   var require_copyArray = __commonJS({
     "../shared/node_modules/lodash/_copyArray.js"(exports, module) {
-      function copyArray(source, array7) {
+      function copyArray(source, array8) {
         var index = -1, length = source.length;
-        array7 || (array7 = Array(length));
+        array8 || (array8 = Array(length));
         while (++index < length) {
-          array7[index] = source[index];
+          array8[index] = source[index];
         }
-        return array7;
+        return array8;
       }
       module.exports = copyArray;
     }
@@ -10911,16 +11075,16 @@
       function overRest(func, start, transform) {
         start = nativeMax(start === void 0 ? func.length - 1 : start, 0);
         return function() {
-          var args = arguments, index = -1, length = nativeMax(args.length - start, 0), array7 = Array(length);
+          var args = arguments, index = -1, length = nativeMax(args.length - start, 0), array8 = Array(length);
           while (++index < length) {
-            array7[index] = args[start + index];
+            array8[index] = args[start + index];
           }
           index = -1;
           var otherArgs = Array(start + 1);
           while (++index < start) {
             otherArgs[index] = args[index];
           }
-          otherArgs[start] = transform(array7);
+          otherArgs[start] = transform(array8);
           return apply(func, this, otherArgs);
         };
       }
@@ -10946,11 +11110,11 @@
       var constant = require_constant();
       var defineProperty = require_defineProperty();
       var identity2 = require_identity();
-      var baseSetToString = !defineProperty ? identity2 : function(func, string10) {
+      var baseSetToString = !defineProperty ? identity2 : function(func, string11) {
         return defineProperty(func, "toString", {
           "configurable": true,
           "enumerable": false,
-          "value": constant(string10),
+          "value": constant(string11),
           "writable": true
         });
       };
@@ -11017,8 +11181,8 @@
         if (!isObject2(object)) {
           return false;
         }
-        var type10 = typeof index;
-        if (type10 == "number" ? isArrayLike(object) && isIndex(index, object.length) : type10 == "string" && index in object) {
+        var type11 = typeof index;
+        if (type11 == "number" ? isArrayLike(object) && isIndex(index, object.length) : type11 == "string" && index in object) {
           return eq(object[index], value);
         }
         return false;
@@ -11110,10 +11274,10 @@
   // ../shared/node_modules/lodash/_arraySome.js
   var require_arraySome = __commonJS({
     "../shared/node_modules/lodash/_arraySome.js"(exports, module) {
-      function arraySome(array7, predicate) {
-        var index = -1, length = array7 == null ? 0 : array7.length;
+      function arraySome(array8, predicate) {
+        var index = -1, length = array8 == null ? 0 : array8.length;
         while (++index < length) {
-          if (predicate(array7[index], index, array7)) {
+          if (predicate(array8[index], index, array8)) {
             return true;
           }
         }
@@ -11141,23 +11305,23 @@
       var cacheHas = require_cacheHas();
       var COMPARE_PARTIAL_FLAG = 1;
       var COMPARE_UNORDERED_FLAG = 2;
-      function equalArrays(array7, other, bitmask, customizer, equalFunc, stack) {
-        var isPartial = bitmask & COMPARE_PARTIAL_FLAG, arrLength = array7.length, othLength = other.length;
+      function equalArrays(array8, other, bitmask, customizer, equalFunc, stack) {
+        var isPartial = bitmask & COMPARE_PARTIAL_FLAG, arrLength = array8.length, othLength = other.length;
         if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
           return false;
         }
-        var arrStacked = stack.get(array7);
+        var arrStacked = stack.get(array8);
         var othStacked = stack.get(other);
         if (arrStacked && othStacked) {
-          return arrStacked == other && othStacked == array7;
+          return arrStacked == other && othStacked == array8;
         }
         var index = -1, result = true, seen = bitmask & COMPARE_UNORDERED_FLAG ? new SetCache() : void 0;
-        stack.set(array7, other);
-        stack.set(other, array7);
+        stack.set(array8, other);
+        stack.set(other, array8);
         while (++index < arrLength) {
-          var arrValue = array7[index], othValue = other[index];
+          var arrValue = array8[index], othValue = other[index];
           if (customizer) {
-            var compared = isPartial ? customizer(othValue, arrValue, index, other, array7, stack) : customizer(arrValue, othValue, index, array7, other, stack);
+            var compared = isPartial ? customizer(othValue, arrValue, index, other, array8, stack) : customizer(arrValue, othValue, index, array8, other, stack);
           }
           if (compared !== void 0) {
             if (compared) {
@@ -11180,7 +11344,7 @@
             break;
           }
         }
-        stack["delete"](array7);
+        stack["delete"](array8);
         stack["delete"](other);
         return result;
       }
@@ -11293,12 +11457,12 @@
   // ../shared/node_modules/lodash/_arrayPush.js
   var require_arrayPush = __commonJS({
     "../shared/node_modules/lodash/_arrayPush.js"(exports, module) {
-      function arrayPush(array7, values) {
-        var index = -1, length = values.length, offset2 = array7.length;
+      function arrayPush(array8, values) {
+        var index = -1, length = values.length, offset2 = array8.length;
         while (++index < length) {
-          array7[offset2 + index] = values[index];
+          array8[offset2 + index] = values[index];
         }
-        return array7;
+        return array8;
       }
       module.exports = arrayPush;
     }
@@ -11320,11 +11484,11 @@
   // ../shared/node_modules/lodash/_arrayFilter.js
   var require_arrayFilter = __commonJS({
     "../shared/node_modules/lodash/_arrayFilter.js"(exports, module) {
-      function arrayFilter(array7, predicate) {
-        var index = -1, length = array7 == null ? 0 : array7.length, resIndex = 0, result = [];
+      function arrayFilter(array8, predicate) {
+        var index = -1, length = array8 == null ? 0 : array8.length, resIndex = 0, result = [];
         while (++index < length) {
-          var value = array7[index];
-          if (predicate(value, index, array7)) {
+          var value = array8[index];
+          if (predicate(value, index, array8)) {
             result[resIndex++] = value;
           }
         }
@@ -11643,174 +11807,10 @@
     }
   });
 
-  // ../shared/node_modules/lodash/now.js
-  var require_now = __commonJS({
-    "../shared/node_modules/lodash/now.js"(exports, module) {
-      var root = require_root();
-      var now = function() {
-        return root.Date.now();
-      };
-      module.exports = now;
-    }
-  });
-
-  // ../shared/node_modules/lodash/_trimmedEndIndex.js
-  var require_trimmedEndIndex = __commonJS({
-    "../shared/node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
-      var reWhitespace = /\s/;
-      function trimmedEndIndex(string10) {
-        var index = string10.length;
-        while (index-- && reWhitespace.test(string10.charAt(index))) {
-        }
-        return index;
-      }
-      module.exports = trimmedEndIndex;
-    }
-  });
-
-  // ../shared/node_modules/lodash/_baseTrim.js
-  var require_baseTrim = __commonJS({
-    "../shared/node_modules/lodash/_baseTrim.js"(exports, module) {
-      var trimmedEndIndex = require_trimmedEndIndex();
-      var reTrimStart = /^\s+/;
-      function baseTrim(string10) {
-        return string10 ? string10.slice(0, trimmedEndIndex(string10) + 1).replace(reTrimStart, "") : string10;
-      }
-      module.exports = baseTrim;
-    }
-  });
-
-  // ../shared/node_modules/lodash/toNumber.js
-  var require_toNumber = __commonJS({
-    "../shared/node_modules/lodash/toNumber.js"(exports, module) {
-      var baseTrim = require_baseTrim();
-      var isObject2 = require_isObject();
-      var isSymbol = require_isSymbol();
-      var NAN = 0 / 0;
-      var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-      var reIsBinary = /^0b[01]+$/i;
-      var reIsOctal = /^0o[0-7]+$/i;
-      var freeParseInt = parseInt;
-      function toNumber(value) {
-        if (typeof value == "number") {
-          return value;
-        }
-        if (isSymbol(value)) {
-          return NAN;
-        }
-        if (isObject2(value)) {
-          var other = typeof value.valueOf == "function" ? value.valueOf() : value;
-          value = isObject2(other) ? other + "" : other;
-        }
-        if (typeof value != "string") {
-          return value === 0 ? value : +value;
-        }
-        value = baseTrim(value);
-        var isBinary = reIsBinary.test(value);
-        return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
-      }
-      module.exports = toNumber;
-    }
-  });
-
-  // ../shared/node_modules/lodash/debounce.js
-  var require_debounce = __commonJS({
-    "../shared/node_modules/lodash/debounce.js"(exports, module) {
-      var isObject2 = require_isObject();
-      var now = require_now();
-      var toNumber = require_toNumber();
-      var FUNC_ERROR_TEXT = "Expected a function";
-      var nativeMax = Math.max;
-      var nativeMin = Math.min;
-      function debounce(func, wait, options) {
-        var lastArgs, lastThis, maxWait, result, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
-        if (typeof func != "function") {
-          throw new TypeError(FUNC_ERROR_TEXT);
-        }
-        wait = toNumber(wait) || 0;
-        if (isObject2(options)) {
-          leading = !!options.leading;
-          maxing = "maxWait" in options;
-          maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
-          trailing = "trailing" in options ? !!options.trailing : trailing;
-        }
-        function invokeFunc(time) {
-          var args = lastArgs, thisArg = lastThis;
-          lastArgs = lastThis = void 0;
-          lastInvokeTime = time;
-          result = func.apply(thisArg, args);
-          return result;
-        }
-        function leadingEdge(time) {
-          lastInvokeTime = time;
-          timerId = setTimeout(timerExpired, wait);
-          return leading ? invokeFunc(time) : result;
-        }
-        function remainingWait(time) {
-          var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime, timeWaiting = wait - timeSinceLastCall;
-          return maxing ? nativeMin(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting;
-        }
-        function shouldInvoke(time) {
-          var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime;
-          return lastCallTime === void 0 || timeSinceLastCall >= wait || timeSinceLastCall < 0 || maxing && timeSinceLastInvoke >= maxWait;
-        }
-        function timerExpired() {
-          var time = now();
-          if (shouldInvoke(time)) {
-            return trailingEdge(time);
-          }
-          timerId = setTimeout(timerExpired, remainingWait(time));
-        }
-        function trailingEdge(time) {
-          timerId = void 0;
-          if (trailing && lastArgs) {
-            return invokeFunc(time);
-          }
-          lastArgs = lastThis = void 0;
-          return result;
-        }
-        function cancel2() {
-          if (timerId !== void 0) {
-            clearTimeout(timerId);
-          }
-          lastInvokeTime = 0;
-          lastArgs = lastCallTime = lastThis = timerId = void 0;
-        }
-        function flush() {
-          return timerId === void 0 ? result : trailingEdge(now());
-        }
-        function debounced() {
-          var time = now(), isInvoking = shouldInvoke(time);
-          lastArgs = arguments;
-          lastThis = this;
-          lastCallTime = time;
-          if (isInvoking) {
-            if (timerId === void 0) {
-              return leadingEdge(lastCallTime);
-            }
-            if (maxing) {
-              clearTimeout(timerId);
-              timerId = setTimeout(timerExpired, wait);
-              return invokeFunc(lastCallTime);
-            }
-          }
-          if (timerId === void 0) {
-            timerId = setTimeout(timerExpired, wait);
-          }
-          return result;
-        }
-        debounced.cancel = cancel2;
-        debounced.flush = flush;
-        return debounced;
-      }
-      module.exports = debounce;
-    }
-  });
-
   // ../shared/node_modules/lodash/throttle.js
   var require_throttle = __commonJS({
     "../shared/node_modules/lodash/throttle.js"(exports, module) {
-      var debounce = require_debounce();
+      var debounce2 = require_debounce();
       var isObject2 = require_isObject();
       var FUNC_ERROR_TEXT = "Expected a function";
       function throttle2(func, wait, options) {
@@ -11822,7 +11822,7 @@
           leading = "leading" in options ? !!options.leading : leading;
           trailing = "trailing" in options ? !!options.trailing : trailing;
         }
-        return debounce(func, wait, {
+        return debounce2(func, wait, {
           "leading": leading,
           "maxWait": wait,
           "trailing": trailing
@@ -12005,21 +12005,21 @@
   globalThis.simpleFetch = simpleFetch2;
 
   // src/crypto-polyfill.ts
-  function getRandomValues(array7) {
-    if (!(array7 instanceof Int8Array || array7 instanceof Uint8Array || array7 instanceof Int16Array || array7 instanceof Uint16Array || array7 instanceof Int32Array || array7 instanceof Uint32Array || array7 instanceof Uint8ClampedArray)) {
+  function getRandomValues(array8) {
+    if (!(array8 instanceof Int8Array || array8 instanceof Uint8Array || array8 instanceof Int16Array || array8 instanceof Uint16Array || array8 instanceof Int32Array || array8 instanceof Uint32Array || array8 instanceof Uint8ClampedArray)) {
       throw new Error("Expected an integer array");
     }
-    if (array7.byteLength > 65536) {
+    if (array8.byteLength > 65536) {
       throw new Error("Can only request a maximum of 65536 bytes");
     }
-    const base64 = registerNativeBridge().function("getRandomBase64").call(array7.byteLength);
+    const base64 = registerNativeBridge().function("getRandomBase64").call(array8.byteLength);
     const decoded = registerNativeBridge().function("base64Decode").call(base64);
-    const bytes = new Uint8Array(array7.byteLength);
-    for (let i2 = 0; i2 < array7.byteLength; i2++) {
+    const bytes = new Uint8Array(array8.byteLength);
+    for (let i2 = 0; i2 < array8.byteLength; i2++) {
       bytes[i2] = decoded.charCodeAt(i2);
     }
-    array7.set(bytes);
-    return array7;
+    array8.set(bytes);
+    return array8;
   }
   registerJSBridge("crypto").function("getRandomValues", getRandomValues);
 
@@ -12034,14 +12034,14 @@
     constructor() {
       this.listeners = /* @__PURE__ */ new Map();
     }
-    addEventListener(type10, listener) {
-      if (!this.listeners.has(type10)) {
-        this.listeners.set(type10, /* @__PURE__ */ new Set());
+    addEventListener(type11, listener) {
+      if (!this.listeners.has(type11)) {
+        this.listeners.set(type11, /* @__PURE__ */ new Set());
       }
-      this.listeners.get(type10)?.add(listener);
+      this.listeners.get(type11)?.add(listener);
     }
-    removeEventListener(type10, listener) {
-      const typeListeners = this.listeners.get(type10);
+    removeEventListener(type11, listener) {
+      const typeListeners = this.listeners.get(type11);
       if (typeListeners) {
         typeListeners.delete(listener);
       }
@@ -12143,6 +12143,1247 @@
 
   // ../shared/src/products/nudges/store/selectors.ts
   var import_get = __toESM(require_get());
+
+  // ../shared/src/internal/middleware/nudge.ts
+  var t8 = __toESM(require_lib());
+
+  // ../shared/node_modules/fp-ts/es6/function.js
+  function pipe(a, ab, bc, cd, de, ef, fg, gh, hi, ij, jk, kl, lm, mn, no, op, pq, qr, rs, st) {
+    switch (arguments.length) {
+      case 1:
+        return a;
+      case 2:
+        return ab(a);
+      case 3:
+        return bc(ab(a));
+      case 4:
+        return cd(bc(ab(a)));
+      case 5:
+        return de(cd(bc(ab(a))));
+      case 6:
+        return ef(de(cd(bc(ab(a)))));
+      case 7:
+        return fg(ef(de(cd(bc(ab(a))))));
+      case 8:
+        return gh(fg(ef(de(cd(bc(ab(a)))))));
+      case 9:
+        return hi(gh(fg(ef(de(cd(bc(ab(a))))))));
+      case 10:
+        return ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))));
+      case 11:
+        return jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))));
+      case 12:
+        return kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))));
+      case 13:
+        return lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))));
+      case 14:
+        return mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))));
+      case 15:
+        return no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))));
+      case 16:
+        return op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))));
+      case 17:
+        return pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))))));
+      case 18:
+        return qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))))));
+      case 19:
+        return rs(qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))))))));
+      case 20:
+        return st(rs(qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))))))));
+    }
+    return;
+  }
+
+  // ../shared/node_modules/fp-ts/es6/Functor.js
+  function flap(F) {
+    return function(a) {
+      return function(fab) {
+        return F.map(fab, function(f) {
+          return f(a);
+        });
+      };
+    };
+  }
+
+  // ../shared/node_modules/fp-ts/es6/internal.js
+  var isLeft = function(ma) {
+    return ma._tag === "Left";
+  };
+
+  // ../shared/node_modules/fp-ts/es6/Either.js
+  var isLeft2 = isLeft;
+  var right = function(a) {
+    return { _tag: "Right", right: a };
+  };
+  var orElseW = function(onLeft) {
+    return function(ma) {
+      return isLeft2(ma) ? onLeft(ma.left) : ma;
+    };
+  };
+  var orElse = orElseW;
+  var _map = function(fa, f) {
+    return pipe(fa, map(f));
+  };
+  var map = function(f) {
+    return function(fa) {
+      return isLeft2(fa) ? fa : right(f(fa.right));
+    };
+  };
+  var URI = "Either";
+  var Functor = {
+    URI,
+    map: _map
+  };
+  var flap2 = (
+    /*#_PURE_*/
+    flap(Functor)
+  );
+
+  // ../shared/node_modules/io-ts-types/es6/clone.js
+  function clone(t14) {
+    var r = Object.create(Object.getPrototypeOf(t14));
+    Object.assign(r, t14);
+    return r;
+  }
+
+  // ../shared/node_modules/io-ts-types/es6/withFallback.js
+  var t2 = __toESM(require_lib());
+
+  // ../shared/node_modules/io-ts-types/es6/withValidate.js
+  var t = __toESM(require_lib());
+  function withValidate(codec, validate2, name) {
+    if (name === void 0) {
+      name = codec.name;
+    }
+    var r = clone(codec);
+    r.validate = validate2;
+    r.decode = function(i2) {
+      return validate2(i2, t.getDefaultContext(r));
+    };
+    r.name = name;
+    return r;
+  }
+
+  // ../shared/node_modules/io-ts-types/es6/withFallback.js
+  function withFallback(codec, a, name) {
+    if (name === void 0) {
+      name = "withFallback(" + codec.name + ")";
+    }
+    return withValidate(codec, function(u, c2) {
+      return orElse(function() {
+        return t2.success(a);
+      })(codec.validate(u, c2));
+    }, name);
+  }
+
+  // ../shared/src/internal/middleware/generics.ts
+  var import_io_ts_reporters = __toESM(require_src());
+  var import_function2 = __toESM(require_function());
+  var import_Either2 = __toESM(require_Either());
+
+  // ../shared/node_modules/@amplitude/analytics-types/lib/esm/logger.js
+  var LogLevel;
+  (function(LogLevel2) {
+    LogLevel2[LogLevel2["None"] = 0] = "None";
+    LogLevel2[LogLevel2["Error"] = 1] = "Error";
+    LogLevel2[LogLevel2["Warn"] = 2] = "Warn";
+    LogLevel2[LogLevel2["Verbose"] = 3] = "Verbose";
+    LogLevel2[LogLevel2["Debug"] = 4] = "Debug";
+  })(LogLevel || (LogLevel = {}));
+
+  // ../shared/src/sdk/symbols.ts
+  var _analytics = "_analytics";
+  var _configuration = "_configuration";
+
+  // ../shared/src/internal/util/LocalStorage.ts
+  var PREFIX = "amplitude.engagement";
+  var set = (label, value) => {
+    try {
+      localStorage.setItem(`${PREFIX}.${label}`, value.toString());
+      return value;
+    } catch (err) {
+      return "";
+    }
+  };
+  var get = (label, defaultValue, prefixOverride) => {
+    let value;
+    const prefix = prefixOverride ?? PREFIX;
+    try {
+      value = localStorage.getItem(`${prefix}.${label}`);
+    } catch (err) {
+      value = null;
+    }
+    if (value === null) {
+      return defaultValue;
+    } else {
+      if (value === "false") return false;
+      if (value === "true") return true;
+      if (+value) return +value;
+      return value;
+    }
+  };
+  var remove = (label) => {
+    try {
+      localStorage.removeItem(`${PREFIX}.${label}`);
+      return;
+    } catch (err) {
+      return;
+    }
+  };
+  var LocalStorage = {
+    set,
+    get,
+    remove
+  };
+  var LocalStorage_default = LocalStorage;
+
+  // ../shared/src/internal/util/Logger.ts
+  var PREFIX2 = "Amplitude Engagement Logger ";
+  var getlocalStorageOverride = () => {
+    const level = parseInt(LocalStorage_default.get("logLevel", ""), 10);
+    if ([0, 1, 2, 3, 4].includes(level)) {
+      return level;
+    }
+    return null;
+  };
+  var DefaultLogger = class {
+    logLevel;
+    constructor() {
+      this.logLevel = getlocalStorageOverride() ?? LogLevel.None;
+    }
+    disable() {
+      this.logLevel = getlocalStorageOverride() ?? LogLevel.None;
+    }
+    enable(logLevel = LogLevel.Warn) {
+      this.logLevel = getlocalStorageOverride() ?? logLevel;
+    }
+    log(...args) {
+      if (this.logLevel < LogLevel.Verbose) {
+        return;
+      }
+      console.log(`${PREFIX2}[Log]:`, ...args);
+    }
+    warn(...args) {
+      if (this.logLevel < LogLevel.Warn) {
+        return;
+      }
+      console.warn(`${PREFIX2}[Warn]:`, ...args);
+    }
+    error(...args) {
+      if (this.logLevel < LogLevel.Error) {
+        return;
+      }
+      console.error(`${PREFIX2}[Error]:`, ...args);
+    }
+    debug(...args) {
+      if (this.logLevel < LogLevel.Debug) {
+        return;
+      }
+      console.log(`${PREFIX2}[Debug]:`, ...args);
+    }
+  };
+  var proxyLogger = {
+    disable: () => {
+    },
+    enable: () => {
+    },
+    log: () => {
+    },
+    warn: () => {
+    },
+    error: () => {
+    },
+    debug: () => {
+    }
+  };
+  var logger = new Proxy(proxyLogger, {
+    get(_target, prop) {
+      const sdkLogger = getSDK()?.[_configuration]?.options?.logger || proxyLogger;
+      return sdkLogger[prop];
+    }
+  });
+
+  // ../shared/src/internal/middleware/generics.ts
+  function decodeThrowing(validator, input) {
+    const result = validator.decode(input);
+    return (0, import_function2.pipe)(
+      result,
+      (0, import_Either2.fold)(
+        (_errors) => {
+          const messages = import_io_ts_reporters.default.report(result);
+          const errorMessage = `${messages.join("\n")}
+when parsing ${JSON.stringify(input, null, 2)}`;
+          logger.debug(JSON.stringify(_errors));
+          throw new Error(errorMessage);
+        },
+        (value) => value
+      )
+    );
+  }
+
+  // ../shared/src/types/entities/nudge/actions.ts
+  var t3 = __toESM(require_lib());
+  var AdminAction = t3.type({
+    type: t3.literal("admin"),
+    value: t3.string
+  });
+  var CallbackAction = t3.type({
+    type: t3.literal("callback"),
+    value: t3.string
+  });
+  var AppReviewAction = t3.intersection([
+    t3.type({
+      type: t3.literal("app_review")
+    }),
+    t3.partial({
+      appStoreId: t3.string,
+      playStorePackageName: t3.string
+    })
+  ]);
+  var LinkAction = t3.intersection([
+    t3.type({
+      type: t3.literal("link"),
+      value: t3.string
+    }),
+    t3.partial({
+      operation: t3.union([t3.literal("router"), t3.literal("self"), t3.literal("blank"), t3.undefined]),
+      meta: t3.type({
+        command: t3.string
+      })
+    })
+  ]);
+  var OpenChatActionTypeV = t3.union([
+    t3.literal("intercom"),
+    t3.literal("helpscout"),
+    t3.literal("freshdesk"),
+    t3.literal("freshchat"),
+    t3.literal("crisp"),
+    t3.literal("zendesk"),
+    t3.literal("liveChat"),
+    t3.literal("gist"),
+    t3.literal("olark"),
+    t3.literal("hubspot"),
+    t3.literal("drift"),
+    t3.literal("pylon"),
+    t3.literal("talkdesk_v2"),
+    t3.literal("zendesk_handoff"),
+    t3.string
+  ]);
+  var OpenChatActionV = t3.type({
+    type: t3.literal("open_chat"),
+    meta: t3.type({
+      type: OpenChatActionTypeV
+    })
+  });
+  var DismissAction = t3.type({
+    type: t3.literal("dismiss")
+  });
+  var CompleteAction = t3.type({
+    type: t3.literal("complete")
+  });
+  var StepBackAction = t3.type({
+    type: t3.literal("step_back")
+  });
+  var StepForwardAction = t3.type({
+    type: t3.literal("step_forward")
+  });
+  var StayOnStepAction = t3.type({
+    type: t3.literal("stay_on_step")
+  });
+  var SnoozeInterval = t3.union([t3.literal("hour"), t3.literal("day"), t3.literal("week")]);
+  var SnoozeValue = t3.number;
+  var SnoozeAction = t3.intersection([
+    t3.type({
+      type: t3.literal("snooze")
+    }),
+    t3.partial({
+      interval: SnoozeInterval,
+      value: SnoozeValue
+    })
+  ]);
+  var BuiltInAction = t3.type({
+    type: t3.literal("builtin"),
+    value: t3.string
+  });
+  var ScriptAction = t3.type({
+    type: t3.literal("script"),
+    value: t3.string
+  });
+  var VideoAction = t3.type({
+    type: t3.literal("video"),
+    value: t3.string
+  });
+  var NoAction = t3.type({ type: t3.literal("no_action") });
+  var ClickAction = t3.type({
+    type: t3.literal("click"),
+    value: t3.string
+  });
+  var NudgeActionV = t3.type({
+    type: t3.literal("nudge"),
+    value: t3.number
+  });
+  var GoToNudgeStepActionV = t3.type({
+    type: t3.literal("go_to_step"),
+    value: t3.number
+  });
+  var UseConditionalLogicAction = t3.type({
+    type: t3.literal("use_conditional_logic")
+  });
+  var ShowVideoAction = t3.type({
+    type: t3.literal("video"),
+    value: t3.number
+  });
+  var ShowDocumentAction = t3.type({
+    type: t3.literal("document"),
+    value: t3.number
+  });
+  var OpenResourceCenterAction = t3.type({
+    type: t3.literal("open_resource_center")
+  });
+  var OpenAIAssistantAction = t3.type({
+    type: t3.literal("open_ai_assistant")
+  });
+  var ActionV = t3.union([
+    NoAction,
+    ClickAction,
+    LinkAction,
+    OpenChatActionV,
+    DismissAction,
+    CompleteAction,
+    SnoozeAction,
+    NudgeActionV,
+    GoToNudgeStepActionV,
+    UseConditionalLogicAction,
+    StepBackAction,
+    StepForwardAction,
+    StayOnStepAction,
+    CallbackAction,
+    ShowVideoAction,
+    ShowDocumentAction,
+    AppReviewAction,
+    OpenResourceCenterAction,
+    OpenAIAssistantAction
+  ]);
+  var LabeledActionV = t3.type({
+    cta: t3.string,
+    action: ActionV
+  });
+  var TriggerAction = t3.type({
+    type: t3.literal("trigger"),
+    value: ActionV
+  });
+
+  // ../shared/src/internal/middleware/helpers/goals.ts
+  var t5 = __toESM(require_lib());
+
+  // ../shared/src/internal/middleware/evaluation.ts
+  var t4 = __toESM(require_lib());
+  var EvaluationConditionV = t4.type({
+    selector: t4.array(t4.string),
+    op: t4.string,
+    values: t4.array(t4.string)
+  });
+
+  // ../shared/src/internal/middleware/helpers/goals.ts
+  var PageVisitedGoal = t5.type({
+    type: t5.literal("page_visited"),
+    value: t5.string
+  });
+  var ElementClickedGoal = t5.type({
+    type: t5.literal("element_clicked"),
+    value: t5.string
+  });
+  var CTAClickedGoal = t5.type({
+    type: t5.literal("cta_clicked")
+  });
+  var EventTrackedGoal = t5.intersection([
+    t5.type({
+      type: t5.literal("event_tracked"),
+      event: t5.string
+    }),
+    t5.partial({
+      conditions: t5.array(t5.array(EvaluationConditionV))
+    })
+  ]);
+
+  // ../shared/src/internal/middleware/page-targeting.ts
+  var t6 = __toESM(require_lib());
+  var PageTargetingConfigV = t6.type({
+    conditions: t6.array(t6.array(EvaluationConditionV)),
+    configs: t6.array(
+      t6.type({
+        isExclude: t6.boolean,
+        matchType: t6.union([
+          t6.literal("contains"),
+          t6.literal("endsWith"),
+          t6.literal("exact"),
+          t6.literal("pattern"),
+          t6.literal("regex"),
+          t6.literal("simple"),
+          t6.literal("startsWith")
+        ]),
+        url: t6.string
+      })
+    )
+  });
+
+  // ../shared/src/internal/middleware/organization.ts
+  var t7 = __toESM(require_lib());
+  var ThrottleV = t7.intersection([
+    t7.type({
+      max: t7.number,
+      period: t7.string
+    }),
+    t7.partial({
+      tagIds: t7.array(t7.number),
+      // if it's a tag throttle, this will be set, otherwise the throttle is for all nudge interactions
+      periodCount: t7.union([t7.number, t7.undefined]),
+      type: t7.union([t7.literal("time-between"), t7.literal("basic")])
+    })
+  ]);
+  var CustomThrottleV = t7.intersection([
+    t7.type({
+      limits: t7.array(ThrottleV),
+      conditions: t7.array(t7.array(EvaluationConditionV))
+    }),
+    t7.partial({
+      enabled: t7.boolean,
+      limit: ThrottleV
+    })
+  ]);
+  var TranslationBehaviorV = t7.keyof({
+    showDefault: null,
+    showOutOfDate: null,
+    dontShow: null
+  });
+  var LocalizationV = t7.type({
+    enabled: t7.boolean,
+    defaultLocale: t7.string,
+    addedLocales: t7.array(t7.string),
+    translationUnavailable: TranslationBehaviorV,
+    translationOutdated: TranslationBehaviorV
+  });
+  var OrganizationV = t7.intersection([
+    t7.type({
+      branding: t7.string,
+      shareLinkParam: t7.string,
+      guideThrottle: CustomThrottleV,
+      surveyThrottle: CustomThrottleV
+    }),
+    t7.partial({
+      localization: LocalizationV
+    })
+  ]);
+  var defaults = {
+    branding: "",
+    shareLinkParam: "",
+    guideThrottle: {
+      limits: [{ max: 10, period: "day" }],
+      conditions: [[]],
+      enabled: false
+    },
+    surveyThrottle: {
+      limits: [{ max: 10, period: "day" }],
+      conditions: [[]],
+      enabled: false
+    },
+    localization: {
+      enabled: false,
+      defaultLocale: "en",
+      addedLocales: [],
+      translationUnavailable: "showDefault",
+      translationOutdated: "showOutOfDate"
+    }
+  };
+  var decode = (data) => {
+    try {
+      return decodeThrowing(OrganizationV, data);
+    } catch (e2) {
+      logger.error("Error decoding project settings", { error: e2 });
+      return decodeThrowing(OrganizationV, { ...defaults, ...data });
+    }
+  };
+
+  // ../shared/src/internal/middleware/nudge.ts
+  var ModalPositionV = t8.union([
+    t8.literal("top-left"),
+    t8.literal("top-center"),
+    t8.literal("top-right"),
+    t8.literal("bottom-left"),
+    t8.literal("bottom-center"),
+    t8.literal("bottom-right"),
+    t8.literal("left-center"),
+    t8.literal("right-center"),
+    t8.literal("center")
+  ]);
+  var PopoverPositionV = ModalPositionV;
+  var BannerPositionV = t8.union([t8.literal("top"), t8.literal("bottom")]);
+  var PinPositionV = t8.union([
+    t8.literal("auto"),
+    t8.literal("top"),
+    t8.literal("bottom"),
+    t8.literal("left"),
+    t8.literal("right")
+  ]);
+  var CardPositionV = t8.union([
+    t8.literal("prepend"),
+    t8.literal("append"),
+    t8.literal("replace"),
+    t8.literal("before"),
+    t8.literal("after")
+  ]);
+  var NudgeContentMarkdownBlockV = t8.type({
+    type: t8.literal("markdown"),
+    meta: t8.type({ value: t8.string })
+  });
+  var NudgeContentImageBlockV = t8.type({
+    type: t8.literal("image"),
+    meta: t8.intersection([
+      t8.type({ src: t8.string, filename: t8.string, size: t8.string }),
+      t8.partial({
+        altText: t8.string,
+        style: t8.partial({
+          scale: t8.string
+        })
+      })
+    ])
+  });
+  var NudgeContentVideoBlockV = t8.type({
+    type: t8.literal("video"),
+    meta: t8.type({ type: t8.literal("url"), src: t8.string })
+  });
+  var Required = t8.union([
+    t8.type({
+      value: t8.literal(true),
+      message: t8.string
+    }),
+    t8.type({
+      value: t8.literal(false),
+      message: t8.union([t8.null, t8.undefined, t8.string])
+    })
+  ]);
+  var SurveyValidation = t8.partial({
+    validation: t8.partial({
+      required: Required
+    })
+  });
+  var EffectfulActionV = t8.union([
+    AppReviewAction,
+    CallbackAction,
+    ClickAction,
+    LinkAction,
+    NudgeActionV,
+    OpenAIAssistantAction,
+    OpenChatActionV,
+    OpenResourceCenterAction,
+    ShowDocumentAction,
+    ShowVideoAction
+  ]);
+  var NavigationActionV = t8.union([
+    CompleteAction,
+    DismissAction,
+    GoToNudgeStepActionV,
+    SnoozeAction,
+    StepBackAction,
+    StepForwardAction,
+    StayOnStepAction
+  ]);
+  var ConcreteAction = t8.union([EffectfulActionV, NavigationActionV]);
+  var NudgeButtonActionV = t8.union([NoAction, UseConditionalLogicAction, ConcreteAction]);
+  var ActionSequenceV = t8.type({
+    navigation: NavigationActionV,
+    effects: t8.array(EffectfulActionV)
+  });
+  var isActionSequence = (action) => ActionSequenceV.is(action);
+  var NudgeConditionalActionConditionV = t8.type({
+    field: t8.string,
+    operator: t8.union([
+      t8.literal("eq"),
+      t8.literal("neq"),
+      t8.literal("gt"),
+      t8.literal("lt"),
+      t8.literal("gte"),
+      t8.literal("lte"),
+      t8.literal("contains"),
+      t8.literal("does_not_contain")
+    ]),
+    operand: t8.union([t8.string, t8.number, t8.array(t8.union([t8.string, t8.number]))]),
+    type: t8.union([t8.literal("survey_response"), t8.literal("user_property")])
+  });
+  var NudgeConditionalActionV = t8.intersection([
+    t8.type({
+      operator: t8.union([t8.literal("eq"), t8.literal("neq"), t8.literal("gt"), t8.literal("lt")]),
+      operand: t8.union([t8.string, t8.number]),
+      action: NudgeButtonActionV
+    }),
+    t8.partial({
+      v2: t8.intersection([
+        t8.type({
+          conditions: t8.array(NudgeConditionalActionConditionV),
+          action: NudgeButtonActionV,
+          logic: withFallback(t8.union([t8.literal("and"), t8.literal("or")]), "and")
+        }),
+        t8.partial({
+          actions: ActionSequenceV,
+          evaluationConditions: t8.array(t8.array(EvaluationConditionV))
+        })
+      ])
+    })
+  ]);
+  var NudgeContentButtonBlockV = t8.type({
+    type: t8.literal("button"),
+    meta: t8.union([
+      t8.partial({
+        label: t8.string,
+        action: NudgeButtonActionV,
+        actions: ActionSequenceV,
+        buttonType: t8.union([t8.literal("primary"), t8.literal("secondary"), t8.literal("snooze")], void 0),
+        conditionalActions: t8.array(NudgeConditionalActionV),
+        defaultAction: NudgeButtonActionV,
+        defaultActions: ActionSequenceV
+      }),
+      t8.null
+    ])
+  });
+  var NudgeContentSurveyTextBlockV = t8.type({
+    uuid: t8.string,
+    type: t8.literal("survey_text"),
+    meta: t8.intersection([
+      t8.type({ prompt: t8.string }),
+      SurveyValidation,
+      t8.partial({ label: t8.string, ariaLabel: t8.string })
+    ])
+  });
+  var NudgeStepContentSurveyTextShortBlockTypeV = t8.type({
+    uuid: t8.string,
+    type: t8.literal("survey_text_short"),
+    meta: t8.intersection([
+      t8.intersection([
+        t8.type({ prompt: t8.string }),
+        t8.partial({ prefill: t8.type({ enabled: t8.boolean, userProperty: t8.string }) })
+      ]),
+      SurveyValidation,
+      t8.partial({ label: t8.string, ariaLabel: t8.string })
+    ])
+  });
+  var NudgeContentListBlockV = t8.type({
+    uuid: t8.string,
+    type: t8.literal("survey_list"),
+    meta: t8.intersection([
+      t8.type({
+        options: t8.array(t8.string),
+        listType: t8.union([t8.literal("single"), t8.literal("multiple")]),
+        displayType: t8.union([t8.literal("dropdown"), t8.literal("list"), t8.literal("grid")])
+      }),
+      SurveyValidation,
+      t8.partial({
+        conditionalActions: t8.array(NudgeConditionalActionV),
+        defaultAction: NudgeButtonActionV,
+        isOrderRandom: t8.boolean,
+        otherOption: t8.type({
+          enabled: t8.boolean,
+          label: t8.string,
+          placeholderLabel: t8.string
+        }),
+        label: t8.string,
+        ariaLabel: t8.string
+      })
+    ])
+  });
+  var NudgeContentSurveyRatingBlockV = t8.type({
+    uuid: t8.string,
+    type: t8.literal("survey_rating"),
+    meta: t8.intersection([
+      t8.union([
+        t8.type({
+          type: t8.literal("emojis"),
+          lowerLabel: t8.string,
+          upperLabel: t8.string,
+          options: t8.number,
+          emojis: t8.array(t8.string)
+        }),
+        t8.type({
+          type: t8.literal("numbers"),
+          lowerLabel: t8.string,
+          upperLabel: t8.string,
+          options: t8.number
+        }),
+        t8.type({
+          type: t8.literal("stars"),
+          lowerLabel: t8.string,
+          upperLabel: t8.string,
+          options: t8.number
+        }),
+        t8.type({
+          type: t8.literal("nps"),
+          lowerLabel: t8.string,
+          upperLabel: t8.string,
+          options: t8.number
+        })
+      ]),
+      SurveyValidation,
+      t8.partial({
+        conditionalActions: t8.array(NudgeConditionalActionV),
+        defaultAction: NudgeButtonActionV,
+        label: t8.string,
+        ariaLabel: t8.string
+      })
+    ])
+  });
+  var NudgeContentBlockV = t8.union([
+    NudgeContentMarkdownBlockV,
+    NudgeContentImageBlockV,
+    NudgeContentVideoBlockV,
+    NudgeContentButtonBlockV,
+    NudgeContentSurveyTextBlockV,
+    NudgeStepContentSurveyTextShortBlockTypeV,
+    NudgeContentSurveyRatingBlockV,
+    NudgeContentListBlockV
+  ]);
+  var NudgeStepBaseV = t8.type({
+    id: t8.number,
+    title: t8.string,
+    content: t8.array(NudgeContentBlockV)
+  });
+  var MediaPositionV = t8.union([t8.literal("left"), t8.literal("right")]);
+  var NudgeStepFooterLayoutConfigV = t8.partial({
+    footerLayout: t8.union([t8.literal("classic"), t8.literal("split"), t8.literal("centered"), t8.literal("stacked")])
+  });
+  var NudgeStepLayoutConfigV = t8.intersection([
+    t8.union([
+      t8.partial({
+        layout: t8.union([t8.literal("classic"), t8.literal("vertical"), t8.literal("showcase")])
+      }),
+      t8.partial({
+        layout: t8.literal("horizontal"),
+        mediaPosition: MediaPositionV
+      })
+    ]),
+    t8.partial({
+      titleAlignment: t8.union([t8.literal("start"), t8.literal("center"), t8.literal("end")]),
+      contentAlignment: t8.union([t8.literal("start"), t8.literal("center"), t8.literal("end")])
+    })
+  ]);
+  var ElementSelectorV = t8.intersection([
+    t8.type({
+      selector: t8.string,
+      text: t8.string,
+      tag: t8.string,
+      attributes: t8.record(t8.string, t8.string)
+    }),
+    t8.partial({
+      strategy: withFallback(
+        t8.union([t8.literal("strict"), t8.literal("fallback"), t8.literal("selector_only")]),
+        "fallback"
+      )
+    })
+  ]);
+  var NudgeStepAdditionalV = t8.intersection(
+    [
+      t8.type({
+        formFactor: t8.union([
+          t8.intersection([
+            t8.type({
+              type: t8.literal("modal")
+            }),
+            t8.partial({
+              position: ModalPositionV,
+              textAnimation: t8.literal("typewriter"),
+              canClickOutsideToClose: t8.boolean
+            }),
+            NudgeStepLayoutConfigV,
+            NudgeStepFooterLayoutConfigV
+          ]),
+          t8.intersection([
+            t8.type({
+              type: t8.literal("checklist")
+            }),
+            t8.partial({
+              zIndexOverride: t8.union([t8.undefined, t8.null, t8.number])
+            })
+          ]),
+          t8.intersection([
+            t8.type({
+              type: t8.literal("popover"),
+              position: PopoverPositionV
+            }),
+            t8.partial({
+              textAnimation: t8.literal("typewriter"),
+              zIndexOverride: t8.union([t8.undefined, t8.null, t8.number])
+            }),
+            NudgeStepLayoutConfigV,
+            NudgeStepFooterLayoutConfigV
+          ]),
+          t8.intersection([
+            t8.type({
+              type: t8.literal("banner"),
+              position: BannerPositionV,
+              placement: t8.union([t8.literal("default"), t8.literal("overlay")]),
+              sticky: t8.boolean
+            }),
+            t8.partial({
+              textAnimation: t8.literal("typewriter"),
+              zIndexOverride: t8.union([t8.undefined, t8.null, t8.number])
+            }),
+            NudgeStepLayoutConfigV,
+            NudgeStepFooterLayoutConfigV
+          ]),
+          t8.intersection([
+            t8.type({
+              type: t8.literal("pin"),
+              anchor: t8.string
+            }),
+            t8.partial({
+              anchorSelector: ElementSelectorV,
+              isOpenByDefault: t8.boolean,
+              isShowingMask: t8.boolean,
+              advanceTrigger: t8.string,
+              offset: t8.type({
+                x: t8.string,
+                y: t8.string
+              }),
+              position: PinPositionV,
+              alignment: t8.union([
+                t8.literal("center"),
+                t8.literal("top"),
+                t8.literal("bottom"),
+                t8.literal("left"),
+                t8.literal("right")
+              ]),
+              textAnimation: t8.literal("typewriter"),
+              zIndexOverride: t8.union([t8.undefined, t8.null, t8.number]),
+              pointer: t8.type({ type: t8.union([t8.literal("beacon"), t8.literal("arrow")]) })
+            }),
+            NudgeStepLayoutConfigV,
+            NudgeStepFooterLayoutConfigV
+          ]),
+          t8.intersection([
+            t8.type({
+              type: t8.literal("tooltip"),
+              anchor: t8.string,
+              showOn: t8.union([t8.literal("hover"), t8.literal("click")]),
+              marker: t8.intersection([
+                t8.union([
+                  t8.type({
+                    type: t8.literal("beacon")
+                  }),
+                  t8.type({
+                    type: t8.literal("icon"),
+                    icon: t8.union([
+                      t8.literal("helpCircle"),
+                      t8.literal("helpSquare"),
+                      t8.literal("infoCircle"),
+                      t8.literal("bookClosed"),
+                      t8.literal("lightBulb"),
+                      t8.literal("lightning")
+                    ])
+                  }),
+                  t8.type({
+                    type: t8.literal("image"),
+                    source: t8.string
+                  })
+                ]),
+                t8.type({
+                  positioning: t8.type({
+                    position: t8.union([
+                      t8.literal("left"),
+                      t8.literal("right"),
+                      t8.literal("inline_left"),
+                      t8.literal("inline_right")
+                    ]),
+                    offset: t8.type({
+                      x: t8.string,
+                      y: t8.string
+                    })
+                  })
+                }),
+                t8.partial({
+                  width: t8.number
+                })
+              ])
+            }),
+            t8.partial({
+              anchorSelector: ElementSelectorV,
+              textAnimation: t8.literal("typewriter"),
+              zIndexOverride: t8.union([t8.undefined, t8.null, t8.number]),
+              pointer: t8.type({ type: t8.union([t8.literal("none"), t8.literal("arrow")]) })
+            }),
+            NudgeStepLayoutConfigV,
+            NudgeStepFooterLayoutConfigV
+          ]),
+          t8.intersection([
+            t8.type({
+              type: t8.literal("card"),
+              anchor: t8.string,
+              position: CardPositionV
+            }),
+            t8.partial({
+              anchorSelector: ElementSelectorV,
+              textAnimation: t8.literal("typewriter"),
+              zIndexOverride: t8.union([t8.undefined, t8.null, t8.number]),
+              alignment: t8.union([t8.literal("start"), t8.literal("center"), t8.literal("end")]),
+              cardWidth: t8.type({
+                type: t8.union([t8.literal("auto"), t8.literal("fixed"), t8.literal("full")]),
+                value: t8.union([t8.number, t8.undefined])
+              }),
+              cardHeight: t8.type({
+                type: t8.union([t8.literal("auto"), t8.literal("fixed"), t8.literal("full")]),
+                value: t8.union([t8.number, t8.undefined])
+              }),
+              cardMargin: t8.type({
+                top: t8.number,
+                right: t8.number,
+                bottom: t8.number,
+                left: t8.number
+              })
+            }),
+            NudgeStepLayoutConfigV,
+            NudgeStepFooterLayoutConfigV
+          ])
+        ])
+      }),
+      t8.partial({
+        goal: t8.union([PageVisitedGoal, ElementClickedGoal, CTAClickedGoal, EventTrackedGoal, t8.null])
+      })
+    ],
+    "NudgeStepAdditional"
+  );
+  var stepDefaults = {
+    formFactor: {
+      type: "popover",
+      position: "top-right"
+    }
+  };
+  var NudgeStepV = t8.intersection([NudgeStepBaseV, NudgeStepAdditionalV], "Nudge");
+  var SimpleNudgeTriggerType = t8.union([
+    t8.literal("immediately"),
+    t8.literal("smart_delay"),
+    t8.literal("rage_click"),
+    t8.literal("user_confusion"),
+    t8.literal("exit_intent"),
+    t8.literal("none")
+  ]);
+  var ElementAppearedTriggerConfigV = t8.type({
+    type: t8.literal("element_appeared"),
+    data: t8.type({ selector: t8.string }),
+    conditions: t8.array(t8.array(EvaluationConditionV))
+    // serialized from API (not in assistance-ui)
+  });
+  var ElementClickedTriggerConfigV = t8.type({
+    type: t8.literal("element_clicked"),
+    data: t8.type({ selector: t8.string }),
+    conditions: t8.array(t8.array(EvaluationConditionV))
+    // serialized from API (not in assistance-ui)
+  });
+  var EventTriggerConfigV = t8.type({
+    type: t8.literal("analytics_event"),
+    data: t8.type({
+      event: t8.string
+    }),
+    conditions: t8.array(t8.array(EvaluationConditionV))
+    // serialized from API (not in assistance-ui)
+  });
+  var AfterTimeTriggerConfigV = t8.type({
+    type: t8.literal("after_time"),
+    data: t8.type({ unit: t8.union([t8.literal("minute"), t8.literal("second")]), value: t8.number }),
+    conditions: t8.array(t8.array(EvaluationConditionV))
+    // serialized from API (not in assistance-ui)
+  });
+  var NudgeTriggerConfigV = t8.union([
+    t8.type({
+      type: SimpleNudgeTriggerType,
+      conditions: t8.array(t8.array(EvaluationConditionV)),
+      data: t8.union([t8.null, t8.undefined, t8.record(t8.string, t8.any)])
+    }),
+    ElementAppearedTriggerConfigV,
+    ElementClickedTriggerConfigV,
+    EventTriggerConfigV,
+    AfterTimeTriggerConfigV
+  ]);
+  var NudgeCooldownPeriodV = t8.union([
+    t8.literal("day"),
+    t8.literal("week"),
+    t8.literal("month"),
+    t8.literal("year"),
+    t8.literal("session"),
+    t8.string
+    // keep for forward compatibility
+  ]);
+  var NudgeLifecycleConfigV = t8.type({
+    stopShowingIfCompleted: t8.boolean,
+    stopShowingIfDismissed: t8.boolean,
+    cooldownLimits: t8.array(ThrottleV),
+    conditions: t8.array(t8.array(EvaluationConditionV))
+    // serialized from API (not in assistance-ui)
+  });
+  var TagV = t8.type({
+    id: t8.number,
+    name: t8.string
+  });
+  var NudgeBaseV = t8.intersection(
+    [
+      t8.type({
+        title: t8.string,
+        // TODO: can be removed, not needed in the SDK
+        variantId: t8.number,
+        steps: t8.array(NudgeStepV),
+        triggerConfig: NudgeTriggerConfigV,
+        lifecycleConfig: NudgeLifecycleConfigV,
+        flagKey: t8.string
+      }),
+      t8.partial({
+        archived: t8.boolean,
+        displayTitle: t8.string,
+        displayDescription: t8.string,
+        position: t8.union([t8.literal("bottomRight"), t8.literal("bottomLeft")]),
+        priority: t8.number,
+        dir: t8.union([t8.literal("ltr"), t8.literal("rtl")]),
+        stepCounterFormat: t8.union([t8.literal("numeric"), t8.literal("verbose")]),
+        tags: t8.array(TagV),
+        version: t8.number,
+        latestVersion: t8.number
+      })
+    ],
+    "NudgeBase"
+  );
+  var NudgeTypeV = t8.union([
+    t8.literal("survey"),
+    t8.literal("tour"),
+    t8.literal("banner"),
+    t8.literal("tooltip"),
+    t8.literal("checklist"),
+    t8.string
+  ]);
+  var TranslationStatusV = t8.type({
+    translated: t8.boolean,
+    status: t8.union([t8.literal("missing"), t8.literal("outdated"), t8.literal("up-to-date"), t8.null, t8.undefined]),
+    resolvedLocale: t8.union([t8.string, t8.null, t8.undefined])
+  });
+  var NudgeAdditionalV = t8.type(
+    {
+      platform: withFallback(
+        t8.union([
+          t8.literal("web"),
+          t8.literal("android"),
+          t8.literal("ios"),
+          t8.literal("react-native"),
+          t8.literal("flutter")
+        ]),
+        "web"
+      ),
+      showStepCounter: t8.boolean,
+      isCarousel: t8.union([t8.boolean, t8.undefined]),
+      isDismissible: t8.boolean,
+      isSnoozable: t8.boolean,
+      isSnoozableOnAllSteps: t8.boolean,
+      assistantIntro: t8.boolean,
+      snoozeLabel: t8.string,
+      doneLabel: t8.string,
+      snoozeDuration: t8.type({
+        interval: SnoozeInterval,
+        value: SnoozeValue
+      }),
+      type: NudgeTypeV,
+      previewUrl: t8.union([t8.string, t8.null, t8.undefined]),
+      customThemeId: t8.union([t8.number, t8.null, t8.undefined]),
+      variant: t8.string,
+      pageTargeting: PageTargetingConfigV,
+      hideIfPageTargetingNotMet: t8.boolean,
+      temporarilyHideTargeting: PageTargetingConfigV,
+      translationStatus: t8.union([TranslationStatusV, t8.null, t8.undefined]),
+      breakingFeatures: t8.union([t8.string, t8.null, t8.undefined])
+    },
+    "NudgeAdditional"
+  );
+  var defaults2 = {
+    platform: "web",
+    showStepCounter: false,
+    isCarousel: false,
+    isDismissible: true,
+    isSnoozable: false,
+    isSnoozableOnAllSteps: true,
+    assistantIntro: false,
+    snoozeLabel: "Snooze",
+    doneLabel: "Done",
+    snoozeDuration: {
+      interval: "day",
+      value: 3
+    },
+    type: "tour",
+    previewUrl: null,
+    customThemeId: null,
+    translationStatus: null,
+    variant: "treatment",
+    pageTargeting: {
+      conditions: [[]],
+      configs: []
+    },
+    hideIfPageTargetingNotMet: true,
+    temporarilyHideTargeting: {
+      conditions: [[]],
+      configs: []
+    },
+    breakingFeatures: null
+  };
+  var NudgeV = t8.intersection([NudgeBaseV, NudgeAdditionalV], "Nudge");
+  var createUnsupportedFeatureNudge = (data) => {
+    return {
+      title: data?.title || "Unsupported Feature",
+      variantId: data?.variantId ?? 0,
+      flagKey: data?.flagKey || "unsupported",
+      steps: [],
+      triggerConfig: {
+        type: "none",
+        conditions: [[]],
+        data: null
+      },
+      lifecycleConfig: {
+        conditions: [[]],
+        cooldownLimits: [],
+        stopShowingIfCompleted: false,
+        stopShowingIfDismissed: false
+      },
+      ...defaults2,
+      breakingFeatures: data?.breakingFeatures ?? null
+    };
+  };
+  var hasUnsupportedBreakingFeatures = (data, supportedBreakingFeatures) => {
+    if (!supportedBreakingFeatures || !data.breakingFeatures) {
+      return false;
+    }
+    const breakingFeatures = typeof data.breakingFeatures === "string" ? data.breakingFeatures.split(",").map((f) => f.trim()).filter((f) => f.length > 0) : [];
+    return breakingFeatures.some((feature) => !supportedBreakingFeatures.includes(feature));
+  };
+  var Nudge = class {
+    static decode = (data, supportedBreakingFeatures) => {
+      const variantId = data?.variantId ?? "unknown";
+      if (hasUnsupportedBreakingFeatures(data, supportedBreakingFeatures)) {
+        logger.debug(
+          `Nudge variant ${variantId} uses breaking features not supported by this platform. Breaking features used: ${JSON.stringify(data?.breakingFeatures)}, Supported features: ${JSON.stringify(supportedBreakingFeatures)}`
+        );
+        return decodeThrowing(NudgeV, createUnsupportedFeatureNudge(data));
+      }
+      try {
+        return decodeThrowing(NudgeV, data);
+      } catch (e2) {
+        const errorMessage = e2 instanceof Error ? e2.message : String(e2);
+        logger.debug(`Error decoding nudge variant ${variantId}. Error: ${errorMessage}.`);
+        try {
+          return decodeThrowing(NudgeV, {
+            ...defaults2,
+            ...data,
+            steps: (data?.steps || []).map((step) => ({ ...stepDefaults, ...step }))
+          });
+        } catch (fallbackError) {
+          const fallbackErrorMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
+          logger.debug(
+            `Error decoding nudge variant ${variantId} with fallback values. Error: ${errorMessage}. Fallback error: ${fallbackErrorMessage}.`
+          );
+          return decodeThrowing(NudgeV, createUnsupportedFeatureNudge(data));
+        }
+      }
+    };
+  };
 
   // ../shared/src/internal/middleware/types.ts
   var isValidSessionPropertyKey = (key) => typeof key === "string" && key.length > 0;
@@ -12274,9 +13515,9 @@
     return nudge.type === "survey" ? "survey" : "guide";
   };
   var getProductMeta = (nudge) => {
-    const type10 = getNudgeProductType(nudge);
+    const type11 = getNudgeProductType(nudge);
     return {
-      type: type10,
+      type: type11,
       name: getNudgeProductType(nudge) === "guide" ? "Guide" : "Survey"
     };
   };
@@ -12294,128 +13535,6 @@
     }
     return _.evalEngine.evaluateConditions(pageTarget, conditions);
   };
-
-  // ../shared/src/sdk/symbols.ts
-  var _analytics = "_analytics";
-  var _configuration = "_configuration";
-
-  // ../shared/node_modules/@amplitude/analytics-types/lib/esm/logger.js
-  var LogLevel;
-  (function(LogLevel2) {
-    LogLevel2[LogLevel2["None"] = 0] = "None";
-    LogLevel2[LogLevel2["Error"] = 1] = "Error";
-    LogLevel2[LogLevel2["Warn"] = 2] = "Warn";
-    LogLevel2[LogLevel2["Verbose"] = 3] = "Verbose";
-    LogLevel2[LogLevel2["Debug"] = 4] = "Debug";
-  })(LogLevel || (LogLevel = {}));
-
-  // ../shared/src/internal/util/LocalStorage.ts
-  var PREFIX = "amplitude.engagement";
-  var set = (label, value) => {
-    try {
-      localStorage.setItem(`${PREFIX}.${label}`, value.toString());
-      return value;
-    } catch (err) {
-      return "";
-    }
-  };
-  var get = (label, defaultValue, prefixOverride) => {
-    let value;
-    const prefix = prefixOverride ?? PREFIX;
-    try {
-      value = localStorage.getItem(`${prefix}.${label}`);
-    } catch (err) {
-      value = null;
-    }
-    if (value === null) {
-      return defaultValue;
-    } else {
-      if (value === "false") return false;
-      if (value === "true") return true;
-      if (+value) return +value;
-      return value;
-    }
-  };
-  var remove = (label) => {
-    try {
-      localStorage.removeItem(`${PREFIX}.${label}`);
-      return;
-    } catch (err) {
-      return;
-    }
-  };
-  var LocalStorage = {
-    set,
-    get,
-    remove
-  };
-  var LocalStorage_default = LocalStorage;
-
-  // ../shared/src/internal/util/Logger.ts
-  var PREFIX2 = "Amplitude Engagement Logger ";
-  var getlocalStorageOverride = () => {
-    const level = parseInt(LocalStorage_default.get("logLevel", ""), 10);
-    if ([0, 1, 2, 3, 4].includes(level)) {
-      return level;
-    }
-    return null;
-  };
-  var DefaultLogger = class {
-    logLevel;
-    constructor() {
-      this.logLevel = getlocalStorageOverride() ?? LogLevel.None;
-    }
-    disable() {
-      this.logLevel = getlocalStorageOverride() ?? LogLevel.None;
-    }
-    enable(logLevel = LogLevel.Warn) {
-      this.logLevel = getlocalStorageOverride() ?? logLevel;
-    }
-    log(...args) {
-      if (this.logLevel < LogLevel.Verbose) {
-        return;
-      }
-      console.log(`${PREFIX2}[Log]:`, ...args);
-    }
-    warn(...args) {
-      if (this.logLevel < LogLevel.Warn) {
-        return;
-      }
-      console.warn(`${PREFIX2}[Warn]:`, ...args);
-    }
-    error(...args) {
-      if (this.logLevel < LogLevel.Error) {
-        return;
-      }
-      console.error(`${PREFIX2}[Error]:`, ...args);
-    }
-    debug(...args) {
-      if (this.logLevel < LogLevel.Debug) {
-        return;
-      }
-      console.log(`${PREFIX2}[Debug]:`, ...args);
-    }
-  };
-  var proxyLogger = {
-    disable: () => {
-    },
-    enable: () => {
-    },
-    log: () => {
-    },
-    warn: () => {
-    },
-    error: () => {
-    },
-    debug: () => {
-    }
-  };
-  var logger = new Proxy(proxyLogger, {
-    get(_target, prop) {
-      const sdkLogger = getSDK()?.[_configuration]?.options?.logger || proxyLogger;
-      return sdkLogger[prop];
-    }
-  });
 
   // ../shared/src/services/targeting/helpers.ts
   var getActiveVariantForFlag = (flagKey, decideResult) => {
@@ -12830,19 +13949,19 @@
   var hasRemainingSteps = (nudge) => ({ stepIndex }) => stepIndex < nudge.steps.length - 1;
   var shouldBypassCustomThrottles = (_, nudge) => nudge.priority === 4 /* Urgent */ || !isIncludedInCustomThrottles(nudge) || _.nudgeDebugToolBar.visible && _.nudgeDebugToolBar.bypassCustomThrottles || isTestNudge(_, nudge);
   var checkBuiltInThrottle = (_, nudge) => {
-    const { type: type10 } = getProductMeta(nudge);
+    const { type: type11 } = getProductMeta(nudge);
     const result = passesBuiltInThrottles(_, nudge);
     const nudgesInRenderLoop = getNudgesInRenderLoop(_);
     const blockingNudge = getBlockingNudge(nudge, nudgesInRenderLoop);
-    let explanation = `This ${type10} is blocked by another currently rendered guide or survey.`;
+    let explanation = `This ${type11} is blocked by another currently rendered guide or survey.`;
     if (result) {
-      explanation = `This ${type10} is not blocked by other guides or surveys.`;
+      explanation = `This ${type11} is not blocked by other guides or surveys.`;
     }
     if (blockingNudge?.variantId === nudge.variantId) {
       explanation = "This nudge is alreadying rendering.";
     }
     if (blockingNudge) {
-      explanation = `This ${type10} is blocked by '${blockingNudge.title} - ${blockingNudge.variant}'.`;
+      explanation = `This ${type11} is blocked by '${blockingNudge.title} - ${blockingNudge.variant}'.`;
     }
     return {
       result,
@@ -12853,15 +13972,15 @@
     };
   };
   var getGlobalChecks = (_, nudge) => {
-    const { type: type10 } = getProductMeta(nudge);
+    const { type: type11 } = getProductMeta(nudge);
     const builtInThrottlesCheck = checkBuiltInThrottle(_, nudge);
     const globalChecks = {
       builtInThrottles: builtInThrottlesCheck,
       customThrottles: {
         result: shouldBypassCustomThrottles(_, nudge) || passesCustomThrottles(_, nudge),
-        explanation: `The custom throttle for ${type10}s of this type prevents further guides or surveys from being shown.`,
+        explanation: `The custom throttle for ${type11}s of this type prevents further guides or surveys from being shown.`,
         detail: {
-          throttles: type10 === "survey" ? _.organization?.surveyThrottle : _.organization?.guideThrottle
+          throttles: type11 === "survey" ? _.organization?.surveyThrottle : _.organization?.guideThrottle
         }
       }
     };
@@ -13040,51 +14159,58 @@
     }
     return null;
   };
+  var resolveConditionalAction = (conditionalAction) => {
+    const v2 = conditionalAction.v2;
+    if (v2) {
+      return v2.actions ?? v2.action ?? null;
+    }
+    return conditionalAction.action ?? null;
+  };
+  var resolveDefaultAction = (block) => block.defaultActions ?? block.defaultAction ?? null;
   var getActionBasedOnConditions = (_, step, event, buttonType) => {
     const options = step.content.find(isListBlock)?.meta.options;
-    const surveyBlocks = step.content.filter(hasConditionalActionsBlock).filter((block) => block.type === "survey_rating" || block.type === "survey_list");
+    const surveyBlocks = step.content.filter(hasConditionalActionsBlock).filter((block2) => block2.type === "survey_rating" || block2.type === "survey_list");
     if (buttonType && surveyBlocks.length > 0) {
       const surveyBlock = surveyBlocks[0];
       const conditionalActions2 = surveyBlock.meta.conditionalActions;
-      const defaultAction2 = surveyBlock.meta.defaultAction;
       if (conditionalActions2) {
         for (let i2 = 0; i2 < conditionalActions2.length; i2++) {
           const conditionalAction = conditionalActions2[i2];
           if (evaluateCondition(_, conditionalAction, event, options)) {
-            const selectedAction = conditionalAction.v2?.action || conditionalAction.action || null;
-            return selectedAction;
+            return resolveConditionalAction(conditionalAction);
           }
         }
       }
-      return defaultAction2 ?? null;
+      return resolveDefaultAction(surveyBlock.meta);
     }
-    const conditionalActions = step.content.find(hasConditionalActionsBlock)?.meta.conditionalActions;
-    const defaultAction = step.content.find(hasConditionalActionsBlock)?.meta.defaultAction;
+    const block = step.content.find(hasConditionalActionsBlock);
+    const conditionalActions = block?.meta.conditionalActions;
     if (conditionalActions) {
       for (let i2 = 0; i2 < conditionalActions.length; i2++) {
         const conditionalAction = conditionalActions[i2];
         if (evaluateCondition(_, conditionalAction, event, options)) {
-          const selectedAction = conditionalAction.v2?.action || conditionalAction.action || null;
-          return selectedAction;
+          return resolveConditionalAction(conditionalAction);
         }
       }
     }
-    return defaultAction ?? null;
+    return block ? resolveDefaultAction(block.meta) : null;
   };
   var getActionBasedOnButtonConditions = (_, buttonBlock, event) => {
-    const { conditionalActions, defaultAction } = buttonBlock.meta || {};
+    const { conditionalActions } = buttonBlock.meta || {};
     if (conditionalActions) {
       for (let i2 = 0; i2 < conditionalActions.length; i2++) {
         const conditionalAction = conditionalActions[i2];
         if (evaluateCondition(_, conditionalAction, event)) {
-          const selectedAction = conditionalAction.v2?.action || conditionalAction.action || null;
-          return selectedAction;
+          return resolveConditionalAction(conditionalAction);
         }
       }
     }
-    return defaultAction ?? null;
+    return buttonBlock.meta ? resolveDefaultAction(buttonBlock.meta) : null;
   };
   var determineAction = (_, step, event) => {
+    if (event.buttonMeta?.actions) {
+      return event.buttonMeta.actions;
+    }
     const immediateAction = getImmediateAction(event.buttonMeta);
     if (event.buttonMeta?.action?.type === "use_conditional_logic") {
       if (event.buttonMeta?.buttonType !== "snooze") {
@@ -13111,6 +14237,9 @@
     return immediateAction;
   };
   var isTooltipNudge = (nudge) => nudge?.type === "tooltip" || nudge?.steps[0]?.formFactor.type === "tooltip";
+  var isChecklistNudge = (nudge) => {
+    return nudge?.type === "checklist" || nudge?.steps[0]?.formFactor.type === "checklist";
+  };
   var isTooltipStep = (step) => step?.formFactor.type === "tooltip";
   var isPinStep = (step) => step?.formFactor.type === "pin";
   var isCardStep = (step) => step?.formFactor.type === "card";
@@ -13852,11 +14981,11 @@
         }
       };
     }
-    on(type10, handler) {
-      let listeners = this.eventListeners.get(type10);
+    on(type11, handler) {
+      let listeners = this.eventListeners.get(type11);
       if (!listeners) {
         listeners = /* @__PURE__ */ new Set();
-        this.eventListeners.set(type10, listeners);
+        this.eventListeners.set(type11, listeners);
       }
       const wrappedHandler = handler.bind(void 0);
       listeners.add(wrappedHandler);
@@ -14439,7 +15568,7 @@
       toJSON: () => ({
         ...transition,
         source: `#${stateNode.id}`,
-        target: target ? target.map((t13) => `#${t13.id}`) : void 0
+        target: target ? target.map((t14) => `#${t14.id}`) : void 0
       })
     };
     return transition;
@@ -14452,25 +15581,25 @@
           throw new Error('Null events ("") cannot be specified as a transition key. Use `always: { ... }` instead.');
         }
         const transitionsConfig = stateNode.config.on[descriptor];
-        transitions.set(descriptor, toTransitionConfigArray(transitionsConfig).map((t13) => formatTransition(stateNode, descriptor, t13)));
+        transitions.set(descriptor, toTransitionConfigArray(transitionsConfig).map((t14) => formatTransition(stateNode, descriptor, t14)));
       }
     }
     if (stateNode.config.onDone) {
       const descriptor = `xstate.done.state.${stateNode.id}`;
-      transitions.set(descriptor, toTransitionConfigArray(stateNode.config.onDone).map((t13) => formatTransition(stateNode, descriptor, t13)));
+      transitions.set(descriptor, toTransitionConfigArray(stateNode.config.onDone).map((t14) => formatTransition(stateNode, descriptor, t14)));
     }
     for (const invokeDef of stateNode.invoke) {
       if (invokeDef.onDone) {
         const descriptor = `xstate.done.actor.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onDone).map((t13) => formatTransition(stateNode, descriptor, t13)));
+        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onDone).map((t14) => formatTransition(stateNode, descriptor, t14)));
       }
       if (invokeDef.onError) {
         const descriptor = `xstate.error.actor.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onError).map((t13) => formatTransition(stateNode, descriptor, t13)));
+        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onError).map((t14) => formatTransition(stateNode, descriptor, t14)));
       }
       if (invokeDef.onSnapshot) {
         const descriptor = `xstate.snapshot.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onSnapshot).map((t13) => formatTransition(stateNode, descriptor, t13)));
+        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onSnapshot).map((t14) => formatTransition(stateNode, descriptor, t14)));
       }
     }
     for (const delayedTransition of stateNode.after) {
@@ -14540,7 +15669,7 @@ ${err.message}`);
       return stateNode.parent.initial;
     }
     return {
-      target: normalizedTarget.map((t13) => typeof t13 === "string" ? getStateNodeByPath(stateNode.parent, t13) : t13)
+      target: normalizedTarget.map((t14) => typeof t14 === "string" ? getStateNodeByPath(stateNode.parent, t14) : t14)
     };
   }
   function isHistoryNode(stateNode) {
@@ -14765,10 +15894,10 @@ ${err.message}`);
   }
   function computeExitSet(transitions, stateNodeSet, historyValue) {
     const statesToExit = /* @__PURE__ */ new Set();
-    for (const t13 of transitions) {
-      if (t13.target?.length) {
-        const domain = getTransitionDomain(t13, historyValue);
-        if (t13.reenter && t13.source === domain) {
+    for (const t14 of transitions) {
+      if (t14.target?.length) {
+        const domain = getTransitionDomain(t14, historyValue);
+        if (t14.reenter && t14.source === domain) {
           statesToExit.add(domain);
         }
         for (const stateNode of stateNodeSet) {
@@ -14802,7 +15931,7 @@ ${err.message}`);
     if (!isInitial) {
       [nextState, historyValue] = exitStates(nextState, event, actorScope, filteredTransitions, mutStateNodeSet, historyValue, internalQueue, actorScope.actionExecutor);
     }
-    nextState = resolveActionsAndContext(nextState, event, actorScope, filteredTransitions.flatMap((t13) => t13.actions), internalQueue, void 0);
+    nextState = resolveActionsAndContext(nextState, event, actorScope, filteredTransitions.flatMap((t14) => t14.actions), internalQueue, void 0);
     nextState = enterStates(nextState, event, actorScope, filteredTransitions, mutStateNodeSet, internalQueue, historyValue, isInitial);
     const nextStateNodes = [...mutStateNodeSet];
     if (nextState.status === "done") {
@@ -14876,26 +16005,26 @@ ${err.message}`);
     return nextSnapshot;
   }
   function computeEntrySet(transitions, historyValue, statesForDefaultEntry, statesToEnter) {
-    for (const t13 of transitions) {
-      const domain = getTransitionDomain(t13, historyValue);
-      for (const s2 of t13.target || []) {
+    for (const t14 of transitions) {
+      const domain = getTransitionDomain(t14, historyValue);
+      for (const s2 of t14.target || []) {
         if (!isHistoryNode(s2) && // if the target is different than the source then it will *definitely* be entered
-        (t13.source !== s2 || // we know that the domain can't lie within the source
+        (t14.source !== s2 || // we know that the domain can't lie within the source
         // if it's different than the source then it's outside of it and it means that the target has to be entered as well
-        t13.source !== domain || // reentering transitions always enter the target, even if it's the source itself
-        t13.reenter)) {
+        t14.source !== domain || // reentering transitions always enter the target, even if it's the source itself
+        t14.reenter)) {
           statesToEnter.add(s2);
           statesForDefaultEntry.add(s2);
         }
         addDescendantStatesToEnter(s2, historyValue, statesForDefaultEntry, statesToEnter);
       }
-      const targetStates = getEffectiveTargetStates(t13, historyValue);
+      const targetStates = getEffectiveTargetStates(t14, historyValue);
       for (const s2 of targetStates) {
         const ancestors = getProperAncestors(s2, domain);
         if (domain?.type === "parallel") {
           ancestors.push(domain);
         }
-        addAncestorStatesToEnter(statesToEnter, historyValue, statesForDefaultEntry, ancestors, !t13.source.parent && t13.reenter ? void 0 : domain);
+        addAncestorStatesToEnter(statesToEnter, historyValue, statesForDefaultEntry, ancestors, !t14.source.parent && t14.reenter ? void 0 : domain);
       }
     }
   }
@@ -15179,7 +16308,7 @@ ${err.message}`);
   var machineSnapshotCan = function can(event) {
     const transitionData = this.machine.getTransitionData(this, event);
     return !!transitionData?.length && // Check that at least one transition is not forbidden
-    transitionData.some((t13) => t13.target !== void 0 || t13.actions.length);
+    transitionData.some((t14) => t14.target !== void 0 || t14.actions.length);
   };
   var machineSnapshotToJSON = function toJSON() {
     const {
@@ -15864,7 +16993,7 @@ ${err.message}`);
     _initialize() {
       this.transitions = formatTransitions(this);
       if (this.config.always) {
-        this.always = toTransitionConfigArray(this.config.always).map((t13) => formatTransition(this, NULL_EVENT, t13));
+        this.always = toTransitionConfigArray(this.config.always).map((t14) => formatTransition(this, NULL_EVENT, t14));
       }
       Object.keys(this.states).forEach((key) => {
         this.states[key]._initialize();
@@ -15884,7 +17013,7 @@ ${err.message}`);
           eventType: null,
           reenter: false,
           toJSON: () => ({
-            target: this.initial.target.map((t13) => `#${t13.id}`),
+            target: this.initial.target.map((t14) => `#${t14.id}`),
             source: `#${this.id}`,
             actions: this.initial.actions.map(toSerializableAction),
             eventType: null
@@ -15895,9 +17024,9 @@ ${err.message}`);
           return state.definition;
         }),
         on: this.on,
-        transitions: [...this.transitions.values()].flat().map((t13) => ({
-          ...t13,
-          actions: t13.actions.map(toSerializableAction)
+        transitions: [...this.transitions.values()].flat().map((t14) => ({
+          ...t14,
+          actions: t14.actions.map(toSerializableAction)
         })),
         entry: this.entry.map(toSerializableAction),
         exit: this.exit.map(toSerializableAction),
@@ -15947,7 +17076,7 @@ ${err.message}`);
     get on() {
       return memo(this, "on", () => {
         const transitions = this.transitions;
-        return [...transitions].flatMap(([descriptor, t13]) => t13.map((t14) => [descriptor, t14])).reduce((map2, [descriptor, transition]) => {
+        return [...transitions].flatMap(([descriptor, t14]) => t14.map((t15) => [descriptor, t15])).reduce((map2, [descriptor, transition]) => {
           map2[descriptor] = map2[descriptor] || [];
           map2[descriptor].push(transition);
           return map2;
@@ -16275,13 +17404,13 @@ ${err.message}`);
 
   // ../shared/node_modules/proxy-compare/dist/index.modern.js
   var e = Symbol();
-  var t = Symbol();
+  var t9 = Symbol();
   var s = Object.getPrototypeOf;
   var c = /* @__PURE__ */ new WeakMap();
   var l = (e2) => e2 && (c.has(e2) ? c.get(e2) : s(e2) === Object.prototype || s(e2) === Array.prototype);
-  var y = (e2) => l(e2) && e2[t] || null;
-  var h = (e2, t13 = true) => {
-    c.set(e2, t13);
+  var y = (e2) => l(e2) && e2[t9] || null;
+  var h = (e2, t14 = true) => {
+    c.set(e2, t14);
   };
 
   // ../shared/node_modules/valtio/esm/vanilla.mjs
@@ -16601,186 +17730,55 @@ ${err.message}`);
   var v4_default = v4;
 
   // ../shared/src/types/entities/endUser.ts
-  var t4 = __toESM(require_lib());
-
-  // ../shared/node_modules/fp-ts/es6/function.js
-  function pipe(a, ab, bc, cd, de, ef, fg, gh, hi, ij, jk, kl, lm, mn, no, op, pq, qr, rs, st) {
-    switch (arguments.length) {
-      case 1:
-        return a;
-      case 2:
-        return ab(a);
-      case 3:
-        return bc(ab(a));
-      case 4:
-        return cd(bc(ab(a)));
-      case 5:
-        return de(cd(bc(ab(a))));
-      case 6:
-        return ef(de(cd(bc(ab(a)))));
-      case 7:
-        return fg(ef(de(cd(bc(ab(a))))));
-      case 8:
-        return gh(fg(ef(de(cd(bc(ab(a)))))));
-      case 9:
-        return hi(gh(fg(ef(de(cd(bc(ab(a))))))));
-      case 10:
-        return ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))));
-      case 11:
-        return jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))));
-      case 12:
-        return kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))));
-      case 13:
-        return lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))));
-      case 14:
-        return mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))));
-      case 15:
-        return no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))));
-      case 16:
-        return op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))));
-      case 17:
-        return pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))))));
-      case 18:
-        return qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))))));
-      case 19:
-        return rs(qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))))))));
-      case 20:
-        return st(rs(qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))))))));
-    }
-    return;
-  }
-
-  // ../shared/node_modules/fp-ts/es6/Functor.js
-  function flap(F) {
-    return function(a) {
-      return function(fab) {
-        return F.map(fab, function(f) {
-          return f(a);
-        });
-      };
-    };
-  }
-
-  // ../shared/node_modules/fp-ts/es6/internal.js
-  var isLeft = function(ma) {
-    return ma._tag === "Left";
-  };
-
-  // ../shared/node_modules/fp-ts/es6/Either.js
-  var isLeft2 = isLeft;
-  var right = function(a) {
-    return { _tag: "Right", right: a };
-  };
-  var orElseW = function(onLeft) {
-    return function(ma) {
-      return isLeft2(ma) ? onLeft(ma.left) : ma;
-    };
-  };
-  var orElse = orElseW;
-  var _map = function(fa, f) {
-    return pipe(fa, map(f));
-  };
-  var map = function(f) {
-    return function(fa) {
-      return isLeft2(fa) ? fa : right(f(fa.right));
-    };
-  };
-  var URI = "Either";
-  var Functor = {
-    URI,
-    map: _map
-  };
-  var flap2 = (
-    /*#_PURE_*/
-    flap(Functor)
-  );
-
-  // ../shared/node_modules/io-ts-types/es6/clone.js
-  function clone(t13) {
-    var r = Object.create(Object.getPrototypeOf(t13));
-    Object.assign(r, t13);
-    return r;
-  }
-
-  // ../shared/node_modules/io-ts-types/es6/withFallback.js
-  var t3 = __toESM(require_lib());
-
-  // ../shared/node_modules/io-ts-types/es6/withValidate.js
-  var t2 = __toESM(require_lib());
-  function withValidate(codec, validate2, name) {
-    if (name === void 0) {
-      name = codec.name;
-    }
-    var r = clone(codec);
-    r.validate = validate2;
-    r.decode = function(i2) {
-      return validate2(i2, t2.getDefaultContext(r));
-    };
-    r.name = name;
-    return r;
-  }
-
-  // ../shared/node_modules/io-ts-types/es6/withFallback.js
-  function withFallback(codec, a, name) {
-    if (name === void 0) {
-      name = "withFallback(" + codec.name + ")";
-    }
-    return withValidate(codec, function(u, c2) {
-      return orElse(function() {
-        return t3.success(a);
-      })(codec.validate(u, c2));
-    }, name);
-  }
-
-  // ../shared/src/types/entities/endUser.ts
-  var NudgeInteractionStateV = t4.type({
-    type: t4.union([
-      t4.literal("survey"),
-      t4.literal("tour"),
-      t4.literal("banner"),
-      t4.literal("tooltip"),
-      t4.literal("checklist"),
-      t4.string
+  var t10 = __toESM(require_lib());
+  var NudgeInteractionStateV = t10.type({
+    type: t10.union([
+      t10.literal("survey"),
+      t10.literal("tour"),
+      t10.literal("banner"),
+      t10.literal("tooltip"),
+      t10.literal("checklist"),
+      t10.string
     ]),
     formFactor: withFallback(
-      t4.union([
-        t4.literal("modal"),
-        t4.literal("checklist"),
-        t4.literal("popover"),
-        t4.literal("banner"),
-        t4.literal("pin"),
-        t4.literal("tooltip"),
-        t4.literal("card"),
-        t4.literal("")
+      t10.union([
+        t10.literal("modal"),
+        t10.literal("checklist"),
+        t10.literal("popover"),
+        t10.literal("banner"),
+        t10.literal("pin"),
+        t10.literal("tooltip"),
+        t10.literal("card"),
+        t10.literal("")
       ]),
       ""
     ),
-    activelifeCycleUuid: t4.union([t4.string, t4.literal("")]),
-    activatedTs: t4.array(t4.number),
-    dismissedTs: t4.array(t4.number),
-    isDismissed: t4.boolean,
-    completedTs: t4.array(t4.number),
-    isCompleted: t4.boolean,
-    lastSeenTs: t4.union([t4.number, t4.literal(-1)]),
-    lastSeenSessionId: withFallback(t4.number, -1),
-    lastSeenDeviceId: withFallback(t4.string, ""),
-    snoozedUntilTs: t4.union([t4.number, t4.literal(-1)]),
-    stepIndexStack: t4.array(t4.number),
-    currentStep: t4.number,
-    isChecklistExpanded: t4.boolean,
-    steps: t4.record(
-      t4.string,
-      t4.type({
-        completedTs: t4.union([t4.number, t4.literal(-1)])
+    activelifeCycleUuid: t10.union([t10.string, t10.literal("")]),
+    activatedTs: t10.array(t10.number),
+    dismissedTs: t10.array(t10.number),
+    isDismissed: t10.boolean,
+    completedTs: t10.array(t10.number),
+    isCompleted: t10.boolean,
+    lastSeenTs: t10.union([t10.number, t10.literal(-1)]),
+    lastSeenSessionId: withFallback(t10.number, -1),
+    lastSeenDeviceId: withFallback(t10.string, ""),
+    snoozedUntilTs: t10.union([t10.number, t10.literal(-1)]),
+    stepIndexStack: t10.array(t10.number),
+    currentStep: t10.number,
+    isChecklistExpanded: t10.boolean,
+    steps: t10.record(
+      t10.string,
+      t10.type({
+        completedTs: t10.union([t10.number, t10.literal(-1)])
         // only used for checklists
       })
     ),
-    tagIds: withFallback(t4.array(t4.number), []),
+    tagIds: withFallback(t10.array(t10.number), []),
     // Tag IDs associated with this nudge
-    lastUpdatedTs: withFallback(t4.number, -1)
+    lastUpdatedTs: withFallback(t10.number, -1)
   });
-  var NudgeInteractionsV = t4.record(t4.string, NudgeInteractionStateV);
-  var EndUserStoreDataV = t4.type({
+  var NudgeInteractionsV = t10.record(t10.string, NudgeInteractionStateV);
+  var EndUserStoreDataV = t10.type({
     nudgeInteractions: NudgeInteractionsV
   });
 
@@ -16801,10 +17799,11 @@ ${err.message}`);
 
   // ../shared/src/internal/middleware/network.ts
   var MAX_WAIT_TIME_MS = 3e4;
-  var isRetryable = ({ method, path }) => {
+  var isRetryable = ({ method, path, status }) => {
     const shouldRetryForMethod = method.toLowerCase() === "get";
     const shouldRetryForEndpoint = ["/decide", "/config", "/state"].some((s2) => path.includes(s2));
-    return shouldRetryForMethod && shouldRetryForEndpoint;
+    const shouldRetryForStatus = status >= 500;
+    return shouldRetryForMethod && shouldRetryForEndpoint && shouldRetryForStatus;
   };
   var post = (url, data = void 0, options = {}) => _fetch("POST", url, data, options);
   var get3 = (url, options = {}) => _fetch("GET", url, void 0, options);
@@ -16832,7 +17831,7 @@ ${err.message}`);
       });
       let shouldRetry = false;
       if (!response.ok) {
-        if (isRetryable({ method, path })) {
+        if (isRetryable({ method, path, status: response.status })) {
           shouldRetry = true;
         } else {
           try {
@@ -16869,28 +17868,8 @@ ${err.message}`);
     };
   };
 
-  // ../shared/src/internal/middleware/generics.ts
-  var import_io_ts_reporters = __toESM(require_src());
-  var import_function2 = __toESM(require_function());
-  var import_Either2 = __toESM(require_Either());
-  function decodeThrowing(validator, input) {
-    const result = validator.decode(input);
-    return (0, import_function2.pipe)(
-      result,
-      (0, import_Either2.fold)(
-        (_errors) => {
-          const messages = import_io_ts_reporters.default.report(result);
-          const errorMessage = `${messages.join("\n")}
-when parsing ${JSON.stringify(input, null, 2)}`;
-          logger.debug(JSON.stringify(_errors));
-          throw new Error(errorMessage);
-        },
-        (value) => value
-      )
-    );
-  }
-
   // ../shared/src/store/end-user/state.ts
+  var import_debounce = __toESM(require_debounce());
   var import_isArray = __toESM(require_isArray());
   var import_mergeWith = __toESM(require_mergeWith());
 
@@ -16901,11 +17880,16 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   };
 
   // ../shared/src/store/end-user/state.ts
+  var MAX_INTERACTION_TIMESTAMPS = 5;
+  var CAPPED_TS_KEYS = /* @__PURE__ */ new Set(["activatedTs", "dismissedTs", "completedTs"]);
+  var PUSH_DEBOUNCE_MS = 1e3;
+  var PUSH_MAX_WAIT_MS = 5e3;
   var emptyEndUserStoreData = () => {
     return {
       nudgeInteractions: {}
     };
   };
+  var REPLACE_ARRAY_KEYS = /* @__PURE__ */ new Set(["stepIndexStack", "tagIds"]);
   var createDefaultNudgeInteractionState = () => {
     return {
       type: "__unknown__",
@@ -16928,7 +17912,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       lastUpdatedTs: -1
     };
   };
-  var updateEndUserStore = async (eus, updates, options = { replaceArrays: ["stepIndexStack", "tagIds"] }) => {
+  var updateEndUserStore = async (eus, updates, options = {}) => {
     const eusData = eus.data;
     Object.entries(updates).forEach(([variantId, updates2]) => {
       if (updates2 === null) {
@@ -16941,25 +17925,37 @@ when parsing ${JSON.stringify(input, null, 2)}`;
           if (src === void 0) {
             return obj;
           }
+          if (CAPPED_TS_KEYS.has(key) && ((0, import_isArray.default)(obj) || (0, import_isArray.default)(src))) {
+            const existing = (0, import_isArray.default)(obj) ? obj : [];
+            const incoming = (0, import_isArray.default)(src) ? src : [src];
+            return [...existing, ...incoming].slice(-MAX_INTERACTION_TIMESTAMPS);
+          }
           if ((0, import_isArray.default)(obj)) {
-            return options.replaceArrays?.includes(key) ? src : obj.concat(src);
+            return REPLACE_ARRAY_KEYS.has(key) ? src : obj.concat(src);
           }
         });
         eusData.nudgeInteractions[variantId].lastUpdatedTs = Date.now();
+        eus.dirtyVariantIds.add(variantId);
       }
     });
-    await eus.pushData();
+    await eus.pushData({ immediate: options.immediate });
   };
   var RemoteEndUserStore = class {
     data;
     initializedSuccessfully;
+    dirtyVariantIds;
+    debouncedNetworkPush;
     constructor() {
       this.data = emptyEndUserStoreData();
       this.initializedSuccessfully = false;
+      this.dirtyVariantIds = /* @__PURE__ */ new Set();
+      this.debouncedNetworkPush = (0, import_debounce.default)(() => this.networkPush(), PUSH_DEBOUNCE_MS, { maxWait: PUSH_MAX_WAIT_MS });
     }
     reset() {
+      this.debouncedNetworkPush.cancel();
       this.data = emptyEndUserStoreData();
       this.initializedSuccessfully = false;
+      this.dirtyVariantIds = /* @__PURE__ */ new Set();
     }
     getApiKeyPrefix() {
       const { apiKey } = getSDK()._configuration;
@@ -17038,6 +18034,12 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         this.initializedSuccessfully = true;
         this.saveToLocalStorage();
         if (this.hasNewerLocalNudges(remoteData, localData)) {
+          for (const [variantId, localNudge] of Object.entries(localData.nudgeInteractions)) {
+            const remoteNudge = remoteData.nudgeInteractions[variantId];
+            if (!remoteNudge || (localNudge.lastUpdatedTs ?? -1) > (remoteNudge.lastUpdatedTs ?? -1)) {
+              this.dirtyVariantIds.add(variantId);
+            }
+          }
           this.pushData();
         }
       } else if (remoteData) {
@@ -17049,13 +18051,46 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         this.initializedSuccessfully = true;
       }
     }
-    async pushData() {
+    async pushData(options) {
       const endUser = getSDK()._.user;
-      if (!endUser || !this.initializedSuccessfully) return;
+      if (!endUser || !this.initializedSuccessfully) {
+        return;
+      }
       this.saveToLocalStorage();
-      const { apiKey } = getSDK()[_configuration];
+      if (this.dirtyVariantIds.size === 0) {
+        return;
+      }
+      if (options?.immediate) {
+        this.debouncedNetworkPush.cancel();
+        await this.networkPush();
+      } else {
+        this.debouncedNetworkPush();
+      }
+    }
+    async networkPush() {
+      const sdk = getSDK();
+      const endUser = sdk._.user;
+      const eus = sdk._.endUserStore;
+      if (!endUser || eus.dirtyVariantIds.size === 0) {
+        return;
+      }
+      const pushedVariantIds = new Set(eus.dirtyVariantIds);
+      const dirtyInteractions = {};
+      for (const variantId of pushedVariantIds) {
+        if (eus.data.nudgeInteractions[variantId]) {
+          dirtyInteractions[variantId] = eus.data.nudgeInteractions[variantId];
+        }
+      }
+      if (Object.keys(dirtyInteractions).length === 0) {
+        for (const id of pushedVariantIds) {
+          eus.dirtyVariantIds.delete(id);
+        }
+        return;
+      }
+      const payload = { nudgeInteractions: dirtyInteractions };
+      const validData = decodeThrowing(EndUserStoreDataV, payload);
+      const { apiKey } = sdk[_configuration];
       const userJsonBase64 = jsonBase64Encoder(endUser);
-      const validData = decodeThrowing(EndUserStoreDataV, this.data);
       try {
         await post("/sdk/v1/state", validData, {
           headers: {
@@ -17063,6 +18098,9 @@ when parsing ${JSON.stringify(input, null, 2)}`;
             "X-Amp-User": userJsonBase64
           }
         });
+        for (const id of pushedVariantIds) {
+          eus.dirtyVariantIds.delete(id);
+        }
       } catch (e2) {
         logger.error("Failed to push data to remote end user store", { error: e2 });
       }
@@ -17071,9 +18109,11 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   var NullEndUserStore = class {
     data;
     initializedSuccessfully;
+    dirtyVariantIds;
     constructor() {
       this.data = emptyEndUserStoreData();
       this.initializedSuccessfully = true;
+      this.dirtyVariantIds = /* @__PURE__ */ new Set();
     }
     reset() {
     }
@@ -17085,13 +18125,16 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   var LocalStorageTestEndUserStore = class {
     data;
     initializedSuccessfully;
+    dirtyVariantIds;
     constructor() {
       this.data = emptyEndUserStoreData();
       this.initializedSuccessfully = false;
+      this.dirtyVariantIds = /* @__PURE__ */ new Set();
     }
     reset() {
       this.data = emptyEndUserStoreData();
       this.initializedSuccessfully = true;
+      this.dirtyVariantIds = /* @__PURE__ */ new Set();
     }
     getEUSKey() {
       const user = getSDK()._.user;
@@ -17120,6 +18163,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     activatePushExperience: () => activatePushExperience,
     addCallbacks: () => addCallbacks,
     executeAction: () => executeAction,
+    initEffectsSequencer: () => initEffectsSequencer,
     publishAnalyticsEventToMessageBus: () => publishAnalyticsEventToMessageBus,
     removeCallback: () => removeCallback,
     setOrganization: () => setOrganization,
@@ -17152,6 +18196,51 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     stopDebugSession: () => stopDebugSession,
     updateNudgeStepForPreview: () => updateNudgeStepForPreview
   });
+
+  // ../shared/src/products/nudges/store/effectsSequencer.ts
+  var t11 = __toESM(require_lib());
+
+  // ../shared/src/internal/util/SessionStorage.ts
+  var PREFIX3 = "amplitude.engagement";
+  var set2 = (label, value) => {
+    try {
+      sessionStorage.setItem(`${PREFIX3}.${label}`, value.toString());
+      return value;
+    } catch (err) {
+      return "";
+    }
+  };
+  var get4 = (label, defaultValue, prefixOverride) => {
+    let value;
+    const prefix = prefixOverride ?? PREFIX3;
+    try {
+      value = sessionStorage.getItem(`${prefix}.${label}`);
+    } catch (err) {
+      value = null;
+    }
+    if (value === null) {
+      return defaultValue;
+    } else {
+      if (value === "false") return false;
+      if (value === "true") return true;
+      if (+value) return +value;
+      return value;
+    }
+  };
+  var remove2 = (label) => {
+    try {
+      sessionStorage.removeItem(`${PREFIX3}.${label}`);
+      return;
+    } catch (err) {
+      return;
+    }
+  };
+  var SessionStorage = {
+    set: set2,
+    get: get4,
+    remove: remove2
+  };
+  var SessionStorage_default = SessionStorage;
 
   // ../shared/src/util/Interpolate.ts
   var import_get2 = __toESM(require_get());
@@ -17302,7 +18391,261 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         _.services.appReviewExecutable(_, action);
         break;
       }
+      case "open_resource_center": {
+        _.services.setCurrentContentId(_, null);
+        _.services.showResourceCenter(_, true, { initialPage: "help-hub" });
+        break;
+      }
+      case "open_ai_assistant": {
+        _.services.showResourceCenter(_, true, { initialPage: "assistant" });
+        break;
+      }
     }
+  };
+
+  // ../shared/src/products/nudges/store/effectsSequencer.ts
+  var EFFECTS_SEQUENCER_ID = "EffectsSequencer";
+  var RETRY_INTERVAL = 250;
+  var RETRY_TIMEOUT = 5e3;
+  var SEQUENCE_EXPIRATION_TIME = 6e4;
+  var SEQUENCE_STORAGE_KEY = "effects_sequencer_sequence";
+  var PersistedActionSequenceV = t11.type({
+    effects: t11.array(EffectfulActionV),
+    source: t11.type({
+      variantId: t11.number
+    }),
+    expiresAt: t11.number,
+    sessionKey: t11.string
+  });
+  var clearSavedSequence = () => {
+    SessionStorage_default.remove(SEQUENCE_STORAGE_KEY);
+  };
+  var EffectsSequencerMachine = (globalStore) => {
+    const hasEffects = ({ event }) => event.effects.length > 0;
+    const hasEffectToExecute = ({ context }) => !!context.effects.at(context.currentEffectIndex);
+    const getLinkSequenceStrategy = ({ context }) => {
+      const effect = context.effects.at(context.currentEffectIndex);
+      const hasRemainingEffects = context.currentEffectIndex < context.effects.length - 1;
+      if (!hasRemainingEffects || effect?.type !== "link") return "continue";
+      if (__GS_PLATFORM__ === "web" && effect.operation === "self") return "persist";
+      if (__GS_PLATFORM__ !== "web" && effect.operation !== "router") return "terminate";
+      return "continue";
+    };
+    const shouldPersist = (args) => getLinkSequenceStrategy(args) === "persist";
+    const shouldTerminateSequence = (args) => getLinkSequenceStrategy(args) === "terminate";
+    const isRetryable2 = ({ context }) => context.effects.at(context.currentEffectIndex)?.type === "click";
+    const saveSequence = ({ context }) => {
+      if (!context.source) {
+        return;
+      }
+      const sessionKey = String(getEffectiveSessionStart(globalStore));
+      const remainingEffects = context.effects.slice(context.currentEffectIndex + 1);
+      const sequence = PersistedActionSequenceV.encode({
+        effects: remainingEffects,
+        source: context.source,
+        expiresAt: Date.now() + SEQUENCE_EXPIRATION_TIME,
+        sessionKey
+      });
+      SessionStorage_default.set(SEQUENCE_STORAGE_KEY, JSON.stringify(sequence));
+    };
+    return setup({
+      types: {},
+      actions: {
+        loadSequence: enqueueActions(({ enqueue }) => {
+          const sequence = SessionStorage_default.get(SEQUENCE_STORAGE_KEY, false);
+          if (typeof sequence !== "string") {
+            return;
+          }
+          let parsed;
+          try {
+            parsed = JSON.parse(sequence);
+          } catch {
+            logger.error("Malformed sequence in sessionStorage, clearing");
+            clearSavedSequence();
+            return;
+          }
+          const parsedSequence = PersistedActionSequenceV.decode(parsed);
+          if (parsedSequence._tag === "Left") {
+            logger.error("Invalid sequence stored in sessionStorage", parsedSequence);
+            clearSavedSequence();
+            return;
+          }
+          const sessionKey = String(getEffectiveSessionStart(globalStore));
+          if (parsedSequence.right.sessionKey !== sessionKey) {
+            clearSavedSequence();
+            return;
+          }
+          if (parsedSequence.right.expiresAt < Date.now()) {
+            clearSavedSequence();
+            return;
+          }
+          enqueue.raise({
+            type: "RUN",
+            ...parsedSequence.right
+          });
+        }),
+        clearSavedSequence,
+        saveSequence,
+        assignSequence: assign({
+          effects: ({ event }) => event.effects,
+          source: ({ event }) => event.source,
+          currentEffectIndex: 0
+        }),
+        advanceEffect: assign({
+          currentEffectIndex: ({ context }) => context.currentEffectIndex + 1
+        }),
+        clearSequence: assign({
+          effects: [],
+          currentEffectIndex: 0,
+          source: null
+        })
+      },
+      actors: {
+        executeEffect: fromPromise(async ({ input }) => {
+          if (!input.source) {
+            throw new Error("No execution event source");
+          }
+          if (!input.effect) {
+            throw new Error("No effect to execute");
+          }
+          executeAction(globalStore, input.effect, input.source.variantId);
+        })
+      },
+      guards: { hasEffects, hasEffectToExecute, shouldPersist, shouldTerminateSequence, isRetryable: isRetryable2 },
+      delays: { RETRY_INTERVAL, RETRY_TIMEOUT }
+    }).createMachine({
+      /** @xstate-layout N4IgpgJg5mDOIC5QFEBmqwGMAusDKYAjgK5gB2mYATgHQCSEANmAMQBKAqgHIDaADAF1EoAA4B7WAEtsksWWEgAHogC0ANgAcGmgCYALAFYNAdh0BGDWYNq1xgDQgAnoisBOGmeN81Ovq7Wueq4AzJ4AvmEOaBg4+ESkFNQ0BCTkmJJkUOzc-EJIIOJSMnIKyggqesF6NMFqVmp+da4G-g7OCME62nx6JgZ6enyeFgMRUehYuCkJlLTTaRlQNADCABZYANaL0ZMsuQqF0rLy+WVmVsE0lq7GwTdm+l16bS6+NHzBxiGufBr9Gq5AmMQDtYvNEnN4gtMit1pgtplQdg9mY8qIJEcSqcXLU+B5jACgsYGgYLDoXggzJV3lTep5SV0qsFgUi4qkIckoRRFjRkIosMQZJkWIpYNgAIbYMA0cWoKVUAAUbGQABU2ABNAD6KroAFlkAB5DgqgCULFZ4NmnPZ6RhfIFQqg+3yh2KJ1AZQGeM8Nj4vzUelp3gpDTxpJ+IV6AVqzMiIImYK5VstPPtmEFPIAgtgpQBbESOlgQOTSjIANzEG2lFqTSRTdv56cdNGzeYLiwQ5bEmElx1yzvRRWOpUQRjMNFMOjuQQM1hawQpxnOV28GmCGnMZiqNxZCamtchNtTjYzMNbYHzheoVDEtBEjElqFvud5e7ZMzrSePDqzOYv7cyTsyArHs3X7QQDgxN0R0pP0DBoWcNDUAw-B0JdDFcClXC3XQBh+Dc+B0AxggMXcYn3G1PyPBsfzPP9L0WFhr1vGh70fZ9X3I980iomZvybX820dICQN7OR+1RSChyxD0XD9bQDAJKwrB0H4lzUCkzD4YxqgMHQ1E6PhiOsLc1DIyZuI5esljTU8lgAdXFI5MhVMQ2DAbAqEcEUxUlaVZXlJVVQ1TU6C4FVkDYAA1TMABkzRrSjDz4miBJhRznKgVz3M8xwBwKKDh2xSlKnguo-g3foqkDDSnEQJc8Q0Vc9FMO5ASCczEyS60UqWTMIDLcVuWFfLXSK2SED4Ck+E6iiP2S6E+oGobbSyHhJJdQqZKURAprqybZss5Mv1SuyADEMnFRgkSLEsaC7KtOIsy1eMW3kT0dC6yCupERO7MSyHAtECuk90doQb4JyGTQUNcLofA0TS9B0XQAxaxTiSnKNDpehbhpsj7Fi+n69yYqgbzvB9sCfKgX0S+aere2zPsu669z+0C+0EUatrBsoum0KkA3MIw0P0hd9q6YwaBCWoBjMBoNF6YwIjjMgxAgOAFHpniqCkzE+dULR3D8EjglqLdjYl9oKj9GggkBb5ZyM-ocYPegmDAfXoOKlQlfHU3iIt9cAWt1QA10FC-R8KP12Rt3uus73xvBipEf2lQfXeP0hk+NDFNGOMdask6ljWTZtj3ZPtrOX4FKDj5zDuRTMIzgZs79c4Hk+bDjFIou31xxn8fe2ioGrw2IYVq4ugeIx-FMJWKVJeuAh6Ho4ZQjQE4Z6zR7Svr6IA8fNtBmD-GqDdLCIgFbCeEMvHeawledgkMJ33Xh9W-e7JoDLHWyh5LyE8YKmTDLUawQwtC2GRhSLQ2gghBCpDcHoekdAfxLtRJag18YgOKtPHwiCFY6SnIEGwmlCKXEIgZIYVJ9K-D0Bg46WCf4s2+mzcieCJoEgUsSZC64hhzlqu0IieJfREThqbCwZgmGvRHpmAA7k5R0XBxRlkkFAAGXDwadGlr4Mw-gWg6H0BYAwWETa0iXA8cW65XCqzCEAA */
+      id: EFFECTS_SEQUENCER_ID,
+      exit: ["clearSavedSequence"],
+      description: "Executes a sequence of CTA button effects (clicks, links, nudge opens) one at a time. On web, persists remaining effects to sessionStorage when a same-page navigation is about to occur and resumes on the next page load. On mobile, terminates the sequence when a non-router link navigates out of the app context.",
+      context: {
+        effects: [],
+        currentEffectIndex: 0,
+        source: null
+      },
+      initial: "Idle",
+      states: {
+        Idle: {
+          description: "Waiting for a RUN event. On entry, attempts to restore a persisted sequence from sessionStorage (e.g. after a same-page navigation).",
+          entry: ["loadSequence", "clearSequence"],
+          on: {
+            RUN: {
+              target: "Sequencing",
+              guard: "hasEffects",
+              actions: ["assignSequence"]
+            }
+          }
+        },
+        Sequencing: {
+          description: "Actively processing a chain of effects one at a time.",
+          on: {
+            RUN: {
+              description: "Interrupts the current sequence and restarts with a new set of effects.",
+              target: "Sequencing",
+              guard: "hasEffects",
+              actions: ["assignSequence"],
+              reenter: true
+            }
+          },
+          initial: "CheckingEffect",
+          states: {
+            CheckingEffect: {
+              description: "Routes the current effect: if it will cause same-page navigation, persists remaining effects and goes to ExecutingFinalEffect; on mobile, non-router links terminate the sequence after execution; otherwise proceeds to standard Executing.",
+              always: [
+                {
+                  target: "ExecutingFinalEffect",
+                  guard: "shouldPersist",
+                  actions: ["saveSequence"]
+                },
+                {
+                  target: "ExecutingFinalEffect",
+                  guard: "shouldTerminateSequence"
+                },
+                "Executing"
+              ]
+            },
+            Executing: {
+              description: "Runs the current effect with retry support for click-type effects. A global RETRY_TIMEOUT caps total retry duration before advancing.",
+              initial: "Attempting",
+              after: {
+                RETRY_TIMEOUT: {
+                  description: "Safety net: if retries exceed the timeout, skip this effect and advance.",
+                  target: "Advancing"
+                }
+              },
+              states: {
+                Attempting: {
+                  description: "Invokes a single execution attempt of the current effect.",
+                  invoke: {
+                    src: "executeEffect",
+                    input: ({ context }) => ({
+                      effect: context.effects.at(context.currentEffectIndex),
+                      source: context.source ? { variantId: context.source.variantId } : void 0
+                    }),
+                    onDone: {
+                      target: "#Advancing"
+                    },
+                    onError: [
+                      {
+                        target: "WaitingToRetry",
+                        guard: "isRetryable"
+                      },
+                      {
+                        target: "#Advancing"
+                      }
+                    ]
+                  }
+                },
+                WaitingToRetry: {
+                  description: "Pauses before re-attempting a failed click effect.",
+                  after: {
+                    RETRY_INTERVAL: {
+                      target: "Attempting",
+                      reenter: true
+                    }
+                  }
+                }
+              }
+            },
+            Advancing: {
+              description: "Increments the effect index. If more effects remain, loops back to CheckingEffect; otherwise returns to Idle and clears state.",
+              id: "Advancing",
+              entry: ["advanceEffect"],
+              always: [
+                {
+                  target: "CheckingEffect",
+                  guard: "hasEffectToExecute"
+                },
+                {
+                  target: "#EffectsSequencer.Idle",
+                  actions: ["clearSequence", "clearSavedSequence"],
+                  reenter: true
+                }
+              ]
+            },
+            ExecutingFinalEffect: {
+              description: "Executes a link effect that ends the sequence. On web, this is a self-link with remaining effects persisted to sessionStorage. On mobile, this is a non-router link that terminates the sequence since navigation leaves the app context.",
+              invoke: {
+                src: "executeEffect",
+                input: ({ context }) => ({
+                  effect: context.effects.at(context.currentEffectIndex),
+                  source: context.source ? { variantId: context.source.variantId } : void 0
+                }),
+                onDone: "AwaitingNavigation",
+                onError: {
+                  target: "#Advancing",
+                  actions: ["clearSavedSequence"]
+                }
+              }
+            },
+            AwaitingNavigation: {
+              description: "Terminal state \u2014 navigation is taking the user away from the current context. On web, the sequence will resume from Idle on the next page load via persisted sessionStorage data. On mobile, the sequence ends here.",
+              type: "final"
+            }
+          }
+        }
+      }
+    });
   };
 
   // ../shared/src/store/global-actions.ts
@@ -17329,11 +18672,21 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   var setOrganization = (_, organization) => {
     _.organization = organization;
   };
+  var initEffectsSequencer = (_) => {
+    const machine = EffectsSequencerMachine(_);
+    _.effectsSequencer = ref(createActor(machine, { id: EFFECTS_SEQUENCER_ID }));
+    _.effectsSequencer.start();
+  };
   var publishAnalyticsEventToMessageBus = (_, event_type, event_properties) => {
     event_properties = event_properties || {};
     _.messageBus.publish("analytics_event", { event_type, event_properties });
   };
   var activatePushExperience = (_, experience, source) => {
+    if (isChecklistNudge(experience)) {
+      updateEndUserStore(_.endUserStore, {
+        [experience.variantId]: { isChecklistExpanded: true }
+      });
+    }
     forceTriggerSingleNudge(_, experience, {
       source,
       overrides: {
@@ -17409,48 +18762,6 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       !async
     );
   };
-
-  // ../shared/src/internal/util/SessionStorage.ts
-  var PREFIX3 = "amplitude.engagement";
-  var set2 = (label, value) => {
-    try {
-      sessionStorage.setItem(`${PREFIX3}.${label}`, value.toString());
-      return value;
-    } catch (err) {
-      return "";
-    }
-  };
-  var get4 = (label, defaultValue, prefixOverride) => {
-    let value;
-    const prefix = prefixOverride ?? PREFIX3;
-    try {
-      value = sessionStorage.getItem(`${prefix}.${label}`);
-    } catch (err) {
-      value = null;
-    }
-    if (value === null) {
-      return defaultValue;
-    } else {
-      if (value === "false") return false;
-      if (value === "true") return true;
-      if (+value) return +value;
-      return value;
-    }
-  };
-  var remove2 = (label) => {
-    try {
-      sessionStorage.removeItem(`${PREFIX3}.${label}`);
-      return;
-    } catch (err) {
-      return;
-    }
-  };
-  var SessionStorage = {
-    set: set2,
-    get: get4,
-    remove: remove2
-  };
-  var SessionStorage_default = SessionStorage;
 
   // ../shared/src/store/preview-session-storage-manager.ts
   var PREVIEW_SESSION_KEY = "previewSession";
@@ -17537,7 +18848,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     surveySubmitted: "[Guides-Surveys] Survey Submitted",
     surveyAbandoned: "[Guides-Surveys] Survey Abandoned"
   };
-  var getEventNameCreator = (nudge) => (type10) => {
+  var getEventNameCreator = (nudge) => (type11) => {
     const productName = isSurvey(nudge) ? "Survey" : "Guide";
     const events = {
       viewed: `[Guides-Surveys] ${productName} Viewed`,
@@ -17551,7 +18862,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       ...guideSpecificEvents,
       ...surveySpecificEvents
     };
-    return events[type10];
+    return events[type11];
   };
 
   // ../shared/src/services/analytics/track.ts
@@ -17735,11 +19046,11 @@ when parsing ${JSON.stringify(input, null, 2)}`;
        * @param sourceKey The source key of the clicked result (if available)
        * @param position The position of the clicked result in the list
        */
-      resultClicked: (title, excerpt, type10, id, sourceKey, position2) => {
+      resultClicked: (title, excerpt, type11, id, sourceKey, position2) => {
         getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Result Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] Excerpt" /* Excerpt */]: excerpt,
-          ["[Guides-Surveys] Type" /* Type */]: type10,
+          ["[Guides-Surveys] Type" /* Type */]: type11,
           ["[Guides-Surveys] Key" /* Key */]: null,
           // Content Item ID is not tracked
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
@@ -17773,10 +19084,10 @@ when parsing ${JSON.stringify(input, null, 2)}`;
        * @param isDefault Whether the recommendation set is the default set
        * @param isAutopilot Whether the recommendation is an autopilot recommendation
        */
-      recommendationClicked: (title, type10, url, key, sourceKey, position2, recommendationSetKey, isDefault, isAutopilot) => {
+      recommendationClicked: (title, type11, url, key, sourceKey, position2, recommendationSetKey, isDefault, isAutopilot) => {
         getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Recommendation Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] Type" /* Type */]: type10,
+          ["[Guides-Surveys] Type" /* Type */]: type11,
           ["[Guides-Surveys] URL" /* URL */]: url,
           ["[Guides-Surveys] Key" /* Key */]: key,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
@@ -17797,10 +19108,10 @@ when parsing ${JSON.stringify(input, null, 2)}`;
        * @param position The position of the clicked quick link in the list
        * @param isDefault Whether the quick link is in the default set
        */
-      quickLinkClicked: (title, type10, url, key, sourceKey, position2, isDefault) => {
+      quickLinkClicked: (title, type11, url, key, sourceKey, position2, isDefault) => {
         getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Quick Link Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] Type" /* Type */]: type10,
+          ["[Guides-Surveys] Type" /* Type */]: type11,
           ["[Guides-Surveys] URL" /* URL */]: url,
           ["[Guides-Surveys] Key" /* Key */]: key,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
@@ -18311,997 +19622,55 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     debounceTimeout = setTimeout(saveToStorage, debounceDelay);
   };
 
-  // ../shared/src/internal/middleware/organization.ts
-  var t6 = __toESM(require_lib());
-
-  // ../shared/src/internal/middleware/evaluation.ts
-  var t5 = __toESM(require_lib());
-  var EvaluationConditionV = t5.type({
-    selector: t5.array(t5.string),
-    op: t5.string,
-    values: t5.array(t5.string)
-  });
-
-  // ../shared/src/internal/middleware/organization.ts
-  var ThrottleV = t6.intersection([
-    t6.type({
-      max: t6.number,
-      period: t6.string
-    }),
-    t6.partial({
-      tagIds: t6.array(t6.number),
-      // if it's a tag throttle, this will be set, otherwise the throttle is for all nudge interactions
-      periodCount: t6.union([t6.number, t6.undefined]),
-      type: t6.union([t6.literal("time-between"), t6.literal("basic")])
-    })
-  ]);
-  var CustomThrottleV = t6.intersection([
-    t6.type({
-      limits: t6.array(ThrottleV),
-      conditions: t6.array(t6.array(EvaluationConditionV))
-    }),
-    t6.partial({
-      enabled: t6.boolean,
-      limit: ThrottleV
-    })
-  ]);
-  var TranslationBehaviorV = t6.keyof({
-    showDefault: null,
-    showOutOfDate: null,
-    dontShow: null
-  });
-  var LocalizationV = t6.type({
-    enabled: t6.boolean,
-    defaultLocale: t6.string,
-    addedLocales: t6.array(t6.string),
-    translationUnavailable: TranslationBehaviorV,
-    translationOutdated: TranslationBehaviorV
-  });
-  var OrganizationV = t6.intersection([
-    t6.type({
-      branding: t6.string,
-      shareLinkParam: t6.string,
-      guideThrottle: CustomThrottleV,
-      surveyThrottle: CustomThrottleV
-    }),
-    t6.partial({
-      localization: LocalizationV
-    })
-  ]);
-  var defaults = {
-    branding: "",
-    shareLinkParam: "",
-    guideThrottle: {
-      limits: [{ max: 10, period: "day" }],
-      conditions: [[]],
-      enabled: false
-    },
-    surveyThrottle: {
-      limits: [{ max: 10, period: "day" }],
-      conditions: [[]],
-      enabled: false
-    },
-    localization: {
-      enabled: false,
-      defaultLocale: "en",
-      addedLocales: [],
-      translationUnavailable: "showDefault",
-      translationOutdated: "showOutOfDate"
-    }
-  };
-  var decode = (data) => {
-    try {
-      return decodeThrowing(OrganizationV, data);
-    } catch (e2) {
-      logger.error("Error decoding project settings", { error: e2 });
-      return decodeThrowing(OrganizationV, { ...defaults, ...data });
-    }
-  };
-
-  // ../shared/src/internal/middleware/nudge.ts
-  var t10 = __toESM(require_lib());
-
-  // ../shared/src/types/entities/nudge/actions.ts
-  var t7 = __toESM(require_lib());
-  var AdminAction = t7.type({
-    type: t7.literal("admin"),
-    value: t7.string
-  });
-  var CallbackAction = t7.type({
-    type: t7.literal("callback"),
-    value: t7.string
-  });
-  var AppReviewAction = t7.intersection([
-    t7.type({
-      type: t7.literal("app_review")
-    }),
-    t7.partial({
-      appStoreId: t7.string,
-      playStorePackageName: t7.string
-    })
-  ]);
-  var LinkAction = t7.intersection([
-    t7.type({
-      type: t7.literal("link"),
-      value: t7.string
-    }),
-    t7.partial({
-      operation: t7.union([t7.literal("router"), t7.literal("self"), t7.literal("blank"), t7.undefined]),
-      meta: t7.type({
-        command: t7.string
-      })
-    })
-  ]);
-  var OpenChatActionTypeV = t7.union([
-    t7.literal("intercom"),
-    t7.literal("helpscout"),
-    t7.literal("freshdesk"),
-    t7.literal("freshchat"),
-    t7.literal("crisp"),
-    t7.literal("zendesk"),
-    t7.literal("liveChat"),
-    t7.literal("gist"),
-    t7.literal("olark"),
-    t7.literal("hubspot"),
-    t7.literal("drift"),
-    t7.literal("pylon"),
-    t7.literal("talkdesk_v2"),
-    t7.literal("zendesk_handoff"),
-    t7.string
-  ]);
-  var OpenChatActionV = t7.type({
-    type: t7.literal("open_chat"),
-    meta: t7.type({
-      type: OpenChatActionTypeV
-    })
-  });
-  var DismissAction = t7.type({
-    type: t7.literal("dismiss")
-  });
-  var CompleteAction = t7.type({
-    type: t7.literal("complete")
-  });
-  var StepBackAction = t7.type({
-    type: t7.literal("step_back")
-  });
-  var StepForwardAction = t7.type({
-    type: t7.literal("step_forward")
-  });
-  var SnoozeInterval = t7.union([t7.literal("hour"), t7.literal("day"), t7.literal("week")]);
-  var SnoozeValue = t7.number;
-  var SnoozeAction = t7.intersection([
-    t7.type({
-      type: t7.literal("snooze")
-    }),
-    t7.partial({
-      interval: SnoozeInterval,
-      value: SnoozeValue
-    })
-  ]);
-  var BuiltInAction = t7.type({
-    type: t7.literal("builtin"),
-    value: t7.string
-  });
-  var ScriptAction = t7.type({
-    type: t7.literal("script"),
-    value: t7.string
-  });
-  var VideoAction = t7.type({
-    type: t7.literal("video"),
-    value: t7.string
-  });
-  var NoAction = t7.type({ type: t7.literal("no_action") });
-  var ClickAction = t7.type({
-    type: t7.literal("click"),
-    value: t7.string
-  });
-  var NudgeActionV = t7.type({
-    type: t7.literal("nudge"),
-    value: t7.number
-  });
-  var GoToNudgeStepActionV = t7.type({
-    type: t7.literal("go_to_step"),
-    value: t7.number
-  });
-  var UseConditionalLogicAction = t7.type({
-    type: t7.literal("use_conditional_logic")
-  });
-  var ShowVideoAction = t7.type({
-    type: t7.literal("video"),
-    value: t7.number
-  });
-  var ShowDocumentAction = t7.type({
-    type: t7.literal("document"),
-    value: t7.number
-  });
-  var ActionV = t7.union([
-    NoAction,
-    ClickAction,
-    LinkAction,
-    OpenChatActionV,
-    DismissAction,
-    CompleteAction,
-    SnoozeAction,
-    NudgeActionV,
-    GoToNudgeStepActionV,
-    UseConditionalLogicAction,
-    StepBackAction,
-    StepForwardAction,
-    CallbackAction,
-    ShowVideoAction,
-    ShowDocumentAction,
-    AppReviewAction
-  ]);
-  var LabeledActionV = t7.type({
-    cta: t7.string,
-    action: ActionV
-  });
-  var TriggerAction = t7.type({
-    type: t7.literal("trigger"),
-    value: ActionV
-  });
-
-  // ../shared/src/internal/middleware/helpers/goals.ts
-  var t8 = __toESM(require_lib());
-  var PageVisitedGoal = t8.type({
-    type: t8.literal("page_visited"),
-    value: t8.string
-  });
-  var ElementClickedGoal = t8.type({
-    type: t8.literal("element_clicked"),
-    value: t8.string
-  });
-  var CTAClickedGoal = t8.type({
-    type: t8.literal("cta_clicked")
-  });
-  var EventTrackedGoal = t8.intersection([
-    t8.type({
-      type: t8.literal("event_tracked"),
-      event: t8.string
-    }),
-    t8.partial({
-      conditions: t8.array(t8.array(EvaluationConditionV))
-    })
-  ]);
-
-  // ../shared/src/internal/middleware/page-targeting.ts
-  var t9 = __toESM(require_lib());
-  var PageTargetingConfigV = t9.type({
-    conditions: t9.array(t9.array(EvaluationConditionV)),
-    configs: t9.array(
-      t9.type({
-        isExclude: t9.boolean,
-        matchType: t9.union([
-          t9.literal("contains"),
-          t9.literal("endsWith"),
-          t9.literal("exact"),
-          t9.literal("pattern"),
-          t9.literal("regex"),
-          t9.literal("simple"),
-          t9.literal("startsWith")
-        ]),
-        url: t9.string
-      })
-    )
-  });
-
-  // ../shared/src/internal/middleware/nudge.ts
-  var ModalPositionV = t10.union([
-    t10.literal("top-left"),
-    t10.literal("top-center"),
-    t10.literal("top-right"),
-    t10.literal("bottom-left"),
-    t10.literal("bottom-center"),
-    t10.literal("bottom-right"),
-    t10.literal("left-center"),
-    t10.literal("right-center"),
-    t10.literal("center")
-  ]);
-  var PopoverPositionV = ModalPositionV;
-  var BannerPositionV = t10.union([t10.literal("top"), t10.literal("bottom")]);
-  var PinPositionV = t10.union([
-    t10.literal("auto"),
-    t10.literal("top"),
-    t10.literal("bottom"),
-    t10.literal("left"),
-    t10.literal("right")
-  ]);
-  var CardPositionV = t10.union([
-    t10.literal("prepend"),
-    t10.literal("append"),
-    t10.literal("replace"),
-    t10.literal("before"),
-    t10.literal("after")
-  ]);
-  var NudgeContentMarkdownBlockV = t10.type({
-    type: t10.literal("markdown"),
-    meta: t10.type({ value: t10.string })
-  });
-  var NudgeContentImageBlockV = t10.type({
-    type: t10.literal("image"),
-    meta: t10.intersection([
-      t10.type({ src: t10.string, filename: t10.string, size: t10.string }),
-      t10.partial({
-        altText: t10.string,
-        style: t10.partial({
-          scale: t10.string
-        })
-      })
-    ])
-  });
-  var NudgeContentVideoBlockV = t10.type({
-    type: t10.literal("video"),
-    meta: t10.type({ type: t10.literal("url"), src: t10.string })
-  });
-  var Required = t10.union([
-    t10.type({
-      value: t10.literal(true),
-      message: t10.string
-    }),
-    t10.type({
-      value: t10.literal(false),
-      message: t10.union([t10.null, t10.undefined, t10.string])
-    })
-  ]);
-  var SurveyValidation = t10.partial({
-    validation: t10.partial({
-      required: Required
-    })
-  });
-  var NudgeButtonActionV = t10.union([
-    NoAction,
-    ClickAction,
-    LinkAction,
-    OpenChatActionV,
-    DismissAction,
-    CompleteAction,
-    SnoozeAction,
-    StepBackAction,
-    StepForwardAction,
-    NudgeActionV,
-    GoToNudgeStepActionV,
-    UseConditionalLogicAction,
-    CallbackAction,
-    ShowDocumentAction,
-    ShowVideoAction,
-    AppReviewAction
-  ]);
-  var NudgeConditionalActionConditionV = t10.type({
-    field: t10.string,
-    operator: t10.union([
-      t10.literal("eq"),
-      t10.literal("neq"),
-      t10.literal("gt"),
-      t10.literal("lt"),
-      t10.literal("gte"),
-      t10.literal("lte"),
-      t10.literal("contains"),
-      t10.literal("does_not_contain")
-    ]),
-    operand: t10.union([t10.string, t10.number, t10.array(t10.union([t10.string, t10.number]))]),
-    type: t10.union([t10.literal("survey_response"), t10.literal("user_property")])
-  });
-  var NudgeConditionalActionV = t10.intersection([
-    t10.type({
-      operator: t10.union([t10.literal("eq"), t10.literal("neq"), t10.literal("gt"), t10.literal("lt")]),
-      operand: t10.union([t10.string, t10.number]),
-      action: NudgeButtonActionV
-    }),
-    t10.partial({
-      v2: t10.intersection([
-        t10.type({
-          conditions: t10.array(NudgeConditionalActionConditionV),
-          action: NudgeButtonActionV,
-          logic: withFallback(t10.union([t10.literal("and"), t10.literal("or")]), "and")
-        }),
-        t10.partial({
-          evaluationConditions: t10.array(t10.array(EvaluationConditionV))
-        })
-      ])
-    })
-  ]);
-  var NudgeContentButtonBlockV = t10.type({
-    type: t10.literal("button"),
-    meta: t10.union([
-      t10.partial({
-        label: t10.string,
-        action: NudgeButtonActionV,
-        buttonType: t10.union([t10.literal("primary"), t10.literal("secondary"), t10.literal("snooze")], void 0),
-        conditionalActions: t10.array(NudgeConditionalActionV),
-        defaultAction: NudgeButtonActionV
-      }),
-      t10.null
-    ])
-  });
-  var NudgeContentSurveyTextBlockV = t10.type({
-    uuid: t10.string,
-    type: t10.literal("survey_text"),
-    meta: t10.intersection([
-      t10.type({ prompt: t10.string }),
-      SurveyValidation,
-      t10.partial({ label: t10.string, ariaLabel: t10.string })
-    ])
-  });
-  var NudgeStepContentSurveyTextShortBlockTypeV = t10.type({
-    uuid: t10.string,
-    type: t10.literal("survey_text_short"),
-    meta: t10.intersection([
-      t10.intersection([
-        t10.type({ prompt: t10.string }),
-        t10.partial({ prefill: t10.type({ enabled: t10.boolean, userProperty: t10.string }) })
-      ]),
-      SurveyValidation,
-      t10.partial({ label: t10.string, ariaLabel: t10.string })
-    ])
-  });
-  var NudgeContentListBlockV = t10.type({
-    uuid: t10.string,
-    type: t10.literal("survey_list"),
-    meta: t10.intersection([
-      t10.type({
-        options: t10.array(t10.string),
-        listType: t10.union([t10.literal("single"), t10.literal("multiple")]),
-        displayType: t10.union([t10.literal("dropdown"), t10.literal("list"), t10.literal("grid")])
-      }),
-      SurveyValidation,
-      t10.partial({
-        conditionalActions: t10.array(NudgeConditionalActionV),
-        defaultAction: NudgeButtonActionV,
-        isOrderRandom: t10.boolean,
-        otherOption: t10.type({
-          enabled: t10.boolean,
-          label: t10.string,
-          placeholderLabel: t10.string
-        }),
-        label: t10.string,
-        ariaLabel: t10.string
-      })
-    ])
-  });
-  var NudgeContentSurveyRatingBlockV = t10.type({
-    uuid: t10.string,
-    type: t10.literal("survey_rating"),
-    meta: t10.intersection([
-      t10.union([
-        t10.type({
-          type: t10.literal("emojis"),
-          lowerLabel: t10.string,
-          upperLabel: t10.string,
-          options: t10.number,
-          emojis: t10.array(t10.string)
-        }),
-        t10.type({
-          type: t10.literal("numbers"),
-          lowerLabel: t10.string,
-          upperLabel: t10.string,
-          options: t10.number
-        }),
-        t10.type({
-          type: t10.literal("stars"),
-          lowerLabel: t10.string,
-          upperLabel: t10.string,
-          options: t10.number
-        }),
-        t10.type({
-          type: t10.literal("nps"),
-          lowerLabel: t10.string,
-          upperLabel: t10.string,
-          options: t10.number
-        })
-      ]),
-      SurveyValidation,
-      t10.partial({
-        conditionalActions: t10.array(NudgeConditionalActionV),
-        defaultAction: NudgeButtonActionV,
-        label: t10.string,
-        ariaLabel: t10.string
-      })
-    ])
-  });
-  var NudgeContentBlockV = t10.union([
-    NudgeContentMarkdownBlockV,
-    NudgeContentImageBlockV,
-    NudgeContentVideoBlockV,
-    NudgeContentButtonBlockV,
-    NudgeContentSurveyTextBlockV,
-    NudgeStepContentSurveyTextShortBlockTypeV,
-    NudgeContentSurveyRatingBlockV,
-    NudgeContentListBlockV
-  ]);
-  var NudgeStepBaseV = t10.type({
-    id: t10.number,
-    title: t10.string,
-    content: t10.array(NudgeContentBlockV)
-  });
-  var MediaPositionV = t10.union([t10.literal("left"), t10.literal("right")]);
-  var NudgeStepFooterLayoutConfigV = t10.partial({
-    footerLayout: t10.union([t10.literal("classic"), t10.literal("split"), t10.literal("centered"), t10.literal("stacked")])
-  });
-  var NudgeStepLayoutConfigV = t10.intersection([
-    t10.union([
-      t10.partial({
-        layout: t10.union([t10.literal("classic"), t10.literal("vertical"), t10.literal("showcase")])
-      }),
-      t10.partial({
-        layout: t10.literal("horizontal"),
-        mediaPosition: MediaPositionV
-      })
-    ]),
-    t10.partial({
-      titleAlignment: t10.union([t10.literal("start"), t10.literal("center"), t10.literal("end")]),
-      contentAlignment: t10.union([t10.literal("start"), t10.literal("center"), t10.literal("end")])
-    })
-  ]);
-  var ElementSelectorV = t10.intersection([
-    t10.type({
-      selector: t10.string,
-      text: t10.string,
-      tag: t10.string,
-      attributes: t10.record(t10.string, t10.string)
-    }),
-    t10.partial({
-      strategy: withFallback(
-        t10.union([t10.literal("strict"), t10.literal("fallback"), t10.literal("selector_only")]),
-        "fallback"
-      )
-    })
-  ]);
-  var NudgeStepAdditionalV = t10.intersection(
-    [
-      t10.type({
-        formFactor: t10.union([
-          t10.intersection([
-            t10.type({
-              type: t10.literal("modal")
-            }),
-            t10.partial({
-              position: ModalPositionV,
-              textAnimation: t10.literal("typewriter"),
-              canClickOutsideToClose: t10.boolean
-            }),
-            NudgeStepLayoutConfigV,
-            NudgeStepFooterLayoutConfigV
-          ]),
-          t10.intersection([
-            t10.type({
-              type: t10.literal("checklist")
-            }),
-            t10.partial({
-              zIndexOverride: t10.union([t10.undefined, t10.null, t10.number])
-            })
-          ]),
-          t10.intersection([
-            t10.type({
-              type: t10.literal("popover"),
-              position: PopoverPositionV
-            }),
-            t10.partial({
-              textAnimation: t10.literal("typewriter"),
-              zIndexOverride: t10.union([t10.undefined, t10.null, t10.number])
-            }),
-            NudgeStepLayoutConfigV,
-            NudgeStepFooterLayoutConfigV
-          ]),
-          t10.intersection([
-            t10.type({
-              type: t10.literal("banner"),
-              position: BannerPositionV,
-              placement: t10.union([t10.literal("default"), t10.literal("overlay")]),
-              sticky: t10.boolean
-            }),
-            t10.partial({
-              textAnimation: t10.literal("typewriter"),
-              zIndexOverride: t10.union([t10.undefined, t10.null, t10.number])
-            }),
-            NudgeStepLayoutConfigV,
-            NudgeStepFooterLayoutConfigV
-          ]),
-          t10.intersection([
-            t10.type({
-              type: t10.literal("pin"),
-              anchor: t10.string
-            }),
-            t10.partial({
-              anchorSelector: ElementSelectorV,
-              isOpenByDefault: t10.boolean,
-              isShowingMask: t10.boolean,
-              advanceTrigger: t10.string,
-              offset: t10.type({
-                x: t10.string,
-                y: t10.string
-              }),
-              position: PinPositionV,
-              alignment: t10.union([
-                t10.literal("center"),
-                t10.literal("top"),
-                t10.literal("bottom"),
-                t10.literal("left"),
-                t10.literal("right")
-              ]),
-              textAnimation: t10.literal("typewriter"),
-              zIndexOverride: t10.union([t10.undefined, t10.null, t10.number]),
-              pointer: t10.type({ type: t10.union([t10.literal("beacon"), t10.literal("arrow")]) })
-            }),
-            NudgeStepLayoutConfigV,
-            NudgeStepFooterLayoutConfigV
-          ]),
-          t10.intersection([
-            t10.type({
-              type: t10.literal("tooltip"),
-              anchor: t10.string,
-              showOn: t10.union([t10.literal("hover"), t10.literal("click")]),
-              marker: t10.intersection([
-                t10.union([
-                  t10.type({
-                    type: t10.literal("beacon")
-                  }),
-                  t10.type({
-                    type: t10.literal("icon"),
-                    icon: t10.union([
-                      t10.literal("helpCircle"),
-                      t10.literal("helpSquare"),
-                      t10.literal("infoCircle"),
-                      t10.literal("bookClosed"),
-                      t10.literal("lightBulb"),
-                      t10.literal("lightning")
-                    ])
-                  }),
-                  t10.type({
-                    type: t10.literal("image"),
-                    source: t10.string
-                  })
-                ]),
-                t10.type({
-                  positioning: t10.type({
-                    position: t10.union([
-                      t10.literal("left"),
-                      t10.literal("right"),
-                      t10.literal("inline_left"),
-                      t10.literal("inline_right")
-                    ]),
-                    offset: t10.type({
-                      x: t10.string,
-                      y: t10.string
-                    })
-                  })
-                }),
-                t10.partial({
-                  width: t10.number
-                })
-              ])
-            }),
-            t10.partial({
-              anchorSelector: ElementSelectorV,
-              textAnimation: t10.literal("typewriter"),
-              zIndexOverride: t10.union([t10.undefined, t10.null, t10.number]),
-              pointer: t10.type({ type: t10.union([t10.literal("none"), t10.literal("arrow")]) })
-            }),
-            NudgeStepLayoutConfigV,
-            NudgeStepFooterLayoutConfigV
-          ]),
-          t10.intersection([
-            t10.type({
-              type: t10.literal("card"),
-              anchor: t10.string,
-              position: CardPositionV
-            }),
-            t10.partial({
-              anchorSelector: ElementSelectorV,
-              textAnimation: t10.literal("typewriter"),
-              zIndexOverride: t10.union([t10.undefined, t10.null, t10.number]),
-              alignment: t10.union([t10.literal("start"), t10.literal("center"), t10.literal("end")]),
-              cardWidth: t10.type({
-                type: t10.union([t10.literal("auto"), t10.literal("fixed"), t10.literal("full")]),
-                value: t10.union([t10.number, t10.undefined])
-              }),
-              cardHeight: t10.type({
-                type: t10.union([t10.literal("auto"), t10.literal("fixed"), t10.literal("full")]),
-                value: t10.union([t10.number, t10.undefined])
-              }),
-              cardMargin: t10.type({
-                top: t10.number,
-                right: t10.number,
-                bottom: t10.number,
-                left: t10.number
-              })
-            }),
-            NudgeStepLayoutConfigV,
-            NudgeStepFooterLayoutConfigV
-          ])
-        ])
-      }),
-      t10.partial({
-        goal: t10.union([PageVisitedGoal, ElementClickedGoal, CTAClickedGoal, EventTrackedGoal, t10.null])
-      })
-    ],
-    "NudgeStepAdditional"
-  );
-  var stepDefaults = {
-    formFactor: {
-      type: "popover",
-      position: "top-right"
-    }
-  };
-  var NudgeStepV = t10.intersection([NudgeStepBaseV, NudgeStepAdditionalV], "Nudge");
-  var SimpleNudgeTriggerType = t10.union([
-    t10.literal("immediately"),
-    t10.literal("smart_delay"),
-    t10.literal("rage_click"),
-    t10.literal("user_confusion"),
-    t10.literal("exit_intent"),
-    t10.literal("none")
-  ]);
-  var ElementAppearedTriggerConfigV = t10.type({
-    type: t10.literal("element_appeared"),
-    data: t10.type({ selector: t10.string }),
-    conditions: t10.array(t10.array(EvaluationConditionV))
-    // serialized from API (not in assistance-ui)
-  });
-  var ElementClickedTriggerConfigV = t10.type({
-    type: t10.literal("element_clicked"),
-    data: t10.type({ selector: t10.string }),
-    conditions: t10.array(t10.array(EvaluationConditionV))
-    // serialized from API (not in assistance-ui)
-  });
-  var EventTriggerConfigV = t10.type({
-    type: t10.literal("analytics_event"),
-    data: t10.type({
-      event: t10.string
-    }),
-    conditions: t10.array(t10.array(EvaluationConditionV))
-    // serialized from API (not in assistance-ui)
-  });
-  var AfterTimeTriggerConfigV = t10.type({
-    type: t10.literal("after_time"),
-    data: t10.type({ unit: t10.union([t10.literal("minute"), t10.literal("second")]), value: t10.number }),
-    conditions: t10.array(t10.array(EvaluationConditionV))
-    // serialized from API (not in assistance-ui)
-  });
-  var NudgeTriggerConfigV = t10.union([
-    t10.type({
-      type: SimpleNudgeTriggerType,
-      conditions: t10.array(t10.array(EvaluationConditionV)),
-      data: t10.union([t10.null, t10.undefined, t10.record(t10.string, t10.any)])
-    }),
-    ElementAppearedTriggerConfigV,
-    ElementClickedTriggerConfigV,
-    EventTriggerConfigV,
-    AfterTimeTriggerConfigV
-  ]);
-  var NudgeCooldownPeriodV = t10.union([
-    t10.literal("day"),
-    t10.literal("week"),
-    t10.literal("month"),
-    t10.literal("year"),
-    t10.literal("session"),
-    t10.string
-    // keep for forward compatibility
-  ]);
-  var NudgeLifecycleConfigV = t10.type({
-    stopShowingIfCompleted: t10.boolean,
-    stopShowingIfDismissed: t10.boolean,
-    cooldownLimits: t10.array(ThrottleV),
-    conditions: t10.array(t10.array(EvaluationConditionV))
-    // serialized from API (not in assistance-ui)
-  });
-  var TagV = t10.type({
-    id: t10.number,
-    name: t10.string
-  });
-  var NudgeBaseV = t10.intersection(
-    [
-      t10.type({
-        title: t10.string,
-        // TODO: can be removed, not needed in the SDK
-        variantId: t10.number,
-        steps: t10.array(NudgeStepV),
-        triggerConfig: NudgeTriggerConfigV,
-        lifecycleConfig: NudgeLifecycleConfigV,
-        flagKey: t10.string
-      }),
-      t10.partial({
-        archived: t10.boolean,
-        displayTitle: t10.string,
-        displayDescription: t10.string,
-        position: t10.union([t10.literal("bottomRight"), t10.literal("bottomLeft")]),
-        priority: t10.number,
-        dir: t10.union([t10.literal("ltr"), t10.literal("rtl")]),
-        stepCounterFormat: t10.union([t10.literal("numeric"), t10.literal("verbose")]),
-        tags: t10.array(TagV),
-        version: t10.number,
-        latestVersion: t10.number
-      })
-    ],
-    "NudgeBase"
-  );
-  var NudgeTypeV = t10.union([
-    t10.literal("survey"),
-    t10.literal("tour"),
-    t10.literal("banner"),
-    t10.literal("tooltip"),
-    t10.literal("checklist"),
-    t10.string
-  ]);
-  var TranslationStatusV = t10.type({
-    translated: t10.boolean,
-    status: t10.union([t10.literal("missing"), t10.literal("outdated"), t10.literal("up-to-date"), t10.null, t10.undefined]),
-    resolvedLocale: t10.union([t10.string, t10.null, t10.undefined])
-  });
-  var NudgeAdditionalV = t10.type(
-    {
-      platform: withFallback(
-        t10.union([
-          t10.literal("web"),
-          t10.literal("android"),
-          t10.literal("ios"),
-          t10.literal("react-native"),
-          t10.literal("flutter")
-        ]),
-        "web"
-      ),
-      showStepCounter: t10.boolean,
-      isCarousel: t10.union([t10.boolean, t10.undefined]),
-      isDismissible: t10.boolean,
-      isSnoozable: t10.boolean,
-      isSnoozableOnAllSteps: t10.boolean,
-      assistantIntro: t10.boolean,
-      snoozeLabel: t10.string,
-      doneLabel: t10.string,
-      snoozeDuration: t10.type({
-        interval: SnoozeInterval,
-        value: SnoozeValue
-      }),
-      type: NudgeTypeV,
-      previewUrl: t10.union([t10.string, t10.null, t10.undefined]),
-      customThemeId: t10.union([t10.number, t10.null, t10.undefined]),
-      variant: t10.string,
-      pageTargeting: PageTargetingConfigV,
-      hideIfPageTargetingNotMet: t10.boolean,
-      temporarilyHideTargeting: PageTargetingConfigV,
-      translationStatus: t10.union([TranslationStatusV, t10.null, t10.undefined]),
-      breakingFeatures: t10.union([t10.string, t10.null, t10.undefined])
-    },
-    "NudgeAdditional"
-  );
-  var defaults2 = {
-    platform: "web",
-    showStepCounter: false,
-    isCarousel: false,
-    isDismissible: true,
-    isSnoozable: false,
-    isSnoozableOnAllSteps: true,
-    assistantIntro: false,
-    snoozeLabel: "Snooze",
-    doneLabel: "Done",
-    snoozeDuration: {
-      interval: "day",
-      value: 3
-    },
-    type: "tour",
-    previewUrl: null,
-    customThemeId: null,
-    translationStatus: null,
-    variant: "treatment",
-    pageTargeting: {
-      conditions: [[]],
-      configs: []
-    },
-    hideIfPageTargetingNotMet: true,
-    temporarilyHideTargeting: {
-      conditions: [[]],
-      configs: []
-    },
-    breakingFeatures: null
-  };
-  var NudgeV = t10.intersection([NudgeBaseV, NudgeAdditionalV], "Nudge");
-  var createUnsupportedFeatureNudge = (data) => {
-    return {
-      title: data?.title || "Unsupported Feature",
-      variantId: data?.variantId ?? 0,
-      flagKey: data?.flagKey || "unsupported",
-      steps: [],
-      triggerConfig: {
-        type: "none",
-        conditions: [[]],
-        data: null
-      },
-      lifecycleConfig: {
-        conditions: [[]],
-        cooldownLimits: [],
-        stopShowingIfCompleted: false,
-        stopShowingIfDismissed: false
-      },
-      ...defaults2,
-      breakingFeatures: data?.breakingFeatures ?? null
-    };
-  };
-  var hasUnsupportedBreakingFeatures = (data, supportedBreakingFeatures) => {
-    if (!supportedBreakingFeatures || !data.breakingFeatures) {
-      return false;
-    }
-    const breakingFeatures = typeof data.breakingFeatures === "string" ? data.breakingFeatures.split(",").map((f) => f.trim()).filter((f) => f.length > 0) : [];
-    return breakingFeatures.some((feature) => !supportedBreakingFeatures.includes(feature));
-  };
-  var Nudge = class {
-    static decode = (data, supportedBreakingFeatures) => {
-      const variantId = data?.variantId ?? "unknown";
-      if (hasUnsupportedBreakingFeatures(data, supportedBreakingFeatures)) {
-        logger.debug(
-          `Nudge variant ${variantId} uses breaking features not supported by this platform. Breaking features used: ${JSON.stringify(data?.breakingFeatures)}, Supported features: ${JSON.stringify(supportedBreakingFeatures)}`
-        );
-        return decodeThrowing(NudgeV, createUnsupportedFeatureNudge(data));
-      }
-      try {
-        return decodeThrowing(NudgeV, data);
-      } catch (e2) {
-        const errorMessage = e2 instanceof Error ? e2.message : String(e2);
-        logger.debug(`Error decoding nudge variant ${variantId}. Error: ${errorMessage}.`);
-        try {
-          return decodeThrowing(NudgeV, {
-            ...defaults2,
-            ...data,
-            steps: (data?.steps || []).map((step) => ({ ...stepDefaults, ...step }))
-          });
-        } catch (fallbackError) {
-          const fallbackErrorMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
-          logger.debug(
-            `Error decoding nudge variant ${variantId} with fallback values. Error: ${errorMessage}. Fallback error: ${fallbackErrorMessage}.`
-          );
-          return decodeThrowing(NudgeV, createUnsupportedFeatureNudge(data));
-        }
-      }
-    };
-  };
-
   // ../shared/src/internal/middleware/theme.ts
-  var t11 = __toESM(require_lib());
-  var ThemeModeV = t11.intersection([
-    t11.type({
-      varDefaults: t11.record(t11.string, t11.union([t11.string, t11.number])),
-      varOverrides: t11.record(t11.string, t11.union([t11.string, t11.number])),
-      componentOverrides: t11.record(t11.string, t11.any),
-      mobileOverrides: t11.record(t11.string, t11.any)
+  var t12 = __toESM(require_lib());
+  var ThemeModeV = t12.intersection([
+    t12.type({
+      varDefaults: t12.record(t12.string, t12.union([t12.string, t12.number])),
+      varOverrides: t12.record(t12.string, t12.union([t12.string, t12.number])),
+      componentOverrides: t12.record(t12.string, t12.any),
+      mobileOverrides: t12.record(t12.string, t12.any)
     }),
-    t11.partial({
-      customCss: t11.string
+    t12.partial({
+      customCss: t12.string
     })
   ]);
-  var ThemeV = t11.union([
-    t11.type({
+  var ThemeV = t12.union([
+    t12.type({
       lightMode: ThemeModeV,
       darkMode: ThemeModeV
     }),
-    t11.null,
-    t11.undefined
+    t12.null,
+    t12.undefined
   ]);
-  var ThemeObjectBaseV = t11.type(
+  var ThemeObjectBaseV = t12.type(
     {
-      id: t11.number,
-      name: t11.string,
-      isDefault: t11.boolean,
+      id: t12.number,
+      name: t12.string,
+      isDefault: t12.boolean,
       theme: ThemeV
     },
     "ThemeBase"
   );
-  var ProductV = t11.union([t11.literal("guides-surveys"), t11.literal("assistant")]);
-  var PlatformV = t11.type({
-    type: t11.union([
-      t11.literal("web"),
-      t11.literal("ios"),
-      t11.literal("android"),
-      t11.literal("react-native"),
-      t11.literal("flutter"),
-      t11.string
+  var ProductV = t12.union([t12.literal("guides-surveys"), t12.literal("assistant")]);
+  var PlatformV = t12.type({
+    type: t12.union([
+      t12.literal("web"),
+      t12.literal("ios"),
+      t12.literal("android"),
+      t12.literal("react-native"),
+      t12.literal("flutter"),
+      t12.string
     ])
   });
-  var ThemeObjectAdditionalV = t11.partial(
+  var ThemeObjectAdditionalV = t12.partial(
     {
       platform: PlatformV,
       product: ProductV
     },
     "ThemeAdditional"
   );
-  var ThemeObjectV = t11.intersection([ThemeObjectBaseV, ThemeObjectAdditionalV], "Nudge");
+  var ThemeObjectV = t12.intersection([ThemeObjectBaseV, ThemeObjectAdditionalV], "Nudge");
   var defaults3 = {};
   var decode2 = (data) => {
     try {
@@ -19320,34 +19689,35 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   };
 
   // ../shared/src/types/api/resource-center.ts
-  var t12 = __toESM(require_lib());
-  var LauncherV = t12.intersection([
-    t12.type({
-      type: t12.string,
-      position: t12.string,
-      offsetX: t12.number,
-      offsetY: t12.number,
-      zIndex: t12.number
+  var t13 = __toESM(require_lib());
+  var LauncherV = t13.intersection([
+    t13.type({
+      type: t13.string,
+      position: t13.string,
+      offsetX: t13.number,
+      offsetY: t13.number,
+      zIndex: t13.number
     }),
-    t12.partial({
-      anchorElement: t12.union([t12.string, t12.null]),
-      iconSrc: t12.union([t12.string, t12.null])
+    t13.partial({
+      anchorElement: t13.union([t13.string, t13.null]),
+      iconSrc: t13.union([t13.string, t13.null])
     })
   ]);
-  var ResourceCenterV = t12.intersection([
-    t12.type({
-      isAutopilotEnabled: t12.boolean,
-      textStrings: t12.record(t12.string, t12.string),
-      showQuickLinks: t12.boolean
+  var ResourceCenterV = t13.intersection([
+    t13.type({
+      isAutopilotEnabled: t13.boolean,
+      textStrings: t13.record(t13.string, t13.string),
+      showQuickLinks: t13.boolean
     }),
-    t12.partial({
-      key: t12.union([t12.string, t12.null, t12.undefined]),
-      mobileLauncher: t12.union([LauncherV, t12.null]),
-      desktopLauncher: t12.union([LauncherV, t12.null]),
-      windowPosition: t12.union([t12.string, t12.null]),
-      customTheme: t12.union([t12.number, t12.null]),
-      chatEnabled: t12.boolean,
-      resourceCenterEnabled: t12.boolean
+    t13.partial({
+      key: t13.union([t13.string, t13.null, t13.undefined]),
+      mobileLauncher: t13.union([LauncherV, t13.null]),
+      desktopLauncher: t13.union([LauncherV, t13.null]),
+      windowPosition: t13.union([t13.string, t13.null]),
+      customTheme: t13.union([t13.number, t13.null]),
+      chatEnabled: t13.boolean,
+      resourceCenterEnabled: t13.boolean,
+      showBranding: t13.boolean
     })
   ]);
   var ResourceCenter = class {
@@ -19996,7 +20366,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
           interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
         });
       },
-      reportRegress: ({ context }, params) => {
+      reportEngaged: ({ context }, params) => {
         Track.nudge.engaged(context.nudge, context.stepIndex, {
           ...context,
           interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
@@ -20569,11 +20939,11 @@ This ensures only the right variant is shown for experiment nudges.`
                       enqueue({
                         type: "reportSurveyResponse"
                       });
+                      enqueue({
+                        type: "reportStepCompletion",
+                        params: { cta: event.cta, buttonType: event.buttonType }
+                      });
                       if (check("hasSequentialSteps")) {
-                        enqueue({
-                          type: "reportStepCompletion",
-                          params: { cta: event.cta, buttonType: event.buttonType }
-                        });
                         if (check({ type: "advanceToSpecificStep", params: { step: event.step } })) {
                           enqueue({ type: "setStepIndexWithHistory", params: { step: event.step } });
                           enqueue.raise({ type: "NOT_DONE" });
@@ -20599,7 +20969,14 @@ This ensures only the right variant is shown for experiment nudges.`
                   },
                   REGRESS: {
                     target: "Regressing",
-                    actions: [{ type: "reportRegress", params: ({ event }) => ({ buttonType: event.buttonType }) }]
+                    actions: [{ type: "reportEngaged", params: ({ event }) => ({ buttonType: event.buttonType }) }]
+                  },
+                  STAY_ON_STEP: {
+                    actions: [
+                      { type: "reportSurveyResponse" },
+                      { type: "resetAllSurveyResponses" },
+                      { type: "reportEngaged", params: ({ event }) => ({ buttonType: event.buttonType }) }
+                    ]
                   },
                   ASSIGN_POPOVER_ACTOR: {
                     actions: [{ type: "assignPopoverActor", params: ({ event }) => ({ actor: event.actor }) }]
@@ -20639,6 +21016,7 @@ This ensures only the right variant is shown for experiment nudges.`
                       actions: [
                         { type: "reportCompleted" },
                         { type: "resetStep" },
+                        { type: "resetAllSurveyResponses" },
                         { type: "saveInteraction", params: { isCompleted: true, isDismissed: false } }
                       ],
                       guard: "isTooltipNudge"
@@ -21055,8 +21433,16 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
       activeNudge: null
     },
     states: {
+      Disabled: {
+        description: 'Inactive state entered after SHUTDOWN. Does not queue triggers. Transitions to "Awaiting User Store" when a new boot cycle begins (signaled by DECIDE_REQUESTED).',
+        on: {
+          DECIDE_REQUESTED: {
+            target: "Awaiting User Store"
+          }
+        }
+      },
       "Awaiting User Store": {
-        description: "Initial state while the end user store (EUS) is loading. Trigger events are queued during this period so they can be replayed once the store is ready. The queue is cleared after 30s to prevent unbounded queue growth.",
+        description: "State while the end user store (EUS) is loading during an active boot. Trigger events are queued during this period so they can be replayed once the store is ready.",
         on: {
           TRIGGER: {
             actions: [{ type: "enqueueTrigger", params: ({ event }) => ({ triggerEvent: event }) }],
@@ -21297,13 +21683,18 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         ]
       },
       SHUTDOWN: {
-        actions: enqueueActions(({ context, enqueue, self: self2 }) => {
-          const nudgeActors = context.nudgeMachines.values();
-          for (const nudgeMachine of nudgeActors) {
+        target: ".Disabled",
+        actions: enqueueActions(({ context, enqueue }) => {
+          for (const nudgeMachine of context.nudgeMachines.values()) {
             enqueue.sendTo(nudgeMachine, { type: "CLOSE" });
           }
           enqueue({ type: "stopAllNudgeMachines" });
-          self2.stop();
+          enqueue({ type: "clearTriggerQueue" });
+          enqueue({ type: "unsetTriggerEvent" });
+          enqueue({ type: "clearActiveNudge" });
+          enqueue.assign({
+            nudgeMachines: () => /* @__PURE__ */ new Map()
+          });
         })
       }
     }
@@ -21616,12 +22007,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     deactivate,
     markSeen
   }) => {
-    const type10 = nudge.type;
+    const type11 = nudge.type;
     const existingLifecycleUuid = getNudgeDataFromUserStore(_, nudge.variantId)?.activelifeCycleUuid;
     const activelifeCycleUuid = activate ? v4_default() : deactivate ? "" : markSeen && !existingLifecycleUuid ? v4_default() : void 0;
     const updatedContext = {
       [Number(nudge.variantId)]: {
-        type: type10,
+        type: type11,
         formFactor: nudge?.steps?.[0]?.formFactor?.type ?? "",
         currentStep: stepIndex,
         stepIndexStack,
@@ -21638,8 +22029,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         tagIds: nudge.tags?.map((tag) => tag.id) || []
       }
     };
+    const immediate = !!(isDismissed || isCompleted || snoozed || activate);
     try {
-      updateEndUserStore(_.endUserStore, updatedContext);
+      updateEndUserStore(_.endUserStore, updatedContext, { immediate });
     } catch (e2) {
       logger.error("Unable to save end-user state to remote", e2);
     }
@@ -21768,11 +22160,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       setEntityTimer(_, entity);
     }
   };
-  var execNudgeAction = (_, action, meta, renderMode, actor) => {
-    if (renderMode === 1 /* MOCK */ && _.nudgeRecorderToolBar.visible) {
-      return;
-    }
-    switch (action?.type) {
+  var execNavigationAction = (action, meta, actor) => {
+    switch (action.type) {
       case "step_back": {
         actor?.send({
           type: "REGRESS",
@@ -21799,14 +22188,21 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         });
         break;
       }
+      case "stay_on_step": {
+        actor?.send({
+          type: "STAY_ON_STEP",
+          buttonType: meta?.buttonType
+        });
+        break;
+      }
       default: {
-        if (action?.type === "nudge") {
+        if (action.type === "nudge") {
           const snapshot = actor?.getSnapshot();
           const currentNudge = snapshot?.context?.nudge;
           if (currentNudge?.isCarousel) {
             const currentStepIndex = snapshot?.context?.stepIndex ?? 0;
             const isLastStep = currentStepIndex === currentNudge.steps.length - 1;
-            if (!isLastStep) return;
+            if (!isLastStep) return false;
           }
         }
         actor?.send({
@@ -21814,11 +22210,35 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           buttonType: meta?.buttonType,
           cta: meta?.label,
           action,
-          ...action?.type === "go_to_step" && { step: action.value }
+          ...action.type === "go_to_step" && { step: action.value }
         });
         break;
       }
     }
+    return true;
+  };
+  var dispatchEffects = (_, effects, variantId) => {
+    if (variantId != null) {
+      _.effectsSequencer?.send({ type: "RUN", effects, source: { variantId } });
+    }
+  };
+  var execNudgeAction = (_, action, meta, renderMode, actor) => {
+    if (renderMode === 1 /* MOCK */ && _.nudgeRecorderToolBar.visible) {
+      return;
+    }
+    if (!action) {
+      actor?.send({ type: "ADVANCE", buttonType: meta?.buttonType, cta: meta?.label, action: null });
+      return;
+    }
+    if (isActionSequence(action)) {
+      const variantId = actor?.getSnapshot()?.context?.nudge?.variantId;
+      const executed = execNavigationAction(action.navigation, meta, actor);
+      if (executed) {
+        dispatchEffects(_, action.effects, variantId);
+      }
+      return;
+    }
+    execNavigationAction(action, meta, actor);
   };
 
   // src/actions/nudge.ts
@@ -22867,12 +23287,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }()
   );
   var __assign = function() {
-    __assign = Object.assign || function __assign3(t13) {
+    __assign = Object.assign || function __assign3(t14) {
       for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
         s2 = arguments[i2];
-        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t13[p] = s2[p];
+        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t14[p] = s2[p];
       }
-      return t13;
+      return t14;
     };
     return __assign.apply(this, arguments);
   };
@@ -23551,6 +23971,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     _autoRefreshTimer = null;
     _isDisabled = false;
     _lastUsedBootOptions;
+    _cancelDecide = null;
+    _cancelBoot = null;
     constructor(_, sdkConfig) {
       this._ = _;
       this.nudgeActions = bindActions(_, service_actions_exports);
@@ -23818,7 +24240,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       });
     }
     async decide() {
-      if (!this._.user) {
+      this._cancelDecide?.();
+      let cancelled = false;
+      this._cancelDecide = () => {
+        cancelled = true;
+      };
+      const user = this._.user;
+      if (!user) {
         logger.error("User must be set before calling decide");
         return;
       }
@@ -23828,10 +24256,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
       try {
         this._.nudgesManager?.send({ type: "DECIDE_REQUESTED" });
-        this._.decide = await decide_default.decide(this._configuration.apiKey, this._.user, this._.isEditorPreview);
+        const result = await decide_default.decide(this._configuration.apiKey, user, this._.isEditorPreview);
+        if (cancelled) return;
+        this._.decide = result;
         this._.nudgesManager?.send({ type: "DECIDE_LOADED" });
         return this._.decide;
       } catch (e2) {
+        if (cancelled) return;
         logger.error("Failed to fetch decide data", e2);
         this._.nudgesManager?.send({ type: "DECIDE_ERROR" });
       }
@@ -23855,12 +24286,20 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       this.shutdownWithoutClearingBootOptions();
     }
     shutdownWithoutClearingBootOptions() {
+      this._cancelBoot?.();
+      this._cancelDecide?.();
       this._analytics.setBootStatus(false);
       this._clearAutoRefreshTimer();
       this._.integrations = [];
       this._.decide = void 0;
       this._.user = void 0;
+      this._.hasBooted = false;
+      this._.nudgesManager?.send({ type: "SHUTDOWN" });
       this._.endUserStore.reset();
+      if (this._.effectsSequencer) {
+        this._.effectsSequencer.stop();
+        this._.effectsSequencer = null;
+      }
     }
     shutdown() {
       this.shutdownWithoutClearingBootOptions();
@@ -23960,6 +24399,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         return;
       }
       user = this._.services.enrichUser(user);
+      if (!user) return;
       if (this._.hasBooted) {
         getAllNudgeActors(this._)?.forEach((actor) => {
           actor?.send({ type: "CLOSE" });
@@ -23967,6 +24407,14 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
       this._.user = user;
       this._lastUsedBootOptions = options;
+      this._cancelBoot?.();
+      let bootCancelled = false;
+      this._cancelBoot = () => {
+        bootCancelled = true;
+      };
+      if (!this._.effectsSequencer) {
+        this.globalActions.initEffectsSequencer();
+      }
       if (options.integrations != void 0) {
         this._.integrations = [];
         options.integrations?.forEach((integration) => {
@@ -23975,12 +24423,15 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
       try {
         await this.decide();
+        if (bootCancelled) return;
         logger.debug("Decide data fetched successfully");
       } catch (e2) {
+        if (bootCancelled) return;
         logger.error("Failed to fetch decide data", e2);
       }
       try {
         await this._.endUserStore.fetchData();
+        if (bootCancelled) return;
         if (this._.endUserStore.initializedSuccessfully) {
           this._analytics.setBootStatus(true);
           this._.hasBooted = true;
@@ -23991,8 +24442,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           logger.debug("End user state loaded successfully");
         }
       } catch (e2) {
+        if (bootCancelled) return;
         logger.error("Failed to fetch end user state", e2);
       }
+      if (bootCancelled) return;
       this.nudgeActions.sendConstantTriggers();
     }
     /**
@@ -24324,25 +24777,24 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       this.globalActions.addCallbacks({ [callbackKey]: callbackFn });
     }
     _clearNudgeInteractions(variantId) {
-      const now = Date.now();
       if (variantId) {
         this._.endUserStore.data = {
           nudgeInteractions: {
             ...this._.endUserStore.data.nudgeInteractions,
-            [variantId]: { ...createDefaultNudgeInteractionState(), lastUpdatedTs: now }
+            [variantId]: createDefaultNudgeInteractionState()
           }
         };
+        this._.endUserStore.dirtyVariantIds.add(String(variantId));
       } else {
+        const keys = Object.keys(this._.endUserStore.data.nudgeInteractions);
         this._.endUserStore.data = {
-          nudgeInteractions: Object.fromEntries(
-            Object.keys(this._.endUserStore.data.nudgeInteractions).map((key) => [
-              key,
-              { ...createDefaultNudgeInteractionState(), lastUpdatedTs: now }
-            ])
-          )
+          nudgeInteractions: Object.fromEntries(keys.map((key) => [key, createDefaultNudgeInteractionState()]))
         };
+        for (const key of keys) {
+          this._.endUserStore.dirtyVariantIds.add(key);
+        }
       }
-      this._.endUserStore.pushData();
+      this._.endUserStore.pushData({ immediate: true });
     }
   };
 
@@ -24366,12 +24818,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   }
   var __assign2 = function() {
-    __assign2 = Object.assign || function __assign3(t13) {
+    __assign2 = Object.assign || function __assign3(t14) {
       for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
         s2 = arguments[i2];
-        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t13[p] = s2[p];
+        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t14[p] = s2[p];
       }
-      return t13;
+      return t14;
     };
     return __assign2.apply(this, arguments);
   };
@@ -24406,12 +24858,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     var _ = {
       label: 0,
       sent: function() {
-        if (t13[0] & 1) throw t13[1];
-        return t13[1];
+        if (t14[0] & 1) throw t14[1];
+        return t14[1];
       },
       trys: [],
       ops: []
-    }, f, y2, t13, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    }, f, y2, t14, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
     return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() {
       return this;
     }), g;
@@ -24423,12 +24875,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     function step(op) {
       if (f) throw new TypeError("Generator is already executing.");
       while (g && (g = 0, op[0] && (_ = 0)), _) try {
-        if (f = 1, y2 && (t13 = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t13 = y2["return"]) && t13.call(y2), 0) : y2.next) && !(t13 = t13.call(y2, op[1])).done) return t13;
-        if (y2 = 0, t13) op = [op[0] & 2, t13.value];
+        if (f = 1, y2 && (t14 = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t14 = y2["return"]) && t14.call(y2), 0) : y2.next) && !(t14 = t14.call(y2, op[1])).done) return t14;
+        if (y2 = 0, t14) op = [op[0] & 2, t14.value];
         switch (op[0]) {
           case 0:
           case 1:
-            t13 = op;
+            t14 = op;
             break;
           case 4:
             _.label++;
@@ -24446,25 +24898,25 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             _.trys.pop();
             continue;
           default:
-            if (!(t13 = _.trys, t13 = t13.length > 0 && t13[t13.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+            if (!(t14 = _.trys, t14 = t14.length > 0 && t14[t14.length - 1]) && (op[0] === 6 || op[0] === 2)) {
               _ = 0;
               continue;
             }
-            if (op[0] === 3 && (!t13 || op[1] > t13[0] && op[1] < t13[3])) {
+            if (op[0] === 3 && (!t14 || op[1] > t14[0] && op[1] < t14[3])) {
               _.label = op[1];
               break;
             }
-            if (op[0] === 6 && _.label < t13[1]) {
-              _.label = t13[1];
-              t13 = op;
+            if (op[0] === 6 && _.label < t14[1]) {
+              _.label = t14[1];
+              t14 = op;
               break;
             }
-            if (t13 && _.label < t13[2]) {
-              _.label = t13[2];
+            if (t14 && _.label < t14[2]) {
+              _.label = t14[2];
               _.ops.push(op);
               break;
             }
-            if (t13[2]) _.ops.pop();
+            if (t14[2]) _.ops.pop();
             _.trys.pop();
             continue;
         }
@@ -24473,7 +24925,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         op = [6, e2];
         y2 = 0;
       } finally {
-        f = t13 = 0;
+        f = t14 = 0;
       }
       if (op[0] & 5) throw op[1];
       return {
@@ -25528,13 +25980,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   );
 
   // ../shared/src/store/MessageBus.ts
-  var import_debounce = __toESM(require_debounce());
+  var import_debounce2 = __toESM(require_debounce());
   var MessageBus = class {
     messageToSubscriberGroup;
     debounce;
-    constructor(debounce = import_debounce.default) {
+    constructor(debounce2 = import_debounce2.default) {
       this.messageToSubscriberGroup = /* @__PURE__ */ new Map();
-      this.debounce = debounce;
+      this.debounce = debounce2;
     }
     // Register a subscriber with optional ID (for unsubscribing) and optional debounce timeout (no debounce if not provided)
     subscribe(messageType, listener, listenerId = void 0, debounceTimeout = void 0) {
@@ -25682,6 +26134,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       sessionProperties: {},
       flags: null,
       nudgesManager: null,
+      effectsSequencer: null,
       currentModalNudge: null,
       activeChecklist: null,
       timedTriggers: /* @__PURE__ */ new Map(),
@@ -25833,7 +26286,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       const themeMode = _.themeMode === "auto" ? _.services.getDefaultUIMode() : _.themeMode;
       if (nudge?.customThemeId !== void 0 && nudge.customThemeId !== null) {
         theme = {
-          theme: _.themes.find((t13) => t13.id === nudge.customThemeId)?.theme,
+          theme: _.themes.find((t14) => t14.id === nudge.customThemeId)?.theme,
           mode: themeMode
         };
       }

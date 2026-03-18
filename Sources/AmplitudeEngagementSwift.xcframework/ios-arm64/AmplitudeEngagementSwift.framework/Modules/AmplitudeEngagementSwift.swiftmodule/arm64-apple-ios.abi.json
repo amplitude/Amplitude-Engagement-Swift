@@ -16720,14 +16720,14 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/FormFactors\/ContentBlocks\/ImageBlockView.swift",
       "kind": "FloatLiteral",
-      "offset": 4044,
+      "offset": 4254,
       "length": 3,
       "value": "1.0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/FormFactors\/ContentBlocks\/ImageBlockView.swift",
       "kind": "IntegerLiteral",
-      "offset": 4120,
+      "offset": 4330,
       "length": 1,
       "value": "2"
     },
@@ -16744,6 +16744,13 @@
       "offset": 546,
       "length": 1,
       "value": "0"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/FormFactors\/Layouts\/LayoutComponents.swift",
+      "kind": "BooleanLiteral",
+      "offset": 5077,
+      "length": 5,
+      "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/FormFactors\/Layouts\/NudgeModifiers.swift",
@@ -16797,7 +16804,7 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/FormFactors\/Surveys\/RatingBlocks\/RatingView.swift",
       "kind": "IntegerLiteral",
-      "offset": 1378,
+      "offset": 2293,
       "length": 1,
       "value": "1"
     },
@@ -17035,21 +17042,21 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/Shared\/AnimatedText.swift",
       "kind": "FloatLiteral",
-      "offset": 2631,
+      "offset": 2710,
       "length": 4,
       "value": "0.08"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/Shared\/AnimatedText.swift",
       "kind": "StringLiteral",
-      "offset": 4009,
+      "offset": 6198,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/Shared\/AnimatedText.swift",
       "kind": "FloatLiteral",
-      "offset": 4486,
+      "offset": 6675,
       "length": 3,
       "value": "0.0"
     },
@@ -17394,7 +17401,7 @@
       "kind": "StringLiteral",
       "offset": 421,
       "length": 7,
-      "value": "\"3.1.1\""
+      "value": "\"3.2.0\""
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/EngagementWindowManager.swift",
