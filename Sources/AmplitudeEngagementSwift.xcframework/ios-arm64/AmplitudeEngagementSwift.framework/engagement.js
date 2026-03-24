@@ -22323,6 +22323,613 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     locationSubscribers.forEach((cb) => cb(location));
   };
 
+  // ../shared/node_modules/@amplitude/analytics-connector/dist/analytics-connector.esm.js
+  var ApplicationContextProviderImpl = (
+    /** @class */
+    function() {
+      function ApplicationContextProviderImpl2() {
+      }
+      ApplicationContextProviderImpl2.prototype.getApplicationContext = function() {
+        return {
+          versionName: this.versionName,
+          language: getLanguage(),
+          platform: "Web",
+          os: void 0,
+          deviceModel: void 0
+        };
+      };
+      return ApplicationContextProviderImpl2;
+    }()
+  );
+  var getLanguage = function() {
+    return typeof navigator !== "undefined" && (navigator.languages && navigator.languages[0] || navigator.language) || "";
+  };
+  var EventBridgeImpl = (
+    /** @class */
+    function() {
+      function EventBridgeImpl2() {
+        this.queue = [];
+      }
+      EventBridgeImpl2.prototype.logEvent = function(event) {
+        if (!this.receiver) {
+          if (this.queue.length < 512) {
+            this.queue.push(event);
+          }
+        } else {
+          this.receiver(event);
+        }
+      };
+      EventBridgeImpl2.prototype.setEventReceiver = function(receiver) {
+        this.receiver = receiver;
+        if (this.queue.length > 0) {
+          this.queue.forEach(function(event) {
+            receiver(event);
+          });
+          this.queue = [];
+        }
+      };
+      return EventBridgeImpl2;
+    }()
+  );
+  var __assign = function() {
+    __assign = Object.assign || function __assign3(t14) {
+      for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
+        s2 = arguments[i2];
+        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t14[p] = s2[p];
+      }
+      return t14;
+    };
+    return __assign.apply(this, arguments);
+  };
+  function __values(o) {
+    var s2 = typeof Symbol === "function" && Symbol.iterator, m = s2 && o[s2], i2 = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+      next: function() {
+        if (o && i2 >= o.length) o = void 0;
+        return {
+          value: o && o[i2++],
+          done: !o
+        };
+      }
+    };
+    throw new TypeError(s2 ? "Object is not iterable." : "Symbol.iterator is not defined.");
+  }
+  function __read(o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i2 = m.call(o), r, ar = [], e2;
+    try {
+      while ((n === void 0 || n-- > 0) && !(r = i2.next()).done) ar.push(r.value);
+    } catch (error) {
+      e2 = {
+        error
+      };
+    } finally {
+      try {
+        if (r && !r.done && (m = i2["return"])) m.call(i2);
+      } finally {
+        if (e2) throw e2.error;
+      }
+    }
+    return ar;
+  }
+  var isEqual4 = function(obj1, obj2) {
+    var e_1, _a;
+    var primitive = ["string", "number", "boolean", "undefined"];
+    var typeA = typeof obj1;
+    var typeB = typeof obj2;
+    if (typeA !== typeB) {
+      return false;
+    }
+    try {
+      for (var primitive_1 = __values(primitive), primitive_1_1 = primitive_1.next(); !primitive_1_1.done; primitive_1_1 = primitive_1.next()) {
+        var p = primitive_1_1.value;
+        if (p === typeA) {
+          return obj1 === obj2;
+        }
+      }
+    } catch (e_1_1) {
+      e_1 = { error: e_1_1 };
+    } finally {
+      try {
+        if (primitive_1_1 && !primitive_1_1.done && (_a = primitive_1.return)) _a.call(primitive_1);
+      } finally {
+        if (e_1) throw e_1.error;
+      }
+    }
+    if (obj1 == null && obj2 == null) {
+      return true;
+    } else if (obj1 == null || obj2 == null) {
+      return false;
+    }
+    if (obj1.length !== obj2.length) {
+      return false;
+    }
+    var isArrayA = Array.isArray(obj1);
+    var isArrayB = Array.isArray(obj2);
+    if (isArrayA !== isArrayB) {
+      return false;
+    }
+    if (isArrayA && isArrayB) {
+      for (var i2 = 0; i2 < obj1.length; i2++) {
+        if (!isEqual4(obj1[i2], obj2[i2])) {
+          return false;
+        }
+      }
+    } else {
+      var sorted1 = Object.keys(obj1).sort();
+      var sorted2 = Object.keys(obj2).sort();
+      if (!isEqual4(sorted1, sorted2)) {
+        return false;
+      }
+      var result_1 = true;
+      Object.keys(obj1).forEach(function(key) {
+        if (!isEqual4(obj1[key], obj2[key])) {
+          result_1 = false;
+        }
+      });
+      return result_1;
+    }
+    return true;
+  };
+  var ID_OP_SET = "$set";
+  var ID_OP_UNSET = "$unset";
+  var ID_OP_CLEAR_ALL = "$clearAll";
+  if (!Object.entries) {
+    Object.entries = function(obj) {
+      var ownProps = Object.keys(obj);
+      var i2 = ownProps.length;
+      var resArray = new Array(i2);
+      while (i2--) {
+        resArray[i2] = [ownProps[i2], obj[ownProps[i2]]];
+      }
+      return resArray;
+    };
+  }
+  var IdentityStoreImpl = (
+    /** @class */
+    function() {
+      function IdentityStoreImpl2() {
+        this.identity = { userProperties: {} };
+        this.listeners = /* @__PURE__ */ new Set();
+      }
+      IdentityStoreImpl2.prototype.editIdentity = function() {
+        var self2 = this;
+        var actingUserProperties = __assign({}, this.identity.userProperties);
+        var actingIdentity = __assign(__assign({}, this.identity), { userProperties: actingUserProperties });
+        return {
+          setUserId: function(userId) {
+            actingIdentity.userId = userId;
+            return this;
+          },
+          setDeviceId: function(deviceId) {
+            actingIdentity.deviceId = deviceId;
+            return this;
+          },
+          setUserProperties: function(userProperties) {
+            actingIdentity.userProperties = userProperties;
+            return this;
+          },
+          setOptOut: function(optOut) {
+            actingIdentity.optOut = optOut;
+            return this;
+          },
+          updateUserProperties: function(actions) {
+            var e_1, _a, e_2, _b, e_3, _c;
+            var actingProperties = actingIdentity.userProperties || {};
+            try {
+              for (var _d = __values(Object.entries(actions)), _e = _d.next(); !_e.done; _e = _d.next()) {
+                var _f = __read(_e.value, 2), action = _f[0], properties = _f[1];
+                switch (action) {
+                  case ID_OP_SET:
+                    try {
+                      for (var _g = (e_2 = void 0, __values(Object.entries(properties))), _h = _g.next(); !_h.done; _h = _g.next()) {
+                        var _j = __read(_h.value, 2), key = _j[0], value = _j[1];
+                        actingProperties[key] = value;
+                      }
+                    } catch (e_2_1) {
+                      e_2 = { error: e_2_1 };
+                    } finally {
+                      try {
+                        if (_h && !_h.done && (_b = _g.return)) _b.call(_g);
+                      } finally {
+                        if (e_2) throw e_2.error;
+                      }
+                    }
+                    break;
+                  case ID_OP_UNSET:
+                    try {
+                      for (var _k = (e_3 = void 0, __values(Object.keys(properties))), _l = _k.next(); !_l.done; _l = _k.next()) {
+                        var key = _l.value;
+                        delete actingProperties[key];
+                      }
+                    } catch (e_3_1) {
+                      e_3 = { error: e_3_1 };
+                    } finally {
+                      try {
+                        if (_l && !_l.done && (_c = _k.return)) _c.call(_k);
+                      } finally {
+                        if (e_3) throw e_3.error;
+                      }
+                    }
+                    break;
+                  case ID_OP_CLEAR_ALL:
+                    actingProperties = {};
+                    break;
+                }
+              }
+            } catch (e_1_1) {
+              e_1 = { error: e_1_1 };
+            } finally {
+              try {
+                if (_e && !_e.done && (_a = _d.return)) _a.call(_d);
+              } finally {
+                if (e_1) throw e_1.error;
+              }
+            }
+            actingIdentity.userProperties = actingProperties;
+            return this;
+          },
+          commit: function() {
+            self2.setIdentity(actingIdentity);
+            return this;
+          }
+        };
+      };
+      IdentityStoreImpl2.prototype.getIdentity = function() {
+        return __assign({}, this.identity);
+      };
+      IdentityStoreImpl2.prototype.setIdentity = function(identity2) {
+        var originalIdentity = __assign({}, this.identity);
+        this.identity = __assign({}, identity2);
+        if (!isEqual4(originalIdentity, this.identity)) {
+          this.listeners.forEach(function(listener) {
+            listener(identity2);
+          });
+        }
+      };
+      IdentityStoreImpl2.prototype.addIdentityListener = function(listener) {
+        this.listeners.add(listener);
+      };
+      IdentityStoreImpl2.prototype.removeIdentityListener = function(listener) {
+        this.listeners.delete(listener);
+      };
+      return IdentityStoreImpl2;
+    }()
+  );
+  var safeGlobal = typeof globalThis !== "undefined" ? globalThis : typeof global !== "undefined" ? global : self;
+  var AnalyticsConnector = (
+    /** @class */
+    function() {
+      function AnalyticsConnector2() {
+        this.identityStore = new IdentityStoreImpl();
+        this.eventBridge = new EventBridgeImpl();
+        this.applicationContextProvider = new ApplicationContextProviderImpl();
+      }
+      AnalyticsConnector2.getInstance = function(instanceName) {
+        if (!safeGlobal["analyticsConnectorInstances"]) {
+          safeGlobal["analyticsConnectorInstances"] = {};
+        }
+        if (!safeGlobal["analyticsConnectorInstances"][instanceName]) {
+          safeGlobal["analyticsConnectorInstances"][instanceName] = new AnalyticsConnector2();
+        }
+        return safeGlobal["analyticsConnectorInstances"][instanceName];
+      };
+      return AnalyticsConnector2;
+    }()
+  );
+
+  // ../shared/src/sdk/createProxy.ts
+  var ASYNC_METHODS_SNIPPET = ["boot"];
+  var ASYNC_METHODS = ["boot"];
+  var DEFAULT_INSTANCE_NAME = "$default_instance";
+  function createProxy(loadAsyncScripts) {
+    const existingProxy = typeof window !== "undefined" ? window.engagement : void 0;
+    let bundleFailedToLoad = false;
+    const proxy2 = {
+      _q: existingProxy?._q ?? [],
+      _configuration: {
+        apiKey: existingProxy?._configuration?.apiKey ?? "",
+        serverUrl: existingProxy?._configuration?.serverUrl,
+        chatUrl: existingProxy?._configuration?.chatUrl,
+        mediaUrl: existingProxy?._configuration?.mediaUrl,
+        serverZone: existingProxy?._configuration?.serverZone ?? "US",
+        options: {
+          ...existingProxy?._configuration?.options
+        }
+      },
+      /**
+       * Initializes Guides and Surveys, mounting parent containers to the document body. This will **not** make them available right away.
+       * You must use `window.engagement.boot('user')` to identify the end user first.
+       *
+       * @param {string} apiKey Amplitude API Key
+       * @param {InitOptions} [initOptions] Optional configuration options
+       */
+      init(apiKey, initOptions) {
+        if (proxy2._configuration.apiKey) {
+          console.log("Engagement SDK has already been initialized. Ignoring additional init call.");
+          return;
+        }
+        if (initOptions?.useEngagementDomain) {
+          const isEU = (initOptions.serverZone ?? proxy2._configuration.serverZone) === "EU";
+          const domain = "amplitudeengagement.com";
+          if (!initOptions.serverUrl) {
+            initOptions.serverUrl = isEU ? `https://gs.eu.${domain}` : `https://gs.${domain}`;
+          }
+          if (!initOptions.chatUrl) {
+            initOptions.chatUrl = isEU ? `https://houston-chat.eu.${domain}` : `https://houston-chat.${domain}`;
+          }
+          if (!initOptions.mediaUrl) {
+            initOptions.mediaUrl = isEU ? `https://engagement-static.eu.${domain}` : `https://engagement-static.${domain}`;
+          }
+          if (!initOptions.cdnUrl) {
+            initOptions.cdnUrl = isEU ? `https://cdn.eu.${domain}` : `https://cdn.${domain}`;
+          }
+        }
+        proxy2._configuration = {
+          ...proxy2._configuration,
+          ...initOptions,
+          apiKey,
+          options: { splitting: true, ...proxy2._configuration.options, ...initOptions?.options }
+        };
+        if (proxy2._configuration?.options?.logger) {
+          proxy2._configuration.options.logger.enable(proxy2._configuration.options.logLevel ?? 2);
+        }
+        let bundleURL = void 0;
+        if (initOptions?.cdnUrl) {
+          if (proxy2._configuration.options.splitting) {
+            bundleURL = `${initOptions.cdnUrl}/engagement-browser/prod/split/index.js`;
+          } else {
+            bundleURL = initOptions.cdnUrl + "/engagement-browser/prod/index.min.js.gz";
+          }
+        } else {
+          const cdnBaseUrl = proxy2._configuration.serverZone === "EU" ? "https://cdn.eu.amplitude.com" : "https://cdn.amplitude.com";
+          if (proxy2._configuration.options.splitting) {
+            bundleURL = `${cdnBaseUrl}/engagement-browser/prod/split/index.js`;
+          } else {
+            bundleURL = `${cdnBaseUrl}/engagement-browser/prod/index.min.js.gz`;
+          }
+        }
+        let timeoutId = null;
+        const clearQueueAndCleanup = () => {
+          bundleFailedToLoad = true;
+          if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+          }
+          if (proxy2._q && proxy2._q.length > 0) {
+            console.warn(
+              `Engagement SDK failed to load within ${LOAD_TIMEOUT_MS}ms. Resolving pending calls gracefully.`
+            );
+            while (proxy2._q.length > 0) {
+              const item = proxy2._q.shift();
+              if (!item) continue;
+              const methodName = item[0];
+              const isAsyncMethod = ASYNC_METHODS_SNIPPET.includes(methodName);
+              console.warn(
+                `Engagement SDK method '${methodName}' still in queue (isAsyncMethod=${isAsyncMethod}); attempting to resolve as no-op.`
+              );
+              if (isAsyncMethod) {
+                if (item[1] instanceof Function && item[2] instanceof Function) {
+                  const resolve = item[1];
+                  console.warn(`Engagement SDK method '${methodName}' resolved as no-op due to script loading failure`);
+                  resolve(void 0);
+                }
+              }
+            }
+          }
+        };
+        loadAsyncScripts(
+          bundleURL,
+          proxy2._configuration.options.splitting ? "module" : void 0,
+          initOptions?.nonce,
+          clearQueueAndCleanup
+        );
+        const LOAD_TIMEOUT_MS = 1e4;
+        timeoutId = setTimeout(() => {
+          clearQueueAndCleanup();
+        }, LOAD_TIMEOUT_MS);
+      },
+      plugin(options) {
+        const initFunc = proxy2.init;
+        return {
+          name: "@amplitude/engagement-browser",
+          type: "enrichment",
+          async setup(config, client) {
+            const instanceName = config.instanceName ?? DEFAULT_INSTANCE_NAME;
+            const identityStore = AnalyticsConnector.getInstance(instanceName).identityStore;
+            initFunc(config.apiKey, {
+              serverZone: config.serverZone,
+              ...options,
+              options: { logLevel: config.logLevel, logger: config.loggerProvider, ...options?.options }
+            });
+            const integrations = [
+              {
+                track: (event) => {
+                  client.track(event);
+                }
+              }
+            ];
+            await window.engagement.boot({
+              user: () => {
+                const identity2 = identityStore.getIdentity();
+                return {
+                  user_id: client.getUserId(),
+                  device_id: client.getDeviceId(),
+                  user_properties: identity2.userProperties,
+                  getSessionId: client.getSessionId
+                };
+              },
+              integrations
+            });
+            identityStore.addIdentityListener((identity2) => {
+              if (!window.engagement?._.user || !window.engagement?._analytics.hasBooted) {
+                console.warn(`Engagement SDK not booted. Ignoring identity change.`);
+                return;
+              }
+              if (window.engagement?._.user?.user_id !== identity2.userId) {
+                window.engagement.shutdown();
+                window.engagement.boot({
+                  user: () => {
+                    const identity3 = identityStore.getIdentity();
+                    return {
+                      user_id: client.getUserId(),
+                      device_id: client.getDeviceId(),
+                      user_properties: identity3.userProperties,
+                      getSessionId: client.getSessionId
+                    };
+                  },
+                  integrations
+                });
+              } else {
+                window.engagement._setUserProperties(identity2.userProperties);
+              }
+            });
+          },
+          async execute(context) {
+            window.engagement.forwardEvent(context);
+            return context;
+          }
+        };
+      }
+    };
+    const sdk = proxy2;
+    return new Proxy(proxy2, {
+      get: function(_, prop) {
+        if (prop in sdk) return sdk[prop];
+        if (prop === "then") return void 0;
+        if (prop === "gs" || prop === "rc") {
+          return new Proxy(
+            {},
+            {
+              get: function(_2, nestedProp) {
+                return function() {
+                  const args = Array.from(arguments);
+                  const methodPath = `${prop}.${nestedProp}`;
+                  args.unshift(methodPath);
+                  proxy2._q.push(args);
+                };
+              }
+            }
+          );
+        }
+        if (ASYNC_METHODS_SNIPPET.includes(prop)) {
+          return function() {
+            const a = Array.prototype.slice.call(arguments);
+            return new Promise((resolve, reject) => {
+              a.unshift(prop, resolve, reject);
+              proxy2._q.push(a);
+              if (bundleFailedToLoad) {
+                resolve(void 0);
+              }
+            });
+          };
+        }
+        return function() {
+          const a = Array.prototype.slice.call(arguments);
+          a.unshift(prop);
+          proxy2._q.push(a);
+        };
+      }
+    });
+  }
+
+  // ../shared/src/sdk/proxyHelpers.ts
+  var proxyWaiters = [];
+  var ensureSDKReady = (callback) => {
+    const engagement = window.engagement;
+    if (!engagement) {
+      logger.warn("`ensureSDKReady` cannot register callback: window.engagement is not defined yet.");
+      return;
+    }
+    if (engagement._isProxy) {
+      logger.debug(
+        "ensureSDKReady: callback scheduled for invocation once SDK is ready. proxyWaiters length:",
+        proxyWaiters.length
+      );
+      proxyWaiters.push((realSDK) => callback(realSDK));
+      return;
+    }
+    callback(engagement);
+  };
+  var convertProxyObjectToRealObject = async (instance, queue) => {
+    const resolveNestedMethod = (obj, methodPath) => {
+      const pathParts = methodPath.split(".");
+      let current = obj;
+      for (const part of pathParts) {
+        if (!(part in current)) {
+          logger.warn(`Engagement SDK method ${methodPath} is not defined.`);
+          return void 0;
+        }
+        current = current[part];
+      }
+      return current;
+    };
+    const call = async (item) => {
+      const args = [...item];
+      const methodPath = args.shift();
+      const method = resolveNestedMethod(instance, methodPath);
+      if (!method) return;
+      if (ASYNC_METHODS_SNIPPET.includes(methodPath)) {
+        if (args[0] instanceof Function) {
+          const resolve = args.shift();
+          const reject = args.shift();
+          try {
+            await method.bind(instance)(...args).then(resolve, reject);
+          } catch (err) {
+            logger.error(err);
+          }
+        } else {
+          await method.bind(instance)(...args);
+        }
+      } else {
+        await method.bind(instance)(...args);
+      }
+    };
+    const callAll = async (fnName) => {
+      do {
+        const i2 = queue.findIndex((item2) => item2?.[0] === fnName);
+        if (i2 === -1) break;
+        const item = queue.splice(i2, 1)[0];
+        await call(item);
+      } while (true);
+    };
+    const bootFinished = callAll("boot");
+    const lingeringBootCalls = [];
+    while (queue.length > 0) {
+      const item = queue.shift();
+      if (!item) continue;
+      const fnName = item[0];
+      if (fnName === "boot") {
+        lingeringBootCalls.push(item);
+        continue;
+      }
+      if (ASYNC_METHODS.includes(fnName)) {
+        logger.debug("Scheduling async call", fnName);
+        await call(item);
+        logger.debug("Finished async call", fnName);
+      } else {
+        logger.debug("Scheduling sync call", fnName);
+        call(item).catch((e2) => {
+          logger.warn(`Error processing queued call for ${fnName}`, e2);
+          throw e2;
+        });
+        logger.debug("Finished sync call", fnName);
+      }
+    }
+    queue.length = 0;
+    bootFinished.then(async () => {
+      for (let idx = 0; idx < lingeringBootCalls.length; idx++) {
+        const item = lingeringBootCalls[idx];
+        await call(item);
+      }
+    });
+    Promise.allSettled(proxyWaiters?.map((waiter) => waiter(instance)) ?? []);
+    proxyWaiters.length = 0;
+    return instance;
+  };
+
   // src/actions/location.ts
   var setLocation = (_, location) => {
     _.messageBus.publish("dom_mutation");
@@ -22340,7 +22947,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     });
   };
   registerJSBridge("locationActions").function("setLocation", (location) => {
-    setLocation(window.engagement._, location);
+    ensureSDKReady(async (sdk) => {
+      setLocation(sdk._, location);
+    });
   });
 
   // src/actions/simulation.ts
@@ -22505,7 +23114,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   // src/actions/view-hierarchy-mutation.ts
   var viewHierarchyMutationActionsBridge = registerJSBridge("viewHierarchyMutationActions");
   viewHierarchyMutationActionsBridge.function("publishViewHierarchyMutation", () => {
-    window.engagement._.messageBus.publish("dom_mutation");
+    ensureSDKReady(async (sdk) => {
+      sdk._.messageBus.publish("dom_mutation");
+    });
   });
 
   // src/actions/share-link.ts
@@ -23237,594 +23848,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     };
   }
   pinPositioningBridge.function("position", position);
-
-  // ../shared/node_modules/@amplitude/analytics-connector/dist/analytics-connector.esm.js
-  var ApplicationContextProviderImpl = (
-    /** @class */
-    function() {
-      function ApplicationContextProviderImpl2() {
-      }
-      ApplicationContextProviderImpl2.prototype.getApplicationContext = function() {
-        return {
-          versionName: this.versionName,
-          language: getLanguage(),
-          platform: "Web",
-          os: void 0,
-          deviceModel: void 0
-        };
-      };
-      return ApplicationContextProviderImpl2;
-    }()
-  );
-  var getLanguage = function() {
-    return typeof navigator !== "undefined" && (navigator.languages && navigator.languages[0] || navigator.language) || "";
-  };
-  var EventBridgeImpl = (
-    /** @class */
-    function() {
-      function EventBridgeImpl2() {
-        this.queue = [];
-      }
-      EventBridgeImpl2.prototype.logEvent = function(event) {
-        if (!this.receiver) {
-          if (this.queue.length < 512) {
-            this.queue.push(event);
-          }
-        } else {
-          this.receiver(event);
-        }
-      };
-      EventBridgeImpl2.prototype.setEventReceiver = function(receiver) {
-        this.receiver = receiver;
-        if (this.queue.length > 0) {
-          this.queue.forEach(function(event) {
-            receiver(event);
-          });
-          this.queue = [];
-        }
-      };
-      return EventBridgeImpl2;
-    }()
-  );
-  var __assign = function() {
-    __assign = Object.assign || function __assign3(t14) {
-      for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
-        s2 = arguments[i2];
-        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t14[p] = s2[p];
-      }
-      return t14;
-    };
-    return __assign.apply(this, arguments);
-  };
-  function __values(o) {
-    var s2 = typeof Symbol === "function" && Symbol.iterator, m = s2 && o[s2], i2 = 0;
-    if (m) return m.call(o);
-    if (o && typeof o.length === "number") return {
-      next: function() {
-        if (o && i2 >= o.length) o = void 0;
-        return {
-          value: o && o[i2++],
-          done: !o
-        };
-      }
-    };
-    throw new TypeError(s2 ? "Object is not iterable." : "Symbol.iterator is not defined.");
-  }
-  function __read(o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i2 = m.call(o), r, ar = [], e2;
-    try {
-      while ((n === void 0 || n-- > 0) && !(r = i2.next()).done) ar.push(r.value);
-    } catch (error) {
-      e2 = {
-        error
-      };
-    } finally {
-      try {
-        if (r && !r.done && (m = i2["return"])) m.call(i2);
-      } finally {
-        if (e2) throw e2.error;
-      }
-    }
-    return ar;
-  }
-  var isEqual4 = function(obj1, obj2) {
-    var e_1, _a;
-    var primitive = ["string", "number", "boolean", "undefined"];
-    var typeA = typeof obj1;
-    var typeB = typeof obj2;
-    if (typeA !== typeB) {
-      return false;
-    }
-    try {
-      for (var primitive_1 = __values(primitive), primitive_1_1 = primitive_1.next(); !primitive_1_1.done; primitive_1_1 = primitive_1.next()) {
-        var p = primitive_1_1.value;
-        if (p === typeA) {
-          return obj1 === obj2;
-        }
-      }
-    } catch (e_1_1) {
-      e_1 = { error: e_1_1 };
-    } finally {
-      try {
-        if (primitive_1_1 && !primitive_1_1.done && (_a = primitive_1.return)) _a.call(primitive_1);
-      } finally {
-        if (e_1) throw e_1.error;
-      }
-    }
-    if (obj1 == null && obj2 == null) {
-      return true;
-    } else if (obj1 == null || obj2 == null) {
-      return false;
-    }
-    if (obj1.length !== obj2.length) {
-      return false;
-    }
-    var isArrayA = Array.isArray(obj1);
-    var isArrayB = Array.isArray(obj2);
-    if (isArrayA !== isArrayB) {
-      return false;
-    }
-    if (isArrayA && isArrayB) {
-      for (var i2 = 0; i2 < obj1.length; i2++) {
-        if (!isEqual4(obj1[i2], obj2[i2])) {
-          return false;
-        }
-      }
-    } else {
-      var sorted1 = Object.keys(obj1).sort();
-      var sorted2 = Object.keys(obj2).sort();
-      if (!isEqual4(sorted1, sorted2)) {
-        return false;
-      }
-      var result_1 = true;
-      Object.keys(obj1).forEach(function(key) {
-        if (!isEqual4(obj1[key], obj2[key])) {
-          result_1 = false;
-        }
-      });
-      return result_1;
-    }
-    return true;
-  };
-  var ID_OP_SET = "$set";
-  var ID_OP_UNSET = "$unset";
-  var ID_OP_CLEAR_ALL = "$clearAll";
-  if (!Object.entries) {
-    Object.entries = function(obj) {
-      var ownProps = Object.keys(obj);
-      var i2 = ownProps.length;
-      var resArray = new Array(i2);
-      while (i2--) {
-        resArray[i2] = [ownProps[i2], obj[ownProps[i2]]];
-      }
-      return resArray;
-    };
-  }
-  var IdentityStoreImpl = (
-    /** @class */
-    function() {
-      function IdentityStoreImpl2() {
-        this.identity = { userProperties: {} };
-        this.listeners = /* @__PURE__ */ new Set();
-      }
-      IdentityStoreImpl2.prototype.editIdentity = function() {
-        var self2 = this;
-        var actingUserProperties = __assign({}, this.identity.userProperties);
-        var actingIdentity = __assign(__assign({}, this.identity), { userProperties: actingUserProperties });
-        return {
-          setUserId: function(userId) {
-            actingIdentity.userId = userId;
-            return this;
-          },
-          setDeviceId: function(deviceId) {
-            actingIdentity.deviceId = deviceId;
-            return this;
-          },
-          setUserProperties: function(userProperties) {
-            actingIdentity.userProperties = userProperties;
-            return this;
-          },
-          setOptOut: function(optOut) {
-            actingIdentity.optOut = optOut;
-            return this;
-          },
-          updateUserProperties: function(actions) {
-            var e_1, _a, e_2, _b, e_3, _c;
-            var actingProperties = actingIdentity.userProperties || {};
-            try {
-              for (var _d = __values(Object.entries(actions)), _e = _d.next(); !_e.done; _e = _d.next()) {
-                var _f = __read(_e.value, 2), action = _f[0], properties = _f[1];
-                switch (action) {
-                  case ID_OP_SET:
-                    try {
-                      for (var _g = (e_2 = void 0, __values(Object.entries(properties))), _h = _g.next(); !_h.done; _h = _g.next()) {
-                        var _j = __read(_h.value, 2), key = _j[0], value = _j[1];
-                        actingProperties[key] = value;
-                      }
-                    } catch (e_2_1) {
-                      e_2 = { error: e_2_1 };
-                    } finally {
-                      try {
-                        if (_h && !_h.done && (_b = _g.return)) _b.call(_g);
-                      } finally {
-                        if (e_2) throw e_2.error;
-                      }
-                    }
-                    break;
-                  case ID_OP_UNSET:
-                    try {
-                      for (var _k = (e_3 = void 0, __values(Object.keys(properties))), _l = _k.next(); !_l.done; _l = _k.next()) {
-                        var key = _l.value;
-                        delete actingProperties[key];
-                      }
-                    } catch (e_3_1) {
-                      e_3 = { error: e_3_1 };
-                    } finally {
-                      try {
-                        if (_l && !_l.done && (_c = _k.return)) _c.call(_k);
-                      } finally {
-                        if (e_3) throw e_3.error;
-                      }
-                    }
-                    break;
-                  case ID_OP_CLEAR_ALL:
-                    actingProperties = {};
-                    break;
-                }
-              }
-            } catch (e_1_1) {
-              e_1 = { error: e_1_1 };
-            } finally {
-              try {
-                if (_e && !_e.done && (_a = _d.return)) _a.call(_d);
-              } finally {
-                if (e_1) throw e_1.error;
-              }
-            }
-            actingIdentity.userProperties = actingProperties;
-            return this;
-          },
-          commit: function() {
-            self2.setIdentity(actingIdentity);
-            return this;
-          }
-        };
-      };
-      IdentityStoreImpl2.prototype.getIdentity = function() {
-        return __assign({}, this.identity);
-      };
-      IdentityStoreImpl2.prototype.setIdentity = function(identity2) {
-        var originalIdentity = __assign({}, this.identity);
-        this.identity = __assign({}, identity2);
-        if (!isEqual4(originalIdentity, this.identity)) {
-          this.listeners.forEach(function(listener) {
-            listener(identity2);
-          });
-        }
-      };
-      IdentityStoreImpl2.prototype.addIdentityListener = function(listener) {
-        this.listeners.add(listener);
-      };
-      IdentityStoreImpl2.prototype.removeIdentityListener = function(listener) {
-        this.listeners.delete(listener);
-      };
-      return IdentityStoreImpl2;
-    }()
-  );
-  var safeGlobal = typeof globalThis !== "undefined" ? globalThis : typeof global !== "undefined" ? global : self;
-  var AnalyticsConnector = (
-    /** @class */
-    function() {
-      function AnalyticsConnector2() {
-        this.identityStore = new IdentityStoreImpl();
-        this.eventBridge = new EventBridgeImpl();
-        this.applicationContextProvider = new ApplicationContextProviderImpl();
-      }
-      AnalyticsConnector2.getInstance = function(instanceName) {
-        if (!safeGlobal["analyticsConnectorInstances"]) {
-          safeGlobal["analyticsConnectorInstances"] = {};
-        }
-        if (!safeGlobal["analyticsConnectorInstances"][instanceName]) {
-          safeGlobal["analyticsConnectorInstances"][instanceName] = new AnalyticsConnector2();
-        }
-        return safeGlobal["analyticsConnectorInstances"][instanceName];
-      };
-      return AnalyticsConnector2;
-    }()
-  );
-
-  // ../shared/src/sdk/createProxy.ts
-  var ASYNC_METHODS_SNIPPET = ["boot"];
-  var ASYNC_METHODS = ["boot"];
-  var DEFAULT_INSTANCE_NAME = "$default_instance";
-  function createProxy(loadAsyncScripts) {
-    const existingProxy = typeof window !== "undefined" ? window.engagement : void 0;
-    let bundleFailedToLoad = false;
-    const proxy2 = {
-      _q: existingProxy?._q ?? [],
-      _configuration: {
-        apiKey: existingProxy?._configuration?.apiKey ?? "",
-        serverUrl: existingProxy?._configuration?.serverUrl,
-        chatUrl: existingProxy?._configuration?.chatUrl,
-        mediaUrl: existingProxy?._configuration?.mediaUrl,
-        serverZone: existingProxy?._configuration?.serverZone ?? "US",
-        options: {
-          ...existingProxy?._configuration?.options
-        }
-      },
-      /**
-       * Initializes Guides and Surveys, mounting parent containers to the document body. This will **not** make them available right away.
-       * You must use `window.engagement.boot('user')` to identify the end user first.
-       *
-       * @param {string} apiKey Amplitude API Key
-       * @param {InitOptions} [initOptions] Optional configuration options
-       */
-      init(apiKey, initOptions) {
-        if (proxy2._configuration.apiKey) {
-          console.log("Engagement SDK has already been initialized. Ignoring additional init call.");
-          return;
-        }
-        if (initOptions?.useEngagementDomain) {
-          const isEU = (initOptions.serverZone ?? proxy2._configuration.serverZone) === "EU";
-          const domain = "amplitudeengagement.com";
-          if (!initOptions.serverUrl) {
-            initOptions.serverUrl = isEU ? `https://gs.eu.${domain}` : `https://gs.${domain}`;
-          }
-          if (!initOptions.chatUrl) {
-            initOptions.chatUrl = isEU ? `https://houston-chat.eu.${domain}` : `https://houston-chat.${domain}`;
-          }
-          if (!initOptions.mediaUrl) {
-            initOptions.mediaUrl = isEU ? `https://engagement-static.eu.${domain}` : `https://engagement-static.${domain}`;
-          }
-          if (!initOptions.cdnUrl) {
-            initOptions.cdnUrl = isEU ? `https://cdn.eu.${domain}` : `https://cdn.${domain}`;
-          }
-        }
-        proxy2._configuration = {
-          ...proxy2._configuration,
-          ...initOptions,
-          apiKey,
-          options: { splitting: true, ...proxy2._configuration.options, ...initOptions?.options }
-        };
-        if (proxy2._configuration?.options?.logger) {
-          proxy2._configuration.options.logger.enable(proxy2._configuration.options.logLevel ?? 2);
-        }
-        let bundleURL = void 0;
-        if (initOptions?.cdnUrl) {
-          if (proxy2._configuration.options.splitting) {
-            bundleURL = `${initOptions.cdnUrl}/engagement-browser/prod/split/index.js`;
-          } else {
-            bundleURL = initOptions.cdnUrl + "/engagement-browser/prod/index.min.js.gz";
-          }
-        } else {
-          const cdnBaseUrl = proxy2._configuration.serverZone === "EU" ? "https://cdn.eu.amplitude.com" : "https://cdn.amplitude.com";
-          if (proxy2._configuration.options.splitting) {
-            bundleURL = `${cdnBaseUrl}/engagement-browser/prod/split/index.js`;
-          } else {
-            bundleURL = `${cdnBaseUrl}/engagement-browser/prod/index.min.js.gz`;
-          }
-        }
-        let timeoutId = null;
-        const clearQueueAndCleanup = () => {
-          bundleFailedToLoad = true;
-          if (timeoutId) {
-            clearTimeout(timeoutId);
-            timeoutId = null;
-          }
-          if (proxy2._q && proxy2._q.length > 0) {
-            console.warn(
-              `Engagement SDK failed to load within ${LOAD_TIMEOUT_MS}ms. Resolving pending calls gracefully.`
-            );
-            while (proxy2._q.length > 0) {
-              const item = proxy2._q.shift();
-              if (!item) continue;
-              const methodName = item[0];
-              const isAsyncMethod = ASYNC_METHODS_SNIPPET.includes(methodName);
-              console.warn(
-                `Engagement SDK method '${methodName}' still in queue (isAsyncMethod=${isAsyncMethod}); attempting to resolve as no-op.`
-              );
-              if (isAsyncMethod) {
-                if (item[1] instanceof Function && item[2] instanceof Function) {
-                  const resolve = item[1];
-                  console.warn(`Engagement SDK method '${methodName}' resolved as no-op due to script loading failure`);
-                  resolve(void 0);
-                }
-              }
-            }
-          }
-        };
-        loadAsyncScripts(
-          bundleURL,
-          proxy2._configuration.options.splitting ? "module" : void 0,
-          initOptions?.nonce,
-          clearQueueAndCleanup
-        );
-        const LOAD_TIMEOUT_MS = 1e4;
-        timeoutId = setTimeout(() => {
-          clearQueueAndCleanup();
-        }, LOAD_TIMEOUT_MS);
-      },
-      plugin(options) {
-        const initFunc = proxy2.init;
-        return {
-          name: "@amplitude/engagement-browser",
-          type: "enrichment",
-          async setup(config, client) {
-            const instanceName = config.instanceName ?? DEFAULT_INSTANCE_NAME;
-            const identityStore = AnalyticsConnector.getInstance(instanceName).identityStore;
-            initFunc(config.apiKey, {
-              serverZone: config.serverZone,
-              ...options,
-              options: { logLevel: config.logLevel, logger: config.loggerProvider, ...options?.options }
-            });
-            const integrations = [
-              {
-                track: (event) => {
-                  client.track(event);
-                }
-              }
-            ];
-            await window.engagement.boot({
-              user: () => {
-                const identity2 = identityStore.getIdentity();
-                return {
-                  user_id: client.getUserId(),
-                  device_id: client.getDeviceId(),
-                  user_properties: identity2.userProperties,
-                  getSessionId: client.getSessionId
-                };
-              },
-              integrations
-            });
-            identityStore.addIdentityListener((identity2) => {
-              if (!window.engagement?._.user || !window.engagement?._analytics.hasBooted) {
-                console.warn(`Engagement SDK not booted. Ignoring identity change.`);
-                return;
-              }
-              if (window.engagement?._.user?.user_id !== identity2.userId) {
-                window.engagement.shutdown();
-                window.engagement.boot({
-                  user: () => {
-                    const identity3 = identityStore.getIdentity();
-                    return {
-                      user_id: client.getUserId(),
-                      device_id: client.getDeviceId(),
-                      user_properties: identity3.userProperties,
-                      getSessionId: client.getSessionId
-                    };
-                  },
-                  integrations
-                });
-              } else {
-                window.engagement._setUserProperties(identity2.userProperties);
-              }
-            });
-          },
-          async execute(context) {
-            window.engagement.forwardEvent(context);
-            return context;
-          }
-        };
-      }
-    };
-    const sdk = proxy2;
-    return new Proxy(proxy2, {
-      get: function(_, prop) {
-        if (prop in sdk) return sdk[prop];
-        if (prop === "then") return void 0;
-        if (prop === "gs" || prop === "rc") {
-          return new Proxy(
-            {},
-            {
-              get: function(_2, nestedProp) {
-                return function() {
-                  const args = Array.from(arguments);
-                  const methodPath = `${prop}.${nestedProp}`;
-                  args.unshift(methodPath);
-                  proxy2._q.push(args);
-                };
-              }
-            }
-          );
-        }
-        if (ASYNC_METHODS_SNIPPET.includes(prop)) {
-          return function() {
-            const a = Array.prototype.slice.call(arguments);
-            return new Promise((resolve, reject) => {
-              a.unshift(prop, resolve, reject);
-              proxy2._q.push(a);
-              if (bundleFailedToLoad) {
-                resolve(void 0);
-              }
-            });
-          };
-        }
-        return function() {
-          const a = Array.prototype.slice.call(arguments);
-          a.unshift(prop);
-          proxy2._q.push(a);
-        };
-      }
-    });
-  }
-
-  // ../shared/src/sdk/proxyHelpers.ts
-  var convertProxyObjectToRealObject = async (instance, queue) => {
-    const resolveNestedMethod = (obj, methodPath) => {
-      const pathParts = methodPath.split(".");
-      let current = obj;
-      for (const part of pathParts) {
-        if (!(part in current)) {
-          logger.warn(`Engagement SDK method ${methodPath} is not defined.`);
-          return void 0;
-        }
-        current = current[part];
-      }
-      return current;
-    };
-    const call = async (item) => {
-      const args = [...item];
-      const methodPath = args.shift();
-      const method = resolveNestedMethod(instance, methodPath);
-      if (!method) return;
-      if (ASYNC_METHODS_SNIPPET.includes(methodPath)) {
-        if (args[0] instanceof Function) {
-          const resolve = args.shift();
-          const reject = args.shift();
-          try {
-            await method.bind(instance)(...args).then(resolve, reject);
-          } catch (err) {
-            logger.error(err);
-          }
-        } else {
-          await method.bind(instance)(...args);
-        }
-      } else {
-        await method.bind(instance)(...args);
-      }
-    };
-    const callAll = async (fnName) => {
-      do {
-        const i2 = queue.findIndex((item2) => item2?.[0] === fnName);
-        if (i2 === -1) break;
-        const item = queue.splice(i2, 1)[0];
-        await call(item);
-      } while (true);
-    };
-    const bootFinished = callAll("boot");
-    const lingeringBootCalls = [];
-    while (queue.length > 0) {
-      const item = queue.shift();
-      if (!item) continue;
-      const fnName = item[0];
-      if (fnName === "boot") {
-        lingeringBootCalls.push(item);
-        continue;
-      }
-      if (ASYNC_METHODS.includes(fnName)) {
-        logger.debug("Scheduling async call", fnName);
-        await call(item);
-        logger.debug("Finished async call", fnName);
-      } else {
-        logger.debug("Scheduling sync call", fnName);
-        call(item).catch((e2) => {
-          logger.warn(`Error processing queued call for ${fnName}`, e2);
-          throw e2;
-        });
-        logger.debug("Finished sync call", fnName);
-      }
-    }
-    queue.length = 0;
-    bootFinished.then(async () => {
-      for (let idx = 0; idx < lingeringBootCalls.length; idx++) {
-        const item = lingeringBootCalls[idx];
-        await call(item);
-      }
-    });
-    return instance;
-  };
 
   // ../shared/src/store/util/bindActions.ts
   var bindActions = (_, actions) => {
