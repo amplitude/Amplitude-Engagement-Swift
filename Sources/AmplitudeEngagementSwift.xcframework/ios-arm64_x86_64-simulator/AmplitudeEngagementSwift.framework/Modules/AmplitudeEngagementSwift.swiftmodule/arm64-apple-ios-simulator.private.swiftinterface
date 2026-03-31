@@ -2,7 +2,7 @@
 // swift-compiler-version: Apple Swift version 6.0.3 effective-5.10 (swiftlang-6.0.3.1.10 clang-1600.0.30.1)
 // swift-module-flags: -target arm64-apple-ios15.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name AmplitudeEngagementSwift
 import AVKit
-import AmplitudeCore
+@_spi(Internal) import AmplitudeCore
 import Combine
 import CoreGraphics
 import CoreText
@@ -38,6 +38,17 @@ public enum AmplitudeEngagementError : Swift.Error {
   case jsonSerializationError(Swift.String)
   case unknown(Swift.String)
 }
+@_spi(AmplitudeEngagementFlutterPlugin) @_hasMissingDesignatedInitializers public class FlutterElementStore {
+  @_spi(AmplitudeEngagementFlutterPlugin) public static let shared: AmplitudeEngagementSwift.FlutterElementStore
+  @_spi(AmplitudeEngagementFlutterPlugin) public var isActive: Swift.Bool {
+    get
+  }
+  @_spi(AmplitudeEngagementFlutterPlugin) public func update(from viewElements: [[Swift.String : Any]])
+  @_spi(AmplitudeEngagementFlutterPlugin) public func find(identifier: Swift.String) -> CoreFoundation.CGRect?
+  @_spi(AmplitudeEngagementFlutterPlugin) public func clear()
+  @_spi(AmplitudeEngagementFlutterPlugin) public func deactivate()
+  @_spi(AmplitudeEngagementFlutterPlugin) @objc deinit
+}
 @_hasMissingDesignatedInitializers open class BaseEvent : AmplitudeCore.AnalyticsEvent, Swift.Codable {
   public var eventProperties: [Swift.String : Any]?
   public var userId: Swift.String?
@@ -52,6 +63,11 @@ public enum AmplitudeEngagementError : Swift.Error {
 public struct JSON : Swift.Codable {
   public init(from decoder: any Swift.Decoder) throws
   public func encode(to encoder: any Swift.Encoder) throws
+}
+extension AmplitudeCore.PluginHost {
+  public var engagement: (any AmplitudeEngagementSwift.AmplitudeEngagementPlugin)? {
+    get
+  }
 }
 public enum ThemeMode : Swift.String {
   case auto
@@ -104,7 +120,7 @@ public enum AmplitudeLogLevel : Swift.Int, Swift.Codable {
     get
   }
 }
-public protocol AmplitudeLogger {
+public protocol AmplitudeLogger : AmplitudeCore.CoreLogger {
   func disable()
   func enable(logLevel: AmplitudeEngagementSwift.AmplitudeLogLevel)
   func log(_ args: Any...)
@@ -135,7 +151,7 @@ extension SwiftUICore.View {
 }
 
 
-public enum DevelopmentPlatform : Swift.String {
+public enum SDKType : Swift.String {
   case reactNative
   case flutter
   case ios
@@ -145,15 +161,33 @@ public enum DevelopmentPlatform : Swift.String {
     get
   }
 }
-public protocol AmplitudeEngagement : AnyObject {
+public struct DevelopmentPlatform : Swift.Equatable {
+  public let sdk: AmplitudeEngagementSwift.SDKType
+  public let library: Swift.String
+  public let version: Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+  public static func == (lhs: AmplitudeEngagementSwift.DevelopmentPlatform, rhs: AmplitudeEngagementSwift.DevelopmentPlatform) -> Swift.Bool
+  public static let ios: AmplitudeEngagementSwift.DevelopmentPlatform
+  public static func reactNative(version: Swift.String) -> AmplitudeEngagementSwift.DevelopmentPlatform
+  public static func flutter(version: Swift.String) -> AmplitudeEngagementSwift.DevelopmentPlatform
+}
+public enum InstallationType : Swift.String {
+  case plugin
+  case standalone
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public protocol AmplitudeEngagementPlugin : AnyObject {
   var config: AmplitudeEngagementSwift.AmplitudeEngagementConfig { get }
+  var platform: AmplitudeEngagementSwift.DevelopmentPlatform { get }
+  @available(*, deprecated, message: "Use AmplitudeEngagementPluginFactory.make(...) instead (see https://amplitude.com/docs/guides-and-surveys/guides-and-surveys-ios-sdk)")
   func getPlugin() -> any AmplitudeCore.UniversalPlugin
   func handleUrl(_ url: Foundation.URL) -> Swift.Bool
-  func boot(_ user_id: Swift.String)
-  func boot(_ user_id: Swift.String, device_id: Swift.String?)
-  func boot(_ user_id: Swift.String, device_id: Swift.String?, autoRefreshIntervalSeconds: Swift.Int)
-  func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
-  func shutdown()
   func enable()
   func disable()
   func refresh()
@@ -174,24 +208,39 @@ public protocol AmplitudeEngagement : AnyObject {
   func resetSmartInteractions()
   func _setUserProperties(_ userProperties: [Swift.String : Any])
 }
+public protocol AmplitudeEngagement : AmplitudeEngagementSwift.AmplitudeEngagementPlugin {
+  func boot(_ user_id: Swift.String)
+  func boot(_ user_id: Swift.String, device_id: Swift.String?)
+  func boot(_ user_id: Swift.String, device_id: Swift.String?, autoRefreshIntervalSeconds: Swift.Int)
+  func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
+  func shutdown()
+}
 extension AmplitudeEngagementSwift.AmplitudeEngagement {
   public func boot(_ user_id: Swift.String)
   public func boot(_ user_id: Swift.String, device_id: Swift.String?)
+}
+extension AmplitudeEngagementSwift.AmplitudeEngagementPlugin {
   public func reset(key: Swift.String)
   public func show(key: Swift.String)
 }
+public enum AmplitudeEngagementPluginFactory {
+  public static func make(_ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions()) -> any AmplitudeCore.UniversalPlugin
+}
 public enum AmplitudeEngagementFactory {
-  public static func make(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions(), settingsTimeout: Foundation.TimeInterval = 1.25) -> any AmplitudeEngagementSwift.AmplitudeEngagement
+  public static func make(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions? = nil, settingsTimeout: Foundation.TimeInterval = 1.25) -> any AmplitudeEngagementSwift.AmplitudeEngagement
 }
 public enum __Flutter__AESDK_Factory {
-  public static func make(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions(), settingsTimeout: Foundation.TimeInterval = 1.25) -> any AmplitudeEngagementSwift.AmplitudeEngagement
+  public static func make(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions(), settingsTimeout: Foundation.TimeInterval = 1.25, platformVersion: Swift.String) -> any AmplitudeEngagementSwift.AmplitudeEngagement
 }
 public enum __ReactNative__AESDK_Factory {
-  public static func make(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions(), settingsTimeout: Foundation.TimeInterval = 1.25) -> any AmplitudeEngagementSwift.AmplitudeEngagement
+  public static func make(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions(), settingsTimeout: Foundation.TimeInterval = 1.25, platformVersion: Swift.String) -> any AmplitudeEngagementSwift.AmplitudeEngagement
 }
 @_hasMissingDesignatedInitializers public class AmplitudeEngagementImpl : Observation.Observable, AmplitudeEngagementSwift.AmplitudeEngagement {
   public static var logger: any AmplitudeEngagementSwift.AmplitudeLogger
   public var config: AmplitudeEngagementSwift.AmplitudeEngagementConfig
+  public var platform: AmplitudeEngagementSwift.DevelopmentPlatform {
+    get
+  }
   public func getPlugin() -> any AmplitudeCore.UniversalPlugin
   public func boot(_ user_id: Swift.String, device_id: Swift.String? = nil, autoRefreshIntervalSeconds: Swift.Int = 0)
   public func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
@@ -216,17 +265,14 @@ public enum __ReactNative__AESDK_Factory {
   public func _setUserProperties(_ userProperties: [Swift.String : Any])
   @objc deinit
 }
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers public class __ReactNative__AESDK : AmplitudeEngagementSwift.AmplitudeEngagementImpl {
-  @objc deinit
-}
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers public class __Flutter__AESDK : AmplitudeEngagementSwift.AmplitudeEngagementImpl {
-  @objc deinit
-}
 final public class AmplitudeEngagementNoOpStub : AmplitudeEngagementSwift.AmplitudeEngagement {
   final public var config: AmplitudeEngagementSwift.AmplitudeEngagementConfig {
     get
   }
-  public init(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions())
+  final public var platform: AmplitudeEngagementSwift.DevelopmentPlatform {
+    get
+  }
+  public init(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions(), _ platform: AmplitudeEngagementSwift.DevelopmentPlatform)
   final public func getPlugin() -> any AmplitudeCore.UniversalPlugin
   final public func boot(_ user_id: Swift.String, device_id: Swift.String?, autoRefreshIntervalSeconds: Swift.Int)
   final public func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
@@ -315,9 +361,12 @@ extension AmplitudeEngagementSwift.AmplitudeLogLevel : Swift.RawRepresentable {}
 extension AmplitudeEngagementSwift.DebugStatus : Swift.Equatable {}
 extension AmplitudeEngagementSwift.DebugStatus : Swift.Hashable {}
 extension AmplitudeEngagementSwift.DebugStatus : Swift.RawRepresentable {}
-extension AmplitudeEngagementSwift.DevelopmentPlatform : Swift.Equatable {}
-extension AmplitudeEngagementSwift.DevelopmentPlatform : Swift.Hashable {}
-extension AmplitudeEngagementSwift.DevelopmentPlatform : Swift.RawRepresentable {}
+extension AmplitudeEngagementSwift.SDKType : Swift.Equatable {}
+extension AmplitudeEngagementSwift.SDKType : Swift.Hashable {}
+extension AmplitudeEngagementSwift.SDKType : Swift.RawRepresentable {}
+extension AmplitudeEngagementSwift.InstallationType : Swift.Equatable {}
+extension AmplitudeEngagementSwift.InstallationType : Swift.Hashable {}
+extension AmplitudeEngagementSwift.InstallationType : Swift.RawRepresentable {}
 extension AmplitudeEngagementSwift.Roboto : Swift.Equatable {}
 extension AmplitudeEngagementSwift.Roboto : Swift.Hashable {}
 extension AmplitudeEngagementSwift.Roboto : Swift.RawRepresentable {}

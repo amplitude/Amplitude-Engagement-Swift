@@ -159,8 +159,8 @@
         if (isArray3(value)) {
           return false;
         }
-        var type11 = typeof value;
-        if (type11 == "number" || type11 == "symbol" || type11 == "boolean" || value == null || isSymbol(value)) {
+        var type12 = typeof value;
+        if (type12 == "number" || type12 == "symbol" || type12 == "boolean" || value == null || isSymbol(value)) {
           return true;
         }
         return reIsPlainProp.test(value) || !reIsDeepProp.test(value) || object != null && value in Object(object);
@@ -173,8 +173,8 @@
   var require_isObject = __commonJS({
     "../shared/node_modules/lodash/isObject.js"(exports, module) {
       function isObject2(value) {
-        var type11 = typeof value;
-        return value != null && (type11 == "object" || type11 == "function");
+        var type12 = typeof value;
+        return value != null && (type12 == "object" || type12 == "function");
       }
       module.exports = isObject2;
     }
@@ -427,10 +427,10 @@
   var require_assocIndexOf = __commonJS({
     "../shared/node_modules/lodash/_assocIndexOf.js"(exports, module) {
       var eq = require_eq();
-      function assocIndexOf(array8, key) {
-        var length = array8.length;
+      function assocIndexOf(array9, key) {
+        var length = array9.length;
         while (length--) {
-          if (eq(array8[length][0], key)) {
+          if (eq(array9[length][0], key)) {
             return length;
           }
         }
@@ -562,8 +562,8 @@
   var require_isKeyable = __commonJS({
     "../shared/node_modules/lodash/_isKeyable.js"(exports, module) {
       function isKeyable(value) {
-        var type11 = typeof value;
-        return type11 == "string" || type11 == "number" || type11 == "symbol" || type11 == "boolean" ? value !== "__proto__" : value === null;
+        var type12 = typeof value;
+        return type12 == "string" || type12 == "number" || type12 == "symbol" || type12 == "boolean" ? value !== "__proto__" : value === null;
       }
       module.exports = isKeyable;
     }
@@ -706,13 +706,13 @@
       var memoizeCapped = require_memoizeCapped();
       var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
       var reEscapeChar = /\\(\\)?/g;
-      var stringToPath = memoizeCapped(function(string11) {
+      var stringToPath = memoizeCapped(function(string12) {
         var result = [];
-        if (string11.charCodeAt(0) === 46) {
+        if (string12.charCodeAt(0) === 46) {
           result.push("");
         }
-        string11.replace(rePropName, function(match, number8, quote, subString) {
-          result.push(quote ? subString.replace(reEscapeChar, "$1") : number8 || match);
+        string12.replace(rePropName, function(match, number9, quote, subString) {
+          result.push(quote ? subString.replace(reEscapeChar, "$1") : number9 || match);
         });
         return result;
       });
@@ -723,10 +723,10 @@
   // ../shared/node_modules/lodash/_arrayMap.js
   var require_arrayMap = __commonJS({
     "../shared/node_modules/lodash/_arrayMap.js"(exports, module) {
-      function arrayMap(array8, iteratee) {
-        var index = -1, length = array8 == null ? 0 : array8.length, result = Array(length);
+      function arrayMap(array9, iteratee) {
+        var index = -1, length = array9 == null ? 0 : array9.length, result = Array(length);
         while (++index < length) {
-          result[index] = iteratee(array8[index], index, array8);
+          result[index] = iteratee(array9[index], index, array9);
         }
         return result;
       }
@@ -1013,11 +1013,11 @@
       }
       exports.flow = flow2;
       function tuple() {
-        var t14 = [];
+        var t15 = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-          t14[_i] = arguments[_i];
+          t15[_i] = arguments[_i];
         }
-        return t14;
+        return t15;
       }
       exports.tuple = tuple;
       function increment(n) {
@@ -2179,13 +2179,13 @@
         };
       }();
       var __assign3 = exports && exports.__assign || function() {
-        __assign3 = Object.assign || function(t14) {
+        __assign3 = Object.assign || function(t15) {
           for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
             s2 = arguments[i2];
             for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p))
-              t14[p] = s2[p];
+              t15[p] = s2[p];
           }
-          return t14;
+          return t15;
         };
         return __assign3.apply(this, arguments);
       };
@@ -2318,8 +2318,8 @@
         } else if (isKeyofC(domain)) {
           return domain.keys;
         } else if (isUnionC(domain)) {
-          var keys = domain.types.map(function(type12) {
-            return getDomainKeys(type12);
+          var keys = domain.types.map(function(type13) {
+            return getDomainKeys(type13);
           });
           return keys.some(undefinedType.is) ? void 0 : Object.assign.apply(Object, __spreadArray2([{}], keys, false));
         }
@@ -2399,8 +2399,8 @@
         }, domain, codomain);
       }
       function getUnionName(codecs) {
-        return "(" + codecs.map(function(type12) {
-          return type12.name;
+        return "(" + codecs.map(function(type13) {
+          return type13.name;
         }).join(" | ") + ")";
       }
       function mergeAll(base, us) {
@@ -2443,8 +2443,8 @@
           case "PartialType":
             return codec.props;
           case "IntersectionType":
-            return codec.types.reduce(function(props, type12) {
-              return Object.assign(props, getProps(type12));
+            return codec.types.reduce(function(props, type13) {
+              return Object.assign(props, getProps(type13));
             }, {});
         }
       }
@@ -2874,9 +2874,9 @@
         /** @class */
         function(_super) {
           __extends2(RefinementType2, _super);
-          function RefinementType2(name, is, validate2, encode2, type12, predicate) {
+          function RefinementType2(name, is, validate2, encode2, type13, predicate) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type12;
+            _this.type = type13;
             _this.predicate = predicate;
             _this._tag = "RefinementType";
             return _this;
@@ -2936,9 +2936,9 @@
         /** @class */
         function(_super) {
           __extends2(ArrayType2, _super);
-          function ArrayType2(name, is, validate2, encode2, type12) {
+          function ArrayType2(name, is, validate2, encode2, type13) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type12;
+            _this.type = type13;
             _this._tag = "ArrayType";
             return _this;
           }
@@ -2946,7 +2946,7 @@
         }(Type)
       );
       exports.ArrayType = ArrayType;
-      function array8(item, name) {
+      function array9(item, name) {
         if (name === void 0) {
           name = "Array<".concat(item.name, ">");
         }
@@ -2981,7 +2981,7 @@
           return a.map(item.encode);
         }, item);
       }
-      exports.array = array8;
+      exports.array = array9;
       var InterfaceType = (
         /** @class */
         function(_super) {
@@ -2996,7 +2996,7 @@
         }(Type)
       );
       exports.InterfaceType = InterfaceType;
-      function type11(props, name) {
+      function type12(props, name) {
         if (name === void 0) {
           name = getInterfaceTypeName(props);
         }
@@ -3055,8 +3055,8 @@
           return s2;
         }, props);
       }
-      exports.type = type11;
-      exports.interface = type11;
+      exports.type = type12;
+      exports.interface = type12;
       var PartialType = (
         /** @class */
         function(_super) {
@@ -3071,7 +3071,7 @@
         }(Type)
       );
       exports.PartialType = PartialType;
-      function partial7(props, name) {
+      function partial9(props, name) {
         if (name === void 0) {
           name = getPartialTypeName(getInterfaceTypeName(props));
         }
@@ -3132,7 +3132,7 @@
           return s2;
         }, props);
       }
-      exports.partial = partial7;
+      exports.partial = partial9;
       var DictionaryType = (
         /** @class */
         function(_super) {
@@ -3148,11 +3148,11 @@
         }(Type)
       );
       exports.DictionaryType = DictionaryType;
-      function record5(domain, codomain, name) {
+      function record6(domain, codomain, name) {
         var keys = getDomainKeys(domain);
         return keys ? enumerableRecord(Object.keys(keys), domain, codomain, name) : nonEnumerableRecord(domain, codomain, name);
       }
-      exports.record = record5;
+      exports.record = record6;
       var UnionType = (
         /** @class */
         function(_super) {
@@ -3167,7 +3167,7 @@
         }(Type)
       );
       exports.UnionType = UnionType;
-      function union8(codecs, name) {
+      function union9(codecs, name) {
         if (name === void 0) {
           name = getUnionName(codecs);
         }
@@ -3211,8 +3211,8 @@
           }, codecs, tag_1);
         } else {
           return new UnionType(name, function(u) {
-            return codecs.some(function(type12) {
-              return type12.is(u);
+            return codecs.some(function(type13) {
+              return type13.is(u);
             });
           }, function(u, c2) {
             var errors = [];
@@ -3237,7 +3237,7 @@
           }, codecs);
         }
       }
-      exports.union = union8;
+      exports.union = union9;
       var IntersectionType = (
         /** @class */
         function(_super) {
@@ -3252,16 +3252,16 @@
         }(Type)
       );
       exports.IntersectionType = IntersectionType;
-      function intersection7(codecs, name) {
+      function intersection9(codecs, name) {
         if (name === void 0) {
-          name = "(".concat(codecs.map(function(type12) {
-            return type12.name;
+          name = "(".concat(codecs.map(function(type13) {
+            return type13.name;
           }).join(" & "), ")");
         }
         var len = codecs.length;
         return new IntersectionType(name, function(u) {
-          return codecs.every(function(type12) {
-            return type12.is(u);
+          return codecs.every(function(type13) {
+            return type13.is(u);
           });
         }, codecs.length === 0 ? exports.success : function(u, c2) {
           var us = [];
@@ -3282,7 +3282,7 @@
           }));
         }, codecs);
       }
-      exports.intersection = intersection7;
+      exports.intersection = intersection9;
       var TupleType = (
         /** @class */
         function(_super) {
@@ -3299,14 +3299,14 @@
       exports.TupleType = TupleType;
       function tuple(codecs, name) {
         if (name === void 0) {
-          name = "[".concat(codecs.map(function(type12) {
-            return type12.name;
+          name = "[".concat(codecs.map(function(type13) {
+            return type13.name;
           }).join(", "), "]");
         }
         var len = codecs.length;
         return new TupleType(name, function(u) {
-          return exports.UnknownArray.is(u) && u.length === len && codecs.every(function(type12, i2) {
-            return type12.is(u[i2]);
+          return exports.UnknownArray.is(u) && u.length === len && codecs.every(function(type13, i2) {
+            return type13.is(u[i2]);
           });
         }, function(u, c2) {
           var e2 = exports.UnknownArray.validate(u, c2);
@@ -3334,8 +3334,8 @@
           }
           return errors.length > 0 ? (0, exports.failures)(errors) : (0, exports.success)(as);
         }, useIdentity(codecs) ? exports.identity : function(a) {
-          return codecs.map(function(type12, i2) {
-            return type12.encode(a[i2]);
+          return codecs.map(function(type13, i2) {
+            return type13.encode(a[i2]);
           });
         }, codecs);
       }
@@ -3344,9 +3344,9 @@
         /** @class */
         function(_super) {
           __extends2(ReadonlyType2, _super);
-          function ReadonlyType2(name, is, validate2, encode2, type12) {
+          function ReadonlyType2(name, is, validate2, encode2, type13) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type12;
+            _this.type = type13;
             _this._tag = "ReadonlyType";
             return _this;
           }
@@ -3365,9 +3365,9 @@
         /** @class */
         function(_super) {
           __extends2(ReadonlyArrayType2, _super);
-          function ReadonlyArrayType2(name, is, validate2, encode2, type12) {
+          function ReadonlyArrayType2(name, is, validate2, encode2, type13) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type12;
+            _this.type = type13;
             _this._tag = "ReadonlyArrayType";
             return _this;
           }
@@ -3379,21 +3379,21 @@
         if (name === void 0) {
           name = "ReadonlyArray<".concat(item.name, ">");
         }
-        var codec = array8(item);
+        var codec = array9(item);
         return new ReadonlyArrayType(name, codec.is, codec.validate, codec.encode, item);
       }
       exports.readonlyArray = readonlyArray;
       var strict = function(props, name) {
-        return exact(type11(props), name);
+        return exact(type12(props), name);
       };
       exports.strict = strict;
       var ExactType = (
         /** @class */
         function(_super) {
           __extends2(ExactType2, _super);
-          function ExactType2(name, is, validate2, encode2, type12) {
+          function ExactType2(name, is, validate2, encode2, type13) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type12;
+            _this.type = type13;
             _this._tag = "ExactType";
             return _this;
           }
@@ -3523,7 +3523,7 @@
         if (name === void 0) {
           name = getUnionName(codecs);
         }
-        var U = union8(codecs, name);
+        var U = union9(codecs, name);
         if (U instanceof TaggedUnionType) {
           return U;
         } else {
@@ -3564,7 +3564,7 @@
       );
       exports.ObjectType = ObjectType;
       exports.object = new ObjectType();
-      exports.dictionary = record5;
+      exports.dictionary = record6;
       var StrictType = (
         /** @class */
         function(_super) {
@@ -4662,13 +4662,13 @@
         return function_1.identity;
       };
       exports.sortBy = sortBy;
-      var union8 = function(E) {
+      var union9 = function(E) {
         var uniqE = exports.uniq(E);
         return function(first, second) {
           return uniqE(concat(first, second));
         };
       };
-      exports.union = union8;
+      exports.union = union9;
       var rotate = function(n) {
         return function(as) {
           var len = as.length;
@@ -5370,13 +5370,13 @@
         return exports.copy;
       };
       exports.sortBy = sortBy;
-      var union8 = function(E) {
+      var union9 = function(E) {
         var uniqE = exports.uniq(E);
         return function(first, second) {
           return uniqE(concat(first, second));
         };
       };
-      exports.union = union8;
+      exports.union = union9;
       var rotate = function(n) {
         return function(as) {
           var len = as.length;
@@ -6013,8 +6013,8 @@
           shows[_i] = arguments[_i];
         }
         return {
-          show: function(t14) {
-            return "[" + t14.map(function(a, i2) {
+          show: function(t15) {
+            return "[" + t15.map(function(a, i2) {
               return shows[i2].show(a);
             }).join(", ") + "]";
           }
@@ -6660,11 +6660,11 @@
         return go(exports.empty, input);
       }
       exports.comprehension = comprehension;
-      function union8(E) {
+      function union9(E) {
         var unionE = RNEA.union(E);
         return function(first, second) {
           if (second === void 0) {
-            var unionE_1 = union8(E);
+            var unionE_1 = union9(E);
             return function(ys) {
               return unionE_1(ys, first);
             };
@@ -6672,12 +6672,12 @@
           return exports.isNonEmpty(first) && exports.isNonEmpty(second) ? unionE(first, second) : exports.isNonEmpty(first) ? first : second;
         };
       }
-      exports.union = union8;
-      function intersection7(E) {
+      exports.union = union9;
+      function intersection9(E) {
         var elemE = elem(E);
         return function(xs, ys) {
           if (ys === void 0) {
-            var intersectionE_1 = intersection7(E);
+            var intersectionE_1 = intersection9(E);
             return function(ys2) {
               return intersectionE_1(ys2, xs);
             };
@@ -6687,7 +6687,7 @@
           });
         };
       }
-      exports.intersection = intersection7;
+      exports.intersection = intersection9;
       function difference(E) {
         var elemE = elem(E);
         return function(xs, ys) {
@@ -7681,11 +7681,11 @@
         return go([], input);
       }
       exports.comprehension = comprehension;
-      function union8(E) {
+      function union9(E) {
         var unionE = NEA.union(E);
         return function(first, second) {
           if (second === void 0) {
-            var unionE_1 = union8(E);
+            var unionE_1 = union9(E);
             return function(ys) {
               return unionE_1(ys, first);
             };
@@ -7693,12 +7693,12 @@
           return exports.isNonEmpty(first) && exports.isNonEmpty(second) ? unionE(first, second) : exports.isNonEmpty(first) ? exports.copy(first) : exports.copy(second);
         };
       }
-      exports.union = union8;
-      function intersection7(E) {
+      exports.union = union9;
+      function intersection9(E) {
         var elemE = exports.elem(E);
         return function(xs, ys) {
           if (ys === void 0) {
-            var intersectionE_1 = intersection7(E);
+            var intersectionE_1 = intersection9(E);
             return function(ys2) {
               return intersectionE_1(ys2, xs);
             };
@@ -7708,7 +7708,7 @@
           });
         };
       }
-      exports.intersection = intersection7;
+      exports.intersection = intersection9;
       function difference(E) {
         var elemE = exports.elem(E);
         return function(xs, ys) {
@@ -9735,11 +9735,11 @@
       var O = require_Option();
       var R = require_Record();
       var pipeable_1 = require_pipeable();
-      var t14 = require_lib();
+      var t15 = require_lib();
       var utils_1 = require_utils();
       var isUnionType = function(_a) {
-        var type11 = _a.type;
-        return type11 instanceof t14.UnionType;
+        var type12 = _a.type;
+        return type12 instanceof t15.UnionType;
       };
       var jsToString = function(value) {
         return value === void 0 ? "undefined" : JSON.stringify(value);
@@ -9756,15 +9756,15 @@
         return validation.context;
       };
       exports.TYPE_MAX_LEN = 160;
-      var truncateType = function(type11, options) {
+      var truncateType = function(type12, options) {
         if (options === void 0) {
           options = {};
         }
         var _a = options.truncateLongTypes, truncateLongTypes = _a === void 0 ? true : _a;
-        if (truncateLongTypes && type11.length > exports.TYPE_MAX_LEN) {
-          return type11.slice(0, exports.TYPE_MAX_LEN - 3) + "...";
+        if (truncateLongTypes && type12.length > exports.TYPE_MAX_LEN) {
+          return type12.slice(0, exports.TYPE_MAX_LEN - 3) + "...";
         }
-        return type11;
+        return type12;
       };
       var errorMessageSimple = function(expectedType, path, error, options) {
         return [
@@ -9777,8 +9777,8 @@
       var errorMessageUnion = function(expectedTypes, path, value, options) {
         return [
           "Expecting one of:\n",
-          expectedTypes.map(function(type11) {
-            return "    " + truncateType(type11, options);
+          expectedTypes.map(function(type12) {
+            return "    " + truncateType(type12, options);
           }).join("\n"),
           path === "" ? "\n" : "\nat " + path + " ",
           "but instead got: " + jsToString(value)
@@ -9797,8 +9797,8 @@
           return void 0;
         }));
         var expected = expectedTypes.map(function(_a) {
-          var type11 = _a.type;
-          return type11.name;
+          var type12 = _a.type;
+          return type12.name;
         });
         return expected.length > 0 ? O.some(errorMessageUnion(expected, path, value, options)) : O.none;
       };
@@ -9900,9 +9900,9 @@
       var MAX_SAFE_INTEGER = 9007199254740991;
       var reIsUint = /^(?:0|[1-9]\d*)$/;
       function isIndex(value, length) {
-        var type11 = typeof value;
+        var type12 = typeof value;
         length = length == null ? MAX_SAFE_INTEGER : length;
-        return !!length && (type11 == "number" || type11 != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
+        return !!length && (type12 == "number" || type12 != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
       }
       module.exports = isIndex;
     }
@@ -9957,59 +9957,59 @@
   // ../shared/node_modules/dayjs/dayjs.min.js
   var require_dayjs_min = __commonJS({
     "../shared/node_modules/dayjs/dayjs.min.js"(exports, module) {
-      !function(t14, e2) {
-        "object" == typeof exports && "undefined" != typeof module ? module.exports = e2() : "function" == typeof define && define.amd ? define(e2) : (t14 = "undefined" != typeof globalThis ? globalThis : t14 || self).dayjs = e2();
+      !function(t15, e2) {
+        "object" == typeof exports && "undefined" != typeof module ? module.exports = e2() : "function" == typeof define && define.amd ? define(e2) : (t15 = "undefined" != typeof globalThis ? globalThis : t15 || self).dayjs = e2();
       }(exports, function() {
         "use strict";
-        var t14 = 1e3, e2 = 6e4, n = 36e5, r = "millisecond", i2 = "second", s2 = "minute", u = "hour", a = "day", o = "week", f = "month", h2 = "quarter", c2 = "year", d = "date", $ = "Invalid Date", l2 = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y2 = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M = { name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_") }, m = function(t15, e3, n2) {
-          var r2 = String(t15);
-          return !r2 || r2.length >= e3 ? t15 : "" + Array(e3 + 1 - r2.length).join(n2) + t15;
-        }, g = { s: m, z: function(t15) {
-          var e3 = -t15.utcOffset(), n2 = Math.abs(e3), r2 = Math.floor(n2 / 60), i3 = n2 % 60;
+        var t15 = 1e3, e2 = 6e4, n = 36e5, r = "millisecond", i2 = "second", s2 = "minute", u = "hour", a = "day", o = "week", f = "month", h2 = "quarter", c2 = "year", d = "date", $ = "Invalid Date", l2 = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y2 = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M = { name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_") }, m = function(t16, e3, n2) {
+          var r2 = String(t16);
+          return !r2 || r2.length >= e3 ? t16 : "" + Array(e3 + 1 - r2.length).join(n2) + t16;
+        }, g = { s: m, z: function(t16) {
+          var e3 = -t16.utcOffset(), n2 = Math.abs(e3), r2 = Math.floor(n2 / 60), i3 = n2 % 60;
           return (e3 <= 0 ? "+" : "-") + m(r2, 2, "0") + ":" + m(i3, 2, "0");
-        }, m: function t15(e3, n2) {
-          if (e3.date() < n2.date()) return -t15(n2, e3);
+        }, m: function t16(e3, n2) {
+          if (e3.date() < n2.date()) return -t16(n2, e3);
           var r2 = 12 * (n2.year() - e3.year()) + (n2.month() - e3.month()), i3 = e3.clone().add(r2, f), s3 = n2 - i3 < 0, u2 = e3.clone().add(r2 + (s3 ? -1 : 1), f);
           return +(-(r2 + (n2 - i3) / (s3 ? i3 - u2 : u2 - i3)) || 0);
-        }, a: function(t15) {
-          return t15 < 0 ? Math.ceil(t15) || 0 : Math.floor(t15);
-        }, p: function(t15) {
-          return { M: f, y: c2, w: o, d: a, D: d, h: u, m: s2, s: i2, ms: r, Q: h2 }[t15] || String(t15 || "").toLowerCase().replace(/s$/, "");
-        }, u: function(t15) {
-          return void 0 === t15;
+        }, a: function(t16) {
+          return t16 < 0 ? Math.ceil(t16) || 0 : Math.floor(t16);
+        }, p: function(t16) {
+          return { M: f, y: c2, w: o, d: a, D: d, h: u, m: s2, s: i2, ms: r, Q: h2 }[t16] || String(t16 || "").toLowerCase().replace(/s$/, "");
+        }, u: function(t16) {
+          return void 0 === t16;
         } }, v = "en", D = {};
         D[v] = M;
-        var p = function(t15) {
-          return t15 instanceof _;
-        }, S = function t15(e3, n2, r2) {
+        var p = function(t16) {
+          return t16 instanceof _;
+        }, S = function t16(e3, n2, r2) {
           var i3;
           if (!e3) return v;
           if ("string" == typeof e3) {
             var s3 = e3.toLowerCase();
             D[s3] && (i3 = s3), n2 && (D[s3] = n2, i3 = s3);
             var u2 = e3.split("-");
-            if (!i3 && u2.length > 1) return t15(u2[0]);
+            if (!i3 && u2.length > 1) return t16(u2[0]);
           } else {
             var a2 = e3.name;
             D[a2] = e3, i3 = a2;
           }
           return !r2 && i3 && (v = i3), i3 || !r2 && v;
-        }, w = function(t15, e3) {
-          if (p(t15)) return t15.clone();
+        }, w = function(t16, e3) {
+          if (p(t16)) return t16.clone();
           var n2 = "object" == typeof e3 ? e3 : {};
-          return n2.date = t15, n2.args = arguments, new _(n2);
+          return n2.date = t16, n2.args = arguments, new _(n2);
         }, O = g;
-        O.l = S, O.i = p, O.w = function(t15, e3) {
-          return w(t15, { locale: e3.$L, utc: e3.$u, x: e3.$x, $offset: e3.$offset });
+        O.l = S, O.i = p, O.w = function(t16, e3) {
+          return w(t16, { locale: e3.$L, utc: e3.$u, x: e3.$x, $offset: e3.$offset });
         };
         var _ = function() {
-          function M2(t15) {
-            this.$L = S(t15.locale, null, true), this.parse(t15);
+          function M2(t16) {
+            this.$L = S(t16.locale, null, true), this.parse(t16);
           }
           var m2 = M2.prototype;
-          return m2.parse = function(t15) {
-            this.$d = function(t16) {
-              var e3 = t16.date, n2 = t16.utc;
+          return m2.parse = function(t16) {
+            this.$d = function(t17) {
+              var e3 = t17.date, n2 = t17.utc;
               if (null === e3) return /* @__PURE__ */ new Date(NaN);
               if (O.u(e3)) return /* @__PURE__ */ new Date();
               if (e3 instanceof Date) return new Date(e3);
@@ -10021,33 +10021,33 @@
                 }
               }
               return new Date(e3);
-            }(t15), this.$x = t15.x || {}, this.init();
+            }(t16), this.$x = t16.x || {}, this.init();
           }, m2.init = function() {
-            var t15 = this.$d;
-            this.$y = t15.getFullYear(), this.$M = t15.getMonth(), this.$D = t15.getDate(), this.$W = t15.getDay(), this.$H = t15.getHours(), this.$m = t15.getMinutes(), this.$s = t15.getSeconds(), this.$ms = t15.getMilliseconds();
+            var t16 = this.$d;
+            this.$y = t16.getFullYear(), this.$M = t16.getMonth(), this.$D = t16.getDate(), this.$W = t16.getDay(), this.$H = t16.getHours(), this.$m = t16.getMinutes(), this.$s = t16.getSeconds(), this.$ms = t16.getMilliseconds();
           }, m2.$utils = function() {
             return O;
           }, m2.isValid = function() {
             return !(this.$d.toString() === $);
-          }, m2.isSame = function(t15, e3) {
-            var n2 = w(t15);
+          }, m2.isSame = function(t16, e3) {
+            var n2 = w(t16);
             return this.startOf(e3) <= n2 && n2 <= this.endOf(e3);
-          }, m2.isAfter = function(t15, e3) {
-            return w(t15) < this.startOf(e3);
-          }, m2.isBefore = function(t15, e3) {
-            return this.endOf(e3) < w(t15);
-          }, m2.$g = function(t15, e3, n2) {
-            return O.u(t15) ? this[e3] : this.set(n2, t15);
+          }, m2.isAfter = function(t16, e3) {
+            return w(t16) < this.startOf(e3);
+          }, m2.isBefore = function(t16, e3) {
+            return this.endOf(e3) < w(t16);
+          }, m2.$g = function(t16, e3, n2) {
+            return O.u(t16) ? this[e3] : this.set(n2, t16);
           }, m2.unix = function() {
             return Math.floor(this.valueOf() / 1e3);
           }, m2.valueOf = function() {
             return this.$d.getTime();
-          }, m2.startOf = function(t15, e3) {
-            var n2 = this, r2 = !!O.u(e3) || e3, h3 = O.p(t15), $2 = function(t16, e4) {
-              var i3 = O.w(n2.$u ? Date.UTC(n2.$y, e4, t16) : new Date(n2.$y, e4, t16), n2);
+          }, m2.startOf = function(t16, e3) {
+            var n2 = this, r2 = !!O.u(e3) || e3, h3 = O.p(t16), $2 = function(t17, e4) {
+              var i3 = O.w(n2.$u ? Date.UTC(n2.$y, e4, t17) : new Date(n2.$y, e4, t17), n2);
               return r2 ? i3 : i3.endOf(a);
-            }, l3 = function(t16, e4) {
-              return O.w(n2.toDate()[t16].apply(n2.toDate("s"), (r2 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e4)), n2);
+            }, l3 = function(t17, e4) {
+              return O.w(n2.toDate()[t17].apply(n2.toDate("s"), (r2 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e4)), n2);
             }, y3 = this.$W, M3 = this.$M, m3 = this.$D, g2 = "set" + (this.$u ? "UTC" : "");
             switch (h3) {
               case c2:
@@ -10069,60 +10069,60 @@
               default:
                 return this.clone();
             }
-          }, m2.endOf = function(t15) {
-            return this.startOf(t15, false);
-          }, m2.$set = function(t15, e3) {
-            var n2, o2 = O.p(t15), h3 = "set" + (this.$u ? "UTC" : ""), $2 = (n2 = {}, n2[a] = h3 + "Date", n2[d] = h3 + "Date", n2[f] = h3 + "Month", n2[c2] = h3 + "FullYear", n2[u] = h3 + "Hours", n2[s2] = h3 + "Minutes", n2[i2] = h3 + "Seconds", n2[r] = h3 + "Milliseconds", n2)[o2], l3 = o2 === a ? this.$D + (e3 - this.$W) : e3;
+          }, m2.endOf = function(t16) {
+            return this.startOf(t16, false);
+          }, m2.$set = function(t16, e3) {
+            var n2, o2 = O.p(t16), h3 = "set" + (this.$u ? "UTC" : ""), $2 = (n2 = {}, n2[a] = h3 + "Date", n2[d] = h3 + "Date", n2[f] = h3 + "Month", n2[c2] = h3 + "FullYear", n2[u] = h3 + "Hours", n2[s2] = h3 + "Minutes", n2[i2] = h3 + "Seconds", n2[r] = h3 + "Milliseconds", n2)[o2], l3 = o2 === a ? this.$D + (e3 - this.$W) : e3;
             if (o2 === f || o2 === c2) {
               var y3 = this.clone().set(d, 1);
               y3.$d[$2](l3), y3.init(), this.$d = y3.set(d, Math.min(this.$D, y3.daysInMonth())).$d;
             } else $2 && this.$d[$2](l3);
             return this.init(), this;
-          }, m2.set = function(t15, e3) {
-            return this.clone().$set(t15, e3);
-          }, m2.get = function(t15) {
-            return this[O.p(t15)]();
+          }, m2.set = function(t16, e3) {
+            return this.clone().$set(t16, e3);
+          }, m2.get = function(t16) {
+            return this[O.p(t16)]();
           }, m2.add = function(r2, h3) {
             var d2, $2 = this;
             r2 = Number(r2);
-            var l3 = O.p(h3), y3 = function(t15) {
+            var l3 = O.p(h3), y3 = function(t16) {
               var e3 = w($2);
-              return O.w(e3.date(e3.date() + Math.round(t15 * r2)), $2);
+              return O.w(e3.date(e3.date() + Math.round(t16 * r2)), $2);
             };
             if (l3 === f) return this.set(f, this.$M + r2);
             if (l3 === c2) return this.set(c2, this.$y + r2);
             if (l3 === a) return y3(1);
             if (l3 === o) return y3(7);
-            var M3 = (d2 = {}, d2[s2] = e2, d2[u] = n, d2[i2] = t14, d2)[l3] || 1, m3 = this.$d.getTime() + r2 * M3;
+            var M3 = (d2 = {}, d2[s2] = e2, d2[u] = n, d2[i2] = t15, d2)[l3] || 1, m3 = this.$d.getTime() + r2 * M3;
             return O.w(m3, this);
-          }, m2.subtract = function(t15, e3) {
-            return this.add(-1 * t15, e3);
-          }, m2.format = function(t15) {
+          }, m2.subtract = function(t16, e3) {
+            return this.add(-1 * t16, e3);
+          }, m2.format = function(t16) {
             var e3 = this, n2 = this.$locale();
             if (!this.isValid()) return n2.invalidDate || $;
-            var r2 = t15 || "YYYY-MM-DDTHH:mm:ssZ", i3 = O.z(this), s3 = this.$H, u2 = this.$m, a2 = this.$M, o2 = n2.weekdays, f2 = n2.months, h3 = function(t16, n3, i4, s4) {
-              return t16 && (t16[n3] || t16(e3, r2)) || i4[n3].slice(0, s4);
-            }, c3 = function(t16) {
-              return O.s(s3 % 12 || 12, t16, "0");
-            }, d2 = n2.meridiem || function(t16, e4, n3) {
-              var r3 = t16 < 12 ? "AM" : "PM";
+            var r2 = t16 || "YYYY-MM-DDTHH:mm:ssZ", i3 = O.z(this), s3 = this.$H, u2 = this.$m, a2 = this.$M, o2 = n2.weekdays, f2 = n2.months, h3 = function(t17, n3, i4, s4) {
+              return t17 && (t17[n3] || t17(e3, r2)) || i4[n3].slice(0, s4);
+            }, c3 = function(t17) {
+              return O.s(s3 % 12 || 12, t17, "0");
+            }, d2 = n2.meridiem || function(t17, e4, n3) {
+              var r3 = t17 < 12 ? "AM" : "PM";
               return n3 ? r3.toLowerCase() : r3;
             }, l3 = { YY: String(this.$y).slice(-2), YYYY: this.$y, M: a2 + 1, MM: O.s(a2 + 1, 2, "0"), MMM: h3(n2.monthsShort, a2, f2, 3), MMMM: h3(f2, a2), D: this.$D, DD: O.s(this.$D, 2, "0"), d: String(this.$W), dd: h3(n2.weekdaysMin, this.$W, o2, 2), ddd: h3(n2.weekdaysShort, this.$W, o2, 3), dddd: o2[this.$W], H: String(s3), HH: O.s(s3, 2, "0"), h: c3(1), hh: c3(2), a: d2(s3, u2, true), A: d2(s3, u2, false), m: String(u2), mm: O.s(u2, 2, "0"), s: String(this.$s), ss: O.s(this.$s, 2, "0"), SSS: O.s(this.$ms, 3, "0"), Z: i3 };
-            return r2.replace(y2, function(t16, e4) {
-              return e4 || l3[t16] || i3.replace(":", "");
+            return r2.replace(y2, function(t17, e4) {
+              return e4 || l3[t17] || i3.replace(":", "");
             });
           }, m2.utcOffset = function() {
             return 15 * -Math.round(this.$d.getTimezoneOffset() / 15);
           }, m2.diff = function(r2, d2, $2) {
             var l3, y3 = O.p(d2), M3 = w(r2), m3 = (M3.utcOffset() - this.utcOffset()) * e2, g2 = this - M3, v2 = O.m(this, M3);
-            return v2 = (l3 = {}, l3[c2] = v2 / 12, l3[f] = v2, l3[h2] = v2 / 3, l3[o] = (g2 - m3) / 6048e5, l3[a] = (g2 - m3) / 864e5, l3[u] = g2 / n, l3[s2] = g2 / e2, l3[i2] = g2 / t14, l3)[y3] || g2, $2 ? v2 : O.a(v2);
+            return v2 = (l3 = {}, l3[c2] = v2 / 12, l3[f] = v2, l3[h2] = v2 / 3, l3[o] = (g2 - m3) / 6048e5, l3[a] = (g2 - m3) / 864e5, l3[u] = g2 / n, l3[s2] = g2 / e2, l3[i2] = g2 / t15, l3)[y3] || g2, $2 ? v2 : O.a(v2);
           }, m2.daysInMonth = function() {
             return this.endOf(f).$D;
           }, m2.$locale = function() {
             return D[this.$L];
-          }, m2.locale = function(t15, e3) {
-            if (!t15) return this.$L;
-            var n2 = this.clone(), r2 = S(t15, e3, true);
+          }, m2.locale = function(t16, e3) {
+            if (!t16) return this.$L;
+            var n2 = this.clone(), r2 = S(t16, e3, true);
             return r2 && (n2.$L = r2), n2;
           }, m2.clone = function() {
             return O.w(this.$d, this);
@@ -10136,14 +10136,14 @@
             return this.$d.toUTCString();
           }, M2;
         }(), T = _.prototype;
-        return w.prototype = T, [["$ms", r], ["$s", i2], ["$m", s2], ["$H", u], ["$W", a], ["$M", f], ["$y", c2], ["$D", d]].forEach(function(t15) {
-          T[t15[1]] = function(e3) {
-            return this.$g(e3, t15[0], t15[1]);
+        return w.prototype = T, [["$ms", r], ["$s", i2], ["$m", s2], ["$H", u], ["$W", a], ["$M", f], ["$y", c2], ["$D", d]].forEach(function(t16) {
+          T[t16[1]] = function(e3) {
+            return this.$g(e3, t16[0], t16[1]);
           };
-        }), w.extend = function(t15, e3) {
-          return t15.$i || (t15(e3, _, w), t15.$i = true), w;
-        }, w.locale = S, w.isDayjs = p, w.unix = function(t15) {
-          return w(1e3 * t15);
+        }), w.extend = function(t16, e3) {
+          return t16.$i || (t16(e3, _, w), t16.$i = true), w;
+        }, w.locale = S, w.isDayjs = p, w.unix = function(t16) {
+          return w(1e3 * t16);
         }, w.en = D[v], w.Ls = D, w.p = {}, w;
       });
     }
@@ -10164,9 +10164,9 @@
   var require_trimmedEndIndex = __commonJS({
     "../shared/node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
       var reWhitespace = /\s/;
-      function trimmedEndIndex(string11) {
-        var index = string11.length;
-        while (index-- && reWhitespace.test(string11.charAt(index))) {
+      function trimmedEndIndex(string12) {
+        var index = string12.length;
+        while (index-- && reWhitespace.test(string12.charAt(index))) {
         }
         return index;
       }
@@ -10179,8 +10179,8 @@
     "../shared/node_modules/lodash/_baseTrim.js"(exports, module) {
       var trimmedEndIndex = require_trimmedEndIndex();
       var reTrimStart = /^\s+/;
-      function baseTrim(string11) {
-        return string11 ? string11.slice(0, trimmedEndIndex(string11) + 1).replace(reTrimStart, "") : string11;
+      function baseTrim(string12) {
+        return string12 ? string12.slice(0, trimmedEndIndex(string12) + 1).replace(reTrimStart, "") : string12;
       }
       module.exports = baseTrim;
     }
@@ -10505,13 +10505,13 @@
   // ../shared/node_modules/lodash/_copyArray.js
   var require_copyArray = __commonJS({
     "../shared/node_modules/lodash/_copyArray.js"(exports, module) {
-      function copyArray(source, array8) {
+      function copyArray(source, array9) {
         var index = -1, length = source.length;
-        array8 || (array8 = Array(length));
+        array9 || (array9 = Array(length));
         while (++index < length) {
-          array8[index] = source[index];
+          array9[index] = source[index];
         }
-        return array8;
+        return array9;
       }
       module.exports = copyArray;
     }
@@ -11075,16 +11075,16 @@
       function overRest(func, start, transform) {
         start = nativeMax(start === void 0 ? func.length - 1 : start, 0);
         return function() {
-          var args = arguments, index = -1, length = nativeMax(args.length - start, 0), array8 = Array(length);
+          var args = arguments, index = -1, length = nativeMax(args.length - start, 0), array9 = Array(length);
           while (++index < length) {
-            array8[index] = args[start + index];
+            array9[index] = args[start + index];
           }
           index = -1;
           var otherArgs = Array(start + 1);
           while (++index < start) {
             otherArgs[index] = args[index];
           }
-          otherArgs[start] = transform(array8);
+          otherArgs[start] = transform(array9);
           return apply(func, this, otherArgs);
         };
       }
@@ -11110,11 +11110,11 @@
       var constant = require_constant();
       var defineProperty = require_defineProperty();
       var identity2 = require_identity();
-      var baseSetToString = !defineProperty ? identity2 : function(func, string11) {
+      var baseSetToString = !defineProperty ? identity2 : function(func, string12) {
         return defineProperty(func, "toString", {
           "configurable": true,
           "enumerable": false,
-          "value": constant(string11),
+          "value": constant(string12),
           "writable": true
         });
       };
@@ -11181,8 +11181,8 @@
         if (!isObject2(object)) {
           return false;
         }
-        var type11 = typeof index;
-        if (type11 == "number" ? isArrayLike(object) && isIndex(index, object.length) : type11 == "string" && index in object) {
+        var type12 = typeof index;
+        if (type12 == "number" ? isArrayLike(object) && isIndex(index, object.length) : type12 == "string" && index in object) {
           return eq(object[index], value);
         }
         return false;
@@ -11274,10 +11274,10 @@
   // ../shared/node_modules/lodash/_arraySome.js
   var require_arraySome = __commonJS({
     "../shared/node_modules/lodash/_arraySome.js"(exports, module) {
-      function arraySome(array8, predicate) {
-        var index = -1, length = array8 == null ? 0 : array8.length;
+      function arraySome(array9, predicate) {
+        var index = -1, length = array9 == null ? 0 : array9.length;
         while (++index < length) {
-          if (predicate(array8[index], index, array8)) {
+          if (predicate(array9[index], index, array9)) {
             return true;
           }
         }
@@ -11305,23 +11305,23 @@
       var cacheHas = require_cacheHas();
       var COMPARE_PARTIAL_FLAG = 1;
       var COMPARE_UNORDERED_FLAG = 2;
-      function equalArrays(array8, other, bitmask, customizer, equalFunc, stack) {
-        var isPartial = bitmask & COMPARE_PARTIAL_FLAG, arrLength = array8.length, othLength = other.length;
+      function equalArrays(array9, other, bitmask, customizer, equalFunc, stack) {
+        var isPartial = bitmask & COMPARE_PARTIAL_FLAG, arrLength = array9.length, othLength = other.length;
         if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
           return false;
         }
-        var arrStacked = stack.get(array8);
+        var arrStacked = stack.get(array9);
         var othStacked = stack.get(other);
         if (arrStacked && othStacked) {
-          return arrStacked == other && othStacked == array8;
+          return arrStacked == other && othStacked == array9;
         }
         var index = -1, result = true, seen = bitmask & COMPARE_UNORDERED_FLAG ? new SetCache() : void 0;
-        stack.set(array8, other);
-        stack.set(other, array8);
+        stack.set(array9, other);
+        stack.set(other, array9);
         while (++index < arrLength) {
-          var arrValue = array8[index], othValue = other[index];
+          var arrValue = array9[index], othValue = other[index];
           if (customizer) {
-            var compared = isPartial ? customizer(othValue, arrValue, index, other, array8, stack) : customizer(arrValue, othValue, index, array8, other, stack);
+            var compared = isPartial ? customizer(othValue, arrValue, index, other, array9, stack) : customizer(arrValue, othValue, index, array9, other, stack);
           }
           if (compared !== void 0) {
             if (compared) {
@@ -11344,7 +11344,7 @@
             break;
           }
         }
-        stack["delete"](array8);
+        stack["delete"](array9);
         stack["delete"](other);
         return result;
       }
@@ -11457,12 +11457,12 @@
   // ../shared/node_modules/lodash/_arrayPush.js
   var require_arrayPush = __commonJS({
     "../shared/node_modules/lodash/_arrayPush.js"(exports, module) {
-      function arrayPush(array8, values) {
-        var index = -1, length = values.length, offset2 = array8.length;
+      function arrayPush(array9, values) {
+        var index = -1, length = values.length, offset2 = array9.length;
         while (++index < length) {
-          array8[offset2 + index] = values[index];
+          array9[offset2 + index] = values[index];
         }
-        return array8;
+        return array9;
       }
       module.exports = arrayPush;
     }
@@ -11484,11 +11484,11 @@
   // ../shared/node_modules/lodash/_arrayFilter.js
   var require_arrayFilter = __commonJS({
     "../shared/node_modules/lodash/_arrayFilter.js"(exports, module) {
-      function arrayFilter(array8, predicate) {
-        var index = -1, length = array8 == null ? 0 : array8.length, resIndex = 0, result = [];
+      function arrayFilter(array9, predicate) {
+        var index = -1, length = array9 == null ? 0 : array9.length, resIndex = 0, result = [];
         while (++index < length) {
-          var value = array8[index];
-          if (predicate(value, index, array8)) {
+          var value = array9[index];
+          if (predicate(value, index, array9)) {
             result[resIndex++] = value;
           }
         }
@@ -12005,21 +12005,21 @@
   globalThis.simpleFetch = simpleFetch2;
 
   // src/crypto-polyfill.ts
-  function getRandomValues(array8) {
-    if (!(array8 instanceof Int8Array || array8 instanceof Uint8Array || array8 instanceof Int16Array || array8 instanceof Uint16Array || array8 instanceof Int32Array || array8 instanceof Uint32Array || array8 instanceof Uint8ClampedArray)) {
+  function getRandomValues(array9) {
+    if (!(array9 instanceof Int8Array || array9 instanceof Uint8Array || array9 instanceof Int16Array || array9 instanceof Uint16Array || array9 instanceof Int32Array || array9 instanceof Uint32Array || array9 instanceof Uint8ClampedArray)) {
       throw new Error("Expected an integer array");
     }
-    if (array8.byteLength > 65536) {
+    if (array9.byteLength > 65536) {
       throw new Error("Can only request a maximum of 65536 bytes");
     }
-    const base64 = registerNativeBridge().function("getRandomBase64").call(array8.byteLength);
+    const base64 = registerNativeBridge().function("getRandomBase64").call(array9.byteLength);
     const decoded = registerNativeBridge().function("base64Decode").call(base64);
-    const bytes = new Uint8Array(array8.byteLength);
-    for (let i2 = 0; i2 < array8.byteLength; i2++) {
+    const bytes = new Uint8Array(array9.byteLength);
+    for (let i2 = 0; i2 < array9.byteLength; i2++) {
       bytes[i2] = decoded.charCodeAt(i2);
     }
-    array8.set(bytes);
-    return array8;
+    array9.set(bytes);
+    return array9;
   }
   registerJSBridge("crypto").function("getRandomValues", getRandomValues);
 
@@ -12034,14 +12034,14 @@
     constructor() {
       this.listeners = /* @__PURE__ */ new Map();
     }
-    addEventListener(type11, listener) {
-      if (!this.listeners.has(type11)) {
-        this.listeners.set(type11, /* @__PURE__ */ new Set());
+    addEventListener(type12, listener) {
+      if (!this.listeners.has(type12)) {
+        this.listeners.set(type12, /* @__PURE__ */ new Set());
       }
-      this.listeners.get(type11)?.add(listener);
+      this.listeners.get(type12)?.add(listener);
     }
-    removeEventListener(type11, listener) {
-      const typeListeners = this.listeners.get(type11);
+    removeEventListener(type12, listener) {
+      const typeListeners = this.listeners.get(type12);
       if (typeListeners) {
         typeListeners.delete(listener);
       }
@@ -12240,9 +12240,9 @@
   );
 
   // ../shared/node_modules/io-ts-types/es6/clone.js
-  function clone(t14) {
-    var r = Object.create(Object.getPrototypeOf(t14));
-    Object.assign(r, t14);
+  function clone(t15) {
+    var r = Object.create(Object.getPrototypeOf(t15));
+    Object.assign(r, t15);
     return r;
   }
 
@@ -12626,6 +12626,32 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       })
     )
   });
+  var RecSetPageTargetingConfigItemV = t6.intersection([
+    t6.type({
+      isExclude: t6.boolean,
+      matchType: t6.union([
+        t6.literal("contains"),
+        t6.literal("endsWith"),
+        t6.literal("exact"),
+        t6.literal("pattern"),
+        t6.literal("regex"),
+        t6.literal("simple"),
+        t6.literal("startsWith"),
+        t6.literal("domId"),
+        t6.literal("domClassname"),
+        t6.literal("domSelector")
+      ]),
+      url: t6.string
+    }),
+    t6.partial({
+      operator: t6.union([t6.literal("and"), t6.literal("or")]),
+      value: t6.string
+    })
+  ]);
+  var RecSetPageTargetingConfigV = t6.type({
+    conditions: t6.array(t6.array(EvaluationConditionV)),
+    configs: t6.array(RecSetPageTargetingConfigItemV)
+  });
 
   // ../shared/src/internal/middleware/organization.ts
   var t7 = __toESM(require_lib());
@@ -12671,7 +12697,8 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       surveyThrottle: CustomThrottleV
     }),
     t7.partial({
-      localization: LocalizationV
+      localization: LocalizationV,
+      nudgesMutualExclusionGroups: t7.array(t7.type({ variantIds: t7.array(t7.number) }))
     })
   ]);
   var defaults = {
@@ -13036,8 +13063,10 @@ when parsing ${JSON.stringify(input, null, 2)}`;
             t8.partial({
               anchorSelector: ElementSelectorV,
               isOpenByDefault: t8.boolean,
+              openOnHover: t8.boolean,
               isShowingMask: t8.boolean,
               advanceTrigger: t8.string,
+              disableAutoAdvanceOnClick: t8.boolean,
               offset: t8.type({
                 x: t8.string,
                 y: t8.string
@@ -13052,7 +13081,8 @@ when parsing ${JSON.stringify(input, null, 2)}`;
               ]),
               textAnimation: t8.literal("typewriter"),
               zIndexOverride: t8.union([t8.undefined, t8.null, t8.number]),
-              pointer: t8.type({ type: t8.union([t8.literal("beacon"), t8.literal("arrow")]) })
+              pointer: t8.type({ type: t8.union([t8.literal("beacon"), t8.literal("arrow")]) }),
+              skipIfNotFound: t8.boolean
             }),
             NudgeStepLayoutConfigV,
             NudgeStepFooterLayoutConfigV
@@ -13388,6 +13418,8 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   // ../shared/src/internal/middleware/types.ts
   var isValidSessionPropertyKey = (key) => typeof key === "string" && key.length > 0;
   var isValidSessionPropertyValue = (value) => typeof value === "number" || typeof value === "string" || typeof value === "boolean";
+  var isSurveyBlock = (block) => block.type === "survey_text" || block.type === "survey_text_short" || block.type === "survey_rating" || block.type === "survey_list";
+  var isFiniteInputBlock = (block) => block.type === "survey_list" && block.meta.listType === "single" || block.type === "survey_rating";
   var isListBlock = (block) => block.type === "survey_list";
   var hasConditionalActionsBlock = (block) => {
     if (!(block.type === "survey_rating" || block.type === "survey_list" || block.type === "button")) {
@@ -13515,11 +13547,17 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     return nudge.type === "survey" ? "survey" : "guide";
   };
   var getProductMeta = (nudge) => {
-    const type11 = getNudgeProductType(nudge);
+    const type12 = getNudgeProductType(nudge);
     return {
-      type: type11,
+      type: type12,
       name: getNudgeProductType(nudge) === "guide" ? "Guide" : "Survey"
     };
+  };
+  var requiresManualAdvancement = (step) => {
+    const surveyBlocks = step.content.filter(isSurveyBlock);
+    const hasOnlyOneFiniteInput = surveyBlocks.length === 1 && isFiniteInputBlock(surveyBlocks[0]);
+    const hasButton = step.content.some((block) => block.type === "button");
+    return !hasOnlyOneFiniteInput || hasButton;
   };
 
   // ../shared/src/products/nudges/store/utils.ts
@@ -13550,19 +13588,20 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   };
   var getExperimentKey = (nudge, decideResult) => decideResult?.[nudge.flagKey]?.metadata?.experimentKey;
   var getEvaluationId = (nudge, decideResult) => decideResult?.[nudge.flagKey]?.metadata?.evaluationId;
+  var getSegmentName = (nudge, decideResult) => decideResult?.[nudge.flagKey]?.metadata?.segmentName;
 
   // ../shared/src/products/nudges/store/selectors.ts
-  var normalizePlainFalsyValues = (record5) => {
+  var normalizePlainFalsyValues = (record6) => {
     let updatedRecord = null;
-    for (const [key, value] of Object.entries(record5)) {
+    for (const [key, value] of Object.entries(record6)) {
       if (value === 0 || value === false) {
         if (!updatedRecord) {
-          updatedRecord = { ...record5 };
+          updatedRecord = { ...record6 };
         }
         updatedRecord[key] = value === 0 ? "0" : "false";
       }
     }
-    return updatedRecord ?? record5;
+    return updatedRecord ?? record6;
   };
   var isAnalyticsEventTrigger = (trigger) => trigger.type === "analytics_event";
   var getTriggerWithNormalizedProperties = (trigger) => {
@@ -13859,6 +13898,23 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     const retval = _.evalEngine.evaluateConditions(nudgeStateTarget, nudge.lifecycleConfig.conditions);
     return retval;
   };
+  var passesMutualExclusion = (_, nudge) => {
+    const groups = _.organization?.nudgesMutualExclusionGroups;
+    if (!groups?.length) return true;
+    const variantId = Number(nudge.variantId);
+    const relevantGroups = groups.filter((group) => group.variantIds.includes(variantId));
+    if (relevantGroups.length === 0) return true;
+    const mutuallyExclusiveIds = new Set(
+      relevantGroups.flatMap((group) => group.variantIds).filter((id) => id !== variantId)
+    );
+    for (const otherId of mutuallyExclusiveIds) {
+      const otherState = getNudgeDataFromUserStore(_, otherId);
+      if (otherState && otherState.lastSeenTs !== -1) {
+        return false;
+      }
+    }
+    return true;
+  };
   var passesSnoozedConditions = (_, nudge) => {
     const snoozedUntilTs = getNudgeDataFromUserStore(_, nudge.variantId)?.snoozedUntilTs;
     return !(snoozedUntilTs && snoozedUntilTs > Date.now());
@@ -13947,21 +14003,31 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     return true;
   };
   var hasRemainingSteps = (nudge) => ({ stepIndex }) => stepIndex < nudge.steps.length - 1;
+  var isDeadEndStep = (nudge) => ({ stepIndex }) => {
+    const step = getNudgeStep(nudge, stepIndex);
+    if (!step || isPinStep(step) || isChecklistStep(step)) {
+      return false;
+    }
+    if (!requiresManualAdvancement(step)) {
+      return false;
+    }
+    return !step.content.some((block) => NudgeContentButtonBlockV.is(block));
+  };
   var shouldBypassCustomThrottles = (_, nudge) => nudge.priority === 4 /* Urgent */ || !isIncludedInCustomThrottles(nudge) || _.nudgeDebugToolBar.visible && _.nudgeDebugToolBar.bypassCustomThrottles || isTestNudge(_, nudge);
   var checkBuiltInThrottle = (_, nudge) => {
-    const { type: type11 } = getProductMeta(nudge);
+    const { type: type12 } = getProductMeta(nudge);
     const result = passesBuiltInThrottles(_, nudge);
     const nudgesInRenderLoop = getNudgesInRenderLoop(_);
     const blockingNudge = getBlockingNudge(nudge, nudgesInRenderLoop);
-    let explanation = `This ${type11} is blocked by another currently rendered guide or survey.`;
+    let explanation = `This ${type12} is blocked by another currently rendered guide or survey.`;
     if (result) {
-      explanation = `This ${type11} is not blocked by other guides or surveys.`;
+      explanation = `This ${type12} is not blocked by other guides or surveys.`;
     }
     if (blockingNudge?.variantId === nudge.variantId) {
       explanation = "This nudge is alreadying rendering.";
     }
     if (blockingNudge) {
-      explanation = `This ${type11} is blocked by '${blockingNudge.title} - ${blockingNudge.variant}'.`;
+      explanation = `This ${type12} is blocked by '${blockingNudge.title} - ${blockingNudge.variant}'.`;
     }
     return {
       result,
@@ -13972,15 +14038,15 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     };
   };
   var getGlobalChecks = (_, nudge) => {
-    const { type: type11 } = getProductMeta(nudge);
+    const { type: type12 } = getProductMeta(nudge);
     const builtInThrottlesCheck = checkBuiltInThrottle(_, nudge);
     const globalChecks = {
       builtInThrottles: builtInThrottlesCheck,
       customThrottles: {
         result: shouldBypassCustomThrottles(_, nudge) || passesCustomThrottles(_, nudge),
-        explanation: `The custom throttle for ${type11}s of this type prevents further guides or surveys from being shown.`,
+        explanation: `The custom throttle for ${type12}s of this type prevents further guides or surveys from being shown.`,
         detail: {
-          throttles: type11 === "survey" ? _.organization?.surveyThrottle : _.organization?.guideThrottle
+          throttles: type12 === "survey" ? _.organization?.surveyThrottle : _.organization?.guideThrottle
         }
       }
     };
@@ -14036,6 +14102,13 @@ when parsing ${JSON.stringify(input, null, 2)}`;
             conditions: sessionPropertyConditions,
             sessionProperties: _.sessionProperties
           }
+        }
+      },
+      mutualExclusion: {
+        result: passesMutualExclusion(_, nudge),
+        explanation: `${name} is blocked because a mutually exclusive nudge has already been seen.`,
+        detail: {
+          groups: _.organization?.nudgesMutualExclusionGroups
         }
       }
     };
@@ -14243,6 +14316,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   var isTooltipStep = (step) => step?.formFactor.type === "tooltip";
   var isPinStep = (step) => step?.formFactor.type === "pin";
   var isCardStep = (step) => step?.formFactor.type === "card";
+  var isChecklistStep = (step) => step?.formFactor.type === "checklist";
   var isCardNudge = (nudge) => nudge.steps.some((step) => step.formFactor.type === "card");
   var isAnchorableStep = (step) => isPinStep(step) || isTooltipStep(step) || isCardStep(step);
   var passesLocalization = (_, nudge, currentLocale) => {
@@ -14981,11 +15055,11 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         }
       };
     }
-    on(type11, handler) {
-      let listeners = this.eventListeners.get(type11);
+    on(type12, handler) {
+      let listeners = this.eventListeners.get(type12);
       if (!listeners) {
         listeners = /* @__PURE__ */ new Set();
-        this.eventListeners.set(type11, listeners);
+        this.eventListeners.set(type12, listeners);
       }
       const wrappedHandler = handler.bind(void 0);
       listeners.add(wrappedHandler);
@@ -15568,7 +15642,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       toJSON: () => ({
         ...transition,
         source: `#${stateNode.id}`,
-        target: target ? target.map((t14) => `#${t14.id}`) : void 0
+        target: target ? target.map((t15) => `#${t15.id}`) : void 0
       })
     };
     return transition;
@@ -15581,25 +15655,25 @@ when parsing ${JSON.stringify(input, null, 2)}`;
           throw new Error('Null events ("") cannot be specified as a transition key. Use `always: { ... }` instead.');
         }
         const transitionsConfig = stateNode.config.on[descriptor];
-        transitions.set(descriptor, toTransitionConfigArray(transitionsConfig).map((t14) => formatTransition(stateNode, descriptor, t14)));
+        transitions.set(descriptor, toTransitionConfigArray(transitionsConfig).map((t15) => formatTransition(stateNode, descriptor, t15)));
       }
     }
     if (stateNode.config.onDone) {
       const descriptor = `xstate.done.state.${stateNode.id}`;
-      transitions.set(descriptor, toTransitionConfigArray(stateNode.config.onDone).map((t14) => formatTransition(stateNode, descriptor, t14)));
+      transitions.set(descriptor, toTransitionConfigArray(stateNode.config.onDone).map((t15) => formatTransition(stateNode, descriptor, t15)));
     }
     for (const invokeDef of stateNode.invoke) {
       if (invokeDef.onDone) {
         const descriptor = `xstate.done.actor.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onDone).map((t14) => formatTransition(stateNode, descriptor, t14)));
+        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onDone).map((t15) => formatTransition(stateNode, descriptor, t15)));
       }
       if (invokeDef.onError) {
         const descriptor = `xstate.error.actor.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onError).map((t14) => formatTransition(stateNode, descriptor, t14)));
+        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onError).map((t15) => formatTransition(stateNode, descriptor, t15)));
       }
       if (invokeDef.onSnapshot) {
         const descriptor = `xstate.snapshot.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onSnapshot).map((t14) => formatTransition(stateNode, descriptor, t14)));
+        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onSnapshot).map((t15) => formatTransition(stateNode, descriptor, t15)));
       }
     }
     for (const delayedTransition of stateNode.after) {
@@ -15669,7 +15743,7 @@ ${err.message}`);
       return stateNode.parent.initial;
     }
     return {
-      target: normalizedTarget.map((t14) => typeof t14 === "string" ? getStateNodeByPath(stateNode.parent, t14) : t14)
+      target: normalizedTarget.map((t15) => typeof t15 === "string" ? getStateNodeByPath(stateNode.parent, t15) : t15)
     };
   }
   function isHistoryNode(stateNode) {
@@ -15894,10 +15968,10 @@ ${err.message}`);
   }
   function computeExitSet(transitions, stateNodeSet, historyValue) {
     const statesToExit = /* @__PURE__ */ new Set();
-    for (const t14 of transitions) {
-      if (t14.target?.length) {
-        const domain = getTransitionDomain(t14, historyValue);
-        if (t14.reenter && t14.source === domain) {
+    for (const t15 of transitions) {
+      if (t15.target?.length) {
+        const domain = getTransitionDomain(t15, historyValue);
+        if (t15.reenter && t15.source === domain) {
           statesToExit.add(domain);
         }
         for (const stateNode of stateNodeSet) {
@@ -15931,7 +16005,7 @@ ${err.message}`);
     if (!isInitial) {
       [nextState, historyValue] = exitStates(nextState, event, actorScope, filteredTransitions, mutStateNodeSet, historyValue, internalQueue, actorScope.actionExecutor);
     }
-    nextState = resolveActionsAndContext(nextState, event, actorScope, filteredTransitions.flatMap((t14) => t14.actions), internalQueue, void 0);
+    nextState = resolveActionsAndContext(nextState, event, actorScope, filteredTransitions.flatMap((t15) => t15.actions), internalQueue, void 0);
     nextState = enterStates(nextState, event, actorScope, filteredTransitions, mutStateNodeSet, internalQueue, historyValue, isInitial);
     const nextStateNodes = [...mutStateNodeSet];
     if (nextState.status === "done") {
@@ -16005,26 +16079,26 @@ ${err.message}`);
     return nextSnapshot;
   }
   function computeEntrySet(transitions, historyValue, statesForDefaultEntry, statesToEnter) {
-    for (const t14 of transitions) {
-      const domain = getTransitionDomain(t14, historyValue);
-      for (const s2 of t14.target || []) {
+    for (const t15 of transitions) {
+      const domain = getTransitionDomain(t15, historyValue);
+      for (const s2 of t15.target || []) {
         if (!isHistoryNode(s2) && // if the target is different than the source then it will *definitely* be entered
-        (t14.source !== s2 || // we know that the domain can't lie within the source
+        (t15.source !== s2 || // we know that the domain can't lie within the source
         // if it's different than the source then it's outside of it and it means that the target has to be entered as well
-        t14.source !== domain || // reentering transitions always enter the target, even if it's the source itself
-        t14.reenter)) {
+        t15.source !== domain || // reentering transitions always enter the target, even if it's the source itself
+        t15.reenter)) {
           statesToEnter.add(s2);
           statesForDefaultEntry.add(s2);
         }
         addDescendantStatesToEnter(s2, historyValue, statesForDefaultEntry, statesToEnter);
       }
-      const targetStates = getEffectiveTargetStates(t14, historyValue);
+      const targetStates = getEffectiveTargetStates(t15, historyValue);
       for (const s2 of targetStates) {
         const ancestors = getProperAncestors(s2, domain);
         if (domain?.type === "parallel") {
           ancestors.push(domain);
         }
-        addAncestorStatesToEnter(statesToEnter, historyValue, statesForDefaultEntry, ancestors, !t14.source.parent && t14.reenter ? void 0 : domain);
+        addAncestorStatesToEnter(statesToEnter, historyValue, statesForDefaultEntry, ancestors, !t15.source.parent && t15.reenter ? void 0 : domain);
       }
     }
   }
@@ -16308,7 +16382,7 @@ ${err.message}`);
   var machineSnapshotCan = function can(event) {
     const transitionData = this.machine.getTransitionData(this, event);
     return !!transitionData?.length && // Check that at least one transition is not forbidden
-    transitionData.some((t14) => t14.target !== void 0 || t14.actions.length);
+    transitionData.some((t15) => t15.target !== void 0 || t15.actions.length);
   };
   var machineSnapshotToJSON = function toJSON() {
     const {
@@ -16993,7 +17067,7 @@ ${err.message}`);
     _initialize() {
       this.transitions = formatTransitions(this);
       if (this.config.always) {
-        this.always = toTransitionConfigArray(this.config.always).map((t14) => formatTransition(this, NULL_EVENT, t14));
+        this.always = toTransitionConfigArray(this.config.always).map((t15) => formatTransition(this, NULL_EVENT, t15));
       }
       Object.keys(this.states).forEach((key) => {
         this.states[key]._initialize();
@@ -17013,7 +17087,7 @@ ${err.message}`);
           eventType: null,
           reenter: false,
           toJSON: () => ({
-            target: this.initial.target.map((t14) => `#${t14.id}`),
+            target: this.initial.target.map((t15) => `#${t15.id}`),
             source: `#${this.id}`,
             actions: this.initial.actions.map(toSerializableAction),
             eventType: null
@@ -17024,9 +17098,9 @@ ${err.message}`);
           return state.definition;
         }),
         on: this.on,
-        transitions: [...this.transitions.values()].flat().map((t14) => ({
-          ...t14,
-          actions: t14.actions.map(toSerializableAction)
+        transitions: [...this.transitions.values()].flat().map((t15) => ({
+          ...t15,
+          actions: t15.actions.map(toSerializableAction)
         })),
         entry: this.entry.map(toSerializableAction),
         exit: this.exit.map(toSerializableAction),
@@ -17076,7 +17150,7 @@ ${err.message}`);
     get on() {
       return memo(this, "on", () => {
         const transitions = this.transitions;
-        return [...transitions].flatMap(([descriptor, t14]) => t14.map((t15) => [descriptor, t15])).reduce((map2, [descriptor, transition]) => {
+        return [...transitions].flatMap(([descriptor, t15]) => t15.map((t16) => [descriptor, t16])).reduce((map2, [descriptor, transition]) => {
           map2[descriptor] = map2[descriptor] || [];
           map2[descriptor].push(transition);
           return map2;
@@ -17409,8 +17483,8 @@ ${err.message}`);
   var c = /* @__PURE__ */ new WeakMap();
   var l = (e2) => e2 && (c.has(e2) ? c.get(e2) : s(e2) === Object.prototype || s(e2) === Array.prototype);
   var y = (e2) => l(e2) && e2[t9] || null;
-  var h = (e2, t14 = true) => {
-    c.set(e2, t14);
+  var h = (e2, t15 = true) => {
+    c.set(e2, t15);
   };
 
   // ../shared/node_modules/valtio/esm/vanilla.mjs
@@ -18162,6 +18236,8 @@ ${err.message}`);
   __export(global_actions_exports, {
     activatePushExperience: () => activatePushExperience,
     addCallbacks: () => addCallbacks,
+    dispatchEffects: () => dispatchEffects,
+    execResolvedAction: () => execResolvedAction,
     executeAction: () => executeAction,
     initEffectsSequencer: () => initEffectsSequencer,
     publishAnalyticsEventToMessageBus: () => publishAnalyticsEventToMessageBus,
@@ -18177,6 +18253,8 @@ ${err.message}`);
   var service_actions_exports = {};
   __export(service_actions_exports, {
     closeAllNudgeMocks: () => closeAllNudgeMocks,
+    closeNudge: () => closeNudge,
+    closeStep: () => closeStep,
     forceTriggerSingleNudge: () => forceTriggerSingleNudge,
     getDebugSnapshot: () => getDebugSnapshot,
     getDebugSnapshotForHeadless: () => getDebugSnapshotForHeadless,
@@ -18198,7 +18276,7 @@ ${err.message}`);
   });
 
   // ../shared/src/products/nudges/store/effectsSequencer.ts
-  var t11 = __toESM(require_lib());
+  var t12 = __toESM(require_lib());
 
   // ../shared/src/internal/util/SessionStorage.ts
   var PREFIX3 = "amplitude.engagement";
@@ -18241,6 +18319,867 @@ ${err.message}`);
     remove: remove2
   };
   var SessionStorage_default = SessionStorage;
+
+  // ../shared/src/services/analytics/track.ts
+  var import_dayjs = __toESM(require_dayjs_min());
+  var t11 = __toESM(require_lib());
+
+  // ../shared/src/services/analytics/types.ts
+  var guideSpecificEvents = {
+    tooltipMarkerViewed: "[Guides-Surveys] Guide Tooltip Icon Viewed"
+  };
+  var surveySpecificEvents = {
+    surveySubmitted: "[Guides-Surveys] Survey Submitted",
+    surveyAbandoned: "[Guides-Surveys] Survey Abandoned"
+  };
+  var getEventNameCreator = (nudge) => (type12) => {
+    const productName = isSurvey(nudge) ? "Survey" : "Guide";
+    const events = {
+      viewed: `[Guides-Surveys] ${productName} Viewed`,
+      dismissed: `[Guides-Surveys] ${productName} Dismissed`,
+      completed: `[Guides-Surveys] ${productName} Completed`,
+      rageClosed: `[Guides-Surveys] ${productName} Rage Closed`,
+      stepCompleted: `[Guides-Surveys] ${productName} Step Completed`,
+      snoozed: `[Guides-Surveys] ${productName} Snoozed`,
+      engaged: `[Guides-Surveys] ${productName} Engaged`,
+      stepSkipped: `[Guides-Surveys] ${productName} Step Skipped`,
+      pinTargetNotFound: "[Guides-Surveys] Error: Pin Target Not Found",
+      error: "[Guides-Surveys] Error",
+      ...guideSpecificEvents,
+      ...surveySpecificEvents
+    };
+    return events[type12];
+  };
+
+  // ../shared/src/services/analytics/track.ts
+  var getClient = () => {
+    const sdk = getSDK();
+    return sdk?.[_analytics];
+  };
+  var getEmojiOrStringValue = (response) => {
+    if (response?.type === "number") {
+      return response.stringResponse;
+    } else if (response?.type === "string") {
+      return Array.isArray(response.stringResponse) ? response.stringResponse.join(", ") : response.stringResponse;
+    }
+    return null;
+  };
+  var ERROR_DEDUP_STORAGE_KEY = "error_dedup";
+  var ErrorDedupStateV = t11.type({
+    sessionId: t11.union([t11.number, t11.undefined]),
+    keys: t11.array(t11.string)
+  });
+  var loadErrorDedupState = (currentSession) => {
+    const raw = SessionStorage_default.get(ERROR_DEDUP_STORAGE_KEY, "");
+    if (typeof raw !== "string" || raw === "") return /* @__PURE__ */ new Set();
+    try {
+      const decoded = ErrorDedupStateV.decode(JSON.parse(raw));
+      if (decoded._tag === "Right" && decoded.right.sessionId === currentSession) {
+        return new Set(decoded.right.keys);
+      }
+    } catch {
+    }
+    return /* @__PURE__ */ new Set();
+  };
+  var saveErrorDedupState = (sessionId, keys) => {
+    SessionStorage_default.set(ERROR_DEDUP_STORAGE_KEY, JSON.stringify(ErrorDedupStateV.encode({ sessionId, keys: [...keys] })));
+  };
+  var fireErrorEvent = (commonProperties, errorType, dedupKeyParts, actionIndex) => {
+    const sdk = getSDK();
+    const currentSession = sdk?._ ? getEffectiveSessionStart(sdk._) : void 0;
+    const dedupSet = loadErrorDedupState(currentSession);
+    const dedupKey = `${dedupKeyParts.flagKey ?? "unknown"}:${dedupKeyParts.variant ?? "unknown"}:${errorType}`;
+    if (dedupSet.has(dedupKey)) return false;
+    const client = getClient();
+    if (!client?.trackEvent) return false;
+    const properties = {
+      ...commonProperties,
+      ["[Guides-Surveys] Error Type" /* ErrorType */]: errorType
+    };
+    if (actionIndex !== void 0) {
+      properties["[Guides-Surveys] Action Index" /* ActionIndex */] = actionIndex;
+    }
+    client.trackEvent("[Guides-Surveys] Error", properties);
+    dedupSet.add(dedupKey);
+    saveErrorDedupState(currentSession, dedupSet);
+    return true;
+  };
+  var Track = {
+    resourceCenter: {
+      /**
+       * Fired whenever Resource Center is opened.
+       * TODO: Add source property once we have a proper way to plumb it through
+       */
+      opened: () => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Opened", {});
+      },
+      /**
+       * Fired whenever Resource Center is closed.
+       */
+      closed: () => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Closed", {});
+      },
+      /**
+       * Fired whenever a piece of content is viewed in Resource Center.
+       * @param title The title of the article
+       * @param url The URL of the article
+       * @param sourceKey The source key of the article (if available)
+       */
+      articleViewed: (title, url, sourceKey) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Viewed", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever the link to a document in Resource Center is copied.
+       * @param title The title of the article
+       * @param url The URL of the article
+       * @param sourceKey The source key of the article (if available)
+       */
+      articleLinkCopied: (title, url, sourceKey) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Link Copied", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever a link in a piece of content is clicked.
+       * @param title The title of the article
+       * @param url The URL of the article
+       * @param sourceKey The source key of the article (if available)
+       * @param destination The destination URL of the link
+       */
+      articleLinkClicked: (title, url, sourceKey, destination) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Link Clicked", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
+          ["[Guides-Surveys] Destination" /* Destination */]: destination
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever a piece of content is scrolled.
+       * @param title The title of the article
+       * @param url The URL of the article
+       * @param sourceKey The source key of the article (if available)
+       */
+      articleScrolled: (title, url, sourceKey) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Scrolled", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever a video is viewed within the Resource Center.
+       * @param title The title of the article
+       * @param url The URL of the article/video
+       * @param sourceKey The source key of the article (if available)
+       */
+      videoViewed: (title, url, sourceKey) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Viewed", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever the play button of a video is clicked.
+       * @param title The title of the article
+       * @param url The URL of the article/video
+       * @param sourceKey The source key of the article (if available)
+       */
+      videoPlayed: (title, url, sourceKey) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Played", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever the pause button of a video is clicked.
+       * @param title The title of the article
+       * @param url The URL of the article/video
+       * @param sourceKey The source key of the article (if available)
+       */
+      videoPaused: (title, url, sourceKey) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Paused", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever a video is closed or stopped within the Resource Center.
+       * @param title The title of the article
+       * @param url The URL of the article/video
+       * @param sourceKey The source key of the article (if available)
+       * @param duration The duration in milliseconds that the video was viewed
+       */
+      videoClosed: (title, url, sourceKey, duration) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Closed", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
+          ["[Guides-Surveys] Duration" /* Duration */]: duration
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever a piece of content is closed or navigated away from.
+       * @param title The title of the article
+       * @param url The URL of the article
+       * @param sourceKey The source key of the article (if available)
+       * @param duration The duration in milliseconds that the article was viewed
+       */
+      articleClosed: (title, url, sourceKey, duration) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Closed", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
+          ["[Guides-Surveys] Duration" /* Duration */]: duration
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever a search is executed in Resource Center.
+       * @param inputText The search query text
+       * @param resultsCount The number of search results
+       */
+      searchExecuted: (inputText, resultsCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Search", {
+          ["[Guides-Surveys] Input Text" /* InputText */]: inputText,
+          ["[Guides-Surveys] Results Count" /* ResultsCount */]: resultsCount ?? 0
+          // TODO: Add source property once we have a proper way to plumb it through
+        });
+      },
+      /**
+       * Fired whenever a search result is clicked in Resource Center.
+       * @param title The title of the clicked result
+       * @param excerpt The excerpt of the clicked result
+       * @param type The type of the clicked result (e.g., 'document', 'video', 'resource', 'nudge')
+       * @param id The ID of the clicked result
+       * @param sourceKey The source key of the clicked result (if available)
+       * @param position The position of the clicked result in the list
+       */
+      resultClicked: (title, excerpt, type12, id, sourceKey, position2) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Result Clicked", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] Excerpt" /* Excerpt */]: excerpt,
+          ["[Guides-Surveys] Type" /* Type */]: type12,
+          ["[Guides-Surveys] Key" /* Key */]: null,
+          // Content Item ID is not tracked
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
+          // TODO: Add source property once we have a proper way to plumb it through
+          ["[Guides-Surveys] Position" /* Position */]: position2
+        });
+      },
+      /**
+       * Fired whenever a recommendation set is shown in Resource Center.
+       * @param title The title of the recommendation set
+       * @param key The key of the recommendation set
+       * @param isDefault Whether the recommendation set is the default set
+       */
+      recommendationSetShown: (title, key, isDefault) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Recommendation Set Shown", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] Key" /* Key */]: key,
+          // TODO: Add source property once we have a proper way to plumb it through
+          ["[Guides-Surveys] Is Default" /* IsDefault */]: isDefault
+        });
+      },
+      /**
+       * Fired whenever an item in a recommendation set is clicked in Resource Center.
+       * @param title The title of the clicked recommendation
+       * @param type The type of the clicked recommendation (e.g., 'document', 'video', 'link', 'nudge')
+       * @param url The URL of the clicked recommendation (if available)
+       * @param key The key of the clicked recommendation (if available)
+       * @param sourceKey The source key of the clicked recommendation (if available)
+       * @param position The position of the clicked recommendation in the list
+       * @param recommendationSetKey The key of the recommendation set that contains the clicked recommendation
+       * @param isDefault Whether the recommendation set is the default set
+       * @param isAutopilot Whether the recommendation is an autopilot recommendation
+       */
+      recommendationClicked: (title, type12, url, key, sourceKey, position2, recommendationSetKey, isDefault, isAutopilot) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Recommendation Clicked", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] Type" /* Type */]: type12,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Key" /* Key */]: key,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
+          // TODO: Add source property once we have a proper way to plumb it through
+          ["[Guides-Surveys] Position" /* Position */]: position2,
+          ["[Guides-Surveys] Recommendation Set Key" /* RecommendationSetKey */]: recommendationSetKey,
+          ["[Guides-Surveys] Is Default" /* IsDefault */]: isDefault,
+          ["[Guides-Surveys] Is Autopilot" /* IsAutopilot */]: isAutopilot
+        });
+      },
+      /**
+       * Fired whenever an item in the additional resources section (quick links) is clicked in Resource Center.
+       * @param title The title of the clicked quick link
+       * @param type The type of the clicked quick link (e.g., 'document', 'video', 'link', 'nudge')
+       * @param url The URL of the clicked quick link (if available)
+       * @param key The key of the clicked quick link (if available)
+       * @param sourceKey The source key of the clicked quick link (if available)
+       * @param position The position of the clicked quick link in the list
+       * @param isDefault Whether the quick link is in the default set
+       */
+      quickLinkClicked: (title, type12, url, key, sourceKey, position2, isDefault) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Quick Link Clicked", {
+          ["[Guides-Surveys] Title" /* Title */]: title,
+          ["[Guides-Surveys] Type" /* Type */]: type12,
+          ["[Guides-Surveys] URL" /* URL */]: url,
+          ["[Guides-Surveys] Key" /* Key */]: key,
+          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
+          // TODO: Add source property once we have a proper way to plumb it through
+          ["[Guides-Surveys] Position" /* Position */]: position2,
+          ["[Guides-Surveys] Is Default" /* IsDefault */]: isDefault
+        });
+      }
+    },
+    nudge: {
+      /**
+       * Properties that will be included on all nudge events.
+       */
+      _getCommonProperties: (nudge, stepIndex, context) => {
+        const nudgeStep = typeof stepIndex === "undefined" ? null : getNudgeStep(nudge, stepIndex);
+        const isLastStep = stepIndex === nudge.steps.length - 1;
+        const _ = getSDK()?._;
+        return {
+          ["[Guides-Surveys] Title" /* Title */]: nudge.title,
+          ["[Guides-Surveys] Type" /* Type */]: nudge.type,
+          ["[Guides-Surveys] Key" /* Key */]: nudge.flagKey,
+          ["[Guides-Surveys] Tags" /* Tags */]: nudge.tags?.map((tag) => tag.name),
+          ["[Guides-Surveys] Variant ID" /* Variant */]: nudge.variant,
+          ["[Guides-Surveys] Step ID" /* StepId */]: nudgeStep?.id ?? 0,
+          ["[Guides-Surveys] Step Index" /* StepIndex */]: stepIndex ?? 0,
+          ["[Guides-Surveys] Step Title" /* StepTitle */]: nudgeStep?.title ?? "",
+          ["[Guides-Surveys] Is Last Step" /* IsLastStep */]: isLastStep,
+          ["[Guides-Surveys] Lifecycle UUID" /* LifecycleUuid */]: context?.interactionState?.activelifeCycleUuid,
+          ["[Guides-Surveys] Is From Debug Mode" /* IsFromDebugMode */]: !!context?.triggerEvent?.overrides?.simulateMode,
+          ["[Guides-Surveys] Is From Test Mode" /* IsFromTestMode */]: isTestNudge(_, nudge),
+          ["[Guides-Surveys] App Type" /* AppType */]: nudge.platform,
+          ["[Guides-Surveys] Localization Language" /* LocalizationLanguage */]: getAppliedNudgeLocale(nudge, _?.organization?.localization),
+          ["[Guides-Surveys] History Version" /* HistoryVersion */]: nudge.version ?? null
+        };
+      },
+      /**
+       * Fired whenever a nudge is viewed.
+       * @param nudge The nudge that was viewed.
+       * @param stepIndex The step of the nudge that was viewed.
+       * @param context nudge related state
+       */
+      viewed: (nudge, stepIndex, context) => {
+        const sourceType = isSurvey(nudge) ? "survey" : "guide";
+        const source = context?.triggerEvent?.source.type === "nudge" ? { ...context.triggerEvent.source, type: sourceType } : context?.triggerEvent?.source;
+        getClient()?.trackEvent?.(getEventNameCreator(nudge)("viewed"), {
+          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
+          ["[Guides-Surveys] Source" /* Source */]: source,
+          ["[Guides-Surveys] Evaluation ID" /* EvaluationId */]: context?.evaluationId ?? null,
+          ["[Guides-Surveys] Segment Name" /* SegmentName */]: context?.segmentName ?? null
+        });
+      },
+      /**
+       * Fired whenever nudge content is engaged.
+       * @param nudge The nudge that was viewed.
+       * @param stepIndex The step of the nudge that was viewed.
+       * @param context nudge related state including the source of the engagement.
+       */
+      engaged: (nudge, stepIndex, context) => {
+        getClient()?.trackEvent?.(getEventNameCreator(nudge)("engaged"), {
+          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
+          ["[Guides-Surveys] Engagement" /* Engagement */]: context.source
+        });
+      },
+      /**
+       * Fired whenever a nudge is viewed.
+       * @param nudge The nudge that was viewed.
+       * @param stepIndex The step of the nudge that was viewed.
+       * @param context Metadata about nudge state
+       */
+      tooltipMarkerViewed: (nudge, stepIndex, context) => {
+        getClient()?.trackEvent?.(
+          getEventNameCreator(nudge)("tooltipMarkerViewed"),
+          Track.nudge._getCommonProperties(nudge, stepIndex, context)
+        );
+      },
+      /**
+       * Fired whenever a nudge is dismissed.
+       * @param nudge The nudge that was dismissed.
+       * @param stepIndex The step of the nudge that was dismissed.
+       * @param context Metadata about nudge state
+       */
+      dismissed: (nudge, stepIndex, context) => {
+        getClient()?.trackEvent?.(
+          getEventNameCreator(nudge)("dismissed"),
+          Track.nudge._getCommonProperties(nudge, stepIndex, context)
+        );
+      },
+      /**
+       * Fired whenever a nudge is rage closed (dismissed<= 200ms).
+       * @param nudge The nudge that was dismissed.
+       * @param stepIndex The step of the nudge that was dismissed.
+       * @param context Metadata about nudge state
+       */
+      rageClosed: (nudge, stepIndex, context) => {
+        getClient()?.trackEvent?.(
+          getEventNameCreator(nudge)("rageClosed"),
+          Track.nudge._getCommonProperties(nudge, stepIndex, context)
+        );
+      },
+      /**
+       * Fired whenever a nudge is completed.
+       * @param nudge The nudge that was completed.
+       * @param stepIndex The step of the nudge that was completed.
+       * @param context Metadata about nudge state
+       */
+      completed: (nudge, stepIndex, context) => {
+        getClient()?.trackEvent?.(
+          getEventNameCreator(nudge)("completed"),
+          Track.nudge._getCommonProperties(nudge, stepIndex, context)
+        );
+      },
+      /**
+       * Fired whenever a nudge step is completed.
+       * @param nudge The nudge that was completed.
+       * @param stepIndex The step of the nudge that was completed.
+       * @param context Metadata about nudge state and whether the event was triggered via CTA
+       */
+      stepCompleted: (nudge, stepIndex, context) => {
+        getClient()?.trackEvent?.(getEventNameCreator(nudge)("stepCompleted"), {
+          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
+          ["[Guides-Surveys] Was Completed Via CTA" /* WasCompletedViaCta */]: context?.completedViaCta
+        });
+      },
+      /**
+       * Fired whenever a nudge is snoozed.
+       * @param nudge The nudge that was snoozed.
+       * @param stepIndex The step of the nudge that was snoozed.
+       * @param context Metadata about nudge state and The number of ms that the nudge will be snoozed for.
+       */
+      snoozed: (nudge, stepIndex, context) => {
+        const start = (0, import_dayjs.default)();
+        const end = start.add(context.duration.value ?? 0, context.duration.interval);
+        getClient()?.trackEvent?.(getEventNameCreator(nudge)("snoozed"), {
+          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
+          ["[Guides-Surveys] Snooze Duration" /* SnoozeDuration */]: end.diff(start)
+        });
+      },
+      /**
+       * Common function to track survey events with response data
+       * @param eventName The name of the event to track
+       * @param nudge The nudge that the response was submitted for
+       * @param stepIndex The step of the nudge that the response was submitted for
+       * @param context Metadata about nudge state and the response to the survey
+       */
+      _trackSurveyEvent: (eventName, nudge, stepIndex, context) => {
+        const { response } = context;
+        const value = response?.value;
+        getClient()?.trackEvent?.(getEventNameCreator(nudge)(eventName), {
+          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
+          ["[Guides-Surveys] Question UUID" /* QuestionUuid */]: response.blockId,
+          ["[Guides-Surveys] Survey Response" /* SurveyResponse */]: value,
+          ["[Guides-Surveys] Survey Response String" /* SurveyResponseString */]: getEmojiOrStringValue(response) ?? null,
+          ["[Guides-Surveys] Survey Response Number" /* SurveyResponseNumber */]: response.type === "number" ? value : null,
+          ["[Guides-Surveys] Survey Response Array" /* SurveyResponseArray */]: Array.isArray(value) ? response.type === "string" ? response.stringResponse : value : null,
+          ["[Guides-Surveys] Survey Response Other" /* SurveyResponseOther */]: "otherText" in response ? response.otherText : null
+        });
+      },
+      /**
+       * Fired whenever a survey is submitted.
+       * @param nudge The nudge that the survey was submitted for.
+       * @param stepIndex The step of the nudge that the survey was submitted for.
+       * @param context Metadata about nudge state and the response to the survey.
+       */
+      surveySubmitted: (nudge, stepIndex, context) => {
+        Track.nudge._trackSurveyEvent("surveySubmitted", nudge, stepIndex, context);
+      },
+      /**
+       * Fired whenever a survey is abandoned.
+       * @param nudge The nudge that the survey was submitted for.
+       * @param stepIndex The step of the nudge that the survey was submitted for.
+       * @param context Metadata about nudge state and the response to the survey.
+       */
+      surveyAbandoned: (nudge, stepIndex, context) => {
+        Track.nudge._trackSurveyEvent("surveyAbandoned", nudge, stepIndex, context);
+      },
+      stepSkipped: (nudge, stepIndex, context) => {
+        getClient()?.trackEvent?.(getEventNameCreator(nudge)("stepSkipped"), {
+          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
+          ["[Guides-Surveys] Skip Reason" /* SkipReason */]: context.reason
+        });
+      },
+      /**
+       * Fires the unified [Guides-Surveys] Error event with session-scoped dedup.
+       * Deduped once per guide per error type per Amplitude session.
+       * Returns true if the event was fired (not deduped).
+       */
+      error: (nudge, stepIndex, errorType, options) => {
+        const sdk = getSDK();
+        const interactionState = sdk?._ ? getNudgeDataFromUserStore(sdk._, nudge.variantId) : void 0;
+        const commonProperties = Track.nudge._getCommonProperties(nudge, stepIndex, {
+          ...options?.context,
+          interactionState
+        });
+        return fireErrorEvent(
+          commonProperties,
+          errorType,
+          { flagKey: nudge.flagKey, variant: nudge.variant },
+          options?.actionIndex
+        );
+      },
+      /**
+       * Fires the unified error event from a pre-computed common properties snapshot.
+       * Used when the nudge object is unavailable (e.g. restored sequences after navigation).
+       */
+      errorFromProperties: (commonProperties, errorType, actionIndex) => {
+        return fireErrorEvent(
+          commonProperties,
+          errorType,
+          {
+            flagKey: commonProperties["[Guides-Surveys] Key" /* Key */],
+            variant: commonProperties["[Guides-Surveys] Variant ID" /* Variant */]
+          },
+          actionIndex
+        );
+      },
+      internal: {
+        /**
+         * Fired whenever the target element cannot be found within the search timeout.
+         * Kept for backward compatibility. Also fires the unified error event.
+         * Both events share the same dedup — the legacy event only fires when the unified one does.
+         */
+        pinTargetNotFoundError: (nudge, stepIndex, context) => {
+          const fired = Track.nudge.error(nudge, stepIndex, "pin_target_not_found", { context });
+          if (!fired) return;
+          getClient()?.trackEvent?.(getEventNameCreator(nudge)("pinTargetNotFound"), {
+            ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
+            internal: true
+          });
+        }
+      }
+    },
+    experiment: {
+      /**
+       * Fired whenever a nudge is viewed that is part of an experiment.
+       * @param nudge The nudge that was viewed.
+       */
+      exposure: (flagKey, experimentKey, variant) => {
+        const eventProperties = {
+          flag_key: flagKey,
+          experiment_key: experimentKey,
+          variant
+        };
+        getClient()?.trackEvent?.("$exposure", eventProperties);
+      }
+    },
+    chat: {
+      /**
+       * Fired when the Assistant widget panel is opened.
+       */
+      opened: () => {
+        getClient()?.trackEvent?.("[Assistant] Opened", {});
+      },
+      /**
+       * Fired when the Assistant widget panel is closed.
+       */
+      closed: () => {
+        getClient()?.trackEvent?.("[Assistant] Closed", {});
+      },
+      /**
+       * Fired when the Assistant widget is minimized.
+       */
+      minimized: () => {
+        getClient()?.trackEvent?.("[Assistant] Minimized", {});
+      },
+      /**
+       * Fired when the Assistant widget is restored from minimized state.
+       */
+      maximized: () => {
+        getClient()?.trackEvent?.("[Assistant] Maximized", {});
+      },
+      /**
+       * Fired when the user navigates to the Resource Center tab.
+       */
+      resourceCenterViewed: () => {
+        getClient()?.trackEvent?.("[Assistant] Resource Center Viewed", {});
+      },
+      /**
+       * Fired when the user navigates to the Chat tab.
+       */
+      chatViewed: () => {
+        getClient()?.trackEvent?.("[Assistant] Chat Viewed", {});
+      },
+      /**
+       * Fired when a previous chat session is restored (auto-restore from localStorage or manual from history).
+       * @param sessionId The ID of the restored chat session
+       * @param previousMessageCount The number of messages in the restored session
+       */
+      sessionRestored: (sessionId, previousMessageCount) => {
+        getClient()?.trackEvent?.("[Assistant] Chat Session Restored", {
+          ["[Assistant] Session ID" /* AssistantSessionId */]: sessionId,
+          ["[Assistant] Message Count" /* AssistantMessageCount */]: previousMessageCount
+        });
+      },
+      /**
+       * Fired when the chat input textarea receives focus.
+       * @param sessionId The ID of the current chat session
+       */
+      inputFocused: (sessionId) => {
+        getClient()?.trackEvent?.("[Assistant] Chat Input Focused", {
+          ["[Assistant] Session ID" /* AssistantSessionId */]: sessionId
+        });
+      },
+      /**
+       * Fired when the user explicitly stops an in-progress streaming response.
+       * @param sessionId The ID of the current chat session
+       */
+      messageStopped: (sessionId) => {
+        getClient()?.trackEvent?.("[Assistant] Chat Message Stopped", {
+          ["[Assistant] Session ID" /* AssistantSessionId */]: sessionId
+        });
+      },
+      /**
+       * Fired when a non-fallback assistant response finishes streaming successfully.
+       * @param sessionId The ID of the current chat session
+       * @param messageId The ID of the generated response message
+       * @param messageLength The length of the response message content
+       * @param messageCount The total number of messages in the session
+       */
+      responseReceivedGenerated: (sessionId, messageId, messageLength, messageCount) => {
+        getClient()?.trackEvent?.("[Assistant] Chat Response Received/Generated", {
+          ["[Assistant] Session ID" /* AssistantSessionId */]: sessionId,
+          ["[Assistant] Message ID" /* AssistantMessageId */]: messageId,
+          ["[Assistant] Message Length" /* AssistantMessageLength */]: messageLength,
+          ["[Assistant] Message Count" /* AssistantMessageCount */]: messageCount
+        });
+      },
+      /**
+       * Fired when the user removes a pending attachment from the message input (client-side only).
+       * @param sessionId The ID of the current chat session
+       */
+      attachmentRemoved: (sessionId) => {
+        getClient()?.trackEvent?.("[Assistant] Attachment Removed", {
+          ["[Assistant] Session ID" /* AssistantSessionId */]: sessionId
+        });
+      },
+      /**
+       * Fired (debounced) when the user types in the chat input.
+       * @param sessionId The current chat session ID
+       */
+      chatInput: (sessionId) => {
+        getClient()?.trackEvent?.("[Assistant] Chat Input", {
+          ["[Assistant] Session ID" /* AssistantSessionId */]: sessionId
+        });
+      },
+      /**
+       * Fired when the user clicks the send button to submit a message.
+       * @param sessionId The current chat session ID
+       */
+      buttonClicked: (sessionId) => {
+        getClient()?.trackEvent?.("[Assistant] Button Clicked", {
+          ["[Assistant] Session ID" /* AssistantSessionId */]: sessionId
+        });
+      },
+      // --- Old events (kept alongside new taxonomy) ---
+      /**
+       * Fired whenever a chat session is started/initialized.
+       * @param sessionId The ID of the chat session
+       * @param title The title of the chat session
+       */
+      sessionStarted: (sessionId, title) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Session Started", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Chat Session Title" /* ChatSessionTitle */]: title || null
+        });
+      },
+      /**
+       * Fired whenever a chat session is restarted.
+       * @param sessionId The ID of the chat session
+       * @param previousMessageCount The number of messages in the previous session
+       */
+      sessionRestarted: (sessionId, previousMessageCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Session Restarted", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: previousMessageCount
+        });
+      },
+      /**
+       * Fired whenever a user sends a message in chat.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message
+       * @param messageLength The length of the message
+       * @param messageCount The total number of messages in the session
+       */
+      messageSent: (sessionId, messageId, messageLength, messageCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Message Sent", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Message Length" /* MessageLength */]: messageLength,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
+        });
+      },
+      /**
+       * Fired whenever the assistant responds with a message.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message
+       * @param messageLength The length of the response
+       * @param responseTime The time it took to generate the response (in ms)
+       * @param messageCount The total number of messages in the session
+       * @param hasToolCalls Whether the response includes tool calls
+       * @param resolution The resolution of the response (fallback, escalation, or response)
+       */
+      messageReceived: (sessionId, messageId, messageLength, responseTime, messageCount, hasToolCalls, resolution) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Message Received", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Message Length" /* MessageLength */]: messageLength,
+          ["[Guides-Surveys] Response Time" /* ResponseTime */]: responseTime,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount,
+          ["[Guides-Surveys] Message Resolution" /* MessageResolution */]: resolution,
+          "Has Tool Calls": hasToolCalls
+        });
+      },
+      /**
+       * Fired whenever feedback is submitted for a chat message.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message receiving feedback
+       * @param feedbackType The type of feedback (positive, negative, or cleared)
+       * @param messageCount The total number of messages in the session
+       * @param reason The reason for negative feedback (if applicable)
+       */
+      feedbackSubmitted: (sessionId, messageId, feedbackType, messageCount, reason) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Feedback Submitted", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount,
+          ["[Guides-Surveys] Feedback Type" /* FeedbackType */]: feedbackType,
+          ...reason ? { ["[Guides-Surveys] Feedback Reason" /* FeedbackReason */]: reason } : {}
+        });
+      },
+      /**
+       * Fired whenever a tool call is executed in chat.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message containing the tool call
+       * @param toolCallId The ID of the tool call
+       * @param toolCallName The name of the tool being called
+       * @param messageCount The total number of messages in the session
+       */
+      toolCallExecuted: (sessionId, messageId, toolCallId, toolCallName, messageCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Tool Call Executed", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Tool Call ID" /* ToolCallId */]: toolCallId,
+          ["[Guides-Surveys] Tool Call Name" /* ToolCallName */]: toolCallName,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
+        });
+      },
+      /**
+       * Fired whenever a tool call result is displayed in chat.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message containing the tool result
+       * @param toolCallId The ID of the tool call
+       * @param toolCallName The name of the tool that was called
+       * @param status Whether the tool call succeeded or failed
+       * @param messageCount The total number of messages in the session
+       */
+      toolResultDisplayed: (sessionId, messageId, toolCallId, toolCallName, status, messageCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Tool Result Displayed", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Tool Call ID" /* ToolCallId */]: toolCallId,
+          ["[Guides-Surveys] Tool Call Name" /* ToolCallName */]: toolCallName,
+          ["[Guides-Surveys] Tool Result Status" /* ToolResultStatus */]: status,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
+        });
+      },
+      /**
+       * Fired whenever a citation is clicked in chat.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message containing the citation
+       * @param citationId The ID of the citation that was clicked
+       * @param messageCount The total number of messages in the session
+       */
+      citationClicked: (sessionId, messageId, citationId, messageCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Citation Clicked", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Citation ID" /* CitationId */]: citationId,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
+        });
+      },
+      /**
+       * Fired whenever a launch nudge button is clicked in chat.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message containing the launch button
+       * @param toolCallName The name of the tool that provided the nudge
+       * @param messageCount The total number of messages in the session
+       */
+      launchNudgeClicked: (sessionId, messageId, toolCallName, messageCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Launch Nudge Clicked", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Tool Call Name" /* ToolCallName */]: toolCallName,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
+        });
+      },
+      /**
+       * Fired whenever a fallback tool is triggered in chat.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message containing the fallback tool call
+       * @param toolCallName The name of the fallback tool that was called
+       * @param messageCount The total number of messages in the session
+       */
+      fallbackTriggered: (sessionId, messageId, toolCallName, messageCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Fallback Triggered", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Tool Call Name" /* ToolCallName */]: toolCallName,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
+        });
+      },
+      /**
+       * Fired whenever an escalation tool is triggered in chat.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the message containing the escalation tool call
+       * @param toolCallName The name of the escalation tool that was called
+       * @param messageCount The total number of messages in the session
+       */
+      escalationTriggered: (sessionId, messageId, toolCallName, messageCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Escalation Triggered", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Tool Call Name" /* ToolCallName */]: toolCallName,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
+        });
+      },
+      /**
+       * Fired whenever a response message is successfully generated without fallback tools.
+       * @param sessionId The ID of the chat session
+       * @param messageId The ID of the generated response message
+       * @param messageLength The length of the response message
+       * @param messageCount The total number of messages in the session
+       */
+      responseGenerated: (sessionId, messageId, messageLength, messageCount) => {
+        getClient()?.trackEvent?.("[Guides-Surveys] Chat Response Generated", {
+          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
+          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
+          ["[Guides-Surveys] Message Length" /* MessageLength */]: messageLength,
+          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
+        });
+      }
+    }
+  };
 
   // ../shared/src/util/Interpolate.ts
   var import_get2 = __toESM(require_get());
@@ -18305,21 +19244,26 @@ ${err.message}`);
     }
     return returnValue;
   };
-  var interpolateUserPropertiesDeep = (obj, store, throwErrorIfUndefined) => {
+  var interpolateUserPropertiesDeep = (obj, store, options) => {
+    const { throwErrorIfUndefined, skip } = typeof options === "boolean" ? { throwErrorIfUndefined: options, skip: void 0 } : options ?? {};
     if (typeof obj === "string") {
       return interpolateUserProperties(obj, store, throwErrorIfUndefined);
     }
     if (Array.isArray(obj)) {
       const result = [];
       for (const item of obj) {
-        result.push(interpolateUserPropertiesDeep(item, store, throwErrorIfUndefined));
+        result.push(interpolateUserPropertiesDeep(item, store, { throwErrorIfUndefined, skip }));
       }
       return result;
     }
     if (obj && typeof obj === "object") {
       const result = {};
       for (const key of Reflect.ownKeys(obj)) {
-        result[key] = interpolateUserPropertiesDeep(obj[key], store, throwErrorIfUndefined);
+        if (skip?.(key, obj[key], obj)) {
+          result[key] = obj[key];
+        } else {
+          result[key] = interpolateUserPropertiesDeep(obj[key], store, { throwErrorIfUndefined, skip });
+        }
       }
       return result;
     }
@@ -18358,16 +19302,17 @@ ${err.message}`);
         break;
       case "nudge": {
         const nudge = getNudgeById(_, action.value);
-        if (nudge) {
-          const x = e2?.clientX;
-          const y2 = e2?.clientY;
-          const startingPosition = x && y2 ? [x, y2] : void 0;
-          activatePushExperience(_, nudge, {
-            type: "nudge",
-            id: executionEventSource,
-            position: startingPosition
-          });
+        if (!nudge) {
+          break;
         }
+        const x = e2?.clientX;
+        const y2 = e2?.clientY;
+        const startingPosition = x && y2 ? [x, y2] : void 0;
+        activatePushExperience(_, nudge, {
+          type: "nudge",
+          id: executionEventSource,
+          position: startingPosition
+        });
         break;
       }
       case "callback": {
@@ -18402,21 +19347,70 @@ ${err.message}`);
       }
     }
   };
+  var dispatchEffects = (_, effects, source) => {
+    _.effectsSequencer?.send({ type: "RUN", effects, source });
+  };
+  var applyForceNewTab = (effects) => effects.map(
+    (effect) => effect.type === "link" && effect.operation === "self" ? { ...effect, operation: "blank" } : effect
+  );
+  var execResolvedAction = (_, action, executeNavigation, forceOpenLinkInNewTab, source) => {
+    if (!action) {
+      return;
+    }
+    if (isActionSequence(action)) {
+      const shouldDispatch = executeNavigation(action.navigation);
+      if (shouldDispatch !== false && source) {
+        const effects = forceOpenLinkInNewTab ? applyForceNewTab(action.effects) : action.effects;
+        dispatchEffects(_, effects, source);
+      }
+      return;
+    }
+    executeNavigation(action);
+  };
 
   // ../shared/src/products/nudges/store/effectsSequencer.ts
+  var buildEffectsSource = (nudge, stepIndex, interactionState, context) => ({
+    variantId: nudge.variantId,
+    stepIndex,
+    commonProperties: Track.nudge._getCommonProperties(nudge, stepIndex, { ...context, interactionState })
+  });
   var EFFECTS_SEQUENCER_ID = "EffectsSequencer";
   var RETRY_INTERVAL = 250;
   var RETRY_TIMEOUT = 5e3;
   var SEQUENCE_EXPIRATION_TIME = 6e4;
   var SEQUENCE_STORAGE_KEY = "effects_sequencer_sequence";
-  var PersistedActionSequenceV = t11.type({
-    effects: t11.array(EffectfulActionV),
-    source: t11.type({
-      variantId: t11.number
-    }),
-    expiresAt: t11.number,
-    sessionKey: t11.string
+  var PersistedActionSequenceV = t12.type({
+    effects: t12.array(EffectfulActionV),
+    source: t12.intersection([
+      t12.type({ variantId: t12.number }),
+      t12.partial({
+        stepIndex: t12.number,
+        commonProperties: t12.record(t12.string, t12.unknown),
+        actionIndexOffset: t12.number
+      })
+    ]),
+    expiresAt: t12.number,
+    sessionKey: t12.string
   });
+  var mapEffectTypeToErrorCategory = (effect, store) => {
+    switch (effect?.type) {
+      case "click":
+        return "click_action_failed";
+      case "callback":
+        return "callback_action_failed";
+      case "link":
+        return "link_action_failed";
+      case "open_chat":
+        return "open_chat_failed";
+      case "nudge": {
+        const targetNudge = getNudgeById(store, effect.value);
+        if (!targetNudge) return "action_failed";
+        return isSurvey(targetNudge) ? "show_survey_failed" : "show_guide_failed";
+      }
+      default:
+        return "action_failed";
+    }
+  };
   var clearSavedSequence = () => {
     SessionStorage_default.remove(SEQUENCE_STORAGE_KEY);
   };
@@ -18440,9 +19434,10 @@ ${err.message}`);
       }
       const sessionKey = String(getEffectiveSessionStart(globalStore));
       const remainingEffects = context.effects.slice(context.currentEffectIndex + 1);
+      const currentOffset = context.source.actionIndexOffset ?? 0;
       const sequence = PersistedActionSequenceV.encode({
         effects: remainingEffects,
-        source: context.source,
+        source: { ...context.source, actionIndexOffset: currentOffset + context.currentEffectIndex + 1 },
         expiresAt: Date.now() + SEQUENCE_EXPIRATION_TIME,
         sessionKey
       });
@@ -18498,7 +19493,21 @@ ${err.message}`);
           effects: [],
           currentEffectIndex: 0,
           source: null
-        })
+        }),
+        trackActionError: ({ context }) => {
+          const variantId = context.source?.variantId;
+          if (variantId == null) return;
+          const effect = context.effects.at(context.currentEffectIndex);
+          const errorType = mapEffectTypeToErrorCategory(effect, globalStore);
+          const stepIndex = context.source?.stepIndex;
+          const originalActionIndex = (context.source?.actionIndexOffset ?? 0) + context.currentEffectIndex;
+          const sourceNudge = getNudgeById(globalStore, variantId);
+          if (sourceNudge) {
+            Track.nudge.error(sourceNudge, stepIndex, errorType, { actionIndex: originalActionIndex });
+          } else if (context.source?.commonProperties) {
+            Track.nudge.errorFromProperties(context.source.commonProperties, errorType, originalActionIndex);
+          }
+        }
       },
       actors: {
         executeEffect: fromPromise(async ({ input }) => {
@@ -18570,7 +19579,8 @@ ${err.message}`);
               after: {
                 RETRY_TIMEOUT: {
                   description: "Safety net: if retries exceed the timeout, skip this effect and advance.",
-                  target: "Advancing"
+                  target: "Advancing",
+                  actions: ["trackActionError"]
                 }
               },
               states: {
@@ -18591,7 +19601,8 @@ ${err.message}`);
                         guard: "isRetryable"
                       },
                       {
-                        target: "#Advancing"
+                        target: "#Advancing",
+                        actions: ["trackActionError"]
                       }
                     ]
                   }
@@ -18634,7 +19645,7 @@ ${err.message}`);
                 onDone: "AwaitingNavigation",
                 onError: {
                   target: "#Advancing",
-                  actions: ["clearSavedSequence"]
+                  actions: ["trackActionError", "clearSavedSequence"]
                 }
               }
             },
@@ -18837,673 +19848,6 @@ ${err.message}`);
     }
   };
 
-  // ../shared/src/services/analytics/track.ts
-  var import_dayjs = __toESM(require_dayjs_min());
-
-  // ../shared/src/services/analytics/types.ts
-  var guideSpecificEvents = {
-    tooltipMarkerViewed: "[Guides-Surveys] Guide Tooltip Icon Viewed"
-  };
-  var surveySpecificEvents = {
-    surveySubmitted: "[Guides-Surveys] Survey Submitted",
-    surveyAbandoned: "[Guides-Surveys] Survey Abandoned"
-  };
-  var getEventNameCreator = (nudge) => (type11) => {
-    const productName = isSurvey(nudge) ? "Survey" : "Guide";
-    const events = {
-      viewed: `[Guides-Surveys] ${productName} Viewed`,
-      dismissed: `[Guides-Surveys] ${productName} Dismissed`,
-      completed: `[Guides-Surveys] ${productName} Completed`,
-      rageClosed: `[Guides-Surveys] ${productName} Rage Closed`,
-      stepCompleted: `[Guides-Surveys] ${productName} Step Completed`,
-      snoozed: `[Guides-Surveys] ${productName} Snoozed`,
-      engaged: `[Guides-Surveys] ${productName} Engaged`,
-      pinTargetNotFound: "[Guides-Surveys] Error: Pin Target Not Found",
-      ...guideSpecificEvents,
-      ...surveySpecificEvents
-    };
-    return events[type11];
-  };
-
-  // ../shared/src/services/analytics/track.ts
-  var getClient = () => {
-    const sdk = getSDK();
-    return sdk?.[_analytics];
-  };
-  var getEmojiOrStringValue = (response) => {
-    if (response?.type === "number") {
-      return response.stringResponse;
-    } else if (response?.type === "string") {
-      return Array.isArray(response.stringResponse) ? response.stringResponse.join(", ") : response.stringResponse;
-    }
-    return null;
-  };
-  var Track = {
-    resourceCenter: {
-      /**
-       * Fired whenever Resource Center is opened.
-       * TODO: Add source property once we have a proper way to plumb it through
-       */
-      opened: () => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Opened", {});
-      },
-      /**
-       * Fired whenever Resource Center is closed.
-       */
-      closed: () => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Closed", {});
-      },
-      /**
-       * Fired whenever a piece of content is viewed in Resource Center.
-       * @param title The title of the article
-       * @param url The URL of the article
-       * @param sourceKey The source key of the article (if available)
-       */
-      articleViewed: (title, url, sourceKey) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Viewed", {
-          ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] URL" /* URL */]: url,
-          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
-          // TODO: Add source property once we have a proper way to plumb it through
-        });
-      },
-      /**
-       * Fired whenever the link to a document in Resource Center is copied.
-       * @param title The title of the article
-       * @param url The URL of the article
-       * @param sourceKey The source key of the article (if available)
-       */
-      articleLinkCopied: (title, url, sourceKey) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Link Copied", {
-          ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] URL" /* URL */]: url,
-          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
-          // TODO: Add source property once we have a proper way to plumb it through
-        });
-      },
-      /**
-       * Fired whenever a link in a piece of content is clicked.
-       * @param title The title of the article
-       * @param url The URL of the article
-       * @param sourceKey The source key of the article (if available)
-       * @param destination The destination URL of the link
-       */
-      articleLinkClicked: (title, url, sourceKey, destination) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Link Clicked", {
-          ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] URL" /* URL */]: url,
-          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
-          ["[Guides-Surveys] Destination" /* Destination */]: destination
-          // TODO: Add source property once we have a proper way to plumb it through
-        });
-      },
-      /**
-       * Fired whenever a piece of content is scrolled.
-       * @param title The title of the article
-       * @param url The URL of the article
-       * @param sourceKey The source key of the article (if available)
-       */
-      articleScrolled: (title, url, sourceKey) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Scrolled", {
-          ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] URL" /* URL */]: url,
-          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
-          // TODO: Add source property once we have a proper way to plumb it through
-        });
-      },
-      /**
-       * Fired whenever a video is viewed within the Resource Center.
-       * @param title The title of the article
-       * @param url The URL of the article/video
-       * @param sourceKey The source key of the article (if available)
-       */
-      videoViewed: (title, url, sourceKey) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Viewed", {
-          ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] URL" /* URL */]: url,
-          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
-          // TODO: Add source property once we have a proper way to plumb it through
-        });
-      },
-      /**
-       * Fired whenever the play button of a video is clicked.
-       * @param title The title of the article
-       * @param url The URL of the article/video
-       * @param sourceKey The source key of the article (if available)
-       */
-      videoPlayed: (title, url, sourceKey) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Played", {
-          ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] URL" /* URL */]: url,
-          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
-          // TODO: Add source property once we have a proper way to plumb it through
-        });
-      },
-      /**
-       * Fired whenever the pause button of a video is clicked.
-       * @param title The title of the article
-       * @param url The URL of the article/video
-       * @param sourceKey The source key of the article (if available)
-       */
-      videoPaused: (title, url, sourceKey) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Paused", {
-          ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] URL" /* URL */]: url,
-          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
-          // TODO: Add source property once we have a proper way to plumb it through
-        });
-      },
-      /**
-       * Fired whenever a video is closed or stopped within the Resource Center.
-       * @param title The title of the article
-       * @param url The URL of the article/video
-       * @param sourceKey The source key of the article (if available)
-       * @param duration The duration in milliseconds that the video was viewed
-       */
-      videoClosed: (title, url, sourceKey, duration) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Closed", {
-          ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] URL" /* URL */]: url,
-          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
-          ["[Guides-Surveys] Duration" /* Duration */]: duration
-          // TODO: Add source property once we have a proper way to plumb it through
-        });
-      },
-      /**
-       * Fired whenever a piece of content is closed or navigated away from.
-       * @param title The title of the article
-       * @param url The URL of the article
-       * @param sourceKey The source key of the article (if available)
-       * @param duration The duration in milliseconds that the article was viewed
-       */
-      articleClosed: (title, url, sourceKey, duration) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Closed", {
-          ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] URL" /* URL */]: url,
-          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
-          ["[Guides-Surveys] Duration" /* Duration */]: duration
-          // TODO: Add source property once we have a proper way to plumb it through
-        });
-      },
-      /**
-       * Fired whenever a search is executed in Resource Center.
-       * @param inputText The search query text
-       * @param resultsCount The number of search results
-       */
-      searchExecuted: (inputText, resultsCount) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Search", {
-          ["[Guides-Surveys] Input Text" /* InputText */]: inputText,
-          ["[Guides-Surveys] Results Count" /* ResultsCount */]: resultsCount ?? 0
-          // TODO: Add source property once we have a proper way to plumb it through
-        });
-      },
-      /**
-       * Fired whenever a search result is clicked in Resource Center.
-       * @param title The title of the clicked result
-       * @param excerpt The excerpt of the clicked result
-       * @param type The type of the clicked result (e.g., 'document', 'video', 'resource', 'nudge')
-       * @param id The ID of the clicked result
-       * @param sourceKey The source key of the clicked result (if available)
-       * @param position The position of the clicked result in the list
-       */
-      resultClicked: (title, excerpt, type11, id, sourceKey, position2) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Result Clicked", {
-          ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] Excerpt" /* Excerpt */]: excerpt,
-          ["[Guides-Surveys] Type" /* Type */]: type11,
-          ["[Guides-Surveys] Key" /* Key */]: null,
-          // Content Item ID is not tracked
-          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
-          // TODO: Add source property once we have a proper way to plumb it through
-          ["[Guides-Surveys] Position" /* Position */]: position2
-        });
-      },
-      /**
-       * Fired whenever a recommendation set is shown in Resource Center.
-       * @param title The title of the recommendation set
-       * @param key The key of the recommendation set
-       * @param isDefault Whether the recommendation set is the default set
-       */
-      recommendationSetShown: (title, key, isDefault) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Recommendation Set Shown", {
-          ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] Key" /* Key */]: key,
-          // TODO: Add source property once we have a proper way to plumb it through
-          ["[Guides-Surveys] Is Default" /* IsDefault */]: isDefault
-        });
-      },
-      /**
-       * Fired whenever an item in a recommendation set is clicked in Resource Center.
-       * @param title The title of the clicked recommendation
-       * @param type The type of the clicked recommendation (e.g., 'document', 'video', 'link', 'nudge')
-       * @param url The URL of the clicked recommendation (if available)
-       * @param key The key of the clicked recommendation (if available)
-       * @param sourceKey The source key of the clicked recommendation (if available)
-       * @param position The position of the clicked recommendation in the list
-       * @param recommendationSetKey The key of the recommendation set that contains the clicked recommendation
-       * @param isDefault Whether the recommendation set is the default set
-       * @param isAutopilot Whether the recommendation is an autopilot recommendation
-       */
-      recommendationClicked: (title, type11, url, key, sourceKey, position2, recommendationSetKey, isDefault, isAutopilot) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Recommendation Clicked", {
-          ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] Type" /* Type */]: type11,
-          ["[Guides-Surveys] URL" /* URL */]: url,
-          ["[Guides-Surveys] Key" /* Key */]: key,
-          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
-          // TODO: Add source property once we have a proper way to plumb it through
-          ["[Guides-Surveys] Position" /* Position */]: position2,
-          ["[Guides-Surveys] Recommendation Set Key" /* RecommendationSetKey */]: recommendationSetKey,
-          ["[Guides-Surveys] Is Default" /* IsDefault */]: isDefault,
-          ["[Guides-Surveys] Is Autopilot" /* IsAutopilot */]: isAutopilot
-        });
-      },
-      /**
-       * Fired whenever an item in the additional resources section (quick links) is clicked in Resource Center.
-       * @param title The title of the clicked quick link
-       * @param type The type of the clicked quick link (e.g., 'document', 'video', 'link', 'nudge')
-       * @param url The URL of the clicked quick link (if available)
-       * @param key The key of the clicked quick link (if available)
-       * @param sourceKey The source key of the clicked quick link (if available)
-       * @param position The position of the clicked quick link in the list
-       * @param isDefault Whether the quick link is in the default set
-       */
-      quickLinkClicked: (title, type11, url, key, sourceKey, position2, isDefault) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Quick Link Clicked", {
-          ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] Type" /* Type */]: type11,
-          ["[Guides-Surveys] URL" /* URL */]: url,
-          ["[Guides-Surveys] Key" /* Key */]: key,
-          ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
-          // TODO: Add source property once we have a proper way to plumb it through
-          ["[Guides-Surveys] Position" /* Position */]: position2,
-          ["[Guides-Surveys] Is Default" /* IsDefault */]: isDefault
-        });
-      }
-    },
-    nudge: {
-      /**
-       * Properties that will be included on all nudge events.
-       */
-      _getCommonProperties: (nudge, stepIndex, context) => {
-        const nudgeStep = typeof stepIndex === "undefined" ? null : getNudgeStep(nudge, stepIndex);
-        const isLastStep = stepIndex === nudge.steps.length - 1;
-        const _ = getSDK()?._;
-        return {
-          ["[Guides-Surveys] Title" /* Title */]: nudge.title,
-          ["[Guides-Surveys] Type" /* Type */]: nudge.type,
-          ["[Guides-Surveys] Key" /* Key */]: nudge.flagKey,
-          ["[Guides-Surveys] Tags" /* Tags */]: nudge.tags?.map((tag) => tag.name),
-          ["[Guides-Surveys] Variant ID" /* Variant */]: nudge.variant,
-          ["[Guides-Surveys] Step ID" /* StepId */]: nudgeStep?.id ?? 0,
-          ["[Guides-Surveys] Step Index" /* StepIndex */]: stepIndex ?? 0,
-          ["[Guides-Surveys] Step Title" /* StepTitle */]: nudgeStep?.title ?? "",
-          ["[Guides-Surveys] Is Last Step" /* IsLastStep */]: isLastStep,
-          ["[Guides-Surveys] Lifecycle UUID" /* LifecycleUuid */]: context?.interactionState?.activelifeCycleUuid,
-          ["[Guides-Surveys] Is From Debug Mode" /* IsFromDebugMode */]: !!context?.triggerEvent?.overrides?.simulateMode,
-          ["[Guides-Surveys] Is From Test Mode" /* IsFromTestMode */]: isTestNudge(_, nudge),
-          ["[Guides-Surveys] App Type" /* AppType */]: nudge.platform,
-          ["[Guides-Surveys] Localization Language" /* LocalizationLanguage */]: getAppliedNudgeLocale(nudge, _?.organization?.localization),
-          ["[Guides-Surveys] History Version" /* HistoryVersion */]: nudge.version ?? null
-        };
-      },
-      /**
-       * Fired whenever a nudge is viewed.
-       * @param nudge The nudge that was viewed.
-       * @param stepIndex The step of the nudge that was viewed.
-       * @param context nudge related state
-       */
-      viewed: (nudge, stepIndex, context) => {
-        const sourceType = isSurvey(nudge) ? "survey" : "guide";
-        const source = context?.triggerEvent?.source.type === "nudge" ? { ...context.triggerEvent.source, type: sourceType } : context?.triggerEvent?.source;
-        getClient()?.trackEvent?.(getEventNameCreator(nudge)("viewed"), {
-          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
-          ["[Guides-Surveys] Source" /* Source */]: source,
-          ["[Guides-Surveys] Evaluation ID" /* EvaluationId */]: context?.evaluationId ?? null
-        });
-      },
-      /**
-       * Fired whenever nudge content is engaged.
-       * @param nudge The nudge that was viewed.
-       * @param stepIndex The step of the nudge that was viewed.
-       * @param context nudge related state including the source of the engagement.
-       */
-      engaged: (nudge, stepIndex, context) => {
-        getClient()?.trackEvent?.(getEventNameCreator(nudge)("engaged"), {
-          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
-          ["[Guides-Surveys] Engagement" /* Engagement */]: context.source
-        });
-      },
-      /**
-       * Fired whenever a nudge is viewed.
-       * @param nudge The nudge that was viewed.
-       * @param stepIndex The step of the nudge that was viewed.
-       * @param context Metadata about nudge state
-       */
-      tooltipMarkerViewed: (nudge, stepIndex, context) => {
-        getClient()?.trackEvent?.(
-          getEventNameCreator(nudge)("tooltipMarkerViewed"),
-          Track.nudge._getCommonProperties(nudge, stepIndex, context)
-        );
-      },
-      /**
-       * Fired whenever a nudge is dismissed.
-       * @param nudge The nudge that was dismissed.
-       * @param stepIndex The step of the nudge that was dismissed.
-       * @param context Metadata about nudge state
-       */
-      dismissed: (nudge, stepIndex, context) => {
-        getClient()?.trackEvent?.(
-          getEventNameCreator(nudge)("dismissed"),
-          Track.nudge._getCommonProperties(nudge, stepIndex, context)
-        );
-      },
-      /**
-       * Fired whenever a nudge is rage closed (dismissed<= 200ms).
-       * @param nudge The nudge that was dismissed.
-       * @param stepIndex The step of the nudge that was dismissed.
-       * @param context Metadata about nudge state
-       */
-      rageClosed: (nudge, stepIndex, context) => {
-        getClient()?.trackEvent?.(
-          getEventNameCreator(nudge)("rageClosed"),
-          Track.nudge._getCommonProperties(nudge, stepIndex, context)
-        );
-      },
-      /**
-       * Fired whenever a nudge is completed.
-       * @param nudge The nudge that was completed.
-       * @param stepIndex The step of the nudge that was completed.
-       * @param context Metadata about nudge state
-       */
-      completed: (nudge, stepIndex, context) => {
-        getClient()?.trackEvent?.(
-          getEventNameCreator(nudge)("completed"),
-          Track.nudge._getCommonProperties(nudge, stepIndex, context)
-        );
-      },
-      /**
-       * Fired whenever a nudge step is completed.
-       * @param nudge The nudge that was completed.
-       * @param stepIndex The step of the nudge that was completed.
-       * @param context Metadata about nudge state and whether the event was triggered via CTA
-       */
-      stepCompleted: (nudge, stepIndex, context) => {
-        getClient()?.trackEvent?.(getEventNameCreator(nudge)("stepCompleted"), {
-          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
-          ["[Guides-Surveys] Was Completed Via CTA" /* WasCompletedViaCta */]: context?.completedViaCta
-        });
-      },
-      /**
-       * Fired whenever a nudge is snoozed.
-       * @param nudge The nudge that was snoozed.
-       * @param stepIndex The step of the nudge that was snoozed.
-       * @param context Metadata about nudge state and The number of ms that the nudge will be snoozed for.
-       */
-      snoozed: (nudge, stepIndex, context) => {
-        const start = (0, import_dayjs.default)();
-        const end = start.add(context.duration.value ?? 0, context.duration.interval);
-        getClient()?.trackEvent?.(getEventNameCreator(nudge)("snoozed"), {
-          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
-          ["[Guides-Surveys] Snooze Duration" /* SnoozeDuration */]: end.diff(start)
-        });
-      },
-      /**
-       * Common function to track survey events with response data
-       * @param eventName The name of the event to track
-       * @param nudge The nudge that the response was submitted for
-       * @param stepIndex The step of the nudge that the response was submitted for
-       * @param context Metadata about nudge state and the response to the survey
-       */
-      _trackSurveyEvent: (eventName, nudge, stepIndex, context) => {
-        const { response } = context;
-        const value = response?.value;
-        getClient()?.trackEvent?.(getEventNameCreator(nudge)(eventName), {
-          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
-          ["[Guides-Surveys] Question UUID" /* QuestionUuid */]: response.blockId,
-          ["[Guides-Surveys] Survey Response" /* SurveyResponse */]: value,
-          ["[Guides-Surveys] Survey Response String" /* SurveyResponseString */]: getEmojiOrStringValue(response) ?? null,
-          ["[Guides-Surveys] Survey Response Number" /* SurveyResponseNumber */]: response.type === "number" ? value : null,
-          ["[Guides-Surveys] Survey Response Array" /* SurveyResponseArray */]: Array.isArray(value) ? response.type === "string" ? response.stringResponse : value : null,
-          ["[Guides-Surveys] Survey Response Other" /* SurveyResponseOther */]: "otherText" in response ? response.otherText : null
-        });
-      },
-      /**
-       * Fired whenever a survey is submitted.
-       * @param nudge The nudge that the survey was submitted for.
-       * @param stepIndex The step of the nudge that the survey was submitted for.
-       * @param context Metadata about nudge state and the response to the survey.
-       */
-      surveySubmitted: (nudge, stepIndex, context) => {
-        Track.nudge._trackSurveyEvent("surveySubmitted", nudge, stepIndex, context);
-      },
-      /**
-       * Fired whenever a survey is abandoned.
-       * @param nudge The nudge that the survey was submitted for.
-       * @param stepIndex The step of the nudge that the survey was submitted for.
-       * @param context Metadata about nudge state and the response to the survey.
-       */
-      surveyAbandoned: (nudge, stepIndex, context) => {
-        Track.nudge._trackSurveyEvent("surveyAbandoned", nudge, stepIndex, context);
-      },
-      internal: {
-        /**
-         * Fired whenever the target element cannot be found within the search timeout.
-         * @param nudge The nudge that the survey was submitted for.
-         * @param stepIndex The step of the nudge that the survey was submitted for.
-         */
-        pinTargetNotFoundError: (nudge, stepIndex, context) => {
-          getClient()?.trackEvent?.(getEventNameCreator(nudge)("pinTargetNotFound"), {
-            ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
-            internal: true
-          });
-        }
-      }
-    },
-    experiment: {
-      /**
-       * Fired whenever a nudge is viewed that is part of an experiment.
-       * @param nudge The nudge that was viewed.
-       */
-      exposure: (flagKey, experimentKey, variant) => {
-        const eventProperties = {
-          flag_key: flagKey,
-          experiment_key: experimentKey,
-          variant
-        };
-        getClient()?.trackEvent?.("$exposure", eventProperties);
-      }
-    },
-    chat: {
-      /**
-       * Fired whenever a chat session is started/initialized.
-       * @param sessionId The ID of the chat session
-       * @param title The title of the chat session
-       */
-      sessionStarted: (sessionId, title) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Chat Session Started", {
-          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
-          ["[Guides-Surveys] Chat Session Title" /* ChatSessionTitle */]: title || null
-        });
-      },
-      /**
-       * Fired whenever a chat session is restarted.
-       * @param sessionId The ID of the chat session
-       * @param previousMessageCount The number of messages in the previous session
-       */
-      sessionRestarted: (sessionId, previousMessageCount) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Chat Session Restarted", {
-          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
-          ["[Guides-Surveys] Message Count" /* MessageCount */]: previousMessageCount
-        });
-      },
-      /**
-       * Fired whenever a user sends a message in chat.
-       * @param sessionId The ID of the chat session
-       * @param messageId The ID of the message
-       * @param messageLength The length of the message
-       * @param messageCount The total number of messages in the session
-       */
-      messageSent: (sessionId, messageId, messageLength, messageCount) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Chat Message Sent", {
-          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
-          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
-          ["[Guides-Surveys] Message Length" /* MessageLength */]: messageLength,
-          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
-        });
-      },
-      /**
-       * Fired whenever the assistant responds with a message.
-       * @param sessionId The ID of the chat session
-       * @param messageId The ID of the message
-       * @param messageLength The length of the response
-       * @param responseTime The time it took to generate the response (in ms)
-       * @param messageCount The total number of messages in the session
-       * @param hasToolCalls Whether the response includes tool calls
-       * @param resolution The resolution of the response (fallback, escalation, or response)
-       */
-      messageReceived: (sessionId, messageId, messageLength, responseTime, messageCount, hasToolCalls, resolution) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Chat Message Received", {
-          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
-          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
-          ["[Guides-Surveys] Message Length" /* MessageLength */]: messageLength,
-          ["[Guides-Surveys] Response Time" /* ResponseTime */]: responseTime,
-          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount,
-          ["[Guides-Surveys] Message Resolution" /* MessageResolution */]: resolution,
-          "Has Tool Calls": hasToolCalls
-        });
-      },
-      /**
-       * Fired whenever feedback is submitted for a chat message.
-       * @param sessionId The ID of the chat session
-       * @param messageId The ID of the message receiving feedback
-       * @param feedbackType The type of feedback (positive, negative, or cleared)
-       * @param messageCount The total number of messages in the session
-       * @param reason The reason for negative feedback (if applicable)
-       */
-      feedbackSubmitted: (sessionId, messageId, feedbackType, messageCount, reason) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Chat Feedback Submitted", {
-          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
-          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
-          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount,
-          ["[Guides-Surveys] Feedback Type" /* FeedbackType */]: feedbackType,
-          ...reason ? { ["[Guides-Surveys] Feedback Reason" /* FeedbackReason */]: reason } : {}
-        });
-      },
-      /**
-       * Fired whenever a tool call is executed in chat.
-       * @param sessionId The ID of the chat session
-       * @param messageId The ID of the message containing the tool call
-       * @param toolCallId The ID of the tool call
-       * @param toolCallName The name of the tool being called
-       * @param messageCount The total number of messages in the session
-       */
-      toolCallExecuted: (sessionId, messageId, toolCallId, toolCallName, messageCount) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Chat Tool Call Executed", {
-          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
-          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
-          ["[Guides-Surveys] Tool Call ID" /* ToolCallId */]: toolCallId,
-          ["[Guides-Surveys] Tool Call Name" /* ToolCallName */]: toolCallName,
-          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
-        });
-      },
-      /**
-       * Fired whenever a tool call result is displayed in chat.
-       * @param sessionId The ID of the chat session
-       * @param messageId The ID of the message containing the tool result
-       * @param toolCallId The ID of the tool call
-       * @param toolCallName The name of the tool that was called
-       * @param status Whether the tool call succeeded or failed
-       * @param messageCount The total number of messages in the session
-       */
-      toolResultDisplayed: (sessionId, messageId, toolCallId, toolCallName, status, messageCount) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Chat Tool Result Displayed", {
-          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
-          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
-          ["[Guides-Surveys] Tool Call ID" /* ToolCallId */]: toolCallId,
-          ["[Guides-Surveys] Tool Call Name" /* ToolCallName */]: toolCallName,
-          ["[Guides-Surveys] Tool Result Status" /* ToolResultStatus */]: status,
-          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
-        });
-      },
-      /**
-       * Fired whenever a citation is clicked in chat.
-       * @param sessionId The ID of the chat session
-       * @param messageId The ID of the message containing the citation
-       * @param citationId The ID of the citation that was clicked
-       * @param messageCount The total number of messages in the session
-       */
-      citationClicked: (sessionId, messageId, citationId, messageCount) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Chat Citation Clicked", {
-          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
-          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
-          ["[Guides-Surveys] Citation ID" /* CitationId */]: citationId,
-          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
-        });
-      },
-      /**
-       * Fired whenever a launch nudge button is clicked in chat.
-       * @param sessionId The ID of the chat session
-       * @param messageId The ID of the message containing the launch button
-       * @param toolCallName The name of the tool that provided the nudge
-       * @param messageCount The total number of messages in the session
-       */
-      launchNudgeClicked: (sessionId, messageId, toolCallName, messageCount) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Chat Launch Nudge Clicked", {
-          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
-          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
-          ["[Guides-Surveys] Tool Call Name" /* ToolCallName */]: toolCallName,
-          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
-        });
-      },
-      /**
-       * Fired whenever a fallback tool is triggered in chat.
-       * @param sessionId The ID of the chat session
-       * @param messageId The ID of the message containing the fallback tool call
-       * @param toolCallName The name of the fallback tool that was called
-       * @param messageCount The total number of messages in the session
-       */
-      fallbackTriggered: (sessionId, messageId, toolCallName, messageCount) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Chat Fallback Triggered", {
-          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
-          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
-          ["[Guides-Surveys] Tool Call Name" /* ToolCallName */]: toolCallName,
-          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
-        });
-      },
-      /**
-       * Fired whenever an escalation tool is triggered in chat.
-       * @param sessionId The ID of the chat session
-       * @param messageId The ID of the message containing the escalation tool call
-       * @param toolCallName The name of the escalation tool that was called
-       * @param messageCount The total number of messages in the session
-       */
-      escalationTriggered: (sessionId, messageId, toolCallName, messageCount) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Chat Escalation Triggered", {
-          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
-          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
-          ["[Guides-Surveys] Tool Call Name" /* ToolCallName */]: toolCallName,
-          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
-        });
-      },
-      /**
-       * Fired whenever a response message is successfully generated without fallback tools.
-       * @param sessionId The ID of the chat session
-       * @param messageId The ID of the generated response message
-       * @param messageLength The length of the response message
-       * @param messageCount The total number of messages in the session
-       */
-      responseGenerated: (sessionId, messageId, messageLength, messageCount) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Chat Response Generated", {
-          ["[Guides-Surveys] Session ID" /* SessionId */]: sessionId,
-          ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
-          ["[Guides-Surveys] Message Length" /* MessageLength */]: messageLength,
-          ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
-        });
-      }
-    }
-  };
-
   // ../shared/src/products/checklists/store/selectors.ts
   var getChecklistData = (_, checklist) => {
     return _.endUserStore.data.nudgeInteractions[Number(checklist.variantId)];
@@ -19623,54 +19967,54 @@ ${err.message}`);
   };
 
   // ../shared/src/internal/middleware/theme.ts
-  var t12 = __toESM(require_lib());
-  var ThemeModeV = t12.intersection([
-    t12.type({
-      varDefaults: t12.record(t12.string, t12.union([t12.string, t12.number])),
-      varOverrides: t12.record(t12.string, t12.union([t12.string, t12.number])),
-      componentOverrides: t12.record(t12.string, t12.any),
-      mobileOverrides: t12.record(t12.string, t12.any)
+  var t13 = __toESM(require_lib());
+  var ThemeModeV = t13.intersection([
+    t13.type({
+      varDefaults: t13.record(t13.string, t13.union([t13.string, t13.number])),
+      varOverrides: t13.record(t13.string, t13.union([t13.string, t13.number])),
+      componentOverrides: t13.record(t13.string, t13.any),
+      mobileOverrides: t13.record(t13.string, t13.any)
     }),
-    t12.partial({
-      customCss: t12.string
+    t13.partial({
+      customCss: t13.string
     })
   ]);
-  var ThemeV = t12.union([
-    t12.type({
+  var ThemeV = t13.union([
+    t13.type({
       lightMode: ThemeModeV,
       darkMode: ThemeModeV
     }),
-    t12.null,
-    t12.undefined
+    t13.null,
+    t13.undefined
   ]);
-  var ThemeObjectBaseV = t12.type(
+  var ThemeObjectBaseV = t13.type(
     {
-      id: t12.number,
-      name: t12.string,
-      isDefault: t12.boolean,
+      id: t13.number,
+      name: t13.string,
+      isDefault: t13.boolean,
       theme: ThemeV
     },
     "ThemeBase"
   );
-  var ProductV = t12.union([t12.literal("guides-surveys"), t12.literal("assistant")]);
-  var PlatformV = t12.type({
-    type: t12.union([
-      t12.literal("web"),
-      t12.literal("ios"),
-      t12.literal("android"),
-      t12.literal("react-native"),
-      t12.literal("flutter"),
-      t12.string
+  var ProductV = t13.union([t13.literal("guides-surveys"), t13.literal("assistant")]);
+  var PlatformV = t13.type({
+    type: t13.union([
+      t13.literal("web"),
+      t13.literal("ios"),
+      t13.literal("android"),
+      t13.literal("react-native"),
+      t13.literal("flutter"),
+      t13.string
     ])
   });
-  var ThemeObjectAdditionalV = t12.partial(
+  var ThemeObjectAdditionalV = t13.partial(
     {
       platform: PlatformV,
       product: ProductV
     },
     "ThemeAdditional"
   );
-  var ThemeObjectV = t12.intersection([ThemeObjectBaseV, ThemeObjectAdditionalV], "Nudge");
+  var ThemeObjectV = t13.intersection([ThemeObjectBaseV, ThemeObjectAdditionalV], "Nudge");
   var defaults3 = {};
   var decode2 = (data) => {
     try {
@@ -19689,35 +20033,36 @@ ${err.message}`);
   };
 
   // ../shared/src/types/api/resource-center.ts
-  var t13 = __toESM(require_lib());
-  var LauncherV = t13.intersection([
-    t13.type({
-      type: t13.string,
-      position: t13.string,
-      offsetX: t13.number,
-      offsetY: t13.number,
-      zIndex: t13.number
+  var t14 = __toESM(require_lib());
+  var LauncherV = t14.intersection([
+    t14.type({
+      type: t14.string,
+      position: t14.string,
+      offsetX: t14.number,
+      offsetY: t14.number,
+      zIndex: t14.number
     }),
-    t13.partial({
-      anchorElement: t13.union([t13.string, t13.null]),
-      iconSrc: t13.union([t13.string, t13.null])
+    t14.partial({
+      anchorElement: t14.union([t14.string, t14.null]),
+      iconSrc: t14.union([t14.string, t14.null])
     })
   ]);
-  var ResourceCenterV = t13.intersection([
-    t13.type({
-      isAutopilotEnabled: t13.boolean,
-      textStrings: t13.record(t13.string, t13.string),
-      showQuickLinks: t13.boolean
+  var ResourceCenterV = t14.intersection([
+    t14.type({
+      isAutopilotEnabled: t14.boolean,
+      textStrings: t14.record(t14.string, t14.string),
+      showQuickLinks: t14.boolean
     }),
-    t13.partial({
-      key: t13.union([t13.string, t13.null, t13.undefined]),
-      mobileLauncher: t13.union([LauncherV, t13.null]),
-      desktopLauncher: t13.union([LauncherV, t13.null]),
-      windowPosition: t13.union([t13.string, t13.null]),
-      customTheme: t13.union([t13.number, t13.null]),
-      chatEnabled: t13.boolean,
-      resourceCenterEnabled: t13.boolean,
-      showBranding: t13.boolean
+    t14.partial({
+      key: t14.union([t14.string, t14.null, t14.undefined]),
+      mobileLauncher: t14.union([LauncherV, t14.null]),
+      desktopLauncher: t14.union([LauncherV, t14.null]),
+      windowPosition: t14.union([t14.string, t14.null]),
+      customTheme: t14.union([t14.number, t14.null]),
+      chatEnabled: t14.boolean,
+      resourceCenterEnabled: t14.boolean,
+      showBranding: t14.boolean,
+      showRecsetHeroCards: t14.boolean
     })
   ]);
   var ResourceCenter = class {
@@ -20107,12 +20452,6 @@ ${err.message}`);
   var StepConditionsMachine = (_) => setup({
     types: {},
     actions: {
-      reportFailure: ({ context }) => {
-        Track.nudge.internal.pinTargetNotFoundError(context.nudge, context.stepIndex, {
-          ...context,
-          interactionState: getNudgeDataFromUserStore(_, context.nudge.variantId)
-        });
-      },
       setChecksFailed: assign({
         stepChecksFailed: true
       }),
@@ -20143,7 +20482,9 @@ ${err.message}`);
       stepHasTargetElement: ({ context }) => context.triggerEvent?.overrides?.pinnedElement || isAnchorableStep(getNudgeStep(context.nudge, context.stepIndex)),
       hasSearchTimeout: ({ context }) => typeof context.searchTimeout !== "undefined"
     },
-    delays: { ELEMENT_SEARCH_TIMEOUT: ({ context }) => context.searchTimeout ?? Number.POSITIVE_INFINITY }
+    delays: {
+      ELEMENT_SEARCH_TIMEOUT: ({ context }) => context.searchTimeout ?? Number.POSITIVE_INFINITY
+    }
   }).createMachine({
     /** @xstate-layout N4IgpgJg5mDOIC5QGUAuYAOBhA9gOwgEtVD9YA6ABTAMLygGIBtABgF1FQMdZjS9OIAB6IAjAFZx5ACwA2FgE4ATAoAcAdhbzx09QBoQATzFKl5JdIVWVqliyXitAXycG0mXLRJkqNIvWZRDiQQbl5vARCRBAkpOUUbTW1dA2MEU1VyKyt1XKVRJQBmWRc3dGx8IgiKZDAAQwAnAGMACzooAAIAMRwGjoAVRphUDoBRABswAFsaVAZKAEFkZFGAEQB9foWAJQBxUf710YAZUYBZUYA5ftZgrh4+fEFo2XFM9VfZUXVCpJZJVJif7kdSWKy2WSyJSqWzqUogdwVLz8Gr1ZptejdXoDIZgEYTaazBhCWCoOroch1ABm6AaAAoTucrocVjssAAJTYASQuAHkAKr9ACUDERniqKPItUarXaWL6gwawzGkxmeFQt0EYUekVALzeIM+31+Wn+4kB6Wh5kcdkcuUhPzh8LwOAgcEEYsqOvgIW1EWeiAAtLILcH4Z7kT5qLR6FqHv6oohpEoLQVZFlRJDxApZHJZApjeHyuLvVK0bLMT0Fbj8arZnHwvwAwhCgXyCxVNnEqadPojIgFOp23Y7KoijDRNICkWPF7quRLjgcUq8SrCeqGzrm63RO3O8o1H9exalPYZNlcup8kUSq4EcW55KCWqRtL0d06oRJhBNwm9UDQXIcQJHkJR1DUVRCiUEN+xiVQFHPbIIShGEWCdMpZ0jPAKGfWYsQAVwIX8m0TGI0OkICQPscCYSgmC0lUXcwXBLQUNhFwXCAA */
     id: "StepConditions",
@@ -20189,7 +20530,7 @@ ${err.message}`);
         entry: [{ type: "setChecksPassed" }]
       },
       "Element Search Failed": {
-        entry: [{ type: "reportFailure" }, { type: "setChecksFailed" }],
+        entry: [{ type: "setChecksFailed" }],
         type: "final"
       },
       "Element Found": {
@@ -20240,6 +20581,15 @@ ${err.message}`);
   };
 
   // ../shared/src/products/nudges/store/nudgeMachine.ts
+  var enqueueDismissInteraction = (check, enqueue) => {
+    if (check("isDeadEndStep")) {
+      enqueue({ type: "reportCompleted" });
+      enqueue({ type: "resetStep" });
+      enqueue({ type: "saveInteraction", params: { isCompleted: true, isDismissed: true } });
+    } else {
+      enqueue({ type: "saveInteraction", params: { isCompleted: false, isDismissed: true } });
+    }
+  };
   var NudgeMachine = (globalStore, nudge) => setup({
     types: {},
     actors: {
@@ -20267,6 +20617,7 @@ ${err.message}`);
       passesClicked: ({ context }) => passesClickedElement(globalStore, context.nudge, context.triggerEvent),
       passesCustomThrottles: ({ context }) => shouldBypassCustomThrottles(globalStore, context.nudge) || context.triggerEvent?.overrides?.customThrottles || passesCustomThrottles(globalStore, context.nudge),
       passesLocalization: ({ context }) => context.triggerEvent?.overrides?.localization || passesLocalization(globalStore, context.nudge, getSDK()?.[_configuration].locale),
+      passesMutualExclusion: ({ context }) => context.triggerEvent?.overrides?.mutualExclusion || passesMutualExclusion(globalStore, context.nudge),
       passesExperimentVariant: ({ context }) => context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode || nudgePassesDecide(context.nudge, globalStore.decide),
       // step specific
       remainingSteps: ({ context }) => hasRemainingSteps(context.nudge)(context),
@@ -20279,7 +20630,15 @@ ${err.message}`);
       isWebPlatform: ({ context }) => context.nudge.platform === "web",
       hasSurveyResponse: (_, params) => "surveyResponse" in params.event,
       hasSequentialSteps: ({ context }) => hasSequentialSteps(context.nudge),
-      isDismissal: (_, params) => params.isDismissAction
+      isDismissal: (_, params) => params.isDismissAction,
+      isDeadEndStep: ({ context }) => isDeadEndStep(context.nudge)(context),
+      shouldSkipStep: ({ context }, params) => {
+        if (!params.stepChecksFailed) {
+          return false;
+        }
+        const step = getNudgeStep(context.nudge, context.stepIndex);
+        return !!step && isPinStep(step) && !!step.formFactor.skipIfNotFound;
+      }
     },
     actions: {
       setPinGraceUntil: assign({
@@ -20301,6 +20660,14 @@ ${err.message}`);
           if (audienceSkipped) return null;
           const id = getEvaluationId(context.nudge, globalStore.decide);
           return typeof id === "string" ? id : null;
+        }
+      }),
+      captureSegmentName: assign({
+        segmentName: ({ context }) => {
+          const audienceSkipped = context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode;
+          if (audienceSkipped) return null;
+          const name = getSegmentName(context.nudge, globalStore.decide);
+          return typeof name === "string" ? name : null;
         }
       }),
       sendEnterRenderLoop: sendTo(({ context }) => context.parentRef, {
@@ -20418,6 +20785,19 @@ ${err.message}`);
       },
       reportCompleted: ({ context }) => {
         Track.nudge.completed(context.nudge, context.stepIndex, {
+          ...context,
+          interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
+        });
+      },
+      reportStepSkipped: ({ context }) => {
+        Track.nudge.stepSkipped(context.nudge, context.stepIndex, {
+          ...context,
+          interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
+          reason: "pin target not found"
+        });
+      },
+      reportPinTargetNotFound: ({ context }) => {
+        Track.nudge.internal.pinTargetNotFoundError(context.nudge, context.stepIndex, {
           ...context,
           interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
         });
@@ -20652,6 +21032,7 @@ ${err.message}`);
                 guard: "passesAudience",
                 actions: [
                   { type: "captureEvaluationId" },
+                  { type: "captureSegmentName" },
                   { type: "logCondition", params: { conditionName: "audience", conditionResult: "PASS" } }
                 ]
               },
@@ -20740,7 +21121,7 @@ ${err.message}`);
           "Checking Cooldown": {
             always: [
               {
-                target: "Checking Snoozed",
+                target: "Checking Mutual Exclusion",
                 guard: "passesCooldown",
                 actions: [{ type: "logCondition", params: { conditionName: "cooldown", conditionResult: "PASS" } }]
               },
@@ -20753,6 +21134,25 @@ ${err.message}`);
               }
             ],
             description: `Has this specific nudge been seen the maximum number of times?`
+          },
+          "Checking Mutual Exclusion": {
+            always: [
+              {
+                target: "Checking Snoozed",
+                guard: "passesMutualExclusion",
+                actions: [
+                  { type: "logCondition", params: { conditionName: "mutualExclusion", conditionResult: "PASS" } }
+                ]
+              },
+              {
+                target: "#Nudge.Idle",
+                actions: [
+                  { type: "cleanupSmartNudges" },
+                  { type: "logCondition", params: { conditionName: "mutualExclusion", conditionResult: "FAIL" } }
+                ]
+              }
+            ],
+            description: `Is this nudge blocked because a mutually exclusive nudge has already been seen?`
           },
           "Checking Nudge Match": {
             always: [
@@ -20834,12 +21234,27 @@ ${err.message}`);
             invoke: {
               src: "StepConditionsMachine",
               id: "StepConditionsMachine",
-              input: ({ context }) => ({
-                nudge: context.nudge,
-                stepIndex: context.stepIndex,
-                triggerEvent: context.triggerEvent
-              }),
+              input: ({ context }) => {
+                const step = getNudgeStep(context.nudge, context.stepIndex);
+                const skipEnabled = !!step && isPinStep(step) && !!step.formFactor.skipIfNotFound;
+                return {
+                  nudge: context.nudge,
+                  stepIndex: context.stepIndex,
+                  triggerEvent: context.triggerEvent,
+                  ...skipEnabled && { searchTimeout: 250 }
+                };
+              },
               onDone: [
+                {
+                  target: "Skipping Step",
+                  guard: {
+                    type: "shouldSkipStep",
+                    params: ({ event }) => ({
+                      stepChecksFailed: event.output.stepChecksFailed
+                    })
+                  },
+                  actions: [{ type: "reportStepSkipped" }]
+                },
                 {
                   target: "Done",
                   guard: {
@@ -20847,6 +21262,7 @@ ${err.message}`);
                     params: ({ event }) => ({ passed: event.output.stepChecksFailed })
                   },
                   actions: [
+                    { type: "reportPinTargetNotFound" },
                     { type: "logCondition", params: { conditionName: "findTargetElement", conditionResult: "FAIL" } }
                   ]
                 },
@@ -20864,6 +21280,23 @@ ${err.message}`);
             },
             description: `This is where we check any step specific conditions.
 This includes searching for elements to pin to or checking availability of commands on a CTA.`
+          },
+          "Skipping Step": {
+            always: [
+              {
+                target: "Checking Conditions",
+                guard: "remainingSteps",
+                actions: [{ type: "incrementStep" }]
+              },
+              {
+                target: "Done",
+                actions: [
+                  { type: "reportCompleted" },
+                  { type: "resetStep" },
+                  { type: "saveInteraction", params: { isCompleted: true, isDismissed: false } }
+                ]
+              }
+            ]
           },
           "Checking Max Rendered": {
             always: [
@@ -21036,19 +21469,34 @@ This ensures only the right variant is shown for experiment nudges.`
                 invoke: {
                   src: "StepConditionsMachine",
                   id: "StepConditionsMachine",
-                  input: ({ context }) => ({
-                    nudge: context.nudge,
-                    stepIndex: context.stepIndex,
-                    triggerEvent: context.triggerEvent,
-                    searchTimeout: 5e3
-                  }),
+                  input: ({ context }) => {
+                    const step = getNudgeStep(context.nudge, context.stepIndex);
+                    const skipEnabled = !!step && isPinStep(step) && !!step.formFactor.skipIfNotFound;
+                    return {
+                      nudge: context.nudge,
+                      stepIndex: context.stepIndex,
+                      triggerEvent: context.triggerEvent,
+                      searchTimeout: skipEnabled ? 250 : 5e3
+                    };
+                  },
                   onDone: [
+                    {
+                      target: "Auto Advancing",
+                      guard: {
+                        type: "shouldSkipStep",
+                        params: ({ event }) => ({
+                          stepChecksFailed: event.output.stepChecksFailed
+                        })
+                      },
+                      actions: [{ type: "reportStepSkipped" }]
+                    },
                     {
                       target: "#Nudge.Step.Done",
                       guard: {
                         type: "stepChecksFailed",
                         params: ({ event }) => ({ passed: event.output.stepChecksFailed })
-                      }
+                      },
+                      actions: [{ type: "reportPinTargetNotFound" }]
                     },
                     {
                       target: "Rendering"
@@ -21056,6 +21504,23 @@ This ensures only the right variant is shown for experiment nudges.`
                   ]
                 },
                 description: `Perform the same step conditions check that occurs before the render loop.`
+              },
+              "Auto Advancing": {
+                always: [
+                  {
+                    target: "Checking Conditions",
+                    guard: "remainingSteps",
+                    actions: [{ type: "incrementStep" }, { type: "saveInteraction" }]
+                  },
+                  {
+                    target: "#Nudge.Step.Done",
+                    actions: [
+                      { type: "reportCompleted" },
+                      { type: "resetStep" },
+                      { type: "saveInteraction", params: { isCompleted: true, isDismissed: false } }
+                    ]
+                  }
+                ]
               },
               Regressing: {
                 always: [
@@ -21081,11 +21546,14 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
               DISMISS: {
                 target: "Done",
                 actions: enqueueActions(({ check, enqueue, event }) => {
-                  if (check({ type: "hasSurveyResponse", params: { event } })) {
+                  if (check("isDeadEndStep")) {
+                    enqueue({ type: "reportSurveyResponse" });
+                    enqueue({ type: "resetAllSurveyResponses" });
+                  } else if (check({ type: "hasSurveyResponse", params: { event } })) {
                     enqueue({ type: "reportSurveyResponse" });
                   }
                   enqueue({ type: "reportDismissed" });
-                  enqueue({ type: "saveInteraction", params: { isCompleted: false, isDismissed: true } });
+                  enqueueDismissInteraction(check, enqueue);
                 })
               },
               SNOOZE: {
@@ -21129,8 +21597,15 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
                         isDismissAction: event2.action?.type === "dismiss"
                       })
                     })) {
+                      const isDeadEnd = check("isDeadEndStep");
+                      if (isDeadEnd) {
+                        enqueue({ type: "resetAllSurveyResponses" });
+                      }
                       enqueue({ type: "reportDismissed" });
-                      enqueue({ type: "saveInteraction", params: { isCompleted: false, isDismissed: true } });
+                      enqueueDismissInteraction(check, enqueue);
+                      if (!isDeadEnd) {
+                        enqueue({ type: "resetStep" });
+                      }
                     } else {
                       enqueue({
                         type: "reportStepCompletion",
@@ -21138,9 +21613,9 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
                       });
                       enqueue({ type: "reportCompleted" });
                       enqueue({ type: "saveInteraction", params: { isCompleted: true, isDismissed: false } });
+                      enqueue({ type: "resetStep" });
                     }
-                  }),
-                  { type: "resetStep" }
+                  })
                 ]
               },
               UPDATE_SURVEY_RESPONSE: {
@@ -21210,7 +21685,8 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
         prevPassedConditions: false,
         pinGraceUntil: void 0,
         pinGraceStepIndex: void 0,
-        evaluationId: null
+        evaluationId: null,
+        segmentName: null
       };
     },
     on: {
@@ -21296,8 +21772,12 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
         const currentNudges = getAllNudges(globalStore);
         const getUpdatedNudges = () => {
           const { originalNudge: debugNudge } = context.debugMode;
-          if (!debugNudge || currentNudges.some((nudge) => nudge.variantId === debugNudge.variantId)) {
+          if (!debugNudge) {
             return currentNudges;
+          }
+          const existsInStore = currentNudges.some((nudge) => nudge.variantId === debugNudge.variantId);
+          if (existsInStore) {
+            return currentNudges.map((nudge) => nudge.variantId === debugNudge.variantId ? debugNudge : nudge);
           }
           return [...currentNudges, debugNudge];
         };
@@ -21953,6 +22433,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var closeAllNudgeMocks = (_) => {
     _.services.closeAllNudgeMocks(_);
   };
+  var closeStep = (_, nudge, stepIndex) => {
+    _.services.closeStep(_, nudge, stepIndex);
+  };
   var dismissNudge = (_, nudge, renderMode) => {
     if (renderMode === 1 /* MOCK */) {
       _.services.closeNudgeMock(_, nudge);
@@ -22007,12 +22490,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     deactivate,
     markSeen
   }) => {
-    const type11 = nudge.type;
+    const type12 = nudge.type;
     const existingLifecycleUuid = getNudgeDataFromUserStore(_, nudge.variantId)?.activelifeCycleUuid;
     const activelifeCycleUuid = activate ? v4_default() : deactivate ? "" : markSeen && !existingLifecycleUuid ? v4_default() : void 0;
     const updatedContext = {
       [Number(nudge.variantId)]: {
-        type: type11,
+        type: type12,
         formFactor: nudge?.steps?.[0]?.formFactor?.type ?? "",
         currentStep: stepIndex,
         stepIndexStack,
@@ -22217,11 +22700,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
     return true;
   };
-  var dispatchEffects = (_, effects, variantId) => {
-    if (variantId != null) {
-      _.effectsSequencer?.send({ type: "RUN", effects, source: { variantId } });
-    }
-  };
   var execNudgeAction = (_, action, meta, renderMode, actor) => {
     if (renderMode === 1 /* MOCK */ && _.nudgeRecorderToolBar.visible) {
       return;
@@ -22230,15 +22708,11 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       actor?.send({ type: "ADVANCE", buttonType: meta?.buttonType, cta: meta?.label, action: null });
       return;
     }
-    if (isActionSequence(action)) {
-      const variantId = actor?.getSnapshot()?.context?.nudge?.variantId;
-      const executed = execNavigationAction(action.navigation, meta, actor);
-      if (executed) {
-        dispatchEffects(_, action.effects, variantId);
-      }
-      return;
-    }
-    execNavigationAction(action, meta, actor);
+    const snapshot = actor?.getSnapshot();
+    const nudge = snapshot?.context?.nudge;
+    const stepIndex = snapshot?.context?.stepIndex;
+    const source = nudge && stepIndex !== void 0 ? buildEffectsSource(nudge, stepIndex, getNudgeDataFromUserStore(_, nudge.variantId), snapshot?.context) : void 0;
+    execResolvedAction(_, action, (navAction) => execNavigationAction(navAction, meta, actor), void 0, source);
   };
 
   // src/actions/nudge.ts
@@ -22372,12 +22846,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }()
   );
   var __assign = function() {
-    __assign = Object.assign || function __assign3(t14) {
+    __assign = Object.assign || function __assign3(t15) {
       for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
         s2 = arguments[i2];
-        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t14[p] = s2[p];
+        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t15[p] = s2[p];
       }
-      return t14;
+      return t15;
     };
     return __assign.apply(this, arguments);
   };
@@ -22624,6 +23098,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var ASYNC_METHODS_SNIPPET = ["boot"];
   var ASYNC_METHODS = ["boot"];
   var DEFAULT_INSTANCE_NAME = "$default_instance";
+  var PLUGIN_CALLER = Symbol.for("amplitude-engagement-plugin-caller");
   function createProxy(loadAsyncScripts) {
     const existingProxy = typeof window !== "undefined" ? window.engagement : void 0;
     let bundleFailedToLoad = false;
@@ -22635,6 +23110,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         chatUrl: existingProxy?._configuration?.chatUrl,
         mediaUrl: existingProxy?._configuration?.mediaUrl,
         serverZone: existingProxy?._configuration?.serverZone ?? "US",
+        autoRefreshIntervalSeconds: existingProxy?._configuration?.autoRefreshIntervalSeconds,
         options: {
           ...existingProxy?._configuration?.options
         }
@@ -22739,6 +23215,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           async setup(config, client) {
             const instanceName = config.instanceName ?? DEFAULT_INSTANCE_NAME;
             const identityStore = AnalyticsConnector.getInstance(instanceName).identityStore;
+            proxy2._configuration._installedViaPlugin = true;
             initFunc(config.apiKey, {
               serverZone: config.serverZone,
               ...options,
@@ -22751,37 +23228,45 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
                 }
               }
             ];
-            await window.engagement.boot({
-              user: () => {
-                const identity2 = identityStore.getIdentity();
-                return {
-                  user_id: client.getUserId(),
-                  device_id: client.getDeviceId(),
-                  user_properties: identity2.userProperties,
-                  getSessionId: client.getSessionId
-                };
+            await window.engagement.boot(
+              {
+                user: () => {
+                  const identity2 = identityStore.getIdentity();
+                  return {
+                    user_id: client.getUserId(),
+                    device_id: client.getDeviceId(),
+                    user_properties: identity2.userProperties,
+                    getSessionId: client.getSessionId
+                  };
+                },
+                integrations
               },
-              integrations
-            });
+              // @ts-expect-error PLUGIN_CALLER is an internal-only arg not in the public signature
+              PLUGIN_CALLER
+            );
             identityStore.addIdentityListener((identity2) => {
               if (!window.engagement?._.user || !window.engagement?._analytics.hasBooted) {
                 console.warn(`Engagement SDK not booted. Ignoring identity change.`);
                 return;
               }
               if (window.engagement?._.user?.user_id !== identity2.userId) {
-                window.engagement.shutdown();
-                window.engagement.boot({
-                  user: () => {
-                    const identity3 = identityStore.getIdentity();
-                    return {
-                      user_id: client.getUserId(),
-                      device_id: client.getDeviceId(),
-                      user_properties: identity3.userProperties,
-                      getSessionId: client.getSessionId
-                    };
+                window.engagement.shutdown(PLUGIN_CALLER);
+                window.engagement.boot(
+                  {
+                    user: () => {
+                      const identity3 = identityStore.getIdentity();
+                      return {
+                        user_id: client.getUserId(),
+                        device_id: client.getDeviceId(),
+                        user_properties: identity3.userProperties,
+                        getSessionId: client.getSessionId
+                      };
+                    },
+                    integrations
                   },
-                  integrations
-                });
+                  // @ts-expect-error PLUGIN_CALLER is an internal-only arg not in the public signature
+                  PLUGIN_CALLER
+                );
               } else {
                 window.engagement._setUserProperties(identity2.userProperties);
               }
@@ -23973,6 +24458,18 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
 
   // ../shared/src/sdk/sdk.ts
   var _reloadTargets = ["_reloadOrganization", "_reloadNudges", "_reloadThemes"];
+  var isPluginModeCallBlocked = (isInstalledViaPlugin, methodName, runtimeArgs) => {
+    if (isInstalledViaPlugin && runtimeArgs[runtimeArgs.length - 1] !== PLUGIN_CALLER) {
+      logger.warn(
+        `${methodName} cannot be called directly in plugin installation mode. The Amplitude plugin manages the ${methodName.replace(
+          "()",
+          ""
+        )} lifecycle.`
+      );
+      return true;
+    }
+    return false;
+  };
   var DEFAULT_OPTIONS = {};
   var EngagementSDK = class {
     _;
@@ -23996,11 +24493,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     _lastUsedBootOptions;
     _cancelDecide = null;
     _cancelBoot = null;
+    _isInstalledViaPlugin = false;
     constructor(_, sdkConfig) {
       this._ = _;
       this.nudgeActions = bindActions(_, service_actions_exports);
       this.resourceCenterActions = bindActions(_, service_actions_exports2);
       this.globalActions = bindActions(_, global_actions_exports);
+      this._isInstalledViaPlugin = sdkConfig._installedViaPlugin ?? false;
       this._configuration = {
         ...this._configuration,
         ...sdkConfig,
@@ -24037,9 +24536,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
     plugin(_initOptions) {
       const setup2 = async (config, client) => {
+        this._isInstalledViaPlugin = true;
         const instanceName = config.instanceName ?? DEFAULT_INSTANCE_NAME;
         const identityStore = AnalyticsConnector.getInstance(instanceName).identityStore;
-        await this.boot({
+        await this._bootImpl({
           user: () => {
             const identity2 = identityStore.getIdentity();
             return {
@@ -24302,13 +24802,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         return;
       }
       this._isDisabled = false;
-      this.boot(this._lastUsedBootOptions);
+      this._bootImpl(this._lastUsedBootOptions);
     }
     disable() {
       this._isDisabled = true;
-      this.shutdownWithoutClearingBootOptions();
+      this._shutdownWithoutClearingBootOptions();
     }
-    shutdownWithoutClearingBootOptions() {
+    _shutdownWithoutClearingBootOptions() {
       this._cancelBoot?.();
       this._cancelDecide?.();
       this._analytics.setBootStatus(false);
@@ -24324,9 +24824,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         this._.effectsSequencer = null;
       }
     }
-    shutdown() {
-      this.shutdownWithoutClearingBootOptions();
+    _shutdownImpl() {
+      this._shutdownWithoutClearingBootOptions();
       this._lastUsedBootOptions = void 0;
+    }
+    shutdown() {
+      if (isPluginModeCallBlocked(this._isInstalledViaPlugin, "shutdown()", arguments)) return;
+      this._shutdownImpl();
     }
     /**
      * Sets the auto-refresh interval. Can be called after boot to change or disable the refresh interval.
@@ -24381,6 +24885,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
      * snippet has been run on the page they are on.
      */
     async boot(options) {
+      if (isPluginModeCallBlocked(this._isInstalledViaPlugin, "boot()", arguments)) return;
+      await this._bootImpl(options);
+    }
+    async _bootImpl(options) {
       if (this._isDisabled) {
         logger.debug(
           "boot() called while Engagement SDK is disabled; updating boot options but not booting until enable() is called"
@@ -24444,6 +24952,11 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           this.addIntegration(integration);
         });
       }
+      if (this._.integrations.length === 0) {
+        logger.warn(
+          "No integrations provided. Guide insights, survey insights, and survey responses will not be tracked. Pass at least one integration to boot(), or use { track: () => {} } as a noop."
+        );
+      }
       try {
         await this.decide();
         if (bootCancelled) return;
@@ -24458,8 +24971,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         if (this._.endUserStore.initializedSuccessfully) {
           this._analytics.setBootStatus(true);
           this._.hasBooted = true;
-          if (options.autoRefreshIntervalSeconds !== void 0) {
-            this.setAutoRefreshInterval(options.autoRefreshIntervalSeconds);
+          const autoRefreshInterval = options.autoRefreshIntervalSeconds ?? this._configuration.autoRefreshIntervalSeconds;
+          if (autoRefreshInterval !== void 0) {
+            this.setAutoRefreshInterval(autoRefreshInterval);
           }
           this._.nudgesManager?.send({ type: "END_USER_STORE_LOADED" });
           logger.debug("End user state loaded successfully");
@@ -24841,12 +25355,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   }
   var __assign2 = function() {
-    __assign2 = Object.assign || function __assign3(t14) {
+    __assign2 = Object.assign || function __assign3(t15) {
       for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
         s2 = arguments[i2];
-        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t14[p] = s2[p];
+        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t15[p] = s2[p];
       }
-      return t14;
+      return t15;
     };
     return __assign2.apply(this, arguments);
   };
@@ -24881,12 +25395,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     var _ = {
       label: 0,
       sent: function() {
-        if (t14[0] & 1) throw t14[1];
-        return t14[1];
+        if (t15[0] & 1) throw t15[1];
+        return t15[1];
       },
       trys: [],
       ops: []
-    }, f, y2, t14, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    }, f, y2, t15, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
     return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() {
       return this;
     }), g;
@@ -24898,12 +25412,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     function step(op) {
       if (f) throw new TypeError("Generator is already executing.");
       while (g && (g = 0, op[0] && (_ = 0)), _) try {
-        if (f = 1, y2 && (t14 = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t14 = y2["return"]) && t14.call(y2), 0) : y2.next) && !(t14 = t14.call(y2, op[1])).done) return t14;
-        if (y2 = 0, t14) op = [op[0] & 2, t14.value];
+        if (f = 1, y2 && (t15 = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t15 = y2["return"]) && t15.call(y2), 0) : y2.next) && !(t15 = t15.call(y2, op[1])).done) return t15;
+        if (y2 = 0, t15) op = [op[0] & 2, t15.value];
         switch (op[0]) {
           case 0:
           case 1:
-            t14 = op;
+            t15 = op;
             break;
           case 4:
             _.label++;
@@ -24921,25 +25435,25 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             _.trys.pop();
             continue;
           default:
-            if (!(t14 = _.trys, t14 = t14.length > 0 && t14[t14.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+            if (!(t15 = _.trys, t15 = t15.length > 0 && t15[t15.length - 1]) && (op[0] === 6 || op[0] === 2)) {
               _ = 0;
               continue;
             }
-            if (op[0] === 3 && (!t14 || op[1] > t14[0] && op[1] < t14[3])) {
+            if (op[0] === 3 && (!t15 || op[1] > t15[0] && op[1] < t15[3])) {
               _.label = op[1];
               break;
             }
-            if (op[0] === 6 && _.label < t14[1]) {
-              _.label = t14[1];
-              t14 = op;
+            if (op[0] === 6 && _.label < t15[1]) {
+              _.label = t15[1];
+              t15 = op;
               break;
             }
-            if (t14 && _.label < t14[2]) {
-              _.label = t14[2];
+            if (t15 && _.label < t15[2]) {
+              _.label = t15[2];
               _.ops.push(op);
               break;
             }
-            if (t14[2]) _.ops.pop();
+            if (t15[2]) _.ops.pop();
             _.trys.pop();
             continue;
         }
@@ -24948,7 +25462,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         op = [6, e2];
         y2 = 0;
       } finally {
-        f = t14 = 0;
+        f = t15 = 0;
       }
       if (op[0] & 5) throw op[1];
       return {
@@ -26176,7 +26690,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         originalInitLocale: void 0
       },
       nudgeRecorderToolBar: {
-        visible: false
+        visible: false,
+        experience: void 0
       },
       // needed for dashboard preview
       editorPreviewDevice: "desktop",
@@ -26204,6 +26719,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         isAutopilotEnabled: false,
         textStrings: {},
         showQuickLinks: false,
+        showRecsetHeroCards: false,
         isAdditionalResourcesExpanded: true,
         shouldPersistOnReload: true,
         filter: null
@@ -26309,7 +26825,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       const themeMode = _.themeMode === "auto" ? _.services.getDefaultUIMode() : _.themeMode;
       if (nudge?.customThemeId !== void 0 && nudge.customThemeId !== null) {
         theme = {
-          theme: _.themes.find((t14) => t14.id === nudge.customThemeId)?.theme,
+          theme: _.themes.find((t15) => t15.id === nudge.customThemeId)?.theme,
           mode: themeMode
         };
       }
