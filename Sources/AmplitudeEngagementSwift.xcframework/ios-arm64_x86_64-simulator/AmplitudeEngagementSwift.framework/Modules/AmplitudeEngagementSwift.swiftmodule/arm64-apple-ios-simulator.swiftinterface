@@ -4,8 +4,6 @@
 import AVKit
 import AmplitudeCore
 import Combine
-import CoreGraphics
-import CoreText
 import DeveloperToolsSupport
 import Foundation
 import Foundation/*.Bundle*/
@@ -296,31 +294,6 @@ public struct AmplitudeBootOptions {
   public init(user_id: Swift.String?, device_id: Swift.String? = nil, integrations: [(_ eventType: Swift.String, _ eventProperties: [Swift.String : Any]) -> Swift.Void] = [], user_properties: [Swift.String : Any] = [:], autoRefreshIntervalSeconds: Swift.Int = 0)
   public init(user: AmplitudeEngagementSwift.AmplitudeEndUser, integrations: [(_ eventType: Swift.String, _ eventProperties: [Swift.String : Any]) -> Swift.Void] = [], autoRefreshIntervalSeconds: Swift.Int = 0)
 }
-public enum Roboto : Swift.String, Swift.CaseIterable {
-  case thin
-  case bold
-  case light
-  case black
-  case medium
-  case regular
-  public init?(rawValue: Swift.String)
-  public typealias AllCases = [AmplitudeEngagementSwift.Roboto]
-  public typealias RawValue = Swift.String
-  nonisolated public static var allCases: [AmplitudeEngagementSwift.Roboto] {
-    get
-  }
-  public var rawValue: Swift.String {
-    get
-  }
-}
-extension SwiftUICore.Font {
-  public static func roboto(_ roboto: AmplitudeEngagementSwift.Roboto, size: CoreFoundation.CGFloat) -> SwiftUICore.Font
-}
-public struct RobotoFont {
-  public static func registerFonts()
-}
-public struct FontLoader {
-}
 public enum AmplitudeServerZone : Swift.String, Swift.Codable {
   case EU
   case US
@@ -356,9 +329,6 @@ extension AmplitudeEngagementSwift.SDKType : Swift.RawRepresentable {}
 extension AmplitudeEngagementSwift.InstallationType : Swift.Equatable {}
 extension AmplitudeEngagementSwift.InstallationType : Swift.Hashable {}
 extension AmplitudeEngagementSwift.InstallationType : Swift.RawRepresentable {}
-extension AmplitudeEngagementSwift.Roboto : Swift.Equatable {}
-extension AmplitudeEngagementSwift.Roboto : Swift.Hashable {}
-extension AmplitudeEngagementSwift.Roboto : Swift.RawRepresentable {}
 extension AmplitudeEngagementSwift.AmplitudeServerZone : Swift.Equatable {}
 extension AmplitudeEngagementSwift.AmplitudeServerZone : Swift.Hashable {}
 extension AmplitudeEngagementSwift.AmplitudeServerZone : Swift.RawRepresentable {}
