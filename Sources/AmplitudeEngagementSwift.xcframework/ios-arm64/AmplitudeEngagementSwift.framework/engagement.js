@@ -11832,9 +11832,173 @@
     }
   });
 
+  // ../shared/node_modules/@amplitude/analytics-types/lib/esm/logger.js
+  var LogLevel;
+  (function(LogLevel2) {
+    LogLevel2[LogLevel2["None"] = 0] = "None";
+    LogLevel2[LogLevel2["Error"] = 1] = "Error";
+    LogLevel2[LogLevel2["Warn"] = 2] = "Warn";
+    LogLevel2[LogLevel2["Verbose"] = 3] = "Verbose";
+    LogLevel2[LogLevel2["Debug"] = 4] = "Debug";
+  })(LogLevel || (LogLevel = {}));
+
+  // ../shared/src/sdk/symbols.ts
+  var _analytics = "_analytics";
+  var _configuration = "_configuration";
+
+  // ../shared/src/internal/util/LocalStorage.ts
+  var PREFIX = "amplitude.engagement";
+  var set = (label, value) => {
+    try {
+      localStorage.setItem(`${PREFIX}.${label}`, value.toString());
+      return value;
+    } catch (err) {
+      return "";
+    }
+  };
+  var get = (label, defaultValue, prefixOverride) => {
+    let value;
+    const prefix = prefixOverride ?? PREFIX;
+    try {
+      value = localStorage.getItem(`${prefix}.${label}`);
+    } catch (err) {
+      value = null;
+    }
+    if (value === null) {
+      return defaultValue;
+    } else {
+      if (value === "false") return false;
+      if (value === "true") return true;
+      if (+value) return +value;
+      return value;
+    }
+  };
+  var remove = (label) => {
+    try {
+      localStorage.removeItem(`${PREFIX}.${label}`);
+      return;
+    } catch (err) {
+      return;
+    }
+  };
+  var LocalStorage = {
+    set,
+    get,
+    remove
+  };
+  var LocalStorage_default = LocalStorage;
+
+  // ../shared/src/internal/util/Logger.ts
+  var PREFIX2 = "Amplitude Engagement Logger ";
+  var getlocalStorageOverride = () => {
+    const level = parseInt(LocalStorage_default.get("logLevel", ""), 10);
+    if ([0, 1, 2, 3, 4].includes(level)) {
+      return level;
+    }
+    return null;
+  };
+  var DefaultLogger = class {
+    logLevel;
+    constructor() {
+      this.logLevel = getlocalStorageOverride() ?? LogLevel.None;
+    }
+    disable() {
+      this.logLevel = getlocalStorageOverride() ?? LogLevel.None;
+    }
+    enable(logLevel = LogLevel.Warn) {
+      this.logLevel = getlocalStorageOverride() ?? logLevel;
+    }
+    log(...args) {
+      if (this.logLevel < LogLevel.Verbose) {
+        return;
+      }
+      console.log(`${PREFIX2}[Log]:`, ...args);
+    }
+    warn(...args) {
+      if (this.logLevel < LogLevel.Warn) {
+        return;
+      }
+      console.warn(`${PREFIX2}[Warn]:`, ...args);
+    }
+    error(...args) {
+      if (this.logLevel < LogLevel.Error) {
+        return;
+      }
+      console.error(`${PREFIX2}[Error]:`, ...args);
+    }
+    debug(...args) {
+      if (this.logLevel < LogLevel.Debug) {
+        return;
+      }
+      console.log(`${PREFIX2}[Debug]:`, ...args);
+    }
+  };
+  var proxyLogger = {
+    disable: () => {
+    },
+    enable: () => {
+    },
+    log: () => {
+    },
+    warn: () => {
+    },
+    error: () => {
+    },
+    debug: () => {
+    }
+  };
+  var logger = new Proxy(proxyLogger, {
+    get(_target, prop) {
+      const sdkLogger = getSDK()?.[_configuration]?.options?.logger || proxyLogger;
+      return sdkLogger[prop];
+    }
+  });
+
+  // ../shared/src/sdk/instanceRegistry.ts
+  var DEFAULT_INSTANCE_NAME = "$default";
+  function getInstanceRegistry() {
+    if (typeof window === "undefined" || !window.engagement) {
+      return /* @__PURE__ */ new Map();
+    }
+    const existingRegistry = window.engagement._instances;
+    if (!(existingRegistry instanceof Map)) {
+      window.engagement._instances = /* @__PURE__ */ new Map();
+    }
+    return window.engagement._instances;
+  }
+  function getInstance(instanceName) {
+    if (instanceName === DEFAULT_INSTANCE_NAME) {
+      return typeof window !== "undefined" ? window.engagement : void 0;
+    }
+    return getInstanceRegistry().get(instanceName);
+  }
+  function unregisterInstance(instanceName) {
+    if (instanceName === DEFAULT_INSTANCE_NAME) {
+      logger.warn("Cannot unregister the default instance");
+      return false;
+    }
+    return getInstanceRegistry().delete(instanceName);
+  }
+  function getInstanceNames() {
+    const names = Array.from(getInstanceRegistry().keys());
+    if (typeof window !== "undefined" && window.engagement && !names.includes(DEFAULT_INSTANCE_NAME)) {
+      names.unshift(DEFAULT_INSTANCE_NAME);
+    }
+    return names;
+  }
+  function getContainerId(instanceName) {
+    return instanceName === DEFAULT_INSTANCE_NAME ? "engagement-container" : `engagement-container-${instanceName}`;
+  }
+
   // ../shared/src/sdk/globals.ts
-  function getSDK() {
-    return window.engagement;
+  function getSDK(instanceName) {
+    if (!instanceName || instanceName === DEFAULT_INSTANCE_NAME) {
+      return window.engagement;
+    }
+    return getInstance(instanceName);
+  }
+  function getSDKForStore(_) {
+    return getSDK(_.instanceName);
   }
 
   // src/bridge.ts
@@ -12280,130 +12444,6 @@
   var import_io_ts_reporters = __toESM(require_src());
   var import_function2 = __toESM(require_function());
   var import_Either2 = __toESM(require_Either());
-
-  // ../shared/node_modules/@amplitude/analytics-types/lib/esm/logger.js
-  var LogLevel;
-  (function(LogLevel2) {
-    LogLevel2[LogLevel2["None"] = 0] = "None";
-    LogLevel2[LogLevel2["Error"] = 1] = "Error";
-    LogLevel2[LogLevel2["Warn"] = 2] = "Warn";
-    LogLevel2[LogLevel2["Verbose"] = 3] = "Verbose";
-    LogLevel2[LogLevel2["Debug"] = 4] = "Debug";
-  })(LogLevel || (LogLevel = {}));
-
-  // ../shared/src/sdk/symbols.ts
-  var _analytics = "_analytics";
-  var _configuration = "_configuration";
-
-  // ../shared/src/internal/util/LocalStorage.ts
-  var PREFIX = "amplitude.engagement";
-  var set = (label, value) => {
-    try {
-      localStorage.setItem(`${PREFIX}.${label}`, value.toString());
-      return value;
-    } catch (err) {
-      return "";
-    }
-  };
-  var get = (label, defaultValue, prefixOverride) => {
-    let value;
-    const prefix = prefixOverride ?? PREFIX;
-    try {
-      value = localStorage.getItem(`${prefix}.${label}`);
-    } catch (err) {
-      value = null;
-    }
-    if (value === null) {
-      return defaultValue;
-    } else {
-      if (value === "false") return false;
-      if (value === "true") return true;
-      if (+value) return +value;
-      return value;
-    }
-  };
-  var remove = (label) => {
-    try {
-      localStorage.removeItem(`${PREFIX}.${label}`);
-      return;
-    } catch (err) {
-      return;
-    }
-  };
-  var LocalStorage = {
-    set,
-    get,
-    remove
-  };
-  var LocalStorage_default = LocalStorage;
-
-  // ../shared/src/internal/util/Logger.ts
-  var PREFIX2 = "Amplitude Engagement Logger ";
-  var getlocalStorageOverride = () => {
-    const level = parseInt(LocalStorage_default.get("logLevel", ""), 10);
-    if ([0, 1, 2, 3, 4].includes(level)) {
-      return level;
-    }
-    return null;
-  };
-  var DefaultLogger = class {
-    logLevel;
-    constructor() {
-      this.logLevel = getlocalStorageOverride() ?? LogLevel.None;
-    }
-    disable() {
-      this.logLevel = getlocalStorageOverride() ?? LogLevel.None;
-    }
-    enable(logLevel = LogLevel.Warn) {
-      this.logLevel = getlocalStorageOverride() ?? logLevel;
-    }
-    log(...args) {
-      if (this.logLevel < LogLevel.Verbose) {
-        return;
-      }
-      console.log(`${PREFIX2}[Log]:`, ...args);
-    }
-    warn(...args) {
-      if (this.logLevel < LogLevel.Warn) {
-        return;
-      }
-      console.warn(`${PREFIX2}[Warn]:`, ...args);
-    }
-    error(...args) {
-      if (this.logLevel < LogLevel.Error) {
-        return;
-      }
-      console.error(`${PREFIX2}[Error]:`, ...args);
-    }
-    debug(...args) {
-      if (this.logLevel < LogLevel.Debug) {
-        return;
-      }
-      console.log(`${PREFIX2}[Debug]:`, ...args);
-    }
-  };
-  var proxyLogger = {
-    disable: () => {
-    },
-    enable: () => {
-    },
-    log: () => {
-    },
-    warn: () => {
-    },
-    error: () => {
-    },
-    debug: () => {
-    }
-  };
-  var logger = new Proxy(proxyLogger, {
-    get(_target, prop) {
-      const sdkLogger = getSDK()?.[_configuration]?.options?.logger || proxyLogger;
-      return sdkLogger[prop];
-    }
-  });
-
-  // ../shared/src/internal/middleware/generics.ts
   function decodeThrowing(validator, input) {
     const result = validator.decode(input);
     return (0, import_function2.pipe)(
@@ -12818,6 +12858,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   var ConcreteAction = t8.union([EffectfulActionV, NavigationActionV]);
   var NudgeButtonActionV = t8.union([NoAction, UseConditionalLogicAction, ConcreteAction]);
   var ActionSequenceV = t8.type({
+    type: withFallback(t8.literal("action_sequence"), "action_sequence"),
     navigation: NavigationActionV,
     effects: t8.array(EffectfulActionV)
   });
@@ -14342,12 +14383,12 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         return true;
     }
   };
-  var getAppliedNudgeLocale = (nudge, localizationSettings) => {
+  var getAppliedNudgeLocale = (nudge, localizationSettings, locale) => {
     if (!localizationSettings || !localizationSettings.enabled || !nudge.translationStatus) {
       return void 0;
     }
     if (nudge.translationStatus.translated) {
-      return getSDK()?.[_configuration].locale;
+      return locale;
     } else {
       return localizationSettings.defaultLocale;
     }
@@ -17857,12 +17898,13 @@ ${err.message}`);
   });
 
   // ../shared/src/internal/middleware/getBaseURL.ts
-  var getServerUrl = () => {
-    const apiEndpoint = getSDK()?.[_configuration]?.serverUrl;
+  var getServerUrl = (instanceName) => {
+    const sdk = getSDK(instanceName);
+    const apiEndpoint = sdk?.[_configuration]?.serverUrl;
     if (apiEndpoint) {
       return apiEndpoint;
     } else {
-      if (getSDK()?.[_configuration].serverZone === "EU") {
+      if (sdk?.[_configuration].serverZone === "EU") {
         return "https://gs.eu.amplitude.com";
       } else {
         return "https://gs.amplitude.com";
@@ -18019,7 +18061,9 @@ ${err.message}`);
     initializedSuccessfully;
     dirtyVariantIds;
     debouncedNetworkPush;
-    constructor() {
+    instanceName;
+    constructor(instanceName) {
+      this.instanceName = instanceName;
       this.data = emptyEndUserStoreData();
       this.initializedSuccessfully = false;
       this.dirtyVariantIds = /* @__PURE__ */ new Set();
@@ -18032,11 +18076,13 @@ ${err.message}`);
       this.dirtyVariantIds = /* @__PURE__ */ new Set();
     }
     getApiKeyPrefix() {
-      const { apiKey } = getSDK()._configuration;
+      const sdk = getSDK(this.instanceName);
+      if (!sdk) return "";
+      const { apiKey } = sdk._configuration;
       return apiKey.substring(0, 6);
     }
     getLocalStorageLabel() {
-      const user = getSDK()._.user;
+      const user = getSDK(this.instanceName)?._.user;
       const prefix = this.getApiKeyPrefix();
       if (user?.user_id) {
         return `eus.${prefix}.user_id:${user.user_id}`;
@@ -18086,9 +18132,10 @@ ${err.message}`);
       });
     }
     async fetchData() {
-      const endUser = getSDK()._.user;
-      if (!endUser) return;
-      const { apiKey } = getSDK()._configuration;
+      const sdk = getSDK(this.instanceName);
+      const endUser = sdk?._.user;
+      if (!sdk || !endUser) return;
+      const { apiKey } = sdk._configuration;
       const userJsonBase64 = jsonBase64Encoder(endUser);
       let remoteData = null;
       try {
@@ -18126,7 +18173,7 @@ ${err.message}`);
       }
     }
     async pushData(options) {
-      const endUser = getSDK()._.user;
+      const endUser = getSDK(this.instanceName)?._.user;
       if (!endUser || !this.initializedSuccessfully) {
         return;
       }
@@ -18142,7 +18189,8 @@ ${err.message}`);
       }
     }
     async networkPush() {
-      const sdk = getSDK();
+      const sdk = getSDK(this.instanceName);
+      if (!sdk) return;
       const endUser = sdk._.user;
       const eus = sdk._.endUserStore;
       if (!endUser || eus.dirtyVariantIds.size === 0) {
@@ -18200,7 +18248,9 @@ ${err.message}`);
     data;
     initializedSuccessfully;
     dirtyVariantIds;
-    constructor() {
+    instanceName;
+    constructor(instanceName) {
+      this.instanceName = instanceName;
       this.data = emptyEndUserStoreData();
       this.initializedSuccessfully = false;
       this.dirtyVariantIds = /* @__PURE__ */ new Set();
@@ -18211,7 +18261,7 @@ ${err.message}`);
       this.dirtyVariantIds = /* @__PURE__ */ new Set();
     }
     getEUSKey() {
-      const user = getSDK()._.user;
+      const user = getSDK(this.instanceName)?._.user;
       if (user?.user_id) {
         return `eus.user_id:${user?.user_id}`;
       } else if (user?.device_id) {
@@ -18280,19 +18330,19 @@ ${err.message}`);
 
   // ../shared/src/internal/util/SessionStorage.ts
   var PREFIX3 = "amplitude.engagement";
-  var set2 = (label, value) => {
+  var buildKey = (label, scope) => scope ? `${PREFIX3}.${scope}.${label}` : `${PREFIX3}.${label}`;
+  var set2 = (label, value, scope) => {
     try {
-      sessionStorage.setItem(`${PREFIX3}.${label}`, value.toString());
+      sessionStorage.setItem(buildKey(label, scope), value.toString());
       return value;
     } catch (err) {
       return "";
     }
   };
-  var get4 = (label, defaultValue, prefixOverride) => {
+  var get4 = (label, defaultValue, scope) => {
     let value;
-    const prefix = prefixOverride ?? PREFIX3;
     try {
-      value = sessionStorage.getItem(`${prefix}.${label}`);
+      value = sessionStorage.getItem(buildKey(label, scope));
     } catch (err) {
       value = null;
     }
@@ -18305,9 +18355,9 @@ ${err.message}`);
       return value;
     }
   };
-  var remove2 = (label) => {
+  var remove2 = (label, scope) => {
     try {
-      sessionStorage.removeItem(`${PREFIX3}.${label}`);
+      sessionStorage.removeItem(buildKey(label, scope));
       return;
     } catch (err) {
       return;
@@ -18352,8 +18402,8 @@ ${err.message}`);
   };
 
   // ../shared/src/services/analytics/track.ts
-  var getClient = () => {
-    const sdk = getSDK();
+  var getClient = (instanceName) => {
+    const sdk = getSDK(instanceName);
     return sdk?.[_analytics];
   };
   var getEmojiOrStringValue = (response) => {
@@ -18365,12 +18415,48 @@ ${err.message}`);
     return null;
   };
   var ERROR_DEDUP_STORAGE_KEY = "error_dedup";
+  var MAX_SANITIZE_DEPTH = 10;
+  var sanitizeAnalyticsValue = (value, seen = /* @__PURE__ */ new WeakSet(), depth = 0) => {
+    try {
+      if (depth > MAX_SANITIZE_DEPTH) {
+        return "[Max Depth]";
+      }
+      if (value === null || typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+        return value;
+      }
+      if (typeof value === "undefined") {
+        return null;
+      }
+      if (typeof value === "function") {
+        return "[Function]";
+      }
+      if (Array.isArray(value)) {
+        if (seen.has(value)) {
+          return "[Circular]";
+        }
+        seen.add(value);
+        return value.map((item) => sanitizeAnalyticsValue(item, seen, depth + 1));
+      }
+      if (typeof value === "object") {
+        if (seen.has(value)) {
+          return "[Circular]";
+        }
+        seen.add(value);
+        return Object.fromEntries(
+          Object.entries(value).map(([key, nestedValue]) => [key, sanitizeAnalyticsValue(nestedValue, seen, depth + 1)])
+        );
+      }
+      return String(value);
+    } catch {
+      return "[Error]";
+    }
+  };
   var ErrorDedupStateV = t11.type({
     sessionId: t11.union([t11.number, t11.undefined]),
     keys: t11.array(t11.string)
   });
-  var loadErrorDedupState = (currentSession) => {
-    const raw = SessionStorage_default.get(ERROR_DEDUP_STORAGE_KEY, "");
+  var loadErrorDedupState = (currentSession, apiKeyPrefix) => {
+    const raw = SessionStorage_default.get(ERROR_DEDUP_STORAGE_KEY, "", apiKeyPrefix);
     if (typeof raw !== "string" || raw === "") return /* @__PURE__ */ new Set();
     try {
       const decoded = ErrorDedupStateV.decode(JSON.parse(raw));
@@ -18381,16 +18467,21 @@ ${err.message}`);
     }
     return /* @__PURE__ */ new Set();
   };
-  var saveErrorDedupState = (sessionId, keys) => {
-    SessionStorage_default.set(ERROR_DEDUP_STORAGE_KEY, JSON.stringify(ErrorDedupStateV.encode({ sessionId, keys: [...keys] })));
+  var saveErrorDedupState = (sessionId, keys, apiKeyPrefix) => {
+    SessionStorage_default.set(
+      ERROR_DEDUP_STORAGE_KEY,
+      JSON.stringify(ErrorDedupStateV.encode({ sessionId, keys: [...keys] })),
+      apiKeyPrefix
+    );
   };
-  var fireErrorEvent = (commonProperties, errorType, dedupKeyParts, actionIndex) => {
-    const sdk = getSDK();
+  var fireErrorEvent = (commonProperties, errorType, dedupKeyParts, actionIndex, instanceName) => {
+    const sdk = getSDK(instanceName);
+    const apiKeyPrefix = sdk?._?.apiKeyPrefix;
     const currentSession = sdk?._ ? getEffectiveSessionStart(sdk._) : void 0;
-    const dedupSet = loadErrorDedupState(currentSession);
+    const dedupSet = loadErrorDedupState(currentSession, apiKeyPrefix);
     const dedupKey = `${dedupKeyParts.flagKey ?? "unknown"}:${dedupKeyParts.variant ?? "unknown"}:${errorType}`;
     if (dedupSet.has(dedupKey)) return false;
-    const client = getClient();
+    const client = getClient(instanceName);
     if (!client?.trackEvent) return false;
     const properties = {
       ...commonProperties,
@@ -18401,23 +18492,51 @@ ${err.message}`);
     }
     client.trackEvent("[Guides-Surveys] Error", properties);
     dedupSet.add(dedupKey);
-    saveErrorDedupState(currentSession, dedupSet);
+    saveErrorDedupState(currentSession, dedupSet, apiKeyPrefix);
     return true;
   };
   var Track = {
+    booted: (bootArgs, instanceName) => {
+      const sdk = getSDK(instanceName);
+      const interactionProperties = Object.entries(sdk?._.endUserStore.data.nudgeInteractions ?? {}).reduce((properties, [variantId, interactionState]) => {
+        properties[`interactions-variant-${variantId}`] = interactionState;
+        return properties;
+      }, {});
+      getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Booted", {
+        initArguments: sanitizeAnalyticsValue(sdk?._configuration),
+        bootArguments: sanitizeAnalyticsValue(bootArgs),
+        ...interactionProperties
+      });
+    },
     resourceCenter: {
       /**
        * Fired whenever Resource Center is opened.
        * TODO: Add source property once we have a proper way to plumb it through
        */
-      opened: () => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Opened", {});
+      opened: (instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Opened", {});
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Opened" /* ResourceCenterOpened */, {});
       },
       /**
        * Fired whenever Resource Center is closed.
        */
-      closed: () => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Closed", {});
+      closed: (instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Closed", {});
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Closed" /* ResourceCenterClosed */, {});
+      },
+      /**
+       * Fired whenever Resource Center is minimized.
+       */
+      minimized: (instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Minimized", {});
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Minimized" /* ResourceCenterMinimized */, {});
+      },
+      /**
+       * Fired whenever Resource Center is restored from minimized state.
+       */
+      maximized: (instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Maximized", {});
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Maximized" /* ResourceCenterMaximized */, {});
       },
       /**
        * Fired whenever a piece of content is viewed in Resource Center.
@@ -18425,12 +18544,17 @@ ${err.message}`);
        * @param url The URL of the article
        * @param sourceKey The source key of the article (if available)
        */
-      articleViewed: (title, url, sourceKey) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Viewed", {
+      articleViewed: (title, url, sourceKey, instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Article Viewed", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] URL" /* URL */]: url,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
           // TODO: Add source property once we have a proper way to plumb it through
+        });
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Article Viewed" /* ResourceCenterArticleViewed */, {
+          ["[Assistant] Title" /* Title */]: title,
+          ["[Assistant] URL" /* URL */]: url,
+          ["[Assistant] Source Key" /* SourceKey */]: sourceKey
         });
       },
       /**
@@ -18439,12 +18563,17 @@ ${err.message}`);
        * @param url The URL of the article
        * @param sourceKey The source key of the article (if available)
        */
-      articleLinkCopied: (title, url, sourceKey) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Link Copied", {
+      articleLinkCopied: (title, url, sourceKey, instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Article Link Copied", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] URL" /* URL */]: url,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
           // TODO: Add source property once we have a proper way to plumb it through
+        });
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Article Link Copied" /* ResourceCenterArticleLinkCopied */, {
+          ["[Assistant] Title" /* Title */]: title,
+          ["[Assistant] URL" /* URL */]: url,
+          ["[Assistant] Source Key" /* SourceKey */]: sourceKey
         });
       },
       /**
@@ -18454,13 +18583,19 @@ ${err.message}`);
        * @param sourceKey The source key of the article (if available)
        * @param destination The destination URL of the link
        */
-      articleLinkClicked: (title, url, sourceKey, destination) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Link Clicked", {
+      articleLinkClicked: (title, url, sourceKey, destination, instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Article Link Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] URL" /* URL */]: url,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
           ["[Guides-Surveys] Destination" /* Destination */]: destination
           // TODO: Add source property once we have a proper way to plumb it through
+        });
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Article Link Clicked" /* ResourceCenterArticleLinkClicked */, {
+          ["[Assistant] Title" /* Title */]: title,
+          ["[Assistant] URL" /* URL */]: url,
+          ["[Assistant] Source Key" /* SourceKey */]: sourceKey,
+          ["[Assistant] Destination" /* Destination */]: destination
         });
       },
       /**
@@ -18469,12 +18604,17 @@ ${err.message}`);
        * @param url The URL of the article
        * @param sourceKey The source key of the article (if available)
        */
-      articleScrolled: (title, url, sourceKey) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Scrolled", {
+      articleScrolled: (title, url, sourceKey, instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Article Scrolled", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] URL" /* URL */]: url,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
           // TODO: Add source property once we have a proper way to plumb it through
+        });
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Article Scrolled" /* ResourceCenterArticleScrolled */, {
+          ["[Assistant] Title" /* Title */]: title,
+          ["[Assistant] URL" /* URL */]: url,
+          ["[Assistant] Source Key" /* SourceKey */]: sourceKey
         });
       },
       /**
@@ -18483,12 +18623,17 @@ ${err.message}`);
        * @param url The URL of the article/video
        * @param sourceKey The source key of the article (if available)
        */
-      videoViewed: (title, url, sourceKey) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Viewed", {
+      videoViewed: (title, url, sourceKey, instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Video Viewed", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] URL" /* URL */]: url,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
           // TODO: Add source property once we have a proper way to plumb it through
+        });
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Video Viewed" /* ResourceCenterVideoViewed */, {
+          ["[Assistant] Title" /* Title */]: title,
+          ["[Assistant] URL" /* URL */]: url,
+          ["[Assistant] Source Key" /* SourceKey */]: sourceKey
         });
       },
       /**
@@ -18497,12 +18642,17 @@ ${err.message}`);
        * @param url The URL of the article/video
        * @param sourceKey The source key of the article (if available)
        */
-      videoPlayed: (title, url, sourceKey) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Played", {
+      videoPlayed: (title, url, sourceKey, instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Video Played", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] URL" /* URL */]: url,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
           // TODO: Add source property once we have a proper way to plumb it through
+        });
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Video Played" /* ResourceCenterVideoPlayed */, {
+          ["[Assistant] Title" /* Title */]: title,
+          ["[Assistant] URL" /* URL */]: url,
+          ["[Assistant] Source Key" /* SourceKey */]: sourceKey
         });
       },
       /**
@@ -18511,12 +18661,17 @@ ${err.message}`);
        * @param url The URL of the article/video
        * @param sourceKey The source key of the article (if available)
        */
-      videoPaused: (title, url, sourceKey) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Paused", {
+      videoPaused: (title, url, sourceKey, instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Video Paused", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] URL" /* URL */]: url,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey
           // TODO: Add source property once we have a proper way to plumb it through
+        });
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Video Paused" /* ResourceCenterVideoPaused */, {
+          ["[Assistant] Title" /* Title */]: title,
+          ["[Assistant] URL" /* URL */]: url,
+          ["[Assistant] Source Key" /* SourceKey */]: sourceKey
         });
       },
       /**
@@ -18526,13 +18681,19 @@ ${err.message}`);
        * @param sourceKey The source key of the article (if available)
        * @param duration The duration in milliseconds that the video was viewed
        */
-      videoClosed: (title, url, sourceKey, duration) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Video Closed", {
+      videoClosed: (title, url, sourceKey, duration, instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Video Closed", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] URL" /* URL */]: url,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
           ["[Guides-Surveys] Duration" /* Duration */]: duration
           // TODO: Add source property once we have a proper way to plumb it through
+        });
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Video Closed" /* ResourceCenterVideoClosed */, {
+          ["[Assistant] Title" /* Title */]: title,
+          ["[Assistant] URL" /* URL */]: url,
+          ["[Assistant] Source Key" /* SourceKey */]: sourceKey,
+          ["[Assistant] Duration" /* Duration */]: duration
         });
       },
       /**
@@ -18542,13 +18703,19 @@ ${err.message}`);
        * @param sourceKey The source key of the article (if available)
        * @param duration The duration in milliseconds that the article was viewed
        */
-      articleClosed: (title, url, sourceKey, duration) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Article Closed", {
+      articleClosed: (title, url, sourceKey, duration, instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Article Closed", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] URL" /* URL */]: url,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
           ["[Guides-Surveys] Duration" /* Duration */]: duration
           // TODO: Add source property once we have a proper way to plumb it through
+        });
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Article Closed" /* ResourceCenterArticleClosed */, {
+          ["[Assistant] Title" /* Title */]: title,
+          ["[Assistant] URL" /* URL */]: url,
+          ["[Assistant] Source Key" /* SourceKey */]: sourceKey,
+          ["[Assistant] Duration" /* Duration */]: duration
         });
       },
       /**
@@ -18556,11 +18723,15 @@ ${err.message}`);
        * @param inputText The search query text
        * @param resultsCount The number of search results
        */
-      searchExecuted: (inputText, resultsCount) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Search", {
+      searchExecuted: (inputText, resultsCount, instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Search", {
           ["[Guides-Surveys] Input Text" /* InputText */]: inputText,
           ["[Guides-Surveys] Results Count" /* ResultsCount */]: resultsCount ?? 0
           // TODO: Add source property once we have a proper way to plumb it through
+        });
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Search" /* ResourceCenterSearch */, {
+          ["[Assistant] Input Text" /* InputText */]: inputText,
+          ["[Assistant] Results Count" /* ResultsCount */]: resultsCount ?? 0
         });
       },
       /**
@@ -18572,8 +18743,8 @@ ${err.message}`);
        * @param sourceKey The source key of the clicked result (if available)
        * @param position The position of the clicked result in the list
        */
-      resultClicked: (title, excerpt, type12, id, sourceKey, position2) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Result Clicked", {
+      resultClicked: (title, excerpt, type12, id, sourceKey, position2, instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Result Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] Excerpt" /* Excerpt */]: excerpt,
           ["[Guides-Surveys] Type" /* Type */]: type12,
@@ -18583,6 +18754,14 @@ ${err.message}`);
           // TODO: Add source property once we have a proper way to plumb it through
           ["[Guides-Surveys] Position" /* Position */]: position2
         });
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Result Clicked" /* ResourceCenterResultClicked */, {
+          ["[Assistant] Title" /* Title */]: title,
+          ["[Assistant] Excerpt" /* Excerpt */]: excerpt,
+          ["[Assistant] Type" /* Type */]: type12,
+          ["[Assistant] Key" /* Key */]: null,
+          ["[Assistant] Source Key" /* SourceKey */]: sourceKey,
+          ["[Assistant] Position" /* Position */]: position2
+        });
       },
       /**
        * Fired whenever a recommendation set is shown in Resource Center.
@@ -18590,12 +18769,17 @@ ${err.message}`);
        * @param key The key of the recommendation set
        * @param isDefault Whether the recommendation set is the default set
        */
-      recommendationSetShown: (title, key, isDefault) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Recommendation Set Shown", {
+      recommendationSetShown: (title, key, isDefault, instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Recommendation Set Shown", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] Key" /* Key */]: key,
           // TODO: Add source property once we have a proper way to plumb it through
           ["[Guides-Surveys] Is Default" /* IsDefault */]: isDefault
+        });
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Recommendation Set Shown" /* ResourceCenterRecommendationSetShown */, {
+          ["[Assistant] Title" /* Title */]: title,
+          ["[Assistant] Key" /* Key */]: key,
+          ["[Assistant] Is Default" /* IsDefault */]: isDefault
         });
       },
       /**
@@ -18610,8 +18794,8 @@ ${err.message}`);
        * @param isDefault Whether the recommendation set is the default set
        * @param isAutopilot Whether the recommendation is an autopilot recommendation
        */
-      recommendationClicked: (title, type12, url, key, sourceKey, position2, recommendationSetKey, isDefault, isAutopilot) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Recommendation Clicked", {
+      recommendationClicked: (title, type12, url, key, sourceKey, position2, recommendationSetKey, isDefault, isAutopilot, instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Recommendation Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] Type" /* Type */]: type12,
           ["[Guides-Surveys] URL" /* URL */]: url,
@@ -18622,6 +18806,17 @@ ${err.message}`);
           ["[Guides-Surveys] Recommendation Set Key" /* RecommendationSetKey */]: recommendationSetKey,
           ["[Guides-Surveys] Is Default" /* IsDefault */]: isDefault,
           ["[Guides-Surveys] Is Autopilot" /* IsAutopilot */]: isAutopilot
+        });
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Recommendation Clicked" /* ResourceCenterRecommendationClicked */, {
+          ["[Assistant] Title" /* Title */]: title,
+          ["[Assistant] Type" /* Type */]: type12,
+          ["[Assistant] URL" /* URL */]: url,
+          ["[Assistant] Key" /* Key */]: key,
+          ["[Assistant] Source Key" /* SourceKey */]: sourceKey,
+          ["[Assistant] Position" /* Position */]: position2,
+          ["[Assistant] Recommendation Set Key" /* RecommendationSetKey */]: recommendationSetKey,
+          ["[Assistant] Is Default" /* IsDefault */]: isDefault,
+          ["[Assistant] Is Autopilot" /* IsAutopilot */]: isAutopilot
         });
       },
       /**
@@ -18634,8 +18829,8 @@ ${err.message}`);
        * @param position The position of the clicked quick link in the list
        * @param isDefault Whether the quick link is in the default set
        */
-      quickLinkClicked: (title, type12, url, key, sourceKey, position2, isDefault) => {
-        getClient()?.trackEvent?.("[Guides-Surveys] Resource Center Quick Link Clicked", {
+      quickLinkClicked: (title, type12, url, key, sourceKey, position2, isDefault, instanceName) => {
+        getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Quick Link Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] Type" /* Type */]: type12,
           ["[Guides-Surveys] URL" /* URL */]: url,
@@ -18645,16 +18840,27 @@ ${err.message}`);
           ["[Guides-Surveys] Position" /* Position */]: position2,
           ["[Guides-Surveys] Is Default" /* IsDefault */]: isDefault
         });
+        getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Quick Link Clicked" /* ResourceCenterQuickLinkClicked */, {
+          ["[Assistant] Title" /* Title */]: title,
+          ["[Assistant] Type" /* Type */]: type12,
+          ["[Assistant] URL" /* URL */]: url,
+          ["[Assistant] Key" /* Key */]: key,
+          ["[Assistant] Source Key" /* SourceKey */]: sourceKey,
+          ["[Assistant] Position" /* Position */]: position2,
+          ["[Assistant] Is Default" /* IsDefault */]: isDefault
+        });
       }
     },
     nudge: {
       /**
        * Properties that will be included on all nudge events.
        */
-      _getCommonProperties: (nudge, stepIndex, context) => {
+      _getCommonProperties: (nudge, stepIndex, context, instanceName) => {
         const nudgeStep = typeof stepIndex === "undefined" ? null : getNudgeStep(nudge, stepIndex);
         const isLastStep = stepIndex === nudge.steps.length - 1;
-        const _ = getSDK()?._;
+        const sdk = getSDK(instanceName);
+        const _ = sdk?._;
+        const locale = sdk?.[_configuration]?.locale;
         return {
           ["[Guides-Surveys] Title" /* Title */]: nudge.title,
           ["[Guides-Surveys] Type" /* Type */]: nudge.type,
@@ -18669,8 +18875,9 @@ ${err.message}`);
           ["[Guides-Surveys] Is From Debug Mode" /* IsFromDebugMode */]: !!context?.triggerEvent?.overrides?.simulateMode,
           ["[Guides-Surveys] Is From Test Mode" /* IsFromTestMode */]: isTestNudge(_, nudge),
           ["[Guides-Surveys] App Type" /* AppType */]: nudge.platform,
-          ["[Guides-Surveys] Localization Language" /* LocalizationLanguage */]: getAppliedNudgeLocale(nudge, _?.organization?.localization),
-          ["[Guides-Surveys] History Version" /* HistoryVersion */]: nudge.version ?? null
+          ["[Guides-Surveys] Localization Language" /* LocalizationLanguage */]: getAppliedNudgeLocale(nudge, _?.organization?.localization, locale),
+          ["[Guides-Surveys] History Version" /* HistoryVersion */]: nudge.version ?? null,
+          ["[Guides-Surveys] Segment Name" /* SegmentName */]: context?.segmentName ?? null
         };
       },
       /**
@@ -18679,14 +18886,13 @@ ${err.message}`);
        * @param stepIndex The step of the nudge that was viewed.
        * @param context nudge related state
        */
-      viewed: (nudge, stepIndex, context) => {
+      viewed: (nudge, stepIndex, context, instanceName) => {
         const sourceType = isSurvey(nudge) ? "survey" : "guide";
         const source = context?.triggerEvent?.source.type === "nudge" ? { ...context.triggerEvent.source, type: sourceType } : context?.triggerEvent?.source;
-        getClient()?.trackEvent?.(getEventNameCreator(nudge)("viewed"), {
-          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
+        getClient(instanceName)?.trackEvent?.(getEventNameCreator(nudge)("viewed"), {
+          ...Track.nudge._getCommonProperties(nudge, stepIndex, context, instanceName),
           ["[Guides-Surveys] Source" /* Source */]: source,
-          ["[Guides-Surveys] Evaluation ID" /* EvaluationId */]: context?.evaluationId ?? null,
-          ["[Guides-Surveys] Segment Name" /* SegmentName */]: context?.segmentName ?? null
+          ["[Guides-Surveys] Evaluation ID" /* EvaluationId */]: context?.evaluationId ?? null
         });
       },
       /**
@@ -18695,9 +18901,9 @@ ${err.message}`);
        * @param stepIndex The step of the nudge that was viewed.
        * @param context nudge related state including the source of the engagement.
        */
-      engaged: (nudge, stepIndex, context) => {
-        getClient()?.trackEvent?.(getEventNameCreator(nudge)("engaged"), {
-          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
+      engaged: (nudge, stepIndex, context, instanceName) => {
+        getClient(instanceName)?.trackEvent?.(getEventNameCreator(nudge)("engaged"), {
+          ...Track.nudge._getCommonProperties(nudge, stepIndex, context, instanceName),
           ["[Guides-Surveys] Engagement" /* Engagement */]: context.source
         });
       },
@@ -18707,10 +18913,10 @@ ${err.message}`);
        * @param stepIndex The step of the nudge that was viewed.
        * @param context Metadata about nudge state
        */
-      tooltipMarkerViewed: (nudge, stepIndex, context) => {
-        getClient()?.trackEvent?.(
+      tooltipMarkerViewed: (nudge, stepIndex, context, instanceName) => {
+        getClient(instanceName)?.trackEvent?.(
           getEventNameCreator(nudge)("tooltipMarkerViewed"),
-          Track.nudge._getCommonProperties(nudge, stepIndex, context)
+          Track.nudge._getCommonProperties(nudge, stepIndex, context, instanceName)
         );
       },
       /**
@@ -18719,10 +18925,10 @@ ${err.message}`);
        * @param stepIndex The step of the nudge that was dismissed.
        * @param context Metadata about nudge state
        */
-      dismissed: (nudge, stepIndex, context) => {
-        getClient()?.trackEvent?.(
+      dismissed: (nudge, stepIndex, context, instanceName) => {
+        getClient(instanceName)?.trackEvent?.(
           getEventNameCreator(nudge)("dismissed"),
-          Track.nudge._getCommonProperties(nudge, stepIndex, context)
+          Track.nudge._getCommonProperties(nudge, stepIndex, context, instanceName)
         );
       },
       /**
@@ -18731,10 +18937,10 @@ ${err.message}`);
        * @param stepIndex The step of the nudge that was dismissed.
        * @param context Metadata about nudge state
        */
-      rageClosed: (nudge, stepIndex, context) => {
-        getClient()?.trackEvent?.(
+      rageClosed: (nudge, stepIndex, context, instanceName) => {
+        getClient(instanceName)?.trackEvent?.(
           getEventNameCreator(nudge)("rageClosed"),
-          Track.nudge._getCommonProperties(nudge, stepIndex, context)
+          Track.nudge._getCommonProperties(nudge, stepIndex, context, instanceName)
         );
       },
       /**
@@ -18743,10 +18949,10 @@ ${err.message}`);
        * @param stepIndex The step of the nudge that was completed.
        * @param context Metadata about nudge state
        */
-      completed: (nudge, stepIndex, context) => {
-        getClient()?.trackEvent?.(
+      completed: (nudge, stepIndex, context, instanceName) => {
+        getClient(instanceName)?.trackEvent?.(
           getEventNameCreator(nudge)("completed"),
-          Track.nudge._getCommonProperties(nudge, stepIndex, context)
+          Track.nudge._getCommonProperties(nudge, stepIndex, context, instanceName)
         );
       },
       /**
@@ -18755,9 +18961,9 @@ ${err.message}`);
        * @param stepIndex The step of the nudge that was completed.
        * @param context Metadata about nudge state and whether the event was triggered via CTA
        */
-      stepCompleted: (nudge, stepIndex, context) => {
-        getClient()?.trackEvent?.(getEventNameCreator(nudge)("stepCompleted"), {
-          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
+      stepCompleted: (nudge, stepIndex, context, instanceName) => {
+        getClient(instanceName)?.trackEvent?.(getEventNameCreator(nudge)("stepCompleted"), {
+          ...Track.nudge._getCommonProperties(nudge, stepIndex, context, instanceName),
           ["[Guides-Surveys] Was Completed Via CTA" /* WasCompletedViaCta */]: context?.completedViaCta
         });
       },
@@ -18767,11 +18973,11 @@ ${err.message}`);
        * @param stepIndex The step of the nudge that was snoozed.
        * @param context Metadata about nudge state and The number of ms that the nudge will be snoozed for.
        */
-      snoozed: (nudge, stepIndex, context) => {
+      snoozed: (nudge, stepIndex, context, instanceName) => {
         const start = (0, import_dayjs.default)();
         const end = start.add(context.duration.value ?? 0, context.duration.interval);
-        getClient()?.trackEvent?.(getEventNameCreator(nudge)("snoozed"), {
-          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
+        getClient(instanceName)?.trackEvent?.(getEventNameCreator(nudge)("snoozed"), {
+          ...Track.nudge._getCommonProperties(nudge, stepIndex, context, instanceName),
           ["[Guides-Surveys] Snooze Duration" /* SnoozeDuration */]: end.diff(start)
         });
       },
@@ -18782,12 +18988,13 @@ ${err.message}`);
        * @param stepIndex The step of the nudge that the response was submitted for
        * @param context Metadata about nudge state and the response to the survey
        */
-      _trackSurveyEvent: (eventName, nudge, stepIndex, context) => {
+      _trackSurveyEvent: (eventName, nudge, stepIndex, context, instanceName) => {
         const { response } = context;
         const value = response?.value;
-        getClient()?.trackEvent?.(getEventNameCreator(nudge)(eventName), {
-          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
+        getClient(instanceName)?.trackEvent?.(getEventNameCreator(nudge)(eventName), {
+          ...Track.nudge._getCommonProperties(nudge, stepIndex, context, instanceName),
           ["[Guides-Surveys] Question UUID" /* QuestionUuid */]: response.blockId,
+          ["[Guides-Surveys] Question Prompt" /* QuestionPrompt */]: response.label ?? null,
           ["[Guides-Surveys] Survey Response" /* SurveyResponse */]: value,
           ["[Guides-Surveys] Survey Response String" /* SurveyResponseString */]: getEmojiOrStringValue(response) ?? null,
           ["[Guides-Surveys] Survey Response Number" /* SurveyResponseNumber */]: response.type === "number" ? value : null,
@@ -18801,8 +19008,8 @@ ${err.message}`);
        * @param stepIndex The step of the nudge that the survey was submitted for.
        * @param context Metadata about nudge state and the response to the survey.
        */
-      surveySubmitted: (nudge, stepIndex, context) => {
-        Track.nudge._trackSurveyEvent("surveySubmitted", nudge, stepIndex, context);
+      surveySubmitted: (nudge, stepIndex, context, instanceName) => {
+        Track.nudge._trackSurveyEvent("surveySubmitted", nudge, stepIndex, context, instanceName);
       },
       /**
        * Fired whenever a survey is abandoned.
@@ -18810,12 +19017,12 @@ ${err.message}`);
        * @param stepIndex The step of the nudge that the survey was submitted for.
        * @param context Metadata about nudge state and the response to the survey.
        */
-      surveyAbandoned: (nudge, stepIndex, context) => {
-        Track.nudge._trackSurveyEvent("surveyAbandoned", nudge, stepIndex, context);
+      surveyAbandoned: (nudge, stepIndex, context, instanceName) => {
+        Track.nudge._trackSurveyEvent("surveyAbandoned", nudge, stepIndex, context, instanceName);
       },
-      stepSkipped: (nudge, stepIndex, context) => {
-        getClient()?.trackEvent?.(getEventNameCreator(nudge)("stepSkipped"), {
-          ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
+      stepSkipped: (nudge, stepIndex, context, instanceName) => {
+        getClient(instanceName)?.trackEvent?.(getEventNameCreator(nudge)("stepSkipped"), {
+          ...Track.nudge._getCommonProperties(nudge, stepIndex, context, instanceName),
           ["[Guides-Surveys] Skip Reason" /* SkipReason */]: context.reason
         });
       },
@@ -18824,25 +19031,31 @@ ${err.message}`);
        * Deduped once per guide per error type per Amplitude session.
        * Returns true if the event was fired (not deduped).
        */
-      error: (nudge, stepIndex, errorType, options) => {
-        const sdk = getSDK();
+      error: (nudge, stepIndex, errorType, options, instanceName) => {
+        const sdk = getSDK(instanceName);
         const interactionState = sdk?._ ? getNudgeDataFromUserStore(sdk._, nudge.variantId) : void 0;
-        const commonProperties = Track.nudge._getCommonProperties(nudge, stepIndex, {
-          ...options?.context,
-          interactionState
-        });
+        const commonProperties = Track.nudge._getCommonProperties(
+          nudge,
+          stepIndex,
+          {
+            ...options?.context,
+            interactionState
+          },
+          instanceName
+        );
         return fireErrorEvent(
           commonProperties,
           errorType,
           { flagKey: nudge.flagKey, variant: nudge.variant },
-          options?.actionIndex
+          options?.actionIndex,
+          instanceName
         );
       },
       /**
        * Fires the unified error event from a pre-computed common properties snapshot.
        * Used when the nudge object is unavailable (e.g. restored sequences after navigation).
        */
-      errorFromProperties: (commonProperties, errorType, actionIndex) => {
+      errorFromProperties: (commonProperties, errorType, actionIndex, instanceName) => {
         return fireErrorEvent(
           commonProperties,
           errorType,
@@ -18850,7 +19063,8 @@ ${err.message}`);
             flagKey: commonProperties["[Guides-Surveys] Key" /* Key */],
             variant: commonProperties["[Guides-Surveys] Variant ID" /* Variant */]
           },
-          actionIndex
+          actionIndex,
+          instanceName
         );
       },
       internal: {
@@ -18859,11 +19073,11 @@ ${err.message}`);
          * Kept for backward compatibility. Also fires the unified error event.
          * Both events share the same dedup — the legacy event only fires when the unified one does.
          */
-        pinTargetNotFoundError: (nudge, stepIndex, context) => {
-          const fired = Track.nudge.error(nudge, stepIndex, "pin_target_not_found", { context });
+        pinTargetNotFoundError: (nudge, stepIndex, context, instanceName) => {
+          const fired = Track.nudge.error(nudge, stepIndex, "pin_target_not_found", { context }, instanceName);
           if (!fired) return;
-          getClient()?.trackEvent?.(getEventNameCreator(nudge)("pinTargetNotFound"), {
-            ...Track.nudge._getCommonProperties(nudge, stepIndex, context),
+          getClient(instanceName)?.trackEvent?.(getEventNameCreator(nudge)("pinTargetNotFound"), {
+            ...Track.nudge._getCommonProperties(nudge, stepIndex, context, instanceName),
             internal: true
           });
         }
@@ -18874,13 +19088,13 @@ ${err.message}`);
        * Fired whenever a nudge is viewed that is part of an experiment.
        * @param nudge The nudge that was viewed.
        */
-      exposure: (flagKey, experimentKey, variant) => {
+      exposure: (flagKey, experimentKey, variant, instanceName) => {
         const eventProperties = {
           flag_key: flagKey,
           experiment_key: experimentKey,
           variant
         };
-        getClient()?.trackEvent?.("$exposure", eventProperties);
+        getClient(instanceName)?.trackEvent?.("$exposure", eventProperties);
       }
     },
     chat: {
@@ -18888,37 +19102,37 @@ ${err.message}`);
        * Fired when the Assistant widget panel is opened.
        */
       opened: () => {
-        getClient()?.trackEvent?.("[Assistant] Opened", {});
+        getClient()?.trackEvent?.("[Assistant] Opened" /* Opened */, {});
       },
       /**
        * Fired when the Assistant widget panel is closed.
        */
       closed: () => {
-        getClient()?.trackEvent?.("[Assistant] Closed", {});
+        getClient()?.trackEvent?.("[Assistant] Closed" /* Closed */, {});
       },
       /**
        * Fired when the Assistant widget is minimized.
        */
       minimized: () => {
-        getClient()?.trackEvent?.("[Assistant] Minimized", {});
+        getClient()?.trackEvent?.("[Assistant] Minimized" /* Minimized */, {});
       },
       /**
        * Fired when the Assistant widget is restored from minimized state.
        */
       maximized: () => {
-        getClient()?.trackEvent?.("[Assistant] Maximized", {});
+        getClient()?.trackEvent?.("[Assistant] Maximized" /* Maximized */, {});
       },
       /**
        * Fired when the user navigates to the Resource Center tab.
        */
       resourceCenterViewed: () => {
-        getClient()?.trackEvent?.("[Assistant] Resource Center Viewed", {});
+        getClient()?.trackEvent?.("[Assistant] Resource Center Viewed" /* ResourceCenterViewed */, {});
       },
       /**
        * Fired when the user navigates to the Chat tab.
        */
       chatViewed: () => {
-        getClient()?.trackEvent?.("[Assistant] Chat Viewed", {});
+        getClient()?.trackEvent?.("[Assistant] Chat Viewed" /* ChatViewed */, {});
       },
       /**
        * Fired when a previous chat session is restored (auto-restore from localStorage or manual from history).
@@ -18926,9 +19140,9 @@ ${err.message}`);
        * @param previousMessageCount The number of messages in the restored session
        */
       sessionRestored: (sessionId, previousMessageCount) => {
-        getClient()?.trackEvent?.("[Assistant] Chat Session Restored", {
-          ["[Assistant] Session ID" /* AssistantSessionId */]: sessionId,
-          ["[Assistant] Message Count" /* AssistantMessageCount */]: previousMessageCount
+        getClient()?.trackEvent?.("[Assistant] Chat Session Restored" /* ChatSessionRestored */, {
+          ["[Assistant] Session ID" /* SessionId */]: sessionId,
+          ["[Assistant] Message Count" /* MessageCount */]: previousMessageCount
         });
       },
       /**
@@ -18936,32 +19150,36 @@ ${err.message}`);
        * @param sessionId The ID of the current chat session
        */
       inputFocused: (sessionId) => {
-        getClient()?.trackEvent?.("[Assistant] Chat Input Focused", {
-          ["[Assistant] Session ID" /* AssistantSessionId */]: sessionId
+        getClient()?.trackEvent?.("[Assistant] Chat Input Focused" /* ChatInputFocused */, {
+          ["[Assistant] Session ID" /* SessionId */]: sessionId
         });
       },
       /**
        * Fired when the user explicitly stops an in-progress streaming response.
        * @param sessionId The ID of the current chat session
+       * @param messageCount The total number of messages in the session
        */
-      messageStopped: (sessionId) => {
-        getClient()?.trackEvent?.("[Assistant] Chat Message Stopped", {
-          ["[Assistant] Session ID" /* AssistantSessionId */]: sessionId
+      messageStopped: (sessionId, messageCount) => {
+        getClient()?.trackEvent?.("[Assistant] Chat Message Stopped" /* ChatMessageStopped */, {
+          ["[Assistant] Session ID" /* SessionId */]: sessionId,
+          ["[Assistant] Message Count" /* MessageCount */]: messageCount
         });
       },
       /**
-       * Fired when a non-fallback assistant response finishes streaming successfully.
+       * Fired when an assistant response finishes streaming.
        * @param sessionId The ID of the current chat session
        * @param messageId The ID of the generated response message
        * @param messageLength The length of the response message content
+       * @param responseTime The time it took to generate the response (in ms)
        * @param messageCount The total number of messages in the session
        */
-      responseReceivedGenerated: (sessionId, messageId, messageLength, messageCount) => {
-        getClient()?.trackEvent?.("[Assistant] Chat Response Received/Generated", {
-          ["[Assistant] Session ID" /* AssistantSessionId */]: sessionId,
-          ["[Assistant] Message ID" /* AssistantMessageId */]: messageId,
-          ["[Assistant] Message Length" /* AssistantMessageLength */]: messageLength,
-          ["[Assistant] Message Count" /* AssistantMessageCount */]: messageCount
+      responseReceivedGenerated: (sessionId, messageId, messageLength, responseTime, messageCount) => {
+        getClient()?.trackEvent?.("[Assistant] Chat Response Received/Generated" /* ChatResponseReceivedGenerated */, {
+          ["[Assistant] Session ID" /* SessionId */]: sessionId,
+          ["[Assistant] Message ID" /* MessageId */]: messageId,
+          ["[Assistant] Message Length" /* MessageLength */]: messageLength,
+          ["[Assistant] Response Time" /* ResponseTime */]: responseTime,
+          ["[Assistant] Message Count" /* MessageCount */]: messageCount
         });
       },
       /**
@@ -18969,8 +19187,8 @@ ${err.message}`);
        * @param sessionId The ID of the current chat session
        */
       attachmentRemoved: (sessionId) => {
-        getClient()?.trackEvent?.("[Assistant] Attachment Removed", {
-          ["[Assistant] Session ID" /* AssistantSessionId */]: sessionId
+        getClient()?.trackEvent?.("[Assistant] Attachment Removed" /* AttachmentRemoved */, {
+          ["[Assistant] Session ID" /* SessionId */]: sessionId
         });
       },
       /**
@@ -18978,8 +19196,8 @@ ${err.message}`);
        * @param sessionId The current chat session ID
        */
       chatInput: (sessionId) => {
-        getClient()?.trackEvent?.("[Assistant] Chat Input", {
-          ["[Assistant] Session ID" /* AssistantSessionId */]: sessionId
+        getClient()?.trackEvent?.("[Assistant] Chat Input" /* ChatInput */, {
+          ["[Assistant] Session ID" /* SessionId */]: sessionId
         });
       },
       /**
@@ -18987,8 +19205,8 @@ ${err.message}`);
        * @param sessionId The current chat session ID
        */
       buttonClicked: (sessionId) => {
-        getClient()?.trackEvent?.("[Assistant] Button Clicked", {
-          ["[Assistant] Session ID" /* AssistantSessionId */]: sessionId
+        getClient()?.trackEvent?.("[Assistant] Button Clicked" /* ButtonClicked */, {
+          ["[Assistant] Session ID" /* SessionId */]: sessionId
         });
       },
       // --- Old events (kept alongside new taxonomy) ---
@@ -19065,6 +19283,13 @@ ${err.message}`);
           ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount,
           ["[Guides-Surveys] Feedback Type" /* FeedbackType */]: feedbackType,
           ...reason ? { ["[Guides-Surveys] Feedback Reason" /* FeedbackReason */]: reason } : {}
+        });
+        getClient()?.trackEvent?.("[Assistant] Chat Feedback Submitted" /* ChatFeedbackSubmitted */, {
+          ["[Assistant] Session ID" /* SessionId */]: sessionId,
+          ["[Assistant] Message ID" /* MessageId */]: String(messageId),
+          ["[Assistant] Message Count" /* MessageCount */]: messageCount,
+          ["[Assistant] Feedback Type" /* FeedbackType */]: feedbackType,
+          ...reason ? { ["[Assistant] Feedback Reason" /* FeedbackReason */]: reason } : {}
         });
       },
       /**
@@ -19369,10 +19594,10 @@ ${err.message}`);
   };
 
   // ../shared/src/products/nudges/store/effectsSequencer.ts
-  var buildEffectsSource = (nudge, stepIndex, interactionState, context) => ({
+  var buildEffectsSource = (nudge, stepIndex, interactionState, context, instanceName) => ({
     variantId: nudge.variantId,
     stepIndex,
-    commonProperties: Track.nudge._getCommonProperties(nudge, stepIndex, { ...context, interactionState })
+    commonProperties: Track.nudge._getCommonProperties(nudge, stepIndex, { ...context, interactionState }, instanceName)
   });
   var EFFECTS_SEQUENCER_ID = "EffectsSequencer";
   var RETRY_INTERVAL = 250;
@@ -19411,10 +19636,10 @@ ${err.message}`);
         return "action_failed";
     }
   };
-  var clearSavedSequence = () => {
-    SessionStorage_default.remove(SEQUENCE_STORAGE_KEY);
-  };
   var EffectsSequencerMachine = (globalStore) => {
+    const clearSavedSequence = () => {
+      SessionStorage_default.remove(SEQUENCE_STORAGE_KEY, globalStore.apiKeyPrefix);
+    };
     const hasEffects = ({ event }) => event.effects.length > 0;
     const hasEffectToExecute = ({ context }) => !!context.effects.at(context.currentEffectIndex);
     const getLinkSequenceStrategy = ({ context }) => {
@@ -19441,13 +19666,13 @@ ${err.message}`);
         expiresAt: Date.now() + SEQUENCE_EXPIRATION_TIME,
         sessionKey
       });
-      SessionStorage_default.set(SEQUENCE_STORAGE_KEY, JSON.stringify(sequence));
+      SessionStorage_default.set(SEQUENCE_STORAGE_KEY, JSON.stringify(sequence), globalStore.apiKeyPrefix);
     };
     return setup({
       types: {},
       actions: {
         loadSequence: enqueueActions(({ enqueue }) => {
-          const sequence = SessionStorage_default.get(SEQUENCE_STORAGE_KEY, false);
+          const sequence = SessionStorage_default.get(SEQUENCE_STORAGE_KEY, false, globalStore.apiKeyPrefix);
           if (typeof sequence !== "string") {
             return;
           }
@@ -19503,9 +19728,20 @@ ${err.message}`);
           const originalActionIndex = (context.source?.actionIndexOffset ?? 0) + context.currentEffectIndex;
           const sourceNudge = getNudgeById(globalStore, variantId);
           if (sourceNudge) {
-            Track.nudge.error(sourceNudge, stepIndex, errorType, { actionIndex: originalActionIndex });
+            Track.nudge.error(
+              sourceNudge,
+              stepIndex,
+              errorType,
+              { actionIndex: originalActionIndex },
+              globalStore.instanceName
+            );
           } else if (context.source?.commonProperties) {
-            Track.nudge.errorFromProperties(context.source.commonProperties, errorType, originalActionIndex);
+            Track.nudge.errorFromProperties(
+              context.source.commonProperties,
+              errorType,
+              originalActionIndex,
+              globalStore.instanceName
+            );
           }
         }
       },
@@ -19776,16 +20012,16 @@ ${err.message}`);
 
   // ../shared/src/store/preview-session-storage-manager.ts
   var PREVIEW_SESSION_KEY = "previewSession";
-  var savePreviewSession = (state) => {
+  var savePreviewSession = (state, apiKeyPrefix) => {
     try {
-      SessionStorage_default.set(PREVIEW_SESSION_KEY, JSON.stringify(state));
+      SessionStorage_default.set(PREVIEW_SESSION_KEY, JSON.stringify(state), apiKeyPrefix);
     } catch (e2) {
       logger.error("Error saving preview session state:", e2);
     }
   };
-  var getStoredPreviewSession = () => {
+  var getStoredPreviewSession = (apiKeyPrefix) => {
     try {
-      const stored = SessionStorage_default.get(PREVIEW_SESSION_KEY, "");
+      const stored = SessionStorage_default.get(PREVIEW_SESSION_KEY, "", apiKeyPrefix);
       if (stored && typeof stored === "string" && stored !== "") {
         return JSON.parse(stored);
       }
@@ -19794,9 +20030,9 @@ ${err.message}`);
     }
     return null;
   };
-  var clearPreviewSession = () => {
+  var clearPreviewSession = (apiKeyPrefix) => {
     try {
-      SessionStorage_default.remove(PREVIEW_SESSION_KEY);
+      SessionStorage_default.remove(PREVIEW_SESSION_KEY, apiKeyPrefix);
     } catch (e2) {
       logger.error("Error clearing preview session state:", e2);
     }
@@ -19821,7 +20057,7 @@ ${err.message}`);
     if (getDebuggedNudge(_)) {
       return null;
     }
-    const storedSession = getStoredPreviewSession();
+    const storedSession = getStoredPreviewSession(_.apiKeyPrefix);
     if (storedSession) {
       return storedSession.variantId;
     }
@@ -19886,12 +20122,17 @@ ${err.message}`);
     }
     const checklist = _.activeChecklist.nudge;
     if (!options?.skipped) {
-      Track.nudge.stepCompleted(checklist, stepIndex, {
-        completedViaCta: source.completedViaCta,
-        interactionState: getNudgeDataFromUserStore(_, checklist.variantId)
-      });
+      Track.nudge.stepCompleted(
+        checklist,
+        stepIndex,
+        {
+          completedViaCta: source.completedViaCta,
+          interactionState: getNudgeDataFromUserStore(_, checklist.variantId)
+        },
+        _.instanceName
+      );
       if (source.completedViaCta) {
-        Track.nudge.engaged(checklist, stepIndex, { source: { type: "cta", level: "primary" } });
+        Track.nudge.engaged(checklist, stepIndex, { source: { type: "cta", level: "primary" } }, _.instanceName);
       }
     }
     const allNudgesData = {
@@ -20062,7 +20303,9 @@ ${err.message}`);
       chatEnabled: t14.boolean,
       resourceCenterEnabled: t14.boolean,
       showBranding: t14.boolean,
-      showRecsetHeroCards: t14.boolean
+      showRecsetHeroCards: t14.boolean,
+      showNegativeFeedbackDropdown: t14.boolean,
+      imageUploadEnabled: t14.boolean
     })
   ]);
   var ResourceCenter = class {
@@ -20156,10 +20399,10 @@ ${err.message}`);
     }
     return sanitized;
   }
-  async function getConfig(apiKey, isAdmin = false, locale = void 0, isEditorPreview = false) {
+  async function getConfig(apiKey, isAdmin = false, locale = void 0, isEditorPreview = false, instanceName) {
     if (locale) {
       locale = sanitizeLocale(locale);
-      const sdk2 = getSDK();
+      const sdk2 = getSDK(instanceName);
       if (sdk2 && sdk2[_configuration] !== void 0 && sdk2[_configuration].locale !== locale) {
         sdk2[_configuration].locale = locale;
       }
@@ -20188,7 +20431,7 @@ ${err.message}`);
       logger.error("Error decoding config response. It is empty.");
     }
     const { organization, nudges, themes } = data || {};
-    const sdk = getSDK();
+    const sdk = getSDK(instanceName);
     const supportedBreakingFeatures = sdk?._?.services?.supportedBreakingFeatures;
     const decodedNudges = nudges?.flatMap((nudge) => {
       try {
@@ -20245,15 +20488,15 @@ ${err.message}`);
       resourceCenters: resourceCenterData.resourceCenters
     };
   }
-  async function getPreviewConfig(apiKey, isEditorPreview = false, locale) {
+  async function getPreviewConfig(apiKey, isEditorPreview = false, locale, instanceName) {
     if (!apiKey) {
       return;
     }
-    const previewLocale = locale ?? getSDK()?.[_configuration].locale;
-    return getConfig(apiKey, true, previewLocale, isEditorPreview);
+    const previewLocale = locale ?? getSDK(instanceName)?.[_configuration].locale;
+    return getConfig(apiKey, true, previewLocale, isEditorPreview, instanceName);
   }
-  async function getEndUserConfig(apiKey, isEditorPreview = false) {
-    return getConfig(apiKey, false, getSDK()?.[_configuration].locale, isEditorPreview);
+  async function getEndUserConfig(apiKey, isEditorPreview = false, instanceName) {
+    return getConfig(apiKey, false, getSDK(instanceName)?.[_configuration].locale, isEditorPreview, instanceName);
   }
 
   // ../shared/src/store/global-subscriptions.ts
@@ -20369,9 +20612,7 @@ ${err.message}`);
           }
         });
       },
-      "nudge_trigger_dom_mutation",
-      2e3
-      // long timeout to avoid performance issues and because we are fine with a small lag here
+      "nudge_trigger_dom_mutation"
     );
     _.messageBus.subscribe(
       "click",
@@ -20406,11 +20647,14 @@ ${err.message}`);
       if (getPendingPreviewVariantId(_) != null) {
         return;
       }
-      savePreviewSession({
-        variantId: experience.nudge.variantId,
-        toStepIndex: 0,
-        locale: experience.locale
-      });
+      savePreviewSession(
+        {
+          variantId: experience.nudge.variantId,
+          toStepIndex: 0,
+          locale: experience.locale
+        },
+        _.apiKeyPrefix
+      );
       if (_.endUserStore.initializedSuccessfully) {
         restorePreviewSession(_);
       }
@@ -20421,10 +20665,16 @@ ${err.message}`);
       _.nudgeRecorderToolBar.visible = true;
       _.nudgeRecorderToolBar.experience = message.event.data.experience;
       const { experience } = message.event.data;
-      const configuration = getSDK()?.[_configuration];
-      const previewConfig = await getPreviewConfig(configuration?.apiKey, _.isEditorPreview, experience.locale);
+      const sdk = getSDKForStore(_);
+      const configuration = sdk?.[_configuration];
+      const previewConfig = await getPreviewConfig(
+        configuration?.apiKey,
+        _.isEditorPreview,
+        experience.locale,
+        _.instanceName
+      );
       if (previewConfig?.nudges) {
-        await getSDK()?._reloadNudges(previewConfig);
+        await sdk?._reloadNudges(previewConfig);
       }
       const updatedTheme = _.nudgeRecorderToolBar.experience?.theme;
       if (updatedTheme) {
@@ -20440,7 +20690,7 @@ ${err.message}`);
         if (!themeFound && themeId) {
           updatedThemes.push(updatedTheme);
         }
-        await getSDK()?._reloadThemes({ themes: updatedThemes });
+        await sdk?._reloadThemes({ themes: updatedThemes });
       }
     });
   };
@@ -20546,7 +20796,9 @@ ${err.message}`);
 
   // ../shared/src/store/end-user/responses.ts
   var submitSurveyResponse = async (_, variantId, nudgeStepId, blockId, response, { isFromTestMode, isFromDebugMode }) => {
-    const { apiKey } = getSDK()[_configuration];
+    const sdk = getSDKForStore(_);
+    if (!sdk) return;
+    const { apiKey } = sdk[_configuration];
     const userJsonBase64 = jsonBase64Encoder(_.user);
     try {
       await post(
@@ -20616,7 +20868,7 @@ ${err.message}`);
       },
       passesClicked: ({ context }) => passesClickedElement(globalStore, context.nudge, context.triggerEvent),
       passesCustomThrottles: ({ context }) => shouldBypassCustomThrottles(globalStore, context.nudge) || context.triggerEvent?.overrides?.customThrottles || passesCustomThrottles(globalStore, context.nudge),
-      passesLocalization: ({ context }) => context.triggerEvent?.overrides?.localization || passesLocalization(globalStore, context.nudge, getSDK()?.[_configuration].locale),
+      passesLocalization: ({ context }) => context.triggerEvent?.overrides?.localization || passesLocalization(globalStore, context.nudge, getSDKForStore(globalStore)?.[_configuration].locale),
       passesMutualExclusion: ({ context }) => context.triggerEvent?.overrides?.mutualExclusion || passesMutualExclusion(globalStore, context.nudge),
       passesExperimentVariant: ({ context }) => context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode || nudgePassesDecide(context.nudge, globalStore.decide),
       // step specific
@@ -20710,9 +20962,14 @@ ${err.message}`);
         const experimentKey = getExperimentKey(context.nudge, globalStore.decide);
         if (experimentKey && typeof experimentKey === "string") {
           const exposureKey = `experiment_variant_${generateUserKey(globalStore)}_${context.nudge.flagKey}_${experimentKey}_${context.nudge.variant}`;
-          if (!SessionStorage_default.get(exposureKey, false)) {
-            Track.experiment.exposure(context.nudge.flagKey, experimentKey, context.nudge.variant);
-            SessionStorage_default.set(exposureKey, true);
+          if (!SessionStorage_default.get(exposureKey, false, globalStore.apiKeyPrefix)) {
+            Track.experiment.exposure(
+              context.nudge.flagKey,
+              experimentKey,
+              context.nudge.variant,
+              globalStore.instanceName
+            );
+            SessionStorage_default.set(exposureKey, true, globalStore.apiKeyPrefix);
           }
         }
       },
@@ -20721,27 +20978,37 @@ ${err.message}`);
         const activeVariantForExperiment = getActiveVariantForFlag(context.nudge.flagKey, globalStore.decide);
         if (experimentKey && typeof experimentKey === "string" && activeVariantForExperiment == "control") {
           const exposureKey = `experiment_control_${generateUserKey(globalStore)}_${context.nudge.flagKey}_${experimentKey}`;
-          if (!SessionStorage_default.get(exposureKey, false)) {
-            Track.experiment.exposure(context.nudge.flagKey, experimentKey, "control");
-            SessionStorage_default.set(exposureKey, true);
+          if (!SessionStorage_default.get(exposureKey, false, globalStore.apiKeyPrefix)) {
+            Track.experiment.exposure(context.nudge.flagKey, experimentKey, "control", globalStore.instanceName);
+            SessionStorage_default.set(exposureKey, true, globalStore.apiKeyPrefix);
           }
         }
       },
       reportSeen: ({ context }) => {
-        Track.nudge.viewed(context.nudge, context.stepIndex, {
-          ...context,
-          interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
-        });
+        Track.nudge.viewed(
+          context.nudge,
+          context.stepIndex,
+          {
+            ...context,
+            interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
+          },
+          globalStore.instanceName
+        );
       },
       reportEngaged: ({ context }, params) => {
-        Track.nudge.engaged(context.nudge, context.stepIndex, {
-          ...context,
-          interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
-          source: {
-            type: "cta",
-            level: params.buttonType === "snooze" ? "tertiary" : params.buttonType ?? "primary"
-          }
-        });
+        Track.nudge.engaged(
+          context.nudge,
+          context.stepIndex,
+          {
+            ...context,
+            interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
+            source: {
+              type: "cta",
+              level: params.buttonType === "snooze" ? "tertiary" : params.buttonType ?? "primary"
+            }
+          },
+          globalStore.instanceName
+        );
       },
       reportStepCompletion: ({ context }, params) => {
         let completedViaCta = false;
@@ -20749,20 +21016,30 @@ ${err.message}`);
           completedViaCta = true;
         }
         if (params.buttonType) {
-          Track.nudge.engaged(context.nudge, context.stepIndex, {
-            ...context,
-            interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
-            source: {
-              type: "cta",
-              level: params.buttonType === "snooze" ? "tertiary" : params.buttonType
-            }
-          });
+          Track.nudge.engaged(
+            context.nudge,
+            context.stepIndex,
+            {
+              ...context,
+              interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
+              source: {
+                type: "cta",
+                level: params.buttonType === "snooze" ? "tertiary" : params.buttonType
+              }
+            },
+            globalStore.instanceName
+          );
         }
-        Track.nudge.stepCompleted(context.nudge, context.stepIndex, {
-          ...context,
-          completedViaCta,
-          interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
-        });
+        Track.nudge.stepCompleted(
+          context.nudge,
+          context.stepIndex,
+          {
+            ...context,
+            completedViaCta,
+            interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
+          },
+          globalStore.instanceName
+        );
       },
       reportSurveyResponse: ({ context }) => {
         const step = getNudgeStep(context.nudge, context.stepIndex);
@@ -20776,71 +21053,116 @@ ${err.message}`);
             isFromTestMode,
             isFromDebugMode
           });
-          Track.nudge.surveySubmitted(context.nudge, context.stepIndex, {
-            ...context,
-            interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
-            response: surveyResponse
-          });
+          Track.nudge.surveySubmitted(
+            context.nudge,
+            context.stepIndex,
+            {
+              ...context,
+              interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
+              response: surveyResponse
+            },
+            globalStore.instanceName
+          );
         });
       },
       reportCompleted: ({ context }) => {
-        Track.nudge.completed(context.nudge, context.stepIndex, {
-          ...context,
-          interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
-        });
+        Track.nudge.completed(
+          context.nudge,
+          context.stepIndex,
+          {
+            ...context,
+            interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
+          },
+          globalStore.instanceName
+        );
       },
       reportStepSkipped: ({ context }) => {
-        Track.nudge.stepSkipped(context.nudge, context.stepIndex, {
-          ...context,
-          interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
-          reason: "pin target not found"
-        });
+        Track.nudge.stepSkipped(
+          context.nudge,
+          context.stepIndex,
+          {
+            ...context,
+            interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
+            reason: "pin target not found"
+          },
+          globalStore.instanceName
+        );
       },
       reportPinTargetNotFound: ({ context }) => {
-        Track.nudge.internal.pinTargetNotFoundError(context.nudge, context.stepIndex, {
-          ...context,
-          interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
-        });
+        Track.nudge.internal.pinTargetNotFoundError(
+          context.nudge,
+          context.stepIndex,
+          {
+            ...context,
+            interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
+          },
+          globalStore.instanceName
+        );
       },
       reportDismissed: ({ context }) => {
         const now = (0, import_dayjs2.default)();
         const viewedTs = (0, import_dayjs2.default)(context.nudgeSeenThisSessionTs[context.nudgeSeenThisSessionTs.length - 1]);
         if (now.diff(viewedTs) < RAGE_CLOSE_THRESHOLD) {
-          Track.nudge.rageClosed(context.nudge, context.stepIndex, {
-            ...context,
-            interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
-          });
+          Track.nudge.rageClosed(
+            context.nudge,
+            context.stepIndex,
+            {
+              ...context,
+              interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
+            },
+            globalStore.instanceName
+          );
         }
         const step = getNudgeStep(context.nudge, context.stepIndex);
         const stepResponses = step ? context.surveyResponses[step.id] : void 0;
         if (stepResponses && Object.keys(stepResponses).length > 0) {
           Object.values(stepResponses).forEach((surveyResponse) => {
-            Track.nudge.surveyAbandoned(context.nudge, context.stepIndex, {
-              ...context,
-              interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
-              response: surveyResponse
-            });
+            Track.nudge.surveyAbandoned(
+              context.nudge,
+              context.stepIndex,
+              {
+                ...context,
+                interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
+                response: surveyResponse
+              },
+              globalStore.instanceName
+            );
           });
         }
-        Track.nudge.dismissed(context.nudge, context.stepIndex, {
-          ...context,
-          interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
-        });
+        Track.nudge.dismissed(
+          context.nudge,
+          context.stepIndex,
+          {
+            ...context,
+            interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
+          },
+          globalStore.instanceName
+        );
       },
       reportSnoozed: ({ context }, params) => {
-        Track.nudge.engaged(context.nudge, context.stepIndex, {
-          ...context,
-          interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
-          source: {
-            type: "cta",
-            level: params.buttonType === "snooze" ? "tertiary" : params.buttonType ?? "primary"
-          }
-        });
-        Track.nudge.snoozed(context.nudge, context.stepIndex, {
-          ...context,
-          duration: params.duration,
-          interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
-        });
+        Track.nudge.engaged(
+          context.nudge,
+          context.stepIndex,
+          {
+            ...context,
+            interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId),
+            source: {
+              type: "cta",
+              level: params.buttonType === "snooze" ? "tertiary" : params.buttonType ?? "primary"
+            }
+          },
+          globalStore.instanceName
+        );
+        Track.nudge.snoozed(
+          context.nudge,
+          context.stepIndex,
+          {
+            ...context,
+            duration: params.duration,
+            interactionState: getNudgeDataFromUserStore(globalStore, context.nudge.variantId)
+          },
+          globalStore.instanceName
+        );
       },
       saveSeen: ({ context }) => {
         if (context.triggerEvent?.overrides?.saveProgress) return;
@@ -22183,7 +22505,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   // ../shared/src/products/nudges/store/actions.ts
   var shouldDebugNudges = !!LocalStorage_default.get("debug:nudges", false);
   var sendConstantTriggers = (_) => {
-    if (getSDK()?.[_configuration]?.options?.headless) return;
+    if (getSDKForStore(_)?.[_configuration]?.options?.headless) return;
     restorePreviewSession(_);
     if (getPendingPreviewVariantId(_) !== null) {
       logger.debug("Skipping constant triggers due to pending preview session");
@@ -22312,21 +22634,28 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     });
   };
   var refreshDecideResult = async (_) => {
-    const sdk = getSDK();
+    const sdk = getSDKForStore(_);
     if (!_.user) {
       throw new Error("User must be provided to refresh the result from decide");
     }
+    if (!sdk) return;
     _.decide = await decide(sdk[_configuration].apiKey, _.user, _.isEditorPreview);
   };
   var startDebugSession = async (_, nudge, options = { refreshDecide: true }) => {
-    const configuration = getSDK()?.[_configuration];
+    const sdk = getSDKForStore(_);
+    const configuration = sdk?.[_configuration];
     const localeForConfig = options.locale ?? _.nudgeDebugToolBar.originalInitLocale;
-    const previewConfig = await getPreviewConfig(configuration?.apiKey, _.isEditorPreview, localeForConfig);
+    const previewConfig = await getPreviewConfig(
+      configuration?.apiKey,
+      _.isEditorPreview,
+      localeForConfig,
+      _.instanceName
+    );
     if (previewConfig?.nudges) {
-      await getSDK()?._reloadNudges(previewConfig);
+      await sdk?._reloadNudges(previewConfig);
     }
     if (previewConfig?.themes) {
-      await getSDK()?._reloadThemes({ themes: previewConfig.themes });
+      await sdk?._reloadThemes({ themes: previewConfig.themes });
     }
     const adminNudge = previewConfig?.nudges.find((n) => n.variantId === nudge.variantId);
     if (!adminNudge) {
@@ -22334,12 +22663,15 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       return;
     }
     _.nudgesManager?.send({ type: "START_DEBUG", nudge: adminNudge });
-    savePreviewSession({
-      variantId: adminNudge.variantId,
-      // toStepIndex intentionally omitted - see note above
-      locale: localeForConfig,
-      bypassCustomThrottles: _.nudgeDebugToolBar.bypassCustomThrottles
-    });
+    savePreviewSession(
+      {
+        variantId: adminNudge.variantId,
+        // toStepIndex intentionally omitted - see note above
+        locale: localeForConfig,
+        bypassCustomThrottles: _.nudgeDebugToolBar.bypassCustomThrottles
+      },
+      _.apiKeyPrefix
+    );
     const overrides = options.toStepIndex !== void 0 ? { stepIndex: options.toStepIndex } : {};
     setupTimedTriggers(_, [adminNudge]);
     sendDirectedTrigger(_, adminNudge, {
@@ -22373,7 +22705,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         startDebugSession(_, debugNudge, {
           toStepIndex: options.toStepIndex,
           refreshDecide: false,
-          locale: options.locale ?? getSDK()?.[_configuration].locale
+          locale: options.locale ?? getSDKForStore(_)?.[_configuration].locale
         });
       }, 50);
     }
@@ -22384,12 +22716,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       if (options.refreshDecide) {
         await refreshDecideResult(_);
       }
-      clearPreviewSession();
+      clearPreviewSession(_.apiKeyPrefix);
       _.nudgesManager?.send({ type: "STOP_DEBUG" });
       if (options.restoreTriggers) {
-        const sdk = getSDK();
+        const sdk = getSDKForStore(_);
         const originalLocale = _.nudgeDebugToolBar.originalInitLocale;
-        if (originalLocale && sdk[_configuration].locale !== originalLocale) {
+        if (sdk && originalLocale && sdk[_configuration].locale !== originalLocale) {
           sdk[_configuration].locale = originalLocale;
           await sdk._reloadNudges();
         }
@@ -22402,7 +22734,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       logger.debug("Skipping session storage restoration - already in debug mode");
       return;
     }
-    const storedSession = getStoredPreviewSession();
+    const storedSession = getStoredPreviewSession(_.apiKeyPrefix);
     if (!storedSession) {
       return;
     }
@@ -22711,7 +23043,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     const snapshot = actor?.getSnapshot();
     const nudge = snapshot?.context?.nudge;
     const stepIndex = snapshot?.context?.stepIndex;
-    const source = nudge && stepIndex !== void 0 ? buildEffectsSource(nudge, stepIndex, getNudgeDataFromUserStore(_, nudge.variantId), snapshot?.context) : void 0;
+    const source = nudge && stepIndex !== void 0 ? buildEffectsSource(
+      nudge,
+      stepIndex,
+      getNudgeDataFromUserStore(_, nudge.variantId),
+      snapshot?.context,
+      _.instanceName
+    ) : void 0;
     execResolvedAction(_, action, (navAction) => execNavigationAction(navAction, meta, actor), void 0, source);
   };
 
@@ -22773,11 +23111,16 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       const actor = getNudgeActor(window.engagement._, nudgeVariantId);
       const nudge = actor?.getSnapshot().context.nudge;
       if (nudge) {
-        Track.nudge.engaged(nudge, stepIndex, {
-          ...actor?.getSnapshot().context,
-          source: { type: "link", url },
-          interactionState: getNudgeDataFromUserStore(window.engagement._, nudgeVariantId)
-        });
+        Track.nudge.engaged(
+          nudge,
+          stepIndex,
+          {
+            ...actor?.getSnapshot().context,
+            source: { type: "link", url },
+            interactionState: getNudgeDataFromUserStore(window.engagement._, nudgeVariantId)
+          },
+          window.engagement._.instanceName
+        );
       }
     }
   );
@@ -23097,7 +23440,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   // ../shared/src/sdk/createProxy.ts
   var ASYNC_METHODS_SNIPPET = ["boot"];
   var ASYNC_METHODS = ["boot"];
-  var DEFAULT_INSTANCE_NAME = "$default_instance";
+  var ANALYTICS_DEFAULT_INSTANCE_NAME = "$default_instance";
   var PLUGIN_CALLER = Symbol.for("amplitude-engagement-plugin-caller");
   function createProxy(loadAsyncScripts) {
     const existingProxy = typeof window !== "undefined" ? window.engagement : void 0;
@@ -23213,7 +23556,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           name: "@amplitude/engagement-browser",
           type: "enrichment",
           async setup(config, client) {
-            const instanceName = config.instanceName ?? DEFAULT_INSTANCE_NAME;
+            const instanceName = config.instanceName ?? ANALYTICS_DEFAULT_INSTANCE_NAME;
             const identityStore = AnalyticsConnector.getInstance(instanceName).identityStore;
             proxy2._configuration._installedViaPlugin = true;
             initFunc(config.apiKey, {
@@ -24382,15 +24725,17 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   };
 
   // ../shared/src/services/analytics/client.ts
+  var isAssistantEvent = (event) => event.event_type.startsWith("[Assistant]");
   var addPageProperties = (event) => {
     if (typeof window === "undefined" || typeof document === "undefined") {
       return event;
     }
+    const pageKey = isAssistantEvent(event) ? "[Assistant] Page" /* Page */ : "[Guides-Surveys] Page" /* Page */;
     return {
       ...event,
       event_properties: {
         ...event.event_properties,
-        ["[Guides-Surveys] Page" /* Page */]: {
+        [pageKey]: {
           domain: window.location?.hostname,
           hash: window.location?.hash,
           path: window.location?.pathname,
@@ -24403,11 +24748,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     };
   };
   var addVersion = (event) => {
+    const versionKey = isAssistantEvent(event) ? "[Assistant] Version" /* Version */ : "[Guides-Surveys] Version" /* Version */;
     return {
       ...event,
       event_properties: {
         ...event.event_properties,
-        ["[Guides-Surveys] Version" /* Version */]: "1"
+        [versionKey]: "1"
       }
     };
   };
@@ -24537,7 +24883,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     plugin(_initOptions) {
       const setup2 = async (config, client) => {
         this._isInstalledViaPlugin = true;
-        const instanceName = config.instanceName ?? DEFAULT_INSTANCE_NAME;
+        const instanceName = config.instanceName ?? ANALYTICS_DEFAULT_INSTANCE_NAME;
         const identityStore = AnalyticsConnector.getInstance(instanceName).identityStore;
         await this._bootImpl({
           user: () => {
@@ -24652,10 +24998,11 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         return this.transformForHeadless(retval);
       },
       getPreviewGuideOrSurvey: async (variantId) => {
-        const configuration = getSDK()?.[_configuration];
-        const previewConfig = await getPreviewConfig(configuration?.apiKey);
+        const sdk = getSDKForStore(this._);
+        const configuration = sdk?.[_configuration];
+        const previewConfig = await getPreviewConfig(configuration?.apiKey, void 0, void 0, this._.instanceName);
         if (previewConfig?.nudges) {
-          await getSDK()?._reloadNudges(previewConfig);
+          await sdk?._reloadNudges(previewConfig);
         }
         const nudge = this.gs.getAllGuidesAndSurveys({ variantIds: [variantId] }, ["userTargeting"])[0];
         nudge.lifeCycleState.checks.userTargeting = {
@@ -24753,7 +25100,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       if (this._configuration) {
         this._configuration.locale = locale;
       }
-      const updatedConfig = await getEndUserConfig(this._configuration.apiKey);
+      const updatedConfig = await getEndUserConfig(this._configuration.apiKey, void 0, this._.instanceName);
       const refreshedNudges = updatedConfig.nudges;
       getAllNudgeActors(this._)?.forEach((actor) => {
         const nudge = refreshedNudges.find((nudge2) => nudge2.variantId === actor.getSnapshot().context.nudge.variantId);
@@ -24827,6 +25174,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     _shutdownImpl() {
       this._shutdownWithoutClearingBootOptions();
       this._lastUsedBootOptions = void 0;
+      unregisterInstance(this._.instanceName);
     }
     shutdown() {
       if (isPluginModeCallBlocked(this._isInstalledViaPlugin, "shutdown()", arguments)) return;
@@ -25097,7 +25445,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     async _configUser() {
       const { organization, nudges, flags, themes, resourceCenters } = await getEndUserConfig(
         this._configuration.apiKey,
-        this._.isEditorPreview
+        this._.isEditorPreview,
+        this._.instanceName
       );
       this._.flags = flags;
       this._.themes = themes;
@@ -25105,7 +25454,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       if (resourceCenter) {
         this._.resourceCenter = {
           ...this._.resourceCenter,
-          ...resourceCenter
+          ...resourceCenter,
+          loading: false
         };
       }
       this.globalActions.setOrganization(organization);
@@ -25119,7 +25469,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       return this._.editorPreviewDevice;
     }
     async _reload(reloadTargets = _reloadTargets) {
-      const config = await getEndUserConfig(this._configuration.apiKey, this._.isEditorPreview);
+      const config = await getEndUserConfig(this._configuration.apiKey, this._.isEditorPreview, this._.instanceName);
       for (const method of reloadTargets) {
         const symbol = method;
         const fn = this[symbol];
@@ -25129,15 +25479,15 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
     }
     async _reloadOrganization(preLoadedConfig) {
-      const { organization } = preLoadedConfig || await getEndUserConfig(this._configuration.apiKey, this._.isEditorPreview);
+      const { organization } = preLoadedConfig || await getEndUserConfig(this._configuration.apiKey, this._.isEditorPreview, this._.instanceName);
       this.globalActions.setOrganization(organization);
     }
     async _reloadNudges(preLoadedConfig) {
-      const { nudges } = preLoadedConfig || await getEndUserConfig(this._configuration.apiKey, this._.isEditorPreview);
+      const { nudges } = preLoadedConfig || await getEndUserConfig(this._configuration.apiKey, this._.isEditorPreview, this._.instanceName);
       this.nudgeActions.initNudges(nudges || []);
     }
     async _reloadThemes(preLoadedConfig) {
-      const { themes } = preLoadedConfig || await getEndUserConfig(this._configuration.apiKey, this._.isEditorPreview);
+      const { themes } = preLoadedConfig || await getEndUserConfig(this._configuration.apiKey, this._.isEditorPreview, this._.instanceName);
       this._.themes = themes;
     }
     _startNudgeDebug(data) {
@@ -25184,6 +25534,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       logger.log(`Disabled debugging for nudges. Restart the application.`);
     }
     _showResourceCenter(show, options) {
+      if (show && options?.initialPage) {
+        this.resourceCenterActions.setInitialPage({ item: { page: options.initialPage, params: {} } });
+      }
       this.resourceCenterActions.showResourceCenter(show);
       if (options?.recSet !== void 0) {
         this.resourceCenterActions.previewRecSet(options.recSet);
@@ -25332,6 +25685,46 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         }
       }
       this._.endUserStore.pushData({ immediate: true });
+    }
+    /**
+     * Gets the instance name for this SDK instance.
+     * Defaults to '$default' for the primary instance.
+     */
+    getInstanceName() {
+      return this._configuration.instanceName ?? DEFAULT_INSTANCE_NAME;
+    }
+    /**
+     * Gets the container ID for this SDK instance.
+     */
+    getContainerId() {
+      return getContainerId(this.getInstanceName());
+    }
+    /**
+     * Gets an SDK instance by name.
+     * Returns the default instance if no name is provided.
+     *
+     * @param instanceName - The name of the instance to get. Defaults to '$default'.
+     * @returns The SDK instance, or undefined if not found.
+     *
+     * @example
+     * // Get the default instance
+     * const sdk = EngagementSDK.getInstance();
+     *
+     * // Get a named instance
+     * const tenantB = EngagementSDK.getInstance('tenant-b');
+     */
+    static getInstance(instanceName = DEFAULT_INSTANCE_NAME) {
+      return getInstance(instanceName);
+    }
+    /**
+     * Returns the names of all active SDK instances.
+     *
+     * @example
+     * const names = EngagementSDK.listInstances();
+     * // ['$default', 'tenant-b']
+     */
+    static listInstances() {
+      return getInstanceNames();
     }
   };
 
@@ -26646,25 +27039,28 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     persistResourceCenter: true
   };
   var SESSION_START_KEY = "sessionStart";
-  var getOrCreateSessionStart = () => {
-    const stored = SessionStorage_default.get(SESSION_START_KEY, 0);
+  var getOrCreateSessionStart = (apiKeyPrefix) => {
+    const stored = SessionStorage_default.get(SESSION_START_KEY, 0, apiKeyPrefix);
     if (stored && typeof stored === "number" && stored > 0) {
       return stored;
     }
     const now = Date.now();
-    SessionStorage_default.set(SESSION_START_KEY, now);
+    SessionStorage_default.set(SESSION_START_KEY, now, apiKeyPrefix);
     return now;
   };
   var emptyGlobalStore = (optionsPartial) => {
     const options = { ...DEFAULT_OPTIONS2, ...optionsPartial };
     const { isEditorPreview, platform, isAssistantPreview } = options;
+    const apiKeyPrefix = options.apiKeyPrefix ?? "";
     return {
       hasBooted: false,
+      instanceName: options.instanceName ?? DEFAULT_INSTANCE_NAME,
+      apiKeyPrefix,
       services: options.services,
       location: options.location,
       organization: void 0,
       user: void 0,
-      endUserStore: window.Cypress ? new LocalStorageTestEndUserStore() : isEditorPreview ? new NullEndUserStore() : new RemoteEndUserStore(),
+      endUserStore: window.Cypress ? new LocalStorageTestEndUserStore(options.instanceName) : isEditorPreview ? new NullEndUserStore() : new RemoteEndUserStore(options.instanceName),
       decide: void 0,
       evalEngine: new EvaluationEngine(),
       callbacks: {},
@@ -26697,13 +27093,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       editorPreviewDevice: "desktop",
       isEditorPreview,
       isAssistantPreview,
-      sessionStart: getOrCreateSessionStart(),
+      sessionStart: getOrCreateSessionStart(apiKeyPrefix),
       integrations: [],
       resourceCenter: {
         renderKey: 0,
         visible: false,
         minimized: false,
-        loading: false,
+        loading: true,
         scrollPosition: 0,
         query: null,
         searchResults: [],
@@ -26720,6 +27116,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         textStrings: {},
         showQuickLinks: false,
         showRecsetHeroCards: false,
+        showNegativeFeedbackDropdown: true,
+        imageUploadEnabled: true,
         isAdditionalResourcesExpanded: true,
         shouldPersistOnReload: true,
         filter: null
@@ -26764,8 +27162,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
     return null;
   };
-  var proxyMediaUrl = (originalUrl) => {
-    const sdk = getSDK();
+  var proxyMediaUrl = (originalUrl, instanceName) => {
+    const sdk = getSDK(instanceName);
     let customMediaUrl = sdk?.[_configuration]?.mediaUrl;
     if (!customMediaUrl) return originalUrl;
     if (customMediaUrl.endsWith("/")) customMediaUrl = customMediaUrl.slice(0, -1);

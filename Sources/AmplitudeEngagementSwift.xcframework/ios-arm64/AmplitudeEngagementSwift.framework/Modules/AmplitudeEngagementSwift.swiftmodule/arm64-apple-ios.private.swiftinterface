@@ -9,6 +9,7 @@ import Foundation
 import Foundation/*.Bundle*/
 import Foundation/*.ProcessInfo*/
 import Foundation/*.URL*/
+import MessageUI
 import OSLog
 import SafariServices
 import Security
@@ -223,6 +224,9 @@ extension AmplitudeEngagementSwift.AmplitudeEngagementPlugin {
 }
 public enum AmplitudeEngagementPluginFactory {
   public static func make(_ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions()) -> any AmplitudeCore.UniversalPlugin
+}
+@_spi(AmplitudeEngagementFlutterPlugin) public enum __Flutter__AESDK_PluginFactory {
+  @_spi(AmplitudeEngagementFlutterPlugin) public static func make(_ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions(), _ platformVersion: Swift.String) -> any AmplitudeCore.UniversalPlugin
 }
 public enum AmplitudeEngagementFactory {
   public static func make(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions? = nil, settingsTimeout: Foundation.TimeInterval = 1.25) -> any AmplitudeEngagementSwift.AmplitudeEngagement
