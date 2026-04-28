@@ -159,8 +159,8 @@
         if (isArray3(value)) {
           return false;
         }
-        var type12 = typeof value;
-        if (type12 == "number" || type12 == "symbol" || type12 == "boolean" || value == null || isSymbol(value)) {
+        var type13 = typeof value;
+        if (type13 == "number" || type13 == "symbol" || type13 == "boolean" || value == null || isSymbol(value)) {
           return true;
         }
         return reIsPlainProp.test(value) || !reIsDeepProp.test(value) || object != null && value in Object(object);
@@ -173,8 +173,8 @@
   var require_isObject = __commonJS({
     "../shared/node_modules/lodash/isObject.js"(exports, module) {
       function isObject2(value) {
-        var type12 = typeof value;
-        return value != null && (type12 == "object" || type12 == "function");
+        var type13 = typeof value;
+        return value != null && (type13 == "object" || type13 == "function");
       }
       module.exports = isObject2;
     }
@@ -562,8 +562,8 @@
   var require_isKeyable = __commonJS({
     "../shared/node_modules/lodash/_isKeyable.js"(exports, module) {
       function isKeyable(value) {
-        var type12 = typeof value;
-        return type12 == "string" || type12 == "number" || type12 == "symbol" || type12 == "boolean" ? value !== "__proto__" : value === null;
+        var type13 = typeof value;
+        return type13 == "string" || type13 == "number" || type13 == "symbol" || type13 == "boolean" ? value !== "__proto__" : value === null;
       }
       module.exports = isKeyable;
     }
@@ -706,13 +706,13 @@
       var memoizeCapped = require_memoizeCapped();
       var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
       var reEscapeChar = /\\(\\)?/g;
-      var stringToPath = memoizeCapped(function(string12) {
+      var stringToPath = memoizeCapped(function(string13) {
         var result = [];
-        if (string12.charCodeAt(0) === 46) {
+        if (string13.charCodeAt(0) === 46) {
           result.push("");
         }
-        string12.replace(rePropName, function(match, number9, quote, subString) {
-          result.push(quote ? subString.replace(reEscapeChar, "$1") : number9 || match);
+        string13.replace(rePropName, function(match, number10, quote, subString) {
+          result.push(quote ? subString.replace(reEscapeChar, "$1") : number10 || match);
         });
         return result;
       });
@@ -1013,11 +1013,11 @@
       }
       exports.flow = flow2;
       function tuple() {
-        var t15 = [];
+        var t16 = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-          t15[_i] = arguments[_i];
+          t16[_i] = arguments[_i];
         }
-        return t15;
+        return t16;
       }
       exports.tuple = tuple;
       function increment(n) {
@@ -2179,13 +2179,13 @@
         };
       }();
       var __assign3 = exports && exports.__assign || function() {
-        __assign3 = Object.assign || function(t15) {
+        __assign3 = Object.assign || function(t16) {
           for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
             s2 = arguments[i2];
             for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p))
-              t15[p] = s2[p];
+              t16[p] = s2[p];
           }
-          return t15;
+          return t16;
         };
         return __assign3.apply(this, arguments);
       };
@@ -2318,8 +2318,8 @@
         } else if (isKeyofC(domain)) {
           return domain.keys;
         } else if (isUnionC(domain)) {
-          var keys = domain.types.map(function(type13) {
-            return getDomainKeys(type13);
+          var keys = domain.types.map(function(type14) {
+            return getDomainKeys(type14);
           });
           return keys.some(undefinedType.is) ? void 0 : Object.assign.apply(Object, __spreadArray2([{}], keys, false));
         }
@@ -2399,8 +2399,8 @@
         }, domain, codomain);
       }
       function getUnionName(codecs) {
-        return "(" + codecs.map(function(type13) {
-          return type13.name;
+        return "(" + codecs.map(function(type14) {
+          return type14.name;
         }).join(" | ") + ")";
       }
       function mergeAll(base, us) {
@@ -2443,8 +2443,8 @@
           case "PartialType":
             return codec.props;
           case "IntersectionType":
-            return codec.types.reduce(function(props, type13) {
-              return Object.assign(props, getProps(type13));
+            return codec.types.reduce(function(props, type14) {
+              return Object.assign(props, getProps(type14));
             }, {});
         }
       }
@@ -2874,9 +2874,9 @@
         /** @class */
         function(_super) {
           __extends2(RefinementType2, _super);
-          function RefinementType2(name, is, validate2, encode2, type13, predicate) {
+          function RefinementType2(name, is, validate2, encode2, type14, predicate) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type13;
+            _this.type = type14;
             _this.predicate = predicate;
             _this._tag = "RefinementType";
             return _this;
@@ -2936,9 +2936,9 @@
         /** @class */
         function(_super) {
           __extends2(ArrayType2, _super);
-          function ArrayType2(name, is, validate2, encode2, type13) {
+          function ArrayType2(name, is, validate2, encode2, type14) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type13;
+            _this.type = type14;
             _this._tag = "ArrayType";
             return _this;
           }
@@ -2996,7 +2996,7 @@
         }(Type)
       );
       exports.InterfaceType = InterfaceType;
-      function type12(props, name) {
+      function type13(props, name) {
         if (name === void 0) {
           name = getInterfaceTypeName(props);
         }
@@ -3055,8 +3055,8 @@
           return s2;
         }, props);
       }
-      exports.type = type12;
-      exports.interface = type12;
+      exports.type = type13;
+      exports.interface = type13;
       var PartialType = (
         /** @class */
         function(_super) {
@@ -3148,11 +3148,11 @@
         }(Type)
       );
       exports.DictionaryType = DictionaryType;
-      function record6(domain, codomain, name) {
+      function record7(domain, codomain, name) {
         var keys = getDomainKeys(domain);
         return keys ? enumerableRecord(Object.keys(keys), domain, codomain, name) : nonEnumerableRecord(domain, codomain, name);
       }
-      exports.record = record6;
+      exports.record = record7;
       var UnionType = (
         /** @class */
         function(_super) {
@@ -3167,7 +3167,7 @@
         }(Type)
       );
       exports.UnionType = UnionType;
-      function union9(codecs, name) {
+      function union10(codecs, name) {
         if (name === void 0) {
           name = getUnionName(codecs);
         }
@@ -3211,8 +3211,8 @@
           }, codecs, tag_1);
         } else {
           return new UnionType(name, function(u) {
-            return codecs.some(function(type13) {
-              return type13.is(u);
+            return codecs.some(function(type14) {
+              return type14.is(u);
             });
           }, function(u, c2) {
             var errors = [];
@@ -3237,7 +3237,7 @@
           }, codecs);
         }
       }
-      exports.union = union9;
+      exports.union = union10;
       var IntersectionType = (
         /** @class */
         function(_super) {
@@ -3254,14 +3254,14 @@
       exports.IntersectionType = IntersectionType;
       function intersection9(codecs, name) {
         if (name === void 0) {
-          name = "(".concat(codecs.map(function(type13) {
-            return type13.name;
+          name = "(".concat(codecs.map(function(type14) {
+            return type14.name;
           }).join(" & "), ")");
         }
         var len = codecs.length;
         return new IntersectionType(name, function(u) {
-          return codecs.every(function(type13) {
-            return type13.is(u);
+          return codecs.every(function(type14) {
+            return type14.is(u);
           });
         }, codecs.length === 0 ? exports.success : function(u, c2) {
           var us = [];
@@ -3299,14 +3299,14 @@
       exports.TupleType = TupleType;
       function tuple(codecs, name) {
         if (name === void 0) {
-          name = "[".concat(codecs.map(function(type13) {
-            return type13.name;
+          name = "[".concat(codecs.map(function(type14) {
+            return type14.name;
           }).join(", "), "]");
         }
         var len = codecs.length;
         return new TupleType(name, function(u) {
-          return exports.UnknownArray.is(u) && u.length === len && codecs.every(function(type13, i2) {
-            return type13.is(u[i2]);
+          return exports.UnknownArray.is(u) && u.length === len && codecs.every(function(type14, i2) {
+            return type14.is(u[i2]);
           });
         }, function(u, c2) {
           var e2 = exports.UnknownArray.validate(u, c2);
@@ -3334,8 +3334,8 @@
           }
           return errors.length > 0 ? (0, exports.failures)(errors) : (0, exports.success)(as);
         }, useIdentity(codecs) ? exports.identity : function(a) {
-          return codecs.map(function(type13, i2) {
-            return type13.encode(a[i2]);
+          return codecs.map(function(type14, i2) {
+            return type14.encode(a[i2]);
           });
         }, codecs);
       }
@@ -3344,9 +3344,9 @@
         /** @class */
         function(_super) {
           __extends2(ReadonlyType2, _super);
-          function ReadonlyType2(name, is, validate2, encode2, type13) {
+          function ReadonlyType2(name, is, validate2, encode2, type14) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type13;
+            _this.type = type14;
             _this._tag = "ReadonlyType";
             return _this;
           }
@@ -3365,9 +3365,9 @@
         /** @class */
         function(_super) {
           __extends2(ReadonlyArrayType2, _super);
-          function ReadonlyArrayType2(name, is, validate2, encode2, type13) {
+          function ReadonlyArrayType2(name, is, validate2, encode2, type14) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type13;
+            _this.type = type14;
             _this._tag = "ReadonlyArrayType";
             return _this;
           }
@@ -3384,16 +3384,16 @@
       }
       exports.readonlyArray = readonlyArray;
       var strict = function(props, name) {
-        return exact(type12(props), name);
+        return exact(type13(props), name);
       };
       exports.strict = strict;
       var ExactType = (
         /** @class */
         function(_super) {
           __extends2(ExactType2, _super);
-          function ExactType2(name, is, validate2, encode2, type13) {
+          function ExactType2(name, is, validate2, encode2, type14) {
             var _this = _super.call(this, name, is, validate2, encode2) || this;
-            _this.type = type13;
+            _this.type = type14;
             _this._tag = "ExactType";
             return _this;
           }
@@ -3523,7 +3523,7 @@
         if (name === void 0) {
           name = getUnionName(codecs);
         }
-        var U = union9(codecs, name);
+        var U = union10(codecs, name);
         if (U instanceof TaggedUnionType) {
           return U;
         } else {
@@ -3564,7 +3564,7 @@
       );
       exports.ObjectType = ObjectType;
       exports.object = new ObjectType();
-      exports.dictionary = record6;
+      exports.dictionary = record7;
       var StrictType = (
         /** @class */
         function(_super) {
@@ -4662,13 +4662,13 @@
         return function_1.identity;
       };
       exports.sortBy = sortBy;
-      var union9 = function(E) {
+      var union10 = function(E) {
         var uniqE = exports.uniq(E);
         return function(first, second) {
           return uniqE(concat(first, second));
         };
       };
-      exports.union = union9;
+      exports.union = union10;
       var rotate = function(n) {
         return function(as) {
           var len = as.length;
@@ -5370,13 +5370,13 @@
         return exports.copy;
       };
       exports.sortBy = sortBy;
-      var union9 = function(E) {
+      var union10 = function(E) {
         var uniqE = exports.uniq(E);
         return function(first, second) {
           return uniqE(concat(first, second));
         };
       };
-      exports.union = union9;
+      exports.union = union10;
       var rotate = function(n) {
         return function(as) {
           var len = as.length;
@@ -6013,8 +6013,8 @@
           shows[_i] = arguments[_i];
         }
         return {
-          show: function(t15) {
-            return "[" + t15.map(function(a, i2) {
+          show: function(t16) {
+            return "[" + t16.map(function(a, i2) {
               return shows[i2].show(a);
             }).join(", ") + "]";
           }
@@ -6660,11 +6660,11 @@
         return go(exports.empty, input);
       }
       exports.comprehension = comprehension;
-      function union9(E) {
+      function union10(E) {
         var unionE = RNEA.union(E);
         return function(first, second) {
           if (second === void 0) {
-            var unionE_1 = union9(E);
+            var unionE_1 = union10(E);
             return function(ys) {
               return unionE_1(ys, first);
             };
@@ -6672,7 +6672,7 @@
           return exports.isNonEmpty(first) && exports.isNonEmpty(second) ? unionE(first, second) : exports.isNonEmpty(first) ? first : second;
         };
       }
-      exports.union = union9;
+      exports.union = union10;
       function intersection9(E) {
         var elemE = elem(E);
         return function(xs, ys) {
@@ -7681,11 +7681,11 @@
         return go([], input);
       }
       exports.comprehension = comprehension;
-      function union9(E) {
+      function union10(E) {
         var unionE = NEA.union(E);
         return function(first, second) {
           if (second === void 0) {
-            var unionE_1 = union9(E);
+            var unionE_1 = union10(E);
             return function(ys) {
               return unionE_1(ys, first);
             };
@@ -7693,7 +7693,7 @@
           return exports.isNonEmpty(first) && exports.isNonEmpty(second) ? unionE(first, second) : exports.isNonEmpty(first) ? exports.copy(first) : exports.copy(second);
         };
       }
-      exports.union = union9;
+      exports.union = union10;
       function intersection9(E) {
         var elemE = exports.elem(E);
         return function(xs, ys) {
@@ -9735,11 +9735,11 @@
       var O = require_Option();
       var R = require_Record();
       var pipeable_1 = require_pipeable();
-      var t15 = require_lib();
+      var t16 = require_lib();
       var utils_1 = require_utils();
       var isUnionType = function(_a) {
-        var type12 = _a.type;
-        return type12 instanceof t15.UnionType;
+        var type13 = _a.type;
+        return type13 instanceof t16.UnionType;
       };
       var jsToString = function(value) {
         return value === void 0 ? "undefined" : JSON.stringify(value);
@@ -9756,15 +9756,15 @@
         return validation.context;
       };
       exports.TYPE_MAX_LEN = 160;
-      var truncateType = function(type12, options) {
+      var truncateType = function(type13, options) {
         if (options === void 0) {
           options = {};
         }
         var _a = options.truncateLongTypes, truncateLongTypes = _a === void 0 ? true : _a;
-        if (truncateLongTypes && type12.length > exports.TYPE_MAX_LEN) {
-          return type12.slice(0, exports.TYPE_MAX_LEN - 3) + "...";
+        if (truncateLongTypes && type13.length > exports.TYPE_MAX_LEN) {
+          return type13.slice(0, exports.TYPE_MAX_LEN - 3) + "...";
         }
-        return type12;
+        return type13;
       };
       var errorMessageSimple = function(expectedType, path, error, options) {
         return [
@@ -9777,8 +9777,8 @@
       var errorMessageUnion = function(expectedTypes, path, value, options) {
         return [
           "Expecting one of:\n",
-          expectedTypes.map(function(type12) {
-            return "    " + truncateType(type12, options);
+          expectedTypes.map(function(type13) {
+            return "    " + truncateType(type13, options);
           }).join("\n"),
           path === "" ? "\n" : "\nat " + path + " ",
           "but instead got: " + jsToString(value)
@@ -9797,8 +9797,8 @@
           return void 0;
         }));
         var expected = expectedTypes.map(function(_a) {
-          var type12 = _a.type;
-          return type12.name;
+          var type13 = _a.type;
+          return type13.name;
         });
         return expected.length > 0 ? O.some(errorMessageUnion(expected, path, value, options)) : O.none;
       };
@@ -9900,9 +9900,9 @@
       var MAX_SAFE_INTEGER = 9007199254740991;
       var reIsUint = /^(?:0|[1-9]\d*)$/;
       function isIndex(value, length) {
-        var type12 = typeof value;
+        var type13 = typeof value;
         length = length == null ? MAX_SAFE_INTEGER : length;
-        return !!length && (type12 == "number" || type12 != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
+        return !!length && (type13 == "number" || type13 != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
       }
       module.exports = isIndex;
     }
@@ -9957,59 +9957,59 @@
   // ../shared/node_modules/dayjs/dayjs.min.js
   var require_dayjs_min = __commonJS({
     "../shared/node_modules/dayjs/dayjs.min.js"(exports, module) {
-      !function(t15, e2) {
-        "object" == typeof exports && "undefined" != typeof module ? module.exports = e2() : "function" == typeof define && define.amd ? define(e2) : (t15 = "undefined" != typeof globalThis ? globalThis : t15 || self).dayjs = e2();
+      !function(t16, e2) {
+        "object" == typeof exports && "undefined" != typeof module ? module.exports = e2() : "function" == typeof define && define.amd ? define(e2) : (t16 = "undefined" != typeof globalThis ? globalThis : t16 || self).dayjs = e2();
       }(exports, function() {
         "use strict";
-        var t15 = 1e3, e2 = 6e4, n = 36e5, r = "millisecond", i2 = "second", s2 = "minute", u = "hour", a = "day", o = "week", f = "month", h2 = "quarter", c2 = "year", d = "date", $ = "Invalid Date", l2 = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y2 = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M = { name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_") }, m = function(t16, e3, n2) {
-          var r2 = String(t16);
-          return !r2 || r2.length >= e3 ? t16 : "" + Array(e3 + 1 - r2.length).join(n2) + t16;
-        }, g = { s: m, z: function(t16) {
-          var e3 = -t16.utcOffset(), n2 = Math.abs(e3), r2 = Math.floor(n2 / 60), i3 = n2 % 60;
+        var t16 = 1e3, e2 = 6e4, n = 36e5, r = "millisecond", i2 = "second", s2 = "minute", u = "hour", a = "day", o = "week", f = "month", h2 = "quarter", c2 = "year", d = "date", $ = "Invalid Date", l2 = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y2 = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M = { name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_") }, m = function(t17, e3, n2) {
+          var r2 = String(t17);
+          return !r2 || r2.length >= e3 ? t17 : "" + Array(e3 + 1 - r2.length).join(n2) + t17;
+        }, g = { s: m, z: function(t17) {
+          var e3 = -t17.utcOffset(), n2 = Math.abs(e3), r2 = Math.floor(n2 / 60), i3 = n2 % 60;
           return (e3 <= 0 ? "+" : "-") + m(r2, 2, "0") + ":" + m(i3, 2, "0");
-        }, m: function t16(e3, n2) {
-          if (e3.date() < n2.date()) return -t16(n2, e3);
+        }, m: function t17(e3, n2) {
+          if (e3.date() < n2.date()) return -t17(n2, e3);
           var r2 = 12 * (n2.year() - e3.year()) + (n2.month() - e3.month()), i3 = e3.clone().add(r2, f), s3 = n2 - i3 < 0, u2 = e3.clone().add(r2 + (s3 ? -1 : 1), f);
           return +(-(r2 + (n2 - i3) / (s3 ? i3 - u2 : u2 - i3)) || 0);
-        }, a: function(t16) {
-          return t16 < 0 ? Math.ceil(t16) || 0 : Math.floor(t16);
-        }, p: function(t16) {
-          return { M: f, y: c2, w: o, d: a, D: d, h: u, m: s2, s: i2, ms: r, Q: h2 }[t16] || String(t16 || "").toLowerCase().replace(/s$/, "");
-        }, u: function(t16) {
-          return void 0 === t16;
+        }, a: function(t17) {
+          return t17 < 0 ? Math.ceil(t17) || 0 : Math.floor(t17);
+        }, p: function(t17) {
+          return { M: f, y: c2, w: o, d: a, D: d, h: u, m: s2, s: i2, ms: r, Q: h2 }[t17] || String(t17 || "").toLowerCase().replace(/s$/, "");
+        }, u: function(t17) {
+          return void 0 === t17;
         } }, v = "en", D = {};
         D[v] = M;
-        var p = function(t16) {
-          return t16 instanceof _;
-        }, S = function t16(e3, n2, r2) {
+        var p = function(t17) {
+          return t17 instanceof _;
+        }, S = function t17(e3, n2, r2) {
           var i3;
           if (!e3) return v;
           if ("string" == typeof e3) {
             var s3 = e3.toLowerCase();
             D[s3] && (i3 = s3), n2 && (D[s3] = n2, i3 = s3);
             var u2 = e3.split("-");
-            if (!i3 && u2.length > 1) return t16(u2[0]);
+            if (!i3 && u2.length > 1) return t17(u2[0]);
           } else {
             var a2 = e3.name;
             D[a2] = e3, i3 = a2;
           }
           return !r2 && i3 && (v = i3), i3 || !r2 && v;
-        }, w = function(t16, e3) {
-          if (p(t16)) return t16.clone();
+        }, w = function(t17, e3) {
+          if (p(t17)) return t17.clone();
           var n2 = "object" == typeof e3 ? e3 : {};
-          return n2.date = t16, n2.args = arguments, new _(n2);
+          return n2.date = t17, n2.args = arguments, new _(n2);
         }, O = g;
-        O.l = S, O.i = p, O.w = function(t16, e3) {
-          return w(t16, { locale: e3.$L, utc: e3.$u, x: e3.$x, $offset: e3.$offset });
+        O.l = S, O.i = p, O.w = function(t17, e3) {
+          return w(t17, { locale: e3.$L, utc: e3.$u, x: e3.$x, $offset: e3.$offset });
         };
         var _ = function() {
-          function M2(t16) {
-            this.$L = S(t16.locale, null, true), this.parse(t16);
+          function M2(t17) {
+            this.$L = S(t17.locale, null, true), this.parse(t17);
           }
           var m2 = M2.prototype;
-          return m2.parse = function(t16) {
-            this.$d = function(t17) {
-              var e3 = t17.date, n2 = t17.utc;
+          return m2.parse = function(t17) {
+            this.$d = function(t18) {
+              var e3 = t18.date, n2 = t18.utc;
               if (null === e3) return /* @__PURE__ */ new Date(NaN);
               if (O.u(e3)) return /* @__PURE__ */ new Date();
               if (e3 instanceof Date) return new Date(e3);
@@ -10021,33 +10021,33 @@
                 }
               }
               return new Date(e3);
-            }(t16), this.$x = t16.x || {}, this.init();
+            }(t17), this.$x = t17.x || {}, this.init();
           }, m2.init = function() {
-            var t16 = this.$d;
-            this.$y = t16.getFullYear(), this.$M = t16.getMonth(), this.$D = t16.getDate(), this.$W = t16.getDay(), this.$H = t16.getHours(), this.$m = t16.getMinutes(), this.$s = t16.getSeconds(), this.$ms = t16.getMilliseconds();
+            var t17 = this.$d;
+            this.$y = t17.getFullYear(), this.$M = t17.getMonth(), this.$D = t17.getDate(), this.$W = t17.getDay(), this.$H = t17.getHours(), this.$m = t17.getMinutes(), this.$s = t17.getSeconds(), this.$ms = t17.getMilliseconds();
           }, m2.$utils = function() {
             return O;
           }, m2.isValid = function() {
             return !(this.$d.toString() === $);
-          }, m2.isSame = function(t16, e3) {
-            var n2 = w(t16);
+          }, m2.isSame = function(t17, e3) {
+            var n2 = w(t17);
             return this.startOf(e3) <= n2 && n2 <= this.endOf(e3);
-          }, m2.isAfter = function(t16, e3) {
-            return w(t16) < this.startOf(e3);
-          }, m2.isBefore = function(t16, e3) {
-            return this.endOf(e3) < w(t16);
-          }, m2.$g = function(t16, e3, n2) {
-            return O.u(t16) ? this[e3] : this.set(n2, t16);
+          }, m2.isAfter = function(t17, e3) {
+            return w(t17) < this.startOf(e3);
+          }, m2.isBefore = function(t17, e3) {
+            return this.endOf(e3) < w(t17);
+          }, m2.$g = function(t17, e3, n2) {
+            return O.u(t17) ? this[e3] : this.set(n2, t17);
           }, m2.unix = function() {
             return Math.floor(this.valueOf() / 1e3);
           }, m2.valueOf = function() {
             return this.$d.getTime();
-          }, m2.startOf = function(t16, e3) {
-            var n2 = this, r2 = !!O.u(e3) || e3, h3 = O.p(t16), $2 = function(t17, e4) {
-              var i3 = O.w(n2.$u ? Date.UTC(n2.$y, e4, t17) : new Date(n2.$y, e4, t17), n2);
+          }, m2.startOf = function(t17, e3) {
+            var n2 = this, r2 = !!O.u(e3) || e3, h3 = O.p(t17), $2 = function(t18, e4) {
+              var i3 = O.w(n2.$u ? Date.UTC(n2.$y, e4, t18) : new Date(n2.$y, e4, t18), n2);
               return r2 ? i3 : i3.endOf(a);
-            }, l3 = function(t17, e4) {
-              return O.w(n2.toDate()[t17].apply(n2.toDate("s"), (r2 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e4)), n2);
+            }, l3 = function(t18, e4) {
+              return O.w(n2.toDate()[t18].apply(n2.toDate("s"), (r2 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e4)), n2);
             }, y3 = this.$W, M3 = this.$M, m3 = this.$D, g2 = "set" + (this.$u ? "UTC" : "");
             switch (h3) {
               case c2:
@@ -10069,60 +10069,60 @@
               default:
                 return this.clone();
             }
-          }, m2.endOf = function(t16) {
-            return this.startOf(t16, false);
-          }, m2.$set = function(t16, e3) {
-            var n2, o2 = O.p(t16), h3 = "set" + (this.$u ? "UTC" : ""), $2 = (n2 = {}, n2[a] = h3 + "Date", n2[d] = h3 + "Date", n2[f] = h3 + "Month", n2[c2] = h3 + "FullYear", n2[u] = h3 + "Hours", n2[s2] = h3 + "Minutes", n2[i2] = h3 + "Seconds", n2[r] = h3 + "Milliseconds", n2)[o2], l3 = o2 === a ? this.$D + (e3 - this.$W) : e3;
+          }, m2.endOf = function(t17) {
+            return this.startOf(t17, false);
+          }, m2.$set = function(t17, e3) {
+            var n2, o2 = O.p(t17), h3 = "set" + (this.$u ? "UTC" : ""), $2 = (n2 = {}, n2[a] = h3 + "Date", n2[d] = h3 + "Date", n2[f] = h3 + "Month", n2[c2] = h3 + "FullYear", n2[u] = h3 + "Hours", n2[s2] = h3 + "Minutes", n2[i2] = h3 + "Seconds", n2[r] = h3 + "Milliseconds", n2)[o2], l3 = o2 === a ? this.$D + (e3 - this.$W) : e3;
             if (o2 === f || o2 === c2) {
               var y3 = this.clone().set(d, 1);
               y3.$d[$2](l3), y3.init(), this.$d = y3.set(d, Math.min(this.$D, y3.daysInMonth())).$d;
             } else $2 && this.$d[$2](l3);
             return this.init(), this;
-          }, m2.set = function(t16, e3) {
-            return this.clone().$set(t16, e3);
-          }, m2.get = function(t16) {
-            return this[O.p(t16)]();
+          }, m2.set = function(t17, e3) {
+            return this.clone().$set(t17, e3);
+          }, m2.get = function(t17) {
+            return this[O.p(t17)]();
           }, m2.add = function(r2, h3) {
             var d2, $2 = this;
             r2 = Number(r2);
-            var l3 = O.p(h3), y3 = function(t16) {
+            var l3 = O.p(h3), y3 = function(t17) {
               var e3 = w($2);
-              return O.w(e3.date(e3.date() + Math.round(t16 * r2)), $2);
+              return O.w(e3.date(e3.date() + Math.round(t17 * r2)), $2);
             };
             if (l3 === f) return this.set(f, this.$M + r2);
             if (l3 === c2) return this.set(c2, this.$y + r2);
             if (l3 === a) return y3(1);
             if (l3 === o) return y3(7);
-            var M3 = (d2 = {}, d2[s2] = e2, d2[u] = n, d2[i2] = t15, d2)[l3] || 1, m3 = this.$d.getTime() + r2 * M3;
+            var M3 = (d2 = {}, d2[s2] = e2, d2[u] = n, d2[i2] = t16, d2)[l3] || 1, m3 = this.$d.getTime() + r2 * M3;
             return O.w(m3, this);
-          }, m2.subtract = function(t16, e3) {
-            return this.add(-1 * t16, e3);
-          }, m2.format = function(t16) {
+          }, m2.subtract = function(t17, e3) {
+            return this.add(-1 * t17, e3);
+          }, m2.format = function(t17) {
             var e3 = this, n2 = this.$locale();
             if (!this.isValid()) return n2.invalidDate || $;
-            var r2 = t16 || "YYYY-MM-DDTHH:mm:ssZ", i3 = O.z(this), s3 = this.$H, u2 = this.$m, a2 = this.$M, o2 = n2.weekdays, f2 = n2.months, h3 = function(t17, n3, i4, s4) {
-              return t17 && (t17[n3] || t17(e3, r2)) || i4[n3].slice(0, s4);
-            }, c3 = function(t17) {
-              return O.s(s3 % 12 || 12, t17, "0");
-            }, d2 = n2.meridiem || function(t17, e4, n3) {
-              var r3 = t17 < 12 ? "AM" : "PM";
+            var r2 = t17 || "YYYY-MM-DDTHH:mm:ssZ", i3 = O.z(this), s3 = this.$H, u2 = this.$m, a2 = this.$M, o2 = n2.weekdays, f2 = n2.months, h3 = function(t18, n3, i4, s4) {
+              return t18 && (t18[n3] || t18(e3, r2)) || i4[n3].slice(0, s4);
+            }, c3 = function(t18) {
+              return O.s(s3 % 12 || 12, t18, "0");
+            }, d2 = n2.meridiem || function(t18, e4, n3) {
+              var r3 = t18 < 12 ? "AM" : "PM";
               return n3 ? r3.toLowerCase() : r3;
             }, l3 = { YY: String(this.$y).slice(-2), YYYY: this.$y, M: a2 + 1, MM: O.s(a2 + 1, 2, "0"), MMM: h3(n2.monthsShort, a2, f2, 3), MMMM: h3(f2, a2), D: this.$D, DD: O.s(this.$D, 2, "0"), d: String(this.$W), dd: h3(n2.weekdaysMin, this.$W, o2, 2), ddd: h3(n2.weekdaysShort, this.$W, o2, 3), dddd: o2[this.$W], H: String(s3), HH: O.s(s3, 2, "0"), h: c3(1), hh: c3(2), a: d2(s3, u2, true), A: d2(s3, u2, false), m: String(u2), mm: O.s(u2, 2, "0"), s: String(this.$s), ss: O.s(this.$s, 2, "0"), SSS: O.s(this.$ms, 3, "0"), Z: i3 };
-            return r2.replace(y2, function(t17, e4) {
-              return e4 || l3[t17] || i3.replace(":", "");
+            return r2.replace(y2, function(t18, e4) {
+              return e4 || l3[t18] || i3.replace(":", "");
             });
           }, m2.utcOffset = function() {
             return 15 * -Math.round(this.$d.getTimezoneOffset() / 15);
           }, m2.diff = function(r2, d2, $2) {
             var l3, y3 = O.p(d2), M3 = w(r2), m3 = (M3.utcOffset() - this.utcOffset()) * e2, g2 = this - M3, v2 = O.m(this, M3);
-            return v2 = (l3 = {}, l3[c2] = v2 / 12, l3[f] = v2, l3[h2] = v2 / 3, l3[o] = (g2 - m3) / 6048e5, l3[a] = (g2 - m3) / 864e5, l3[u] = g2 / n, l3[s2] = g2 / e2, l3[i2] = g2 / t15, l3)[y3] || g2, $2 ? v2 : O.a(v2);
+            return v2 = (l3 = {}, l3[c2] = v2 / 12, l3[f] = v2, l3[h2] = v2 / 3, l3[o] = (g2 - m3) / 6048e5, l3[a] = (g2 - m3) / 864e5, l3[u] = g2 / n, l3[s2] = g2 / e2, l3[i2] = g2 / t16, l3)[y3] || g2, $2 ? v2 : O.a(v2);
           }, m2.daysInMonth = function() {
             return this.endOf(f).$D;
           }, m2.$locale = function() {
             return D[this.$L];
-          }, m2.locale = function(t16, e3) {
-            if (!t16) return this.$L;
-            var n2 = this.clone(), r2 = S(t16, e3, true);
+          }, m2.locale = function(t17, e3) {
+            if (!t17) return this.$L;
+            var n2 = this.clone(), r2 = S(t17, e3, true);
             return r2 && (n2.$L = r2), n2;
           }, m2.clone = function() {
             return O.w(this.$d, this);
@@ -10136,14 +10136,14 @@
             return this.$d.toUTCString();
           }, M2;
         }(), T = _.prototype;
-        return w.prototype = T, [["$ms", r], ["$s", i2], ["$m", s2], ["$H", u], ["$W", a], ["$M", f], ["$y", c2], ["$D", d]].forEach(function(t16) {
-          T[t16[1]] = function(e3) {
-            return this.$g(e3, t16[0], t16[1]);
+        return w.prototype = T, [["$ms", r], ["$s", i2], ["$m", s2], ["$H", u], ["$W", a], ["$M", f], ["$y", c2], ["$D", d]].forEach(function(t17) {
+          T[t17[1]] = function(e3) {
+            return this.$g(e3, t17[0], t17[1]);
           };
-        }), w.extend = function(t16, e3) {
-          return t16.$i || (t16(e3, _, w), t16.$i = true), w;
-        }, w.locale = S, w.isDayjs = p, w.unix = function(t16) {
-          return w(1e3 * t16);
+        }), w.extend = function(t17, e3) {
+          return t17.$i || (t17(e3, _, w), t17.$i = true), w;
+        }, w.locale = S, w.isDayjs = p, w.unix = function(t17) {
+          return w(1e3 * t17);
         }, w.en = D[v], w.Ls = D, w.p = {}, w;
       });
     }
@@ -10164,9 +10164,9 @@
   var require_trimmedEndIndex = __commonJS({
     "../shared/node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
       var reWhitespace = /\s/;
-      function trimmedEndIndex(string12) {
-        var index = string12.length;
-        while (index-- && reWhitespace.test(string12.charAt(index))) {
+      function trimmedEndIndex(string13) {
+        var index = string13.length;
+        while (index-- && reWhitespace.test(string13.charAt(index))) {
         }
         return index;
       }
@@ -10179,8 +10179,8 @@
     "../shared/node_modules/lodash/_baseTrim.js"(exports, module) {
       var trimmedEndIndex = require_trimmedEndIndex();
       var reTrimStart = /^\s+/;
-      function baseTrim(string12) {
-        return string12 ? string12.slice(0, trimmedEndIndex(string12) + 1).replace(reTrimStart, "") : string12;
+      function baseTrim(string13) {
+        return string13 ? string13.slice(0, trimmedEndIndex(string13) + 1).replace(reTrimStart, "") : string13;
       }
       module.exports = baseTrim;
     }
@@ -11110,11 +11110,11 @@
       var constant = require_constant();
       var defineProperty = require_defineProperty();
       var identity2 = require_identity();
-      var baseSetToString = !defineProperty ? identity2 : function(func, string12) {
+      var baseSetToString = !defineProperty ? identity2 : function(func, string13) {
         return defineProperty(func, "toString", {
           "configurable": true,
           "enumerable": false,
-          "value": constant(string12),
+          "value": constant(string13),
           "writable": true
         });
       };
@@ -11181,8 +11181,8 @@
         if (!isObject2(object)) {
           return false;
         }
-        var type12 = typeof index;
-        if (type12 == "number" ? isArrayLike(object) && isIndex(index, object.length) : type12 == "string" && index in object) {
+        var type13 = typeof index;
+        if (type13 == "number" ? isArrayLike(object) && isIndex(index, object.length) : type13 == "string" && index in object) {
           return eq(object[index], value);
         }
         return false;
@@ -12198,14 +12198,14 @@
     constructor() {
       this.listeners = /* @__PURE__ */ new Map();
     }
-    addEventListener(type12, listener) {
-      if (!this.listeners.has(type12)) {
-        this.listeners.set(type12, /* @__PURE__ */ new Set());
+    addEventListener(type13, listener) {
+      if (!this.listeners.has(type13)) {
+        this.listeners.set(type13, /* @__PURE__ */ new Set());
       }
-      this.listeners.get(type12)?.add(listener);
+      this.listeners.get(type13)?.add(listener);
     }
-    removeEventListener(type12, listener) {
-      const typeListeners = this.listeners.get(type12);
+    removeEventListener(type13, listener) {
+      const typeListeners = this.listeners.get(type13);
       if (typeListeners) {
         typeListeners.delete(listener);
       }
@@ -12404,9 +12404,9 @@
   );
 
   // ../shared/node_modules/io-ts-types/es6/clone.js
-  function clone(t15) {
-    var r = Object.create(Object.getPrototypeOf(t15));
-    Object.assign(r, t15);
+  function clone(t16) {
+    var r = Object.create(Object.getPrototypeOf(t16));
+    Object.assign(r, t16);
     return r;
   }
 
@@ -13248,9 +13248,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   });
   var EventTriggerConfigV = t8.type({
     type: t8.literal("analytics_event"),
-    data: t8.type({
-      event: t8.string
-    }),
+    data: t8.intersection([t8.type({ event: t8.string }), t8.partial({ event_count: t8.number })]),
     conditions: t8.array(t8.array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
   });
@@ -13523,7 +13521,9 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     return "generic";
   };
   var getApplicableNudgeType = (nudge) => {
-    return getApplicableNudgeTypeForStrings(nudge.steps[0].formFactor.type);
+    const step = getNudgeStep(nudge, 0);
+    if (!step) return "generic";
+    return getApplicableNudgeTypeForStrings(step.formFactor.type);
   };
   var isIncludedInCustomThrottles = (nudge) => {
     return RULES[getApplicableNudgeType(nudge)].includedInCustomThrottles;
@@ -13588,15 +13588,16 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     return nudge.type === "survey" ? "survey" : "guide";
   };
   var getProductMeta = (nudge) => {
-    const type12 = getNudgeProductType(nudge);
+    const type13 = getNudgeProductType(nudge);
     return {
-      type: type12,
+      type: type13,
       name: getNudgeProductType(nudge) === "guide" ? "Guide" : "Survey"
     };
   };
   var requiresManualAdvancement = (step) => {
     const surveyBlocks = step.content.filter(isSurveyBlock);
-    const hasOnlyOneFiniteInput = surveyBlocks.length === 1 && isFiniteInputBlock(surveyBlocks[0]);
+    const firstSurveyBlock = surveyBlocks[0];
+    const hasOnlyOneFiniteInput = surveyBlocks.length === 1 && firstSurveyBlock !== void 0 && isFiniteInputBlock(firstSurveyBlock);
     const hasButton = step.content.some((block) => block.type === "button");
     return !hasOnlyOneFiniteInput || hasButton;
   };
@@ -13613,6 +13614,136 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       return defaultValue;
     }
     return _.evalEngine.evaluateConditions(pageTarget, conditions);
+  };
+
+  // ../shared/src/products/nudges/store/eventCountTracker.ts
+  var t9 = __toESM(require_lib());
+
+  // ../shared/src/internal/util/SessionStorage.ts
+  var PREFIX3 = "amplitude.engagement";
+  var buildKey = (label, scope) => scope ? `${PREFIX3}.${scope}.${label}` : `${PREFIX3}.${label}`;
+  var set2 = (label, value, scope) => {
+    try {
+      sessionStorage.setItem(buildKey(label, scope), value.toString());
+      return value;
+    } catch (err) {
+      return "";
+    }
+  };
+  var get2 = (label, defaultValue, scope) => {
+    let value;
+    try {
+      value = sessionStorage.getItem(buildKey(label, scope));
+    } catch (err) {
+      value = null;
+    }
+    if (value === null) {
+      return defaultValue;
+    } else {
+      if (value === "false") return false;
+      if (value === "true") return true;
+      if (+value) return +value;
+      return value;
+    }
+  };
+  var remove2 = (label, scope) => {
+    try {
+      sessionStorage.removeItem(buildKey(label, scope));
+      return;
+    } catch (err) {
+      return;
+    }
+  };
+  var SessionStorage = {
+    set: set2,
+    get: get2,
+    remove: remove2
+  };
+  var SessionStorage_default = SessionStorage;
+
+  // ../shared/src/products/nudges/store/eventCountTracker.ts
+  var STORAGE_KEY = "eventCounts";
+  var PersistedEventCountsV = t9.type({
+    sessionId: t9.number,
+    userId: t9.union([t9.string, t9.undefined]),
+    // user_id or device_id — cleared on identity change
+    counts: t9.record(t9.string, t9.number)
+    // "{variantId}:{eventName}" → count
+  });
+  var memoryCache = /* @__PURE__ */ new Map();
+  var buildCacheKey = (apiKeyPrefix, instanceName) => `${apiKeyPrefix}:${instanceName}`;
+  var buildStorageScope = (apiKeyPrefix, instanceName) => `${apiKeyPrefix}.${instanceName}`;
+  var buildCountKey = (variantId, eventName) => `${variantId}:${eventName}`;
+  var makeFresh = (sessionId, userId) => ({
+    sessionId,
+    userId,
+    counts: {}
+  });
+  var loadState = (apiKeyPrefix, instanceName, currentSessionId, currentUserId) => {
+    const cacheKey = buildCacheKey(apiKeyPrefix, instanceName);
+    const scope = buildStorageScope(apiKeyPrefix, instanceName);
+    const cached = memoryCache.get(cacheKey);
+    if (cached) {
+      if (cached.sessionId !== currentSessionId || cached.userId !== currentUserId) {
+        const fresh = makeFresh(currentSessionId, currentUserId);
+        memoryCache.set(cacheKey, fresh);
+        SessionStorage_default.remove(STORAGE_KEY, scope);
+        return fresh;
+      }
+      return cached;
+    }
+    const raw = SessionStorage_default.get(STORAGE_KEY, false, scope);
+    if (typeof raw !== "string") {
+      const fresh = makeFresh(currentSessionId, currentUserId);
+      memoryCache.set(cacheKey, fresh);
+      return fresh;
+    }
+    let parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      logger.error("Malformed event count data in sessionStorage, clearing");
+      SessionStorage_default.remove(STORAGE_KEY, scope);
+      const fresh = makeFresh(currentSessionId, currentUserId);
+      memoryCache.set(cacheKey, fresh);
+      return fresh;
+    }
+    const decoded = PersistedEventCountsV.decode(parsed);
+    if (decoded._tag === "Left") {
+      logger.error("Invalid event count data in sessionStorage, clearing");
+      SessionStorage_default.remove(STORAGE_KEY, scope);
+      const fresh = makeFresh(currentSessionId, currentUserId);
+      memoryCache.set(cacheKey, fresh);
+      return fresh;
+    }
+    if (decoded.right.sessionId !== currentSessionId || decoded.right.userId !== currentUserId) {
+      SessionStorage_default.remove(STORAGE_KEY, scope);
+      const fresh = makeFresh(currentSessionId, currentUserId);
+      memoryCache.set(cacheKey, fresh);
+      return fresh;
+    }
+    memoryCache.set(cacheKey, decoded.right);
+    return decoded.right;
+  };
+  var persistState = (apiKeyPrefix, instanceName, state) => {
+    const encoded = PersistedEventCountsV.encode(state);
+    SessionStorage_default.set(STORAGE_KEY, JSON.stringify(encoded), buildStorageScope(apiKeyPrefix, instanceName));
+  };
+  var incrementEventCount = (apiKeyPrefix, instanceName, variantId, eventName, currentSessionId, currentUserId) => {
+    const state = loadState(apiKeyPrefix, instanceName, currentSessionId, currentUserId);
+    const key = buildCountKey(variantId, eventName);
+    const newCount = (state.counts[key] ?? 0) + 1;
+    state.counts[key] = newCount;
+    persistState(apiKeyPrefix, instanceName, state);
+    return newCount;
+  };
+  var getEventCount = (apiKeyPrefix, instanceName, variantId, eventName, currentSessionId, currentUserId) => {
+    const state = loadState(apiKeyPrefix, instanceName, currentSessionId, currentUserId);
+    return state.counts[buildCountKey(variantId, eventName)] ?? 0;
+  };
+  var resetAllEventCounts = (apiKeyPrefix, instanceName) => {
+    memoryCache.delete(buildCacheKey(apiKeyPrefix, instanceName));
+    SessionStorage_default.remove(STORAGE_KEY, buildStorageScope(apiKeyPrefix, instanceName));
   };
 
   // ../shared/src/services/targeting/helpers.ts
@@ -13632,17 +13763,17 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   var getSegmentName = (nudge, decideResult) => decideResult?.[nudge.flagKey]?.metadata?.segmentName;
 
   // ../shared/src/products/nudges/store/selectors.ts
-  var normalizePlainFalsyValues = (record6) => {
+  var normalizePlainFalsyValues = (record7) => {
     let updatedRecord = null;
-    for (const [key, value] of Object.entries(record6)) {
+    for (const [key, value] of Object.entries(record7)) {
       if (value === 0 || value === false) {
         if (!updatedRecord) {
-          updatedRecord = { ...record6 };
+          updatedRecord = { ...record7 };
         }
         updatedRecord[key] = value === 0 ? "0" : "false";
       }
     }
-    return updatedRecord ?? record6;
+    return updatedRecord ?? record7;
   };
   var isAnalyticsEventTrigger = (trigger) => trigger.type === "analytics_event";
   var getTriggerWithNormalizedProperties = (trigger) => {
@@ -13876,13 +14007,15 @@ when parsing ${JSON.stringify(input, null, 2)}`;
             if (timestamp > thresholds.year) productTypeCounts.year++;
           }
           for (const throttleKey of matchingTagThrottles) {
-            tagThrottleCounters[throttleKey].ever++;
-            if (timestamp > thresholds.session) tagThrottleCounters[throttleKey].session++;
-            if (timestamp > thresholds.day) tagThrottleCounters[throttleKey].day++;
-            if (timestamp > thresholds.week) tagThrottleCounters[throttleKey].week++;
-            if (timestamp > thresholds.month) tagThrottleCounters[throttleKey].month++;
-            if (timestamp > thresholds.quarter) tagThrottleCounters[throttleKey].quarter++;
-            if (timestamp > thresholds.year) tagThrottleCounters[throttleKey].year++;
+            const counters = tagThrottleCounters[throttleKey];
+            if (!counters) continue;
+            counters.ever++;
+            if (timestamp > thresholds.session) counters.session++;
+            if (timestamp > thresholds.day) counters.day++;
+            if (timestamp > thresholds.week) counters.week++;
+            if (timestamp > thresholds.month) counters.month++;
+            if (timestamp > thresholds.quarter) counters.quarter++;
+            if (timestamp > thresholds.year) counters.year++;
           }
         }
       }
@@ -14024,8 +14157,10 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         result: {}
       };
       let conditionsToEvaluate = nudge.triggerConfig.conditions;
-      if (triggerEvent?.overrides?.triggerFilters && conditionsToEvaluate?.[0]?.length > 0) {
-        conditionsToEvaluate = [[conditionsToEvaluate[0][0]]];
+      const firstInnerConditions = conditionsToEvaluate?.[0];
+      const firstCondition = firstInnerConditions?.[0];
+      if (triggerEvent?.overrides?.triggerFilters && firstCondition !== void 0) {
+        conditionsToEvaluate = [[firstCondition]];
       }
       if (!_.evalEngine.evaluateConditions(evalTarget, conditionsToEvaluate)) {
         return false;
@@ -14033,6 +14168,20 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       return true;
     }
     return false;
+  };
+  var passesEventCount = (_, nudge) => {
+    if (nudge.triggerConfig.type !== "analytics_event") return true;
+    const eventCount = nudge.triggerConfig.data?.event_count;
+    if (!eventCount) return true;
+    const currentCount = getEventCount(
+      _.apiKeyPrefix,
+      _.instanceName,
+      nudge.variantId,
+      nudge.triggerConfig.data.event,
+      getEffectiveSessionStart(_),
+      _.user?.user_id ?? _.user?.device_id
+    );
+    return currentCount >= eventCount;
   };
   var isNudgeActive = (_, nudge) => canBeActive(nudge) && !!getNudgeDataFromUserStore(_, nudge.variantId)?.activelifeCycleUuid;
   var passesPinnedElement = async (_, nudge, stepIndex) => {
@@ -14056,19 +14205,19 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   };
   var shouldBypassCustomThrottles = (_, nudge) => nudge.priority === 4 /* Urgent */ || !isIncludedInCustomThrottles(nudge) || _.nudgeDebugToolBar.visible && _.nudgeDebugToolBar.bypassCustomThrottles || isTestNudge(_, nudge);
   var checkBuiltInThrottle = (_, nudge) => {
-    const { type: type12 } = getProductMeta(nudge);
+    const { type: type13 } = getProductMeta(nudge);
     const result = passesBuiltInThrottles(_, nudge);
     const nudgesInRenderLoop = getNudgesInRenderLoop(_);
     const blockingNudge = getBlockingNudge(nudge, nudgesInRenderLoop);
-    let explanation = `This ${type12} is blocked by another currently rendered guide or survey.`;
+    let explanation = `This ${type13} is blocked by another currently rendered guide or survey.`;
     if (result) {
-      explanation = `This ${type12} is not blocked by other guides or surveys.`;
+      explanation = `This ${type13} is not blocked by other guides or surveys.`;
     }
     if (blockingNudge?.variantId === nudge.variantId) {
       explanation = "This nudge is alreadying rendering.";
     }
     if (blockingNudge) {
-      explanation = `This ${type12} is blocked by '${blockingNudge.title} - ${blockingNudge.variant}'.`;
+      explanation = `This ${type13} is blocked by '${blockingNudge.title} - ${blockingNudge.variant}'.`;
     }
     return {
       result,
@@ -14079,15 +14228,15 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     };
   };
   var getGlobalChecks = (_, nudge) => {
-    const { type: type12 } = getProductMeta(nudge);
+    const { type: type13 } = getProductMeta(nudge);
     const builtInThrottlesCheck = checkBuiltInThrottle(_, nudge);
     const globalChecks = {
       builtInThrottles: builtInThrottlesCheck,
       customThrottles: {
         result: shouldBypassCustomThrottles(_, nudge) || passesCustomThrottles(_, nudge),
-        explanation: `The custom throttle for ${type12}s of this type prevents further guides or surveys from being shown.`,
+        explanation: `The custom throttle for ${type13}s of this type prevents further guides or surveys from being shown.`,
         detail: {
-          throttles: type12 === "survey" ? _.organization?.surveyThrottle : _.organization?.guideThrottle
+          throttles: type13 === "survey" ? _.organization?.surveyThrottle : _.organization?.guideThrottle
         }
       }
     };
@@ -14151,7 +14300,29 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         detail: {
           groups: _.organization?.nudgesMutualExclusionGroups
         }
-      }
+      },
+      ...nudge.triggerConfig.type === "analytics_event" && nudge.triggerConfig.data?.event_count ? (() => {
+        const currentCount = getEventCount(
+          _.apiKeyPrefix,
+          _.instanceName,
+          nudge.variantId,
+          nudge.triggerConfig.data.event,
+          getEffectiveSessionStart(_),
+          _.user?.user_id ?? _.user?.device_id
+        );
+        const requiredCount = nudge.triggerConfig.data.event_count;
+        const countAfterNextTrigger = currentCount + 1;
+        return {
+          eventCount: {
+            result: countAfterNextTrigger >= requiredCount,
+            explanation: `Event has not been tracked enough times in this session.`,
+            detail: {
+              currentCount,
+              requiredCount
+            }
+          }
+        };
+      })() : {}
     };
     return nudgeChecks;
   };
@@ -14227,6 +14398,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       const surveyResponses = Object.values(event.surveyResponses);
       for (const condition of surveyConditions) {
         const value = event.surveyResponses[condition.field]?.value ?? surveyResponses[0]?.value;
+        if (value === void 0) continue;
         surveyResponse[condition.field] = typeof value === "number" ? String(value) : value;
       }
     }
@@ -14284,12 +14456,11 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   var getActionBasedOnConditions = (_, step, event, buttonType) => {
     const options = step.content.find(isListBlock)?.meta.options;
     const surveyBlocks = step.content.filter(hasConditionalActionsBlock).filter((block2) => block2.type === "survey_rating" || block2.type === "survey_list");
-    if (buttonType && surveyBlocks.length > 0) {
-      const surveyBlock = surveyBlocks[0];
+    const surveyBlock = surveyBlocks[0];
+    if (buttonType && surveyBlock) {
       const conditionalActions2 = surveyBlock.meta.conditionalActions;
       if (conditionalActions2) {
-        for (let i2 = 0; i2 < conditionalActions2.length; i2++) {
-          const conditionalAction = conditionalActions2[i2];
+        for (const conditionalAction of conditionalActions2) {
           if (evaluateCondition(_, conditionalAction, event, options)) {
             return resolveConditionalAction(conditionalAction);
           }
@@ -14300,8 +14471,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     const block = step.content.find(hasConditionalActionsBlock);
     const conditionalActions = block?.meta.conditionalActions;
     if (conditionalActions) {
-      for (let i2 = 0; i2 < conditionalActions.length; i2++) {
-        const conditionalAction = conditionalActions[i2];
+      for (const conditionalAction of conditionalActions) {
         if (evaluateCondition(_, conditionalAction, event, options)) {
           return resolveConditionalAction(conditionalAction);
         }
@@ -14312,8 +14482,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   var getActionBasedOnButtonConditions = (_, buttonBlock, event) => {
     const { conditionalActions } = buttonBlock.meta || {};
     if (conditionalActions) {
-      for (let i2 = 0; i2 < conditionalActions.length; i2++) {
-        const conditionalAction = conditionalActions[i2];
+      for (const conditionalAction of conditionalActions) {
         if (evaluateCondition(_, conditionalAction, event)) {
           return resolveConditionalAction(conditionalAction);
         }
@@ -15096,11 +15265,11 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         }
       };
     }
-    on(type12, handler) {
-      let listeners = this.eventListeners.get(type12);
+    on(type13, handler) {
+      let listeners = this.eventListeners.get(type13);
       if (!listeners) {
         listeners = /* @__PURE__ */ new Set();
-        this.eventListeners.set(type12, listeners);
+        this.eventListeners.set(type13, listeners);
       }
       const wrappedHandler = handler.bind(void 0);
       listeners.add(wrappedHandler);
@@ -15683,7 +15852,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       toJSON: () => ({
         ...transition,
         source: `#${stateNode.id}`,
-        target: target ? target.map((t15) => `#${t15.id}`) : void 0
+        target: target ? target.map((t16) => `#${t16.id}`) : void 0
       })
     };
     return transition;
@@ -15696,25 +15865,25 @@ when parsing ${JSON.stringify(input, null, 2)}`;
           throw new Error('Null events ("") cannot be specified as a transition key. Use `always: { ... }` instead.');
         }
         const transitionsConfig = stateNode.config.on[descriptor];
-        transitions.set(descriptor, toTransitionConfigArray(transitionsConfig).map((t15) => formatTransition(stateNode, descriptor, t15)));
+        transitions.set(descriptor, toTransitionConfigArray(transitionsConfig).map((t16) => formatTransition(stateNode, descriptor, t16)));
       }
     }
     if (stateNode.config.onDone) {
       const descriptor = `xstate.done.state.${stateNode.id}`;
-      transitions.set(descriptor, toTransitionConfigArray(stateNode.config.onDone).map((t15) => formatTransition(stateNode, descriptor, t15)));
+      transitions.set(descriptor, toTransitionConfigArray(stateNode.config.onDone).map((t16) => formatTransition(stateNode, descriptor, t16)));
     }
     for (const invokeDef of stateNode.invoke) {
       if (invokeDef.onDone) {
         const descriptor = `xstate.done.actor.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onDone).map((t15) => formatTransition(stateNode, descriptor, t15)));
+        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onDone).map((t16) => formatTransition(stateNode, descriptor, t16)));
       }
       if (invokeDef.onError) {
         const descriptor = `xstate.error.actor.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onError).map((t15) => formatTransition(stateNode, descriptor, t15)));
+        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onError).map((t16) => formatTransition(stateNode, descriptor, t16)));
       }
       if (invokeDef.onSnapshot) {
         const descriptor = `xstate.snapshot.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onSnapshot).map((t15) => formatTransition(stateNode, descriptor, t15)));
+        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onSnapshot).map((t16) => formatTransition(stateNode, descriptor, t16)));
       }
     }
     for (const delayedTransition of stateNode.after) {
@@ -15784,7 +15953,7 @@ ${err.message}`);
       return stateNode.parent.initial;
     }
     return {
-      target: normalizedTarget.map((t15) => typeof t15 === "string" ? getStateNodeByPath(stateNode.parent, t15) : t15)
+      target: normalizedTarget.map((t16) => typeof t16 === "string" ? getStateNodeByPath(stateNode.parent, t16) : t16)
     };
   }
   function isHistoryNode(stateNode) {
@@ -16009,10 +16178,10 @@ ${err.message}`);
   }
   function computeExitSet(transitions, stateNodeSet, historyValue) {
     const statesToExit = /* @__PURE__ */ new Set();
-    for (const t15 of transitions) {
-      if (t15.target?.length) {
-        const domain = getTransitionDomain(t15, historyValue);
-        if (t15.reenter && t15.source === domain) {
+    for (const t16 of transitions) {
+      if (t16.target?.length) {
+        const domain = getTransitionDomain(t16, historyValue);
+        if (t16.reenter && t16.source === domain) {
           statesToExit.add(domain);
         }
         for (const stateNode of stateNodeSet) {
@@ -16046,7 +16215,7 @@ ${err.message}`);
     if (!isInitial) {
       [nextState, historyValue] = exitStates(nextState, event, actorScope, filteredTransitions, mutStateNodeSet, historyValue, internalQueue, actorScope.actionExecutor);
     }
-    nextState = resolveActionsAndContext(nextState, event, actorScope, filteredTransitions.flatMap((t15) => t15.actions), internalQueue, void 0);
+    nextState = resolveActionsAndContext(nextState, event, actorScope, filteredTransitions.flatMap((t16) => t16.actions), internalQueue, void 0);
     nextState = enterStates(nextState, event, actorScope, filteredTransitions, mutStateNodeSet, internalQueue, historyValue, isInitial);
     const nextStateNodes = [...mutStateNodeSet];
     if (nextState.status === "done") {
@@ -16120,26 +16289,26 @@ ${err.message}`);
     return nextSnapshot;
   }
   function computeEntrySet(transitions, historyValue, statesForDefaultEntry, statesToEnter) {
-    for (const t15 of transitions) {
-      const domain = getTransitionDomain(t15, historyValue);
-      for (const s2 of t15.target || []) {
+    for (const t16 of transitions) {
+      const domain = getTransitionDomain(t16, historyValue);
+      for (const s2 of t16.target || []) {
         if (!isHistoryNode(s2) && // if the target is different than the source then it will *definitely* be entered
-        (t15.source !== s2 || // we know that the domain can't lie within the source
+        (t16.source !== s2 || // we know that the domain can't lie within the source
         // if it's different than the source then it's outside of it and it means that the target has to be entered as well
-        t15.source !== domain || // reentering transitions always enter the target, even if it's the source itself
-        t15.reenter)) {
+        t16.source !== domain || // reentering transitions always enter the target, even if it's the source itself
+        t16.reenter)) {
           statesToEnter.add(s2);
           statesForDefaultEntry.add(s2);
         }
         addDescendantStatesToEnter(s2, historyValue, statesForDefaultEntry, statesToEnter);
       }
-      const targetStates = getEffectiveTargetStates(t15, historyValue);
+      const targetStates = getEffectiveTargetStates(t16, historyValue);
       for (const s2 of targetStates) {
         const ancestors = getProperAncestors(s2, domain);
         if (domain?.type === "parallel") {
           ancestors.push(domain);
         }
-        addAncestorStatesToEnter(statesToEnter, historyValue, statesForDefaultEntry, ancestors, !t15.source.parent && t15.reenter ? void 0 : domain);
+        addAncestorStatesToEnter(statesToEnter, historyValue, statesForDefaultEntry, ancestors, !t16.source.parent && t16.reenter ? void 0 : domain);
       }
     }
   }
@@ -16423,7 +16592,7 @@ ${err.message}`);
   var machineSnapshotCan = function can(event) {
     const transitionData = this.machine.getTransitionData(this, event);
     return !!transitionData?.length && // Check that at least one transition is not forbidden
-    transitionData.some((t15) => t15.target !== void 0 || t15.actions.length);
+    transitionData.some((t16) => t16.target !== void 0 || t16.actions.length);
   };
   var machineSnapshotToJSON = function toJSON() {
     const {
@@ -17108,7 +17277,7 @@ ${err.message}`);
     _initialize() {
       this.transitions = formatTransitions(this);
       if (this.config.always) {
-        this.always = toTransitionConfigArray(this.config.always).map((t15) => formatTransition(this, NULL_EVENT, t15));
+        this.always = toTransitionConfigArray(this.config.always).map((t16) => formatTransition(this, NULL_EVENT, t16));
       }
       Object.keys(this.states).forEach((key) => {
         this.states[key]._initialize();
@@ -17128,7 +17297,7 @@ ${err.message}`);
           eventType: null,
           reenter: false,
           toJSON: () => ({
-            target: this.initial.target.map((t15) => `#${t15.id}`),
+            target: this.initial.target.map((t16) => `#${t16.id}`),
             source: `#${this.id}`,
             actions: this.initial.actions.map(toSerializableAction),
             eventType: null
@@ -17139,9 +17308,9 @@ ${err.message}`);
           return state.definition;
         }),
         on: this.on,
-        transitions: [...this.transitions.values()].flat().map((t15) => ({
-          ...t15,
-          actions: t15.actions.map(toSerializableAction)
+        transitions: [...this.transitions.values()].flat().map((t16) => ({
+          ...t16,
+          actions: t16.actions.map(toSerializableAction)
         })),
         entry: this.entry.map(toSerializableAction),
         exit: this.exit.map(toSerializableAction),
@@ -17191,7 +17360,7 @@ ${err.message}`);
     get on() {
       return memo(this, "on", () => {
         const transitions = this.transitions;
-        return [...transitions].flatMap(([descriptor, t15]) => t15.map((t16) => [descriptor, t16])).reduce((map2, [descriptor, transition]) => {
+        return [...transitions].flatMap(([descriptor, t16]) => t16.map((t17) => [descriptor, t17])).reduce((map2, [descriptor, transition]) => {
           map2[descriptor] = map2[descriptor] || [];
           map2[descriptor].push(transition);
           return map2;
@@ -17519,13 +17688,13 @@ ${err.message}`);
 
   // ../shared/node_modules/proxy-compare/dist/index.modern.js
   var e = Symbol();
-  var t9 = Symbol();
+  var t10 = Symbol();
   var s = Object.getPrototypeOf;
   var c = /* @__PURE__ */ new WeakMap();
   var l = (e2) => e2 && (c.has(e2) ? c.get(e2) : s(e2) === Object.prototype || s(e2) === Array.prototype);
-  var y = (e2) => l(e2) && e2[t9] || null;
-  var h = (e2, t15 = true) => {
-    c.set(e2, t15);
+  var y = (e2) => l(e2) && e2[t10] || null;
+  var h = (e2, t16 = true) => {
+    c.set(e2, t16);
   };
 
   // ../shared/node_modules/valtio/esm/vanilla.mjs
@@ -17845,55 +18014,55 @@ ${err.message}`);
   var v4_default = v4;
 
   // ../shared/src/types/entities/endUser.ts
-  var t10 = __toESM(require_lib());
-  var NudgeInteractionStateV = t10.type({
-    type: t10.union([
-      t10.literal("survey"),
-      t10.literal("tour"),
-      t10.literal("banner"),
-      t10.literal("tooltip"),
-      t10.literal("checklist"),
-      t10.string
+  var t11 = __toESM(require_lib());
+  var NudgeInteractionStateV = t11.type({
+    type: t11.union([
+      t11.literal("survey"),
+      t11.literal("tour"),
+      t11.literal("banner"),
+      t11.literal("tooltip"),
+      t11.literal("checklist"),
+      t11.string
     ]),
     formFactor: withFallback(
-      t10.union([
-        t10.literal("modal"),
-        t10.literal("checklist"),
-        t10.literal("popover"),
-        t10.literal("banner"),
-        t10.literal("pin"),
-        t10.literal("tooltip"),
-        t10.literal("card"),
-        t10.literal("")
+      t11.union([
+        t11.literal("modal"),
+        t11.literal("checklist"),
+        t11.literal("popover"),
+        t11.literal("banner"),
+        t11.literal("pin"),
+        t11.literal("tooltip"),
+        t11.literal("card"),
+        t11.literal("")
       ]),
       ""
     ),
-    activelifeCycleUuid: t10.union([t10.string, t10.literal("")]),
-    activatedTs: t10.array(t10.number),
-    dismissedTs: t10.array(t10.number),
-    isDismissed: t10.boolean,
-    completedTs: t10.array(t10.number),
-    isCompleted: t10.boolean,
-    lastSeenTs: t10.union([t10.number, t10.literal(-1)]),
-    lastSeenSessionId: withFallback(t10.number, -1),
-    lastSeenDeviceId: withFallback(t10.string, ""),
-    snoozedUntilTs: t10.union([t10.number, t10.literal(-1)]),
-    stepIndexStack: t10.array(t10.number),
-    currentStep: t10.number,
-    isChecklistExpanded: t10.boolean,
-    steps: t10.record(
-      t10.string,
-      t10.type({
-        completedTs: t10.union([t10.number, t10.literal(-1)])
+    activelifeCycleUuid: t11.union([t11.string, t11.literal("")]),
+    activatedTs: t11.array(t11.number),
+    dismissedTs: t11.array(t11.number),
+    isDismissed: t11.boolean,
+    completedTs: t11.array(t11.number),
+    isCompleted: t11.boolean,
+    lastSeenTs: t11.union([t11.number, t11.literal(-1)]),
+    lastSeenSessionId: withFallback(t11.number, -1),
+    lastSeenDeviceId: withFallback(t11.string, ""),
+    snoozedUntilTs: t11.union([t11.number, t11.literal(-1)]),
+    stepIndexStack: t11.array(t11.number),
+    currentStep: t11.number,
+    isChecklistExpanded: t11.boolean,
+    steps: t11.record(
+      t11.string,
+      t11.type({
+        completedTs: t11.union([t11.number, t11.literal(-1)])
         // only used for checklists
       })
     ),
-    tagIds: withFallback(t10.array(t10.number), []),
+    tagIds: withFallback(t11.array(t11.number), []),
     // Tag IDs associated with this nudge
-    lastUpdatedTs: withFallback(t10.number, -1)
+    lastUpdatedTs: withFallback(t11.number, -1)
   });
-  var NudgeInteractionsV = t10.record(t10.string, NudgeInteractionStateV);
-  var EndUserStoreDataV = t10.type({
+  var NudgeInteractionsV = t11.record(t11.string, NudgeInteractionStateV);
+  var EndUserStoreDataV = t11.type({
     nudgeInteractions: NudgeInteractionsV
   });
 
@@ -17922,7 +18091,7 @@ ${err.message}`);
     return shouldRetryForMethod && shouldRetryForEndpoint && shouldRetryForStatus;
   };
   var post = (url, data = void 0, options = {}) => _fetch("POST", url, data, options);
-  var get3 = (url, options = {}) => _fetch("GET", url, void 0, options);
+  var get4 = (url, options = {}) => _fetch("GET", url, void 0, options);
   var _fetch = async (method, path, data, options = {}, numRetries = 5) => {
     const _baseURL = getBaseURL_default();
     let json, response;
@@ -18139,13 +18308,16 @@ ${err.message}`);
       const userJsonBase64 = jsonBase64Encoder(endUser);
       let remoteData = null;
       try {
-        const response = await get3("/sdk/v1/state", {
+        const response = await get4("/sdk/v1/state", {
           headers: {
             Authorization: `Api-Key ${apiKey}`,
             "X-Amp-User": userJsonBase64
           }
         });
         remoteData = decodeThrowing(EndUserStoreDataV, response.data);
+        if (typeof response.data?.ampIdToken === "string" && !endUser._ampIdToken) {
+          Object.defineProperty(endUser, "_ampIdToken", { value: response.data.ampIdToken, configurable: true });
+        }
       } catch (e2) {
         logger.error("Failed to fetch remote end user store data", { error: e2 });
       }
@@ -18213,13 +18385,16 @@ ${err.message}`);
       const validData = decodeThrowing(EndUserStoreDataV, payload);
       const { apiKey } = sdk[_configuration];
       const userJsonBase64 = jsonBase64Encoder(endUser);
+      const headers = {
+        Authorization: `Api-Key ${apiKey}`,
+        "X-Amp-User": userJsonBase64
+      };
+      const ampIdToken = endUser._ampIdToken;
+      if (ampIdToken) {
+        headers["X-Amp-Id-Token"] = ampIdToken;
+      }
       try {
-        await post("/sdk/v1/state", validData, {
-          headers: {
-            Authorization: `Api-Key ${apiKey}`,
-            "X-Amp-User": userJsonBase64
-          }
-        });
+        await post("/sdk/v1/state", validData, { headers });
         for (const id of pushedVariantIds) {
           eus.dirtyVariantIds.delete(id);
         }
@@ -18326,53 +18501,11 @@ ${err.message}`);
   });
 
   // ../shared/src/products/nudges/store/effectsSequencer.ts
-  var t12 = __toESM(require_lib());
-
-  // ../shared/src/internal/util/SessionStorage.ts
-  var PREFIX3 = "amplitude.engagement";
-  var buildKey = (label, scope) => scope ? `${PREFIX3}.${scope}.${label}` : `${PREFIX3}.${label}`;
-  var set2 = (label, value, scope) => {
-    try {
-      sessionStorage.setItem(buildKey(label, scope), value.toString());
-      return value;
-    } catch (err) {
-      return "";
-    }
-  };
-  var get4 = (label, defaultValue, scope) => {
-    let value;
-    try {
-      value = sessionStorage.getItem(buildKey(label, scope));
-    } catch (err) {
-      value = null;
-    }
-    if (value === null) {
-      return defaultValue;
-    } else {
-      if (value === "false") return false;
-      if (value === "true") return true;
-      if (+value) return +value;
-      return value;
-    }
-  };
-  var remove2 = (label, scope) => {
-    try {
-      sessionStorage.removeItem(buildKey(label, scope));
-      return;
-    } catch (err) {
-      return;
-    }
-  };
-  var SessionStorage = {
-    set: set2,
-    get: get4,
-    remove: remove2
-  };
-  var SessionStorage_default = SessionStorage;
+  var t13 = __toESM(require_lib());
 
   // ../shared/src/services/analytics/track.ts
   var import_dayjs = __toESM(require_dayjs_min());
-  var t11 = __toESM(require_lib());
+  var t12 = __toESM(require_lib());
 
   // ../shared/src/services/analytics/types.ts
   var guideSpecificEvents = {
@@ -18382,7 +18515,7 @@ ${err.message}`);
     surveySubmitted: "[Guides-Surveys] Survey Submitted",
     surveyAbandoned: "[Guides-Surveys] Survey Abandoned"
   };
-  var getEventNameCreator = (nudge) => (type12) => {
+  var getEventNameCreator = (nudge) => (type13) => {
     const productName = isSurvey(nudge) ? "Survey" : "Guide";
     const events = {
       viewed: `[Guides-Surveys] ${productName} Viewed`,
@@ -18398,7 +18531,7 @@ ${err.message}`);
       ...guideSpecificEvents,
       ...surveySpecificEvents
     };
-    return events[type12];
+    return events[type13];
   };
 
   // ../shared/src/services/analytics/track.ts
@@ -18451,9 +18584,9 @@ ${err.message}`);
       return "[Error]";
     }
   };
-  var ErrorDedupStateV = t11.type({
-    sessionId: t11.union([t11.number, t11.undefined]),
-    keys: t11.array(t11.string)
+  var ErrorDedupStateV = t12.type({
+    sessionId: t12.union([t12.number, t12.undefined]),
+    keys: t12.array(t12.string)
   });
   var loadErrorDedupState = (currentSession, apiKeyPrefix) => {
     const raw = SessionStorage_default.get(ERROR_DEDUP_STORAGE_KEY, "", apiKeyPrefix);
@@ -18743,11 +18876,11 @@ ${err.message}`);
        * @param sourceKey The source key of the clicked result (if available)
        * @param position The position of the clicked result in the list
        */
-      resultClicked: (title, excerpt, type12, id, sourceKey, position2, instanceName) => {
+      resultClicked: (title, excerpt, type13, id, sourceKey, position2, instanceName) => {
         getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Result Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] Excerpt" /* Excerpt */]: excerpt,
-          ["[Guides-Surveys] Type" /* Type */]: type12,
+          ["[Guides-Surveys] Type" /* Type */]: type13,
           ["[Guides-Surveys] Key" /* Key */]: null,
           // Content Item ID is not tracked
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
@@ -18757,7 +18890,7 @@ ${err.message}`);
         getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Result Clicked" /* ResourceCenterResultClicked */, {
           ["[Assistant] Title" /* Title */]: title,
           ["[Assistant] Excerpt" /* Excerpt */]: excerpt,
-          ["[Assistant] Type" /* Type */]: type12,
+          ["[Assistant] Type" /* Type */]: type13,
           ["[Assistant] Key" /* Key */]: null,
           ["[Assistant] Source Key" /* SourceKey */]: sourceKey,
           ["[Assistant] Position" /* Position */]: position2
@@ -18794,10 +18927,10 @@ ${err.message}`);
        * @param isDefault Whether the recommendation set is the default set
        * @param isAutopilot Whether the recommendation is an autopilot recommendation
        */
-      recommendationClicked: (title, type12, url, key, sourceKey, position2, recommendationSetKey, isDefault, isAutopilot, instanceName) => {
+      recommendationClicked: (title, type13, url, key, sourceKey, position2, recommendationSetKey, isDefault, isAutopilot, instanceName) => {
         getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Recommendation Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] Type" /* Type */]: type12,
+          ["[Guides-Surveys] Type" /* Type */]: type13,
           ["[Guides-Surveys] URL" /* URL */]: url,
           ["[Guides-Surveys] Key" /* Key */]: key,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
@@ -18809,7 +18942,7 @@ ${err.message}`);
         });
         getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Recommendation Clicked" /* ResourceCenterRecommendationClicked */, {
           ["[Assistant] Title" /* Title */]: title,
-          ["[Assistant] Type" /* Type */]: type12,
+          ["[Assistant] Type" /* Type */]: type13,
           ["[Assistant] URL" /* URL */]: url,
           ["[Assistant] Key" /* Key */]: key,
           ["[Assistant] Source Key" /* SourceKey */]: sourceKey,
@@ -18829,10 +18962,10 @@ ${err.message}`);
        * @param position The position of the clicked quick link in the list
        * @param isDefault Whether the quick link is in the default set
        */
-      quickLinkClicked: (title, type12, url, key, sourceKey, position2, isDefault, instanceName) => {
+      quickLinkClicked: (title, type13, url, key, sourceKey, position2, isDefault, instanceName) => {
         getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Quick Link Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
-          ["[Guides-Surveys] Type" /* Type */]: type12,
+          ["[Guides-Surveys] Type" /* Type */]: type13,
           ["[Guides-Surveys] URL" /* URL */]: url,
           ["[Guides-Surveys] Key" /* Key */]: key,
           ["[Guides-Surveys] Source Key" /* SourceKey */]: sourceKey,
@@ -18842,7 +18975,7 @@ ${err.message}`);
         });
         getClient(instanceName)?.trackEvent?.("[Assistant] Resource Center Quick Link Clicked" /* ResourceCenterQuickLinkClicked */, {
           ["[Assistant] Title" /* Title */]: title,
-          ["[Assistant] Type" /* Type */]: type12,
+          ["[Assistant] Type" /* Type */]: type13,
           ["[Assistant] URL" /* URL */]: url,
           ["[Assistant] Key" /* Key */]: key,
           ["[Assistant] Source Key" /* SourceKey */]: sourceKey,
@@ -19447,7 +19580,10 @@ ${err.message}`);
     }
     const result = str.split(re);
     for (let i2 = 1, length = result.length; i2 < length; i2 += 2) {
-      result[i2] = fn(result[i2]);
+      const match = result[i2];
+      if (match !== void 0) {
+        result[i2] = fn(match);
+      }
     }
     return result;
   };
@@ -19512,7 +19648,11 @@ ${err.message}`);
       case "link":
         if (_.isEditorPreview) {
           const _url = interpolateUserProperties(action.value, _, true);
-          _.callbacks["engagement-router"](_url);
+          const routerCallback = _.callbacks["engagement-router"];
+          if (!routerCallback) {
+            throw new InternalError("Callback is not available: [engagement-router]");
+          }
+          routerCallback(_url);
           return;
         }
         _.services.linkExecutable(_, action, forceOpenLinkInNewTab);
@@ -19520,7 +19660,11 @@ ${err.message}`);
       case "open_chat":
         if (_.isEditorPreview) {
           const upperCase = `${action?.meta?.type.charAt(0).toUpperCase()}${action?.meta?.type.slice(1)}`;
-          _.callbacks["__standalone-editor-cb_hh_cta"](upperCase);
+          const editorCallback = _.callbacks["__standalone-editor-cb_hh_cta"];
+          if (!editorCallback) {
+            throw new InternalError("Callback is not available: [__standalone-editor-cb_hh_cta]");
+          }
+          editorCallback(upperCase);
         } else {
           _.services.openChatExecutable(_, action);
         }
@@ -19604,18 +19748,18 @@ ${err.message}`);
   var RETRY_TIMEOUT = 5e3;
   var SEQUENCE_EXPIRATION_TIME = 6e4;
   var SEQUENCE_STORAGE_KEY = "effects_sequencer_sequence";
-  var PersistedActionSequenceV = t12.type({
-    effects: t12.array(EffectfulActionV),
-    source: t12.intersection([
-      t12.type({ variantId: t12.number }),
-      t12.partial({
-        stepIndex: t12.number,
-        commonProperties: t12.record(t12.string, t12.unknown),
-        actionIndexOffset: t12.number
+  var PersistedActionSequenceV = t13.type({
+    effects: t13.array(EffectfulActionV),
+    source: t13.intersection([
+      t13.type({ variantId: t13.number }),
+      t13.partial({
+        stepIndex: t13.number,
+        commonProperties: t13.record(t13.string, t13.unknown),
+        actionIndexOffset: t13.number
       })
     ]),
-    expiresAt: t12.number,
-    sessionKey: t12.string
+    expiresAt: t13.number,
+    sessionKey: t13.string
   });
   var mapEffectTypeToErrorCategory = (effect, store) => {
     switch (effect?.type) {
@@ -19962,7 +20106,7 @@ ${err.message}`);
       return {};
     }
     const userJsonBase64 = jsonBase64Encoder(user);
-    const result = await get3(`/sdk/v1/decide`, {
+    const result = await get4(`/sdk/v1/decide`, {
       headers: {
         Authorization: `Api-Key ${apiKey}`,
         "X-Amp-User": userJsonBase64
@@ -20099,7 +20243,7 @@ ${err.message}`);
     }
     for (let stepIndex = 0; stepIndex < activeChecklist.steps.length; stepIndex++) {
       const step = activeChecklist.steps[stepIndex];
-      if (!step.goal) continue;
+      if (!step || !step.goal) continue;
       if (!goalHasMatchingEvent(step.goal, eventKey) || isStepCompleted(_, activeChecklist, step)) {
         continue;
       }
@@ -20169,12 +20313,12 @@ ${err.message}`);
   };
 
   // ../shared/src/store/resource-center-storage-manager.ts
-  var STORAGE_KEY = "resourceCenter";
+  var STORAGE_KEY2 = "resourceCenter";
   var PERSISTED_FIELDS = ["visible", "minimized", "scrollPosition", "query", "isAdditionalResourcesExpanded"];
   var retrieveStoredResourceCenterState = () => {
     const obj = {};
     const storage = new CustomStorageStore();
-    const saved = storage.get(STORAGE_KEY, "");
+    const saved = storage.get(STORAGE_KEY2, "");
     if (saved !== "") {
       try {
         const parsed = JSON.parse(saved);
@@ -20184,7 +20328,7 @@ ${err.message}`);
           }
         }
       } catch (e2) {
-        console.error(`Error parsing stored data for ${STORAGE_KEY}:`, e2);
+        console.error(`Error parsing stored data for ${STORAGE_KEY2}:`, e2);
       }
     }
     return obj;
@@ -20196,9 +20340,9 @@ ${err.message}`);
       try {
         const fieldsToPersist = PERSISTED_FIELDS;
         const objectToStore = Object.fromEntries(fieldsToPersist.map((k) => [k, _.resourceCenter[k]]));
-        storage.set(STORAGE_KEY, JSON.stringify(objectToStore));
+        storage.set(STORAGE_KEY2, JSON.stringify(objectToStore));
       } catch (e2) {
-        console.error(`Error serializing and storing data for ${STORAGE_KEY}:`, e2);
+        console.error(`Error serializing and storing data for ${STORAGE_KEY2}:`, e2);
       }
     };
     if (debounceTimeout) {
@@ -20208,54 +20352,54 @@ ${err.message}`);
   };
 
   // ../shared/src/internal/middleware/theme.ts
-  var t13 = __toESM(require_lib());
-  var ThemeModeV = t13.intersection([
-    t13.type({
-      varDefaults: t13.record(t13.string, t13.union([t13.string, t13.number])),
-      varOverrides: t13.record(t13.string, t13.union([t13.string, t13.number])),
-      componentOverrides: t13.record(t13.string, t13.any),
-      mobileOverrides: t13.record(t13.string, t13.any)
+  var t14 = __toESM(require_lib());
+  var ThemeModeV = t14.intersection([
+    t14.type({
+      varDefaults: t14.record(t14.string, t14.union([t14.string, t14.number])),
+      varOverrides: t14.record(t14.string, t14.union([t14.string, t14.number])),
+      componentOverrides: t14.record(t14.string, t14.any),
+      mobileOverrides: t14.record(t14.string, t14.any)
     }),
-    t13.partial({
-      customCss: t13.string
+    t14.partial({
+      customCss: t14.string
     })
   ]);
-  var ThemeV = t13.union([
-    t13.type({
+  var ThemeV = t14.union([
+    t14.type({
       lightMode: ThemeModeV,
       darkMode: ThemeModeV
     }),
-    t13.null,
-    t13.undefined
+    t14.null,
+    t14.undefined
   ]);
-  var ThemeObjectBaseV = t13.type(
+  var ThemeObjectBaseV = t14.type(
     {
-      id: t13.number,
-      name: t13.string,
-      isDefault: t13.boolean,
+      id: t14.number,
+      name: t14.string,
+      isDefault: t14.boolean,
       theme: ThemeV
     },
     "ThemeBase"
   );
-  var ProductV = t13.union([t13.literal("guides-surveys"), t13.literal("assistant")]);
-  var PlatformV = t13.type({
-    type: t13.union([
-      t13.literal("web"),
-      t13.literal("ios"),
-      t13.literal("android"),
-      t13.literal("react-native"),
-      t13.literal("flutter"),
-      t13.string
+  var ProductV = t14.union([t14.literal("guides-surveys"), t14.literal("assistant")]);
+  var PlatformV = t14.type({
+    type: t14.union([
+      t14.literal("web"),
+      t14.literal("ios"),
+      t14.literal("android"),
+      t14.literal("react-native"),
+      t14.literal("flutter"),
+      t14.string
     ])
   });
-  var ThemeObjectAdditionalV = t13.partial(
+  var ThemeObjectAdditionalV = t14.partial(
     {
       platform: PlatformV,
       product: ProductV
     },
     "ThemeAdditional"
   );
-  var ThemeObjectV = t13.intersection([ThemeObjectBaseV, ThemeObjectAdditionalV], "Nudge");
+  var ThemeObjectV = t14.intersection([ThemeObjectBaseV, ThemeObjectAdditionalV], "Nudge");
   var defaults3 = {};
   var decode2 = (data) => {
     try {
@@ -20274,38 +20418,38 @@ ${err.message}`);
   };
 
   // ../shared/src/types/api/resource-center.ts
-  var t14 = __toESM(require_lib());
-  var LauncherV = t14.intersection([
-    t14.type({
-      type: t14.string,
-      position: t14.string,
-      offsetX: t14.number,
-      offsetY: t14.number,
-      zIndex: t14.number
+  var t15 = __toESM(require_lib());
+  var LauncherV = t15.intersection([
+    t15.type({
+      type: t15.string,
+      position: t15.string,
+      offsetX: t15.number,
+      offsetY: t15.number,
+      zIndex: t15.number
     }),
-    t14.partial({
-      anchorElement: t14.union([t14.string, t14.null]),
-      iconSrc: t14.union([t14.string, t14.null])
+    t15.partial({
+      anchorElement: t15.union([t15.string, t15.null]),
+      iconSrc: t15.union([t15.string, t15.null])
     })
   ]);
-  var ResourceCenterV = t14.intersection([
-    t14.type({
-      isAutopilotEnabled: t14.boolean,
-      textStrings: t14.record(t14.string, t14.string),
-      showQuickLinks: t14.boolean
+  var ResourceCenterV = t15.intersection([
+    t15.type({
+      isAutopilotEnabled: t15.boolean,
+      textStrings: t15.record(t15.string, t15.string),
+      showQuickLinks: t15.boolean
     }),
-    t14.partial({
-      key: t14.union([t14.string, t14.null, t14.undefined]),
-      mobileLauncher: t14.union([LauncherV, t14.null]),
-      desktopLauncher: t14.union([LauncherV, t14.null]),
-      windowPosition: t14.union([t14.string, t14.null]),
-      customTheme: t14.union([t14.number, t14.null]),
-      chatEnabled: t14.boolean,
-      resourceCenterEnabled: t14.boolean,
-      showBranding: t14.boolean,
-      showRecsetHeroCards: t14.boolean,
-      showNegativeFeedbackDropdown: t14.boolean,
-      imageUploadEnabled: t14.boolean
+    t15.partial({
+      key: t15.union([t15.string, t15.null, t15.undefined]),
+      mobileLauncher: t15.union([LauncherV, t15.null]),
+      desktopLauncher: t15.union([LauncherV, t15.null]),
+      windowPosition: t15.union([t15.string, t15.null]),
+      customTheme: t15.union([t15.number, t15.null]),
+      chatEnabled: t15.boolean,
+      resourceCenterEnabled: t15.boolean,
+      showBranding: t15.boolean,
+      showRecsetHeroCards: t15.boolean,
+      showNegativeFeedbackDropdown: t15.boolean,
+      imageUploadEnabled: t15.boolean
     })
   ]);
   var ResourceCenter = class {
@@ -20335,7 +20479,7 @@ ${err.message}`);
       path += `?locale=${locale}`;
     }
     if (isEditorPreview) return null;
-    const result = await get3(path, {
+    const result = await get4(path, {
       headers: {
         Authorization: `Api-Key ${apiKey}`
       }
@@ -20346,7 +20490,7 @@ ${err.message}`);
     try {
       const path = `/sdk/v1/resource_center`;
       if (isEditorPreview) return { resourceCenters: [], themes: [] };
-      const result = await get3(path, {
+      const result = await get4(path, {
         headers: {
           Authorization: `Api-Key ${apiKey}`
         }
@@ -20387,10 +20531,11 @@ ${err.message}`);
       logger.warn(`Unusual locale format detected: "${locale}". Expected format: xx-XX (e.g., en-US)`);
     }
     const parts = sanitized.split("-");
-    if (parts.length === 2) {
-      sanitized = `${parts[0].toLowerCase()}-${parts[1].toUpperCase()}`;
-    } else if (parts.length === 1) {
-      sanitized = parts[0].toLowerCase();
+    const [language, region] = parts;
+    if (parts.length === 2 && language !== void 0 && region !== void 0) {
+      sanitized = `${language.toLowerCase()}-${region.toUpperCase()}`;
+    } else if (parts.length === 1 && language !== void 0) {
+      sanitized = language.toLowerCase();
     } else {
       logger.warn(`Locale "${locale}" has unexpected number of parts. Expected format: xx or xx-XX (e.g., en or en-US)`);
     }
@@ -20858,6 +21003,7 @@ ${err.message}`);
       passesNudgeMatch: ({ context }) => !context.triggerEvent?.nudgeId || context.nudge.variantId === context.triggerEvent.nudgeId,
       passesBuiltInThrottles: ({ context }) => context.triggerEvent?.overrides?.builtInThrottles || passesBuiltInThrottles(globalStore, context.nudge),
       passesTriggerMatch: ({ context }) => context.triggerEvent?.overrides?.triggerMatch || passesTriggerMatch(globalStore, context.nudge, context.triggerEvent),
+      passesEventCount: ({ context }) => context.triggerEvent?.overrides?.eventCount || context.triggerEvent?.trigger.type === "active" || passesEventCount(globalStore, context.nudge),
       passesCooldown: ({ context }) => context.triggerEvent?.overrides?.cooldown || isTooltipNudge(context.nudge) || passesCooldown(globalStore, context.nudge),
       passesAudience: ({ context }) => context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode || // In debug/simulate mode we always want our audience guard to pass
       getActiveVariantForFlag(context.nudge.flagKey, globalStore.decide) === "control" || nudgePassesDecide(context.nudge, globalStore.decide),
@@ -20893,6 +21039,22 @@ ${err.message}`);
       }
     },
     actions: {
+      incrementEventCount: ({ context }) => {
+        if (context.triggerEvent?.trigger.type !== "analytics_event") {
+          return;
+        }
+        if (context.nudge.triggerConfig.type !== "analytics_event" || !context.nudge.triggerConfig.data?.event_count || !context.nudge.triggerConfig.data?.event) {
+          return;
+        }
+        incrementEventCount(
+          globalStore.apiKeyPrefix,
+          globalStore.instanceName,
+          context.nudge.variantId,
+          context.nudge.triggerConfig.data.event,
+          getEffectiveSessionStart(globalStore),
+          globalStore.user?.user_id ?? globalStore.user?.device_id
+        );
+      },
       setPinGraceUntil: assign({
         pinGraceUntil: (_, params) => params.until,
         pinGraceStepIndex: (_, params) => params.stepIndex
@@ -20947,7 +21109,7 @@ ${err.message}`);
         pinGraceStepIndex: () => void 0
       }),
       decrementStep: assign({
-        stepIndex: ({ context }) => usesNavigationStack(context.nudge) ? context.stepIndexStack[0] : context.stepIndex - 1,
+        stepIndex: ({ context }) => usesNavigationStack(context.nudge) ? context.stepIndexStack[0] ?? context.stepIndex - 1 : context.stepIndex - 1,
         stepIndexStack: ({ context }) => usesNavigationStack(context.nudge) ? context.stepIndexStack.slice(1) : context.stepIndexStack,
         pinGraceUntil: () => void 0,
         pinGraceStepIndex: () => void 0
@@ -21491,7 +21653,7 @@ ${err.message}`);
           "Checking Trigger Match": {
             always: [
               {
-                target: "Checking Page",
+                target: "Checking Event Count",
                 guard: "passesTriggerMatch",
                 actions: [{ type: "setTriggerMatch" }]
               },
@@ -21500,6 +21662,21 @@ ${err.message}`);
               }
             ],
             description: `Is the trigger event applicable to this nudge?`
+          },
+          "Checking Event Count": {
+            entry: [{ type: "incrementEventCount" }],
+            always: [
+              {
+                target: "Checking Page",
+                guard: "passesEventCount",
+                actions: [{ type: "logCondition", params: { conditionName: "eventCount", conditionResult: "PASS" } }]
+              },
+              {
+                target: "#Nudge.Idle",
+                actions: [{ type: "logCondition", params: { conditionName: "eventCount", conditionResult: "FAIL" } }]
+              }
+            ],
+            description: `Has the event been tracked enough times in this session?`
           },
           "Checking Custom Throttles": {
             always: [
@@ -22137,7 +22314,7 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
           };
           return updatedQueue.sort(sortTriggers);
         },
-        triggerEvent: ({ context }) => context.triggerEventQueue[0]
+        triggerEvent: ({ context }) => context.triggerEventQueue[0] ?? null
       }),
       clearTriggerQueue: assign({
         triggerEventQueue: () => []
@@ -22247,7 +22424,9 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
         description: "State while the end user store (EUS) is loading during an active boot. Trigger events are queued during this period so they can be replayed once the store is ready.",
         on: {
           TRIGGER: {
-            actions: [{ type: "enqueueTrigger", params: ({ event }) => ({ triggerEvent: event }) }],
+            actions: [
+              { type: "enqueueTrigger", params: ({ event }) => ({ triggerEvent: event }) }
+            ],
             target: "Awaiting User Store",
             description: "Only triggers that match any of the spawned nudge actors' triggers will be enqueued."
           },
@@ -22284,7 +22463,9 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
               },
               TRIGGER: {
                 target: "Awaiting Decide",
-                actions: [{ type: "enqueueTrigger", params: ({ event }) => ({ triggerEvent: event }) }]
+                actions: [
+                  { type: "enqueueTrigger", params: ({ event }) => ({ triggerEvent: event }) }
+                ]
               }
             },
             after: {
@@ -22607,6 +22788,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       stepIndex: 0,
       // special `direct` trigger should not need to match trigger conditions
       triggerMatch: true,
+      // don't check event count threshold
+      eventCount: true,
       closeBlockingNudges: true,
       excludeNudgeIds: []
     };
@@ -22717,6 +22900,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         await refreshDecideResult(_);
       }
       clearPreviewSession(_.apiKeyPrefix);
+      resetAllEventCounts(_.apiKeyPrefix, _.instanceName);
       _.nudgesManager?.send({ type: "STOP_DEBUG" });
       if (options.restoreTriggers) {
         const sdk = getSDKForStore(_);
@@ -22822,12 +23006,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     deactivate,
     markSeen
   }) => {
-    const type12 = nudge.type;
+    const type13 = nudge.type;
     const existingLifecycleUuid = getNudgeDataFromUserStore(_, nudge.variantId)?.activelifeCycleUuid;
     const activelifeCycleUuid = activate ? v4_default() : deactivate ? "" : markSeen && !existingLifecycleUuid ? v4_default() : void 0;
     const updatedContext = {
       [Number(nudge.variantId)]: {
-        type: type12,
+        type: type13,
         formFactor: nudge?.steps?.[0]?.formFactor?.type ?? "",
         currentStep: stepIndex,
         stepIndexStack,
@@ -23189,12 +23373,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }()
   );
   var __assign = function() {
-    __assign = Object.assign || function __assign3(t15) {
+    __assign = Object.assign || function __assign3(t16) {
       for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
         s2 = arguments[i2];
-        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t15[p] = s2[p];
+        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t16[p] = s2[p];
       }
-      return t15;
+      return t16;
     };
     return __assign.apply(this, arguments);
   };
@@ -24681,7 +24865,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var bindActions = (_, actions) => {
     const bound = {};
     Object.keys(actions).forEach((k) => {
-      bound[k] = actions[k].bind(null, _);
+      const action = actions[k];
+      if (action !== void 0) {
+        bound[k] = action.bind(null, _);
+      }
     });
     return bound;
   };
@@ -25005,6 +25192,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           await sdk?._reloadNudges(previewConfig);
         }
         const nudge = this.gs.getAllGuidesAndSurveys({ variantIds: [variantId] }, ["userTargeting"])[0];
+        if (!nudge) {
+          return null;
+        }
         nudge.lifeCycleState.checks.userTargeting = {
           result: "PASS",
           explanation: "User targeting always passes in preview mode",
@@ -25155,6 +25345,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       this._isDisabled = true;
       this._shutdownWithoutClearingBootOptions();
     }
+    // Called by both disable() and shutdown(). Only clear state that is
+    // reconstructed on re-boot. Client-side-only state that cannot be
+    // re-fetched (e.g., event counts) must be cleared in _shutdownImpl() instead.
     _shutdownWithoutClearingBootOptions() {
       this._cancelBoot?.();
       this._cancelDecide?.();
@@ -25173,6 +25366,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
     _shutdownImpl() {
       this._shutdownWithoutClearingBootOptions();
+      resetAllEventCounts(this._.apiKeyPrefix, this._.instanceName);
       this._lastUsedBootOptions = void 0;
       unregisterInstance(this._.instanceName);
     }
@@ -25748,12 +25942,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   }
   var __assign2 = function() {
-    __assign2 = Object.assign || function __assign3(t15) {
+    __assign2 = Object.assign || function __assign3(t16) {
       for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
         s2 = arguments[i2];
-        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t15[p] = s2[p];
+        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t16[p] = s2[p];
       }
-      return t15;
+      return t16;
     };
     return __assign2.apply(this, arguments);
   };
@@ -25788,12 +25982,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     var _ = {
       label: 0,
       sent: function() {
-        if (t15[0] & 1) throw t15[1];
-        return t15[1];
+        if (t16[0] & 1) throw t16[1];
+        return t16[1];
       },
       trys: [],
       ops: []
-    }, f, y2, t15, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    }, f, y2, t16, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
     return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() {
       return this;
     }), g;
@@ -25805,12 +25999,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     function step(op) {
       if (f) throw new TypeError("Generator is already executing.");
       while (g && (g = 0, op[0] && (_ = 0)), _) try {
-        if (f = 1, y2 && (t15 = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t15 = y2["return"]) && t15.call(y2), 0) : y2.next) && !(t15 = t15.call(y2, op[1])).done) return t15;
-        if (y2 = 0, t15) op = [op[0] & 2, t15.value];
+        if (f = 1, y2 && (t16 = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t16 = y2["return"]) && t16.call(y2), 0) : y2.next) && !(t16 = t16.call(y2, op[1])).done) return t16;
+        if (y2 = 0, t16) op = [op[0] & 2, t16.value];
         switch (op[0]) {
           case 0:
           case 1:
-            t15 = op;
+            t16 = op;
             break;
           case 4:
             _.label++;
@@ -25828,25 +26022,25 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             _.trys.pop();
             continue;
           default:
-            if (!(t15 = _.trys, t15 = t15.length > 0 && t15[t15.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+            if (!(t16 = _.trys, t16 = t16.length > 0 && t16[t16.length - 1]) && (op[0] === 6 || op[0] === 2)) {
               _ = 0;
               continue;
             }
-            if (op[0] === 3 && (!t15 || op[1] > t15[0] && op[1] < t15[3])) {
+            if (op[0] === 3 && (!t16 || op[1] > t16[0] && op[1] < t16[3])) {
               _.label = op[1];
               break;
             }
-            if (op[0] === 6 && _.label < t15[1]) {
-              _.label = t15[1];
-              t15 = op;
+            if (op[0] === 6 && _.label < t16[1]) {
+              _.label = t16[1];
+              t16 = op;
               break;
             }
-            if (t15 && _.label < t15[2]) {
-              _.label = t15[2];
+            if (t16 && _.label < t16[2]) {
+              _.label = t16[2];
               _.ops.push(op);
               break;
             }
-            if (t15[2]) _.ops.pop();
+            if (t16[2]) _.ops.pop();
             _.trys.pop();
             continue;
         }
@@ -25855,7 +26049,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         op = [6, e2];
         y2 = 0;
       } finally {
-        f = t15 = 0;
+        f = t16 = 0;
       }
       if (op[0] & 5) throw op[1];
       return {
@@ -27223,7 +27417,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       const themeMode = _.themeMode === "auto" ? _.services.getDefaultUIMode() : _.themeMode;
       if (nudge?.customThemeId !== void 0 && nudge.customThemeId !== null) {
         theme = {
-          theme: _.themes.find((t15) => t15.id === nudge.customThemeId)?.theme,
+          theme: _.themes.find((t16) => t16.id === nudge.customThemeId)?.theme,
           mode: themeMode
         };
       }
@@ -27251,9 +27445,23 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var matchesSelector = (targetElement, identifier) => targetElement?.identifier === identifier;
   var DEFAULT_SUPPORTED_BREAKING_FEATURES = [];
   var getSupportedBreakingFeatures = () => {
+    let raw;
     try {
-      return nudgeServicesBridge2.function("supportedBreakingFeatures").call() ?? DEFAULT_SUPPORTED_BREAKING_FEATURES;
+      raw = nudgeServicesBridge2.function("supportedBreakingFeatures").call();
     } catch {
+      return DEFAULT_SUPPORTED_BREAKING_FEATURES;
+    }
+    if (typeof raw !== "string") {
+      return DEFAULT_SUPPORTED_BREAKING_FEATURES;
+    }
+    try {
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) {
+        return DEFAULT_SUPPORTED_BREAKING_FEATURES;
+      }
+      return parsed.filter((item) => typeof item === "string");
+    } catch (error) {
+      logger.error("Error parsing supportedBreakingFeatures from native bridge:", error);
       return DEFAULT_SUPPORTED_BREAKING_FEATURES;
     }
   };

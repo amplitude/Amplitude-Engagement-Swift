@@ -18,11 +18,11 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		aSky442wxRLAdwnWbMNHUnK72NM=
+		wbBvhT3Y10GKXQarqI9zv6Dz00g=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		P51H0mAv2loKtdV9e7v9a1gqxZU=
+		i8zFad7Jn4/DLWiOP2FNhmeN5ek=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -30,19 +30,19 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		m7KvBUp3H1/UxqJWI5986HKjA6c=
+		u+MRl+Mx7PGWWog+FxvcDN3aI7M=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		jD6UPiGb9wVuYJzz8vBU5F1zB54=
+		CfODjT8RkW5unQhWIF4VDPqoi1k=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		aSky442wxRLAdwnWbMNHUnK72NM=
+		wbBvhT3Y10GKXQarqI9zv6Dz00g=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		U+a+S/ErgvYQ4T2c+wNsR6oGYZc=
+		O1agMLymXl6EFh8kb3xMWfS6r2I=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -50,11 +50,11 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		cjiXuTeV8OuhTJ2FDXjKxD/bkxc=
+		B39+tZliUW3W6Srr8K0RBWGuKeU=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		mtkp6oxkrL1EuZikQv4G9frlht8=
+		84X7jMiWXxTDS9JDLeOrqOG4jV0=
 		</data>
 		<key>Roboto[ital,wdth,wght].ttf</key>
 		<data>
@@ -62,7 +62,7 @@
 		</data>
 		<key>engagement.js</key>
 		<data>
-		Ho/qA02BsjWb/OKS3KfuD5ulJhU=
+		M6YsrQ5z+ML6F5otJVJDr+vD5Jo=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -85,14 +85,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			xoLbnpKzTXkRJWlrs4uRTia0LoqI2jCtM/KwXvFOGYg=
+			oNCH0TIuqoG6hIrL0l4cN7ajSbt7V0N0kZ4prY47lSc=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			UInCBiltCPvgRxbsGnlUkcIrxUoVhkqnLEQAoVQwS3E=
+			VuUao+2ln7sxszXEhW0+jhz2D0NFurc+6xoXeVsZI3A=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
@@ -106,28 +106,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Q9qgusZ3Uzd60x5UWEZwUD/yxC0jtb+hMVT3E5g1WMw=
+			q0yF9URCT9ocZyyRD+RtQQo97jRu1Rbfpeq8XC3Jayo=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			NDEj/PU+dZG9rZrSnyPi0kaTPr9xy5rKqp9LmqetvN4=
+			R/NwN+dtStaCERjTEPQ/Z6IwtGXPYp3gTLYuVT+1Y/U=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			xoLbnpKzTXkRJWlrs4uRTia0LoqI2jCtM/KwXvFOGYg=
+			oNCH0TIuqoG6hIrL0l4cN7ajSbt7V0N0kZ4prY47lSc=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			hmoEhl7BPz9AE9EitY1y4ERJQcYpbXz0OWqF9P91hek=
+			YQkIj4qSo2I2Pg1SOYh2HTX1HOKB1QSLjy5gEIc8W1k=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
@@ -141,14 +141,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			U19OAdKlqymCgiOFeO4hx7kC9gSnbdQRnn2aDpo5KNU=
+			XjArYTaE6Szp2YimvRDJcKgiKl83ZyE1ylnrX2LZ6y8=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			LGgQm5ghbaou54q0XtqOq2mmTN3HGRTQmNcZrMggcPA=
+			REcY1NimVQi1JaVEfOm6BhLnDxPhFQvb7wTcPqY1pX8=
 			</data>
 		</dict>
 		<key>Roboto[ital,wdth,wght].ttf</key>
@@ -162,7 +162,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			p247zaKCLmTUX9hM55u9bWEVz6qpC4mtL4Q2drzC3Vc=
+			o9/CD4IXK4rq7T73sazE75YXAcL21w9jLb7cHvvQI2A=
 			</data>
 		</dict>
 	</dict>

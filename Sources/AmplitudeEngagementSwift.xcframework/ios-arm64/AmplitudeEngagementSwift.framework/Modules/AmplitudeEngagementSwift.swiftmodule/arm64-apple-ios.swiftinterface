@@ -199,6 +199,7 @@ public protocol AmplitudeEngagementPlugin : AnyObject {
 public protocol AmplitudeEngagement : AmplitudeEngagementSwift.AmplitudeEngagementPlugin {
   func boot(_ user_id: Swift.String)
   func boot(_ user_id: Swift.String, device_id: Swift.String?)
+  @available(*, deprecated, message: "Configure autoRefreshIntervalSeconds via init(...) instead using AmplitudeInitOptions instead")
   func boot(_ user_id: Swift.String, device_id: Swift.String?, autoRefreshIntervalSeconds: Swift.Int)
   func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
   func shutdown()
@@ -292,8 +293,8 @@ public struct AmplitudeEndUser {
   public init(user_id: Swift.String? = nil, device_id: Swift.String? = nil, user_properties: [Swift.String : Any] = [:])
 }
 public struct AmplitudeBootOptions {
-  public init(user_id: Swift.String?, device_id: Swift.String? = nil, integrations: [(_ eventType: Swift.String, _ eventProperties: [Swift.String : Any]) -> Swift.Void] = [], user_properties: [Swift.String : Any] = [:], autoRefreshIntervalSeconds: Swift.Int = 0)
-  public init(user: AmplitudeEngagementSwift.AmplitudeEndUser, integrations: [(_ eventType: Swift.String, _ eventProperties: [Swift.String : Any]) -> Swift.Void] = [], autoRefreshIntervalSeconds: Swift.Int = 0)
+  public init(user_id: Swift.String?, device_id: Swift.String? = nil, integrations: [(_ eventType: Swift.String, _ eventProperties: [Swift.String : Any]) -> Swift.Void] = [], user_properties: [Swift.String : Any] = [:], autoRefreshIntervalSeconds: Swift.Int? = nil)
+  public init(user: AmplitudeEngagementSwift.AmplitudeEndUser, integrations: [(_ eventType: Swift.String, _ eventProperties: [Swift.String : Any]) -> Swift.Void] = [], autoRefreshIntervalSeconds: Swift.Int? = nil)
 }
 public enum AmplitudeServerZone : Swift.String, Swift.Codable {
   case EU
@@ -306,7 +307,7 @@ public enum AmplitudeServerZone : Swift.String, Swift.Codable {
 }
 public struct AmplitudeInitOptions : Swift.Codable {
   public func toString() -> Swift.String
-  public init(serverZone: AmplitudeEngagementSwift.AmplitudeServerZone? = nil, locale: Swift.String? = nil, logLevel: AmplitudeEngagementSwift.AmplitudeLogLevel? = nil, serverUrl: Swift.String? = nil, cdnUrl: Swift.String? = nil, mediaUrl: Swift.String? = nil, ignoreAnalyticsAutomaticScreenTracking: Swift.Bool? = nil)
+  public init(serverZone: AmplitudeEngagementSwift.AmplitudeServerZone? = nil, locale: Swift.String? = nil, logLevel: AmplitudeEngagementSwift.AmplitudeLogLevel? = nil, serverUrl: Swift.String? = nil, cdnUrl: Swift.String? = nil, mediaUrl: Swift.String? = nil, ignoreAnalyticsAutomaticScreenTracking: Swift.Bool? = nil, autoRefreshInterval: Swift.Int? = nil)
   public func encode(to encoder: any Swift.Encoder) throws
   public init(from decoder: any Swift.Decoder) throws
 }
