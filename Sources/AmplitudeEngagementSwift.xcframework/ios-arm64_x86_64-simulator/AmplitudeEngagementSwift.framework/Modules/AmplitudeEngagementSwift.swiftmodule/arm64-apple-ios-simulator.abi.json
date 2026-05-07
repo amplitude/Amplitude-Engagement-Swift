@@ -14539,8 +14539,8 @@
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Bridge\/NudgeServices.swift",
       "kind": "Array",
       "offset": 108,
-      "length": 74,
-      "value": "[\"0002\", \"0003\"]"
+      "length": 122,
+      "value": "[\"0002\", \"0003\", \"0004\"]"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Bridge\/SessionStorageBridge.swift",
@@ -18628,7 +18628,7 @@
       "kind": "StringLiteral",
       "offset": 421,
       "length": 7,
-      "value": "\"3.6.0\""
+      "value": "\"3.7.0\""
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/EngagementWindowManager.swift",
