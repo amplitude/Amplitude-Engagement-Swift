@@ -665,12 +665,12 @@
           throw new TypeError(FUNC_ERROR_TEXT);
         }
         var memoized = function() {
-          var args = arguments, key = resolver ? resolver.apply(this, args) : args[0], cache2 = memoized.cache;
-          if (cache2.has(key)) {
-            return cache2.get(key);
+          var args = arguments, key = resolver ? resolver.apply(this, args) : args[0], cache3 = memoized.cache;
+          if (cache3.has(key)) {
+            return cache3.get(key);
           }
           var result = func.apply(this, args);
-          memoized.cache = cache2.set(key, result) || cache2;
+          memoized.cache = cache3.set(key, result) || cache3;
           return result;
         };
         memoized.cache = new (memoize.Cache || MapCache)();
@@ -688,12 +688,12 @@
       var MAX_MEMOIZE_SIZE = 500;
       function memoizeCapped(func) {
         var result = memoize(func, function(key) {
-          if (cache2.size === MAX_MEMOIZE_SIZE) {
-            cache2.clear();
+          if (cache3.size === MAX_MEMOIZE_SIZE) {
+            cache3.clear();
           }
           return key;
         });
-        var cache2 = result.cache;
+        var cache3 = result.cache;
         return result;
       }
       module.exports = memoizeCapped;
@@ -2830,7 +2830,7 @@
         }(Type)
       );
       exports.LiteralType = LiteralType;
-      function literal8(value, name) {
+      function literal9(value, name) {
         if (name === void 0) {
           name = JSON.stringify(value);
         }
@@ -2841,7 +2841,7 @@
           return is(u) ? (0, exports.success)(value) : (0, exports.failure)(u, c2);
         }, exports.identity, value);
       }
-      exports.literal = literal8;
+      exports.literal = literal9;
       var KeyofType = (
         /** @class */
         function(_super) {
@@ -2914,13 +2914,13 @@
         configurable: true
       });
       function recursion(name, definition) {
-        var cache2;
+        var cache3;
         var runDefinition = function() {
-          if (!cache2) {
-            cache2 = definition(Self);
-            cache2.name = name;
+          if (!cache3) {
+            cache3 = definition(Self);
+            cache3.name = name;
           }
-          return cache2;
+          return cache3;
         };
         var Self = new RecursiveType(name, function(u) {
           return runDefinition().is(u);
@@ -11290,8 +11290,8 @@
   // ../shared/node_modules/lodash/_cacheHas.js
   var require_cacheHas = __commonJS({
     "../shared/node_modules/lodash/_cacheHas.js"(exports, module) {
-      function cacheHas(cache2, key) {
-        return cache2.has(key);
+      function cacheHas(cache3, key) {
+        return cache3.has(key);
       }
       module.exports = cacheHas;
     }
@@ -12648,49 +12648,47 @@ when parsing ${JSON.stringify(input, null, 2)}`;
 
   // ../shared/src/internal/middleware/page-targeting.ts
   var t6 = __toESM(require_lib());
-  var PageTargetingConfigV = t6.type({
-    conditions: t6.array(t6.array(EvaluationConditionV)),
-    configs: t6.array(
-      t6.type({
-        isExclude: t6.boolean,
-        matchType: t6.union([
-          t6.literal("contains"),
-          t6.literal("endsWith"),
-          t6.literal("exact"),
-          t6.literal("pattern"),
-          t6.literal("regex"),
-          t6.literal("simple"),
-          t6.literal("startsWith")
-        ]),
-        url: t6.string
-      })
-    )
+  var UrlMatchTypeLiteralsV = [
+    t6.literal("contains"),
+    t6.literal("endsWith"),
+    t6.literal("exact"),
+    t6.literal("pattern"),
+    t6.literal("regex"),
+    t6.literal("simple"),
+    t6.literal("startsWith")
+  ];
+  var PageTargetingItemPartialV = t6.partial({
+    operator: t6.union([t6.literal("and"), t6.literal("or"), t6.null]),
+    value: t6.union([t6.string, t6.null])
   });
-  var RecSetPageTargetingConfigItemV = t6.intersection([
+  var PageTargetingConfigItemV = t6.intersection([
     t6.type({
       isExclude: t6.boolean,
       matchType: t6.union([
-        t6.literal("contains"),
-        t6.literal("endsWith"),
-        t6.literal("exact"),
-        t6.literal("pattern"),
-        t6.literal("regex"),
-        t6.literal("simple"),
-        t6.literal("startsWith"),
+        ...UrlMatchTypeLiteralsV,
         t6.literal("domId"),
         t6.literal("domClassname"),
         t6.literal("domSelector")
       ]),
       url: t6.string
     }),
-    t6.partial({
-      operator: t6.union([t6.literal("and"), t6.literal("or")]),
-      value: t6.string
-    })
+    PageTargetingItemPartialV
   ]);
-  var RecSetPageTargetingConfigV = t6.type({
+  var PageTargetingConfigV = t6.type({
     conditions: t6.array(t6.array(EvaluationConditionV)),
-    configs: t6.array(RecSetPageTargetingConfigItemV)
+    configs: t6.array(PageTargetingConfigItemV)
+  });
+  var NudgePageTargetingConfigItemV = t6.intersection([
+    t6.type({
+      isExclude: t6.boolean,
+      matchType: t6.union([...UrlMatchTypeLiteralsV, t6.literal("domSelector")]),
+      url: t6.string
+    }),
+    PageTargetingItemPartialV
+  ]);
+  var NudgePageTargetingConfigV = t6.type({
+    conditions: t6.array(t6.array(EvaluationConditionV)),
+    configs: t6.array(NudgePageTargetingConfigItemV)
   });
 
   // ../shared/src/internal/middleware/organization.ts
@@ -13234,21 +13232,22 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     t8.literal("exit_intent"),
     t8.literal("none")
   ]);
+  var TriggerDelayV = t8.partial({ delay: t8.number });
   var ElementAppearedTriggerConfigV = t8.type({
     type: t8.literal("element_appeared"),
-    data: t8.type({ selector: t8.string }),
+    data: t8.intersection([t8.type({ selector: t8.string }), TriggerDelayV]),
     conditions: t8.array(t8.array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
   });
   var ElementClickedTriggerConfigV = t8.type({
     type: t8.literal("element_clicked"),
-    data: t8.type({ selector: t8.string }),
+    data: t8.intersection([t8.type({ selector: t8.string }), TriggerDelayV]),
     conditions: t8.array(t8.array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
   });
   var EventTriggerConfigV = t8.type({
     type: t8.literal("analytics_event"),
-    data: t8.intersection([t8.type({ event: t8.string }), t8.partial({ event_count: t8.number })]),
+    data: t8.intersection([t8.type({ event: t8.string }), t8.partial({ event_count: t8.number }), TriggerDelayV]),
     conditions: t8.array(t8.array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
   });
@@ -13262,7 +13261,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     t8.type({
       type: SimpleNudgeTriggerType,
       conditions: t8.array(t8.array(EvaluationConditionV)),
-      data: t8.union([t8.null, t8.undefined, t8.record(t8.string, t8.any)])
+      data: t8.union([t8.null, t8.undefined, t8.intersection([t8.record(t8.string, t8.any), TriggerDelayV])])
     }),
     ElementAppearedTriggerConfigV,
     ElementClickedTriggerConfigV,
@@ -13306,6 +13305,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         displayDescription: t8.string,
         position: t8.union([t8.literal("bottomRight"), t8.literal("bottomLeft")]),
         priority: t8.number,
+        subPriority: t8.union([t8.number, t8.null]),
         dir: t8.union([t8.literal("ltr"), t8.literal("rtl")]),
         stepCounterFormat: t8.union([t8.literal("numeric"), t8.literal("verbose")]),
         tags: t8.array(TagV),
@@ -13356,9 +13356,9 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       previewUrl: t8.union([t8.string, t8.null, t8.undefined]),
       customThemeId: t8.union([t8.number, t8.null, t8.undefined]),
       variant: t8.string,
-      pageTargeting: PageTargetingConfigV,
+      pageTargeting: NudgePageTargetingConfigV,
       hideIfPageTargetingNotMet: t8.boolean,
-      temporarilyHideTargeting: PageTargetingConfigV,
+      temporarilyHideTargeting: NudgePageTargetingConfigV,
       translationStatus: t8.union([TranslationStatusV, t8.null, t8.undefined]),
       breakingFeatures: t8.union([t8.string, t8.null, t8.undefined])
     },
@@ -13601,19 +13601,164 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     const hasButton = step.content.some((block) => block.type === "button");
     return !hasOnlyOneFiniteInput || hasButton;
   };
+  var compareNudgePriority = (nudgeA, nudgeB, lastSeenTsA, lastSeenTsB) => {
+    const priorityA = nudgeA.priority ?? 2 /* Medium */;
+    const priorityB = nudgeB.priority ?? 2 /* Medium */;
+    if (priorityA !== priorityB) return priorityB - priorityA;
+    const subPriorityA = nudgeA.subPriority ?? 1;
+    const subPriorityB = nudgeB.subPriority ?? 1;
+    if (subPriorityA !== subPriorityB) return subPriorityA - subPriorityB;
+    if (lastSeenTsA !== void 0 && lastSeenTsB !== void 0) return lastSeenTsB - lastSeenTsA;
+    return 0;
+  };
 
   // ../shared/src/products/nudges/store/utils.ts
   var urlMatchesConditions = (_, url, conditions, defaultValue = true) => {
+    if (conditions.every((c2) => c2.length === 0)) {
+      return defaultValue;
+    }
     const pageTarget = {
       context: {
         url
       },
       result: {}
     };
-    if (conditions.flat().length === 0) {
-      return defaultValue;
-    }
     return _.evalEngine.evaluateConditions(pageTarget, conditions);
+  };
+
+  // ../shared/src/util/page-targeting/cssEscape.ts
+  var cssEscape = (value) => {
+    const length = value.length;
+    const firstCodeUnit = value.charCodeAt(0);
+    if (length === 1 && firstCodeUnit === 45) {
+      return `\\${value}`;
+    }
+    let result = "";
+    for (let index = 0; index < length; index++) {
+      const codeUnit = value.charCodeAt(index);
+      if (codeUnit === 0) {
+        result += "\uFFFD";
+        continue;
+      }
+      const needsHexEscape = codeUnit >= 1 && codeUnit <= 31 || codeUnit === 127 || index === 0 && codeUnit >= 48 && codeUnit <= 57 || index === 1 && codeUnit >= 48 && codeUnit <= 57 && firstCodeUnit === 45;
+      if (needsHexEscape) {
+        result += `\\${codeUnit.toString(16)} `;
+        continue;
+      }
+      const isSafeIdentifierChar = codeUnit >= 128 || codeUnit === 45 || codeUnit === 95 || codeUnit >= 48 && codeUnit <= 57 || codeUnit >= 65 && codeUnit <= 90 || codeUnit >= 97 && codeUnit <= 122;
+      if (isSafeIdentifierChar) {
+        result += value.charAt(index);
+        continue;
+      }
+      result += `\\${value.charAt(index)}`;
+    }
+    return result;
+  };
+
+  // ../shared/src/util/page-targeting/toCssSelector.ts
+  var isDomMatchType = (matchType) => matchType === "domId" || matchType === "domClassname" || matchType === "domSelector";
+  var toCssSelector = (matchType, value) => {
+    switch (matchType) {
+      case "domId":
+        return `#${cssEscape(value)}`;
+      case "domClassname":
+        return `.${cssEscape(value)}`;
+      case "domSelector":
+        return value;
+    }
+  };
+
+  // ../shared/src/util/page-targeting/urlToRegex.ts
+  var escapeForRegex = (s2) => s2.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+  var compile = (url, matchType) => {
+    switch (matchType) {
+      case "exact":
+        return `^${escapeForRegex(url)}$`;
+      case "simple": {
+        const trimmed = url.endsWith("/") ? url.slice(0, -1) : url;
+        return `^${escapeForRegex(trimmed)}\\/?(\\?.*)?(#.*)?$`;
+      }
+      case "pattern": {
+        const parts = url.split("*");
+        let regex = "^";
+        for (let i2 = 0; i2 < parts.length; i2++) {
+          if (i2 > 0) regex += ".*";
+          regex += escapeForRegex(parts[i2] ?? "");
+        }
+        regex += url.endsWith("*") ? ".*" : "$";
+        return regex;
+      }
+      case "contains":
+        return `.*${escapeForRegex(url)}.*`;
+      case "startsWith":
+        return `^${escapeForRegex(url)}.*`;
+      case "endsWith":
+        return `.*${escapeForRegex(url)}$`;
+      case "regex":
+        return url;
+    }
+  };
+  var CACHE_LIMIT = 500;
+  var cache = /* @__PURE__ */ new Map();
+  var urlToRegex = (url, matchType) => {
+    const key = `${matchType}|${url}`;
+    const cached = cache.get(key);
+    if (cached !== void 0) return cached;
+    const result = compile(url, matchType);
+    if (cache.size >= CACHE_LIMIT) cache.clear();
+    cache.set(key, result);
+    return result;
+  };
+
+  // ../shared/src/internal/middleware/evaluate-page-targeting.ts
+  var getEffectiveValue = (config) => config.value ?? config.url;
+  var matchesUrlConfig = (_, matchType, value) => {
+    const regex = urlToRegex(value, matchType);
+    const conditions = [
+      [{ selector: ["context", "url"], op: "regex match", values: [regex] }]
+    ];
+    return urlMatchesConditions(_, _.location.href, conditions);
+  };
+  var matchesConfig = (_, config) => {
+    const value = getEffectiveValue(config);
+    if (isDomMatchType(config.matchType)) {
+      return _.services.matchesAnyElement(toCssSelector(config.matchType, value));
+    }
+    return matchesUrlConfig(_, config.matchType, value);
+  };
+  var evaluatePageTargeting = (_, configs, conditions, defaultValue = true) => {
+    if (configs.length === 0 && conditions.length === 0) return defaultValue;
+    if (configs.length === 0) {
+      return urlMatchesConditions(_, _.location.href, conditions, defaultValue);
+    }
+    const includeConfigs = [];
+    let hasDomOrAnd = false;
+    for (const config of configs) {
+      if (config.isExclude) {
+        if (matchesConfig(_, config)) return false;
+        continue;
+      }
+      includeConfigs.push(config);
+      hasDomOrAnd ||= isDomMatchType(config.matchType) || config.operator === "and";
+    }
+    if (includeConfigs.length === 0) {
+      return urlMatchesConditions(_, _.location.href, conditions, defaultValue);
+    }
+    const andGroups = [];
+    let currentGroup = [];
+    for (const config of includeConfigs) {
+      currentGroup.push(config);
+      if (config.operator !== "and") {
+        andGroups.push(currentGroup);
+        currentGroup = [];
+      }
+    }
+    if (currentGroup.length > 0) andGroups.push(currentGroup);
+    if (andGroups.some((group) => group.every((config) => matchesConfig(_, config)))) {
+      return true;
+    }
+    if (hasDomOrAnd) return false;
+    return urlMatchesConditions(_, _.location.href, conditions, false);
   };
 
   // ../shared/src/products/nudges/store/eventCountTracker.ts
@@ -13757,6 +13902,9 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       return false;
     }
     return activeVariantForNudge === nudge.variant;
+  };
+  var nudgeIsInDecide = (nudge, decideResult) => {
+    return !!decideResult && nudge.flagKey in decideResult;
   };
   var getExperimentKey = (nudge, decideResult) => decideResult?.[nudge.flagKey]?.metadata?.experimentKey;
   var getEvaluationId = (nudge, decideResult) => decideResult?.[nudge.flagKey]?.metadata?.evaluationId;
@@ -14094,7 +14242,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     return !(snoozedUntilTs && snoozedUntilTs > Date.now());
   };
   var passesPageTargeting = (_, nudge) => {
-    return urlMatchesConditions(_, _.location.href, nudge.pageTargeting.conditions);
+    return evaluatePageTargeting(_, nudge.pageTargeting.configs, nudge.pageTargeting.conditions);
   };
   var passesClickedElement = (_, nudge, triggerEvent) => {
     if (triggerEvent?.trigger.type === "element_clicked" && nudge.triggerConfig.type === "element_clicked") {
@@ -14115,9 +14263,13 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   var shouldTemporarilyHide = (_, nudge) => {
     if (nudge.hideIfPageTargetingNotMet) {
       return !passesPageTargeting(_, nudge);
-    } else {
-      return urlMatchesConditions(_, _.location.href, nudge.temporarilyHideTargeting.conditions, false);
     }
+    return evaluatePageTargeting(
+      _,
+      nudge.temporarilyHideTargeting.configs,
+      nudge.temporarilyHideTargeting.conditions,
+      false
+    );
   };
   var getAllNudgeDataFromUserStore = (_) => {
     return _.endUserStore.data.nudgeInteractions;
@@ -17194,14 +17346,14 @@ ${err.message}`);
   }
 
   // ../shared/node_modules/xstate/dist/xstate.esm.js
-  var cache = /* @__PURE__ */ new WeakMap();
+  var cache2 = /* @__PURE__ */ new WeakMap();
   function memo(object, key, fn) {
-    let memoizedData = cache.get(object);
+    let memoizedData = cache2.get(object);
     if (!memoizedData) {
       memoizedData = {
         [key]: fn()
       };
-      cache.set(object, memoizedData);
+      cache2.set(object, memoizedData);
     } else if (!(key in memoizedData)) {
       memoizedData[key] = fn();
     }
@@ -17712,9 +17864,9 @@ ${err.message}`);
         throw promise;
     }
   }, snapCache = /* @__PURE__ */ new WeakMap(), createSnapshot = (target, version2, handlePromise = defaultHandlePromise) => {
-    const cache2 = snapCache.get(target);
-    if ((cache2 == null ? void 0 : cache2[0]) === version2) {
-      return cache2[1];
+    const cache3 = snapCache.get(target);
+    if ((cache3 == null ? void 0 : cache3[0]) === version2) {
+      return cache3[1];
     }
     const snap = Array.isArray(target) ? [] : Object.create(Object.getPrototypeOf(target));
     h(snap, true);
@@ -18479,20 +18631,21 @@ ${err.message}`);
   __export(service_actions_exports, {
     closeAllNudgeMocks: () => closeAllNudgeMocks,
     closeNudge: () => closeNudge,
+    closeRenderingNudgesIfTemporarilyHidden: () => closeRenderingNudgesIfTemporarilyHidden,
     closeStep: () => closeStep,
+    dispatchAfterTimeTriggers: () => dispatchAfterTimeTriggers,
     forceTriggerSingleNudge: () => forceTriggerSingleNudge,
     getDebugSnapshot: () => getDebugSnapshot,
     getDebugSnapshotForHeadless: () => getDebugSnapshotForHeadless,
     getDebuggedNudge: () => getDebuggedNudge,
     initNudges: () => initNudges,
     resetNudge: () => resetNudge,
-    resetTimedTriggers: () => resetTimedTriggers,
+    restartAfterTimeTriggers: () => restartAfterTimeTriggers,
     restartDebugSession: () => restartDebugSession,
     restorePreviewSession: () => restorePreviewSession,
     sendConstantTriggers: () => sendConstantTriggers,
     sendDirectedTrigger: () => sendDirectedTrigger,
     sendIndirectTrigger: () => sendIndirectTrigger,
-    setupTimedTriggers: () => setupTimedTriggers,
     showStepMock: () => showStepMock,
     shutdownNudges: () => shutdownNudges,
     startDebugSession: () => startDebugSession,
@@ -20118,9 +20271,6 @@ ${err.message}`);
     decide
   };
 
-  // ../shared/src/internal/middleware/helpers/pushTrigger.ts
-  var generateTriggerableEntityId = (triggerableEntity) => `nudge-${triggerableEntity.variantId}`;
-
   // ../shared/src/store/util/hasOp.ts
   var import_isEqual2 = __toESM(require_isEqual());
   var hasOp = (opType, path, ops) => {
@@ -20265,19 +20415,25 @@ ${err.message}`);
       return;
     }
     const checklist = _.activeChecklist.nudge;
+    const isAlreadyCompleted = isStepCompleted(_, checklist, step);
     if (!options?.skipped) {
-      Track.nudge.stepCompleted(
-        checklist,
-        stepIndex,
-        {
-          completedViaCta: source.completedViaCta,
-          interactionState: getNudgeDataFromUserStore(_, checklist.variantId)
-        },
-        _.instanceName
-      );
+      if (!isAlreadyCompleted) {
+        Track.nudge.stepCompleted(
+          checklist,
+          stepIndex,
+          {
+            completedViaCta: source.completedViaCta,
+            interactionState: getNudgeDataFromUserStore(_, checklist.variantId)
+          },
+          _.instanceName
+        );
+      }
       if (source.completedViaCta) {
         Track.nudge.engaged(checklist, stepIndex, { source: { type: "cta", level: "primary" } }, _.instanceName);
       }
+    }
+    if (isAlreadyCompleted) {
+      return;
     }
     const allNudgesData = {
       ..._.endUserStore.data.nudgeInteractions
@@ -20432,6 +20588,7 @@ ${err.message}`);
       iconSrc: t15.union([t15.string, t15.null])
     })
   ]);
+  var DefaultTabV = t15.union([t15.literal("resource_center"), t15.literal("assistant")]);
   var ResourceCenterV = t15.intersection([
     t15.type({
       isAutopilotEnabled: t15.boolean,
@@ -20449,7 +20606,8 @@ ${err.message}`);
       showBranding: t15.boolean,
       showRecsetHeroCards: t15.boolean,
       showNegativeFeedbackDropdown: t15.boolean,
-      imageUploadEnabled: t15.boolean
+      imageUploadEnabled: t15.boolean,
+      defaultTab: t15.union([DefaultTabV, t15.null, t15.undefined])
     })
   ]);
   var ResourceCenter = class {
@@ -20688,7 +20846,7 @@ ${err.message}`);
     ]),
     sub(_, sessionPropertiesChanged, [["sessionProperties"]]),
     sub(_, (_2) => updateChecklistStepConditionsGoals(_2), [["activeChecklist"], ["location"]]),
-    sub(_, (_2) => resetTimedTriggers(_2), [["location"]]),
+    sub(_, (_2) => restartAfterTimeTriggers(_2), [["location"]]),
     sub(
       _,
       (_2) => storeResourceCenterStateDebounced(_2),
@@ -20742,6 +20900,7 @@ ${err.message}`);
     _.messageBus.subscribe(
       "dom_mutation",
       () => {
+        closeRenderingNudgesIfTemporarilyHidden(_);
         sendIndirectTrigger(_, {
           trigger: { type: "active" },
           source: { type: "active" },
@@ -21005,8 +21164,15 @@ ${err.message}`);
       passesTriggerMatch: ({ context }) => context.triggerEvent?.overrides?.triggerMatch || passesTriggerMatch(globalStore, context.nudge, context.triggerEvent),
       passesEventCount: ({ context }) => context.triggerEvent?.overrides?.eventCount || context.triggerEvent?.trigger.type === "active" || passesEventCount(globalStore, context.nudge),
       passesCooldown: ({ context }) => context.triggerEvent?.overrides?.cooldown || isTooltipNudge(context.nudge) || passesCooldown(globalStore, context.nudge),
-      passesAudience: ({ context }) => context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode || // In debug/simulate mode we always want our audience guard to pass
-      getActiveVariantForFlag(context.nudge.flagKey, globalStore.decide) === "control" || nudgePassesDecide(context.nudge, globalStore.decide),
+      passesAudience: ({ context }) => {
+        if (context.triggerEvent?.overrides?.audience) return true;
+        if (context.triggerEvent?.overrides?.simulateMode) {
+          if (globalStore.nudgeDebugToolBar.bypassTargeting) return true;
+          if (!nudgeIsInDecide(context.nudge, globalStore.decide)) return true;
+          return nudgePassesDecide(context.nudge, globalStore.decide);
+        }
+        return getActiveVariantForFlag(context.nudge.flagKey, globalStore.decide) === "control" || nudgePassesDecide(context.nudge, globalStore.decide);
+      },
       passesSnoozed: ({ context }) => context.triggerEvent?.overrides?.snoozed || passesSnoozedConditions(globalStore, context.nudge),
       passesPage: ({ context }) => {
         const passesRegularPageTargeting = context.triggerEvent?.overrides?.page || passesPageTargeting(globalStore, context.nudge);
@@ -21016,7 +21182,15 @@ ${err.message}`);
       passesCustomThrottles: ({ context }) => shouldBypassCustomThrottles(globalStore, context.nudge) || context.triggerEvent?.overrides?.customThrottles || passesCustomThrottles(globalStore, context.nudge),
       passesLocalization: ({ context }) => context.triggerEvent?.overrides?.localization || passesLocalization(globalStore, context.nudge, getSDKForStore(globalStore)?.[_configuration].locale),
       passesMutualExclusion: ({ context }) => context.triggerEvent?.overrides?.mutualExclusion || passesMutualExclusion(globalStore, context.nudge),
-      passesExperimentVariant: ({ context }) => context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode || nudgePassesDecide(context.nudge, globalStore.decide),
+      passesExperimentVariant: ({ context }) => {
+        if (context.triggerEvent?.overrides?.audience) return true;
+        if (context.triggerEvent?.overrides?.simulateMode) {
+          if (globalStore.nudgeDebugToolBar.bypassTargeting) return true;
+          if (!nudgeIsInDecide(context.nudge, globalStore.decide)) return true;
+          return nudgePassesDecide(context.nudge, globalStore.decide);
+        }
+        return nudgePassesDecide(context.nudge, globalStore.decide);
+      },
       // step specific
       remainingSteps: ({ context }) => hasRemainingSteps(context.nudge)(context),
       advanceToSpecificStep: ({ context }, params) => params.step !== void 0 && params.step >= 0 && params.step < context.nudge.steps.length,
@@ -21070,7 +21244,11 @@ ${err.message}`);
       }),
       captureEvaluationId: assign({
         evaluationId: ({ context }) => {
-          const audienceSkipped = context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode;
+          const audienceSkipped = context.triggerEvent?.overrides?.audience || // In simulate mode we treat targeting as skipped (and therefore don't
+          // capture the evaluationId) when targeting is bypassed or the nudge
+          // is not in decide. Published nudges with targeting evaluated do
+          // capture their evaluationId like normal.
+          context.triggerEvent?.overrides?.simulateMode && (globalStore.nudgeDebugToolBar.bypassTargeting || !nudgeIsInDecide(context.nudge, globalStore.decide));
           if (audienceSkipped) return null;
           const id = getEvaluationId(context.nudge, globalStore.decide);
           return typeof id === "string" ? id : null;
@@ -21078,7 +21256,7 @@ ${err.message}`);
       }),
       captureSegmentName: assign({
         segmentName: ({ context }) => {
-          const audienceSkipped = context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode;
+          const audienceSkipped = context.triggerEvent?.overrides?.audience || context.triggerEvent?.overrides?.simulateMode && (globalStore.nudgeDebugToolBar.bypassTargeting || !nudgeIsInDecide(context.nudge, globalStore.decide));
           if (audienceSkipped) return null;
           const name = getSegmentName(context.nudge, globalStore.decide);
           return typeof name === "string" ? name : null;
@@ -22337,8 +22515,11 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
           }
         };
       }),
-      cleanupSmartNudges: () => {
-        removeTimedTriggers(globalStore);
+      cleanupDelayedTriggers: () => {
+        removeDelayedTriggers(globalStore);
+      },
+      cancelDelayedTriggerForNudge: (_, params) => {
+        removeDelayedTriggerForNudge(globalStore, params.variantId);
       },
       // this gets set when simulate mode is engaged
       setOriginalDebuggingNudge: assign({
@@ -22444,7 +22625,10 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
             actions: [{ type: "updateSmartNudges", params: ({ event }) => ({ nudge: event.nudge }) }]
           },
           ENTER_RENDER_LOOP: {
-            actions: [{ type: "setActiveNudge", params: ({ event }) => ({ nudge: event.nudge }) }]
+            actions: [
+              { type: "setActiveNudge", params: ({ event }) => ({ nudge: event.nudge }) },
+              { type: "cancelDelayedTriggerForNudge", params: ({ event }) => ({ variantId: event.nudge.variantId }) }
+            ]
           },
           EXIT_RENDER_LOOP: {
             actions: [{ type: "clearActiveNudge" }]
@@ -22506,53 +22690,51 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
                 })
               },
               Triggering: {
-                description: "Forwards the current trigger to all nudge machines. In debug mode, all machines receive the trigger with simulate overrides. In normal mode, machines are sorted by priority (then by last seen timestamp) and blocking nudges are closed if the trigger requests it.",
+                description: "Forwards the current trigger to all nudge machines. In debug mode the trigger is layered with `simulateMode: true` overrides; in normal mode, blocking nudges are closed first if the trigger requests it. Machines are sorted by priority (then by last seen timestamp). Either way, forwarding to each actor goes through `dispatchTriggerWithDelay` so a configured per-trigger delay (`data.delay`, or `value/unit` for after_time) is honored uniformly \u2014 including in simulate/preview mode.",
                 entry: enqueueActions(({ context, enqueue }) => {
                   const { triggerEvent, debugMode, nudgeMachines } = context;
-                  if (debugMode.currentNudge && triggerEvent) {
-                    const debugEvent = {
-                      ...triggerEvent,
-                      overrides: {
-                        ...triggerEvent?.overrides,
-                        simulateMode: true
-                      }
-                    };
-                    for (const machine of nudgeMachines.values()) {
-                      enqueue.sendTo(machine, debugEvent);
+                  if (!triggerEvent) return;
+                  const effectiveTriggerEvent = debugMode.currentNudge ? {
+                    ...triggerEvent,
+                    overrides: {
+                      ...triggerEvent?.overrides,
+                      simulateMode: true
                     }
-                  } else if (triggerEvent) {
-                    const sortedMachines = Array.from(nudgeMachines.values()).sort((a, b) => {
-                      const priorityA = a.getSnapshot()?.context.nudge.priority ?? 2 /* Medium */;
-                      const priorityB = b.getSnapshot()?.context.nudge.priority ?? 2 /* Medium */;
-                      if (priorityA === priorityB) {
-                        const userStoreNudgeDataA = getNudgeDataFromUserStore(
-                          globalStore,
-                          a.getSnapshot()?.context.nudge?.variantId
-                        );
-                        const lastSeenA = userStoreNudgeDataA?.lastSeenTs;
-                        const userStoreNudgeDataB = getNudgeDataFromUserStore(
-                          globalStore,
-                          b.getSnapshot()?.context.nudge?.variantId
-                        );
-                        const lastSeenB = userStoreNudgeDataB?.lastSeenTs;
-                        if (lastSeenA && lastSeenB) {
-                          return lastSeenB - lastSeenA;
-                        }
-                      }
-                      return priorityB - priorityA;
-                    });
+                  } : triggerEvent;
+                  const sortedMachines = Array.from(nudgeMachines.values()).sort((a, b) => {
+                    const nudgeA = a.getSnapshot()?.context?.nudge;
+                    const nudgeB = b.getSnapshot()?.context?.nudge;
+                    const userDataA = getNudgeDataFromUserStore(globalStore, nudgeA?.variantId);
+                    const userDataB = getNudgeDataFromUserStore(globalStore, nudgeB?.variantId);
+                    return compareNudgePriority(
+                      nudgeA ?? {},
+                      nudgeB ?? {},
+                      userDataA?.lastSeenTs,
+                      userDataB?.lastSeenTs
+                    );
+                  });
+                  if (!debugMode.currentNudge) {
                     for (const machine of sortedMachines) {
-                      if (triggerEvent.overrides?.closeBlockingNudges && triggerEvent.nudgeId) {
-                        const nudgeToTrigger = getNudgeById(globalStore, triggerEvent.nudgeId);
-                        const nudge = machine.getSnapshot().context.nudge;
-                        if (nudgeToTrigger && isBlocked(nudgeToTrigger, [nudge])) {
+                      if (effectiveTriggerEvent.overrides?.closeBlockingNudges && effectiveTriggerEvent.nudgeId) {
+                        const nudgeToTrigger = getNudgeById(globalStore, effectiveTriggerEvent.nudgeId);
+                        const nudge = machine.getSnapshot().context?.nudge;
+                        if (nudge && nudgeToTrigger && isBlocked(nudgeToTrigger, [nudge])) {
                           enqueue.sendTo(machine, { type: "CLOSE" });
                         }
                       }
                     }
-                    for (const machine of sortedMachines) {
-                      enqueue.sendTo(machine, triggerEvent);
+                  }
+                  for (const machine of sortedMachines) {
+                    const nudge = machine.getSnapshot().context?.nudge;
+                    if (nudge && dispatchTriggerWithDelay(
+                      globalStore,
+                      nudge,
+                      () => machine.send(effectiveTriggerEvent),
+                      effectiveTriggerEvent
+                    )) {
+                      continue;
                     }
+                    enqueue.sendTo(machine, effectiveTriggerEvent);
                   }
                 }),
                 always: "Listening"
@@ -22614,7 +22796,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           enqueue({ type: "closeDebugToolbar" });
           enqueue({ type: "unsetDebuggingNudge" });
           enqueue({ type: "unsetTriggerEvent" });
-          enqueue({ type: "cleanupSmartNudges" });
+          enqueue({ type: "cleanupDelayedTriggers" });
           enqueue({ type: "stopAllNudgeMachines" });
         })
       },
@@ -22622,6 +22804,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         actions: enqueueActions(({ context, enqueue, event }) => {
           const refreshedNudgeIds = event.nudges.map((nudge) => nudge.variantId.toString());
           const currentNudgeIds = Array.from(context.nudgeMachines.keys());
+          removeDelayedTriggers(globalStore);
           if ((0, import_isEqual3.default)(refreshedNudgeIds, currentNudgeIds)) {
             for (const machine of context.nudgeMachines.values()) {
               const nudge = event.nudges.find(
@@ -22675,6 +22858,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           enqueue({ type: "clearTriggerQueue" });
           enqueue({ type: "unsetTriggerEvent" });
           enqueue({ type: "clearActiveNudge" });
+          enqueue({ type: "cleanupDelayedTriggers" });
           enqueue.assign({
             nudgeMachines: () => /* @__PURE__ */ new Map()
           });
@@ -22715,6 +22899,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         }
       }
     });
+    dispatchAfterTimeTriggers(_);
   };
   var initNudges = (_, nudges) => {
     const platformNudges = nudges.filter((nudge) => nudge.platform === __GS_PLATFORM__);
@@ -22851,12 +23036,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         variantId: adminNudge.variantId,
         // toStepIndex intentionally omitted - see note above
         locale: localeForConfig,
-        bypassCustomThrottles: _.nudgeDebugToolBar.bypassCustomThrottles
+        bypassCustomThrottles: _.nudgeDebugToolBar.bypassCustomThrottles,
+        bypassTargeting: _.nudgeDebugToolBar.bypassTargeting
       },
       _.apiKeyPrefix
     );
     const overrides = options.toStepIndex !== void 0 ? { stepIndex: options.toStepIndex } : {};
-    setupTimedTriggers(_, [adminNudge]);
+    dispatchAfterTimeTriggers(_, [adminNudge]);
     sendDirectedTrigger(_, adminNudge, {
       trigger: { type: "active" },
       source: { type: "active" },
@@ -22925,6 +23111,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     if (storedSession.bypassCustomThrottles !== void 0) {
       _.nudgeDebugToolBar.bypassCustomThrottles = storedSession.bypassCustomThrottles;
     }
+    if (storedSession.bypassTargeting !== void 0) {
+      _.nudgeDebugToolBar.bypassTargeting = storedSession.bypassTargeting;
+    }
     logger.debug("Restoring preview session from session storage", storedSession);
     await startDebugSession(
       _,
@@ -22967,6 +23156,14 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var closeNudge = (_, nudge) => {
     const actor = getNudgeActor(_, nudge.variantId);
     actor?.send({ type: "CLOSE" });
+  };
+  var closeRenderingNudgesIfTemporarilyHidden = (_) => {
+    getAllNudgeActors(_)?.forEach((actor) => {
+      const snapshot = actor.getSnapshot();
+      if (snapshot.matches({ Step: "Render Loop" }) && shouldTemporarilyHide(_, snapshot.context.nudge)) {
+        actor.send({ type: "CLOSE" });
+      }
+    });
   };
   var snoozeNudge = (_, nudge, duration, renderMode = 0 /* DEFAULT */) => {
     if (renderMode === 1 /* MOCK */) {
@@ -23121,12 +23318,79 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var setRecorderToolBarVisibility = (_, visible) => {
     _.nudgeRecorderToolBar.visible = visible;
   };
-  var setEntityTimer = (_, entity) => {
-    const delay = entity.triggerConfig.data.unit === "minute" ? entity.triggerConfig.data.value * 60 * 1e3 : entity.triggerConfig.data.value * 1e3;
-    const timer = setTimeout(() => {
-      sendDirectedTrigger(_, entity, {
-        trigger: { type: "direct" },
-        overrides: { triggerMatch: true },
+  var getTriggerDelayMs = (nudge) => {
+    if (nudge.triggerConfig.type === "after_time") {
+      const { unit, value } = nudge.triggerConfig.data;
+      if (typeof value !== "number" || value <= 0 || !Number.isFinite(value)) return 0;
+      return unit === "minute" ? value * 60 * 1e3 : value * 1e3;
+    }
+    const data = nudge.triggerConfig.data;
+    const delay = data?.delay;
+    if (typeof delay !== "number" || delay <= 0 || !Number.isFinite(delay)) return 0;
+    return delay;
+  };
+  var shouldBypassTriggerDelay = (triggerEvent) => {
+    const triggerType = triggerEvent.trigger.type;
+    if (triggerType === "active" || triggerType === "direct") return true;
+    return false;
+  };
+  var dispatchTriggerWithDelay = (_, nudge, forward, triggerEvent) => {
+    const delayMs = getTriggerDelayMs(nudge);
+    if (delayMs === 0 || !_.delayedTriggers || shouldBypassTriggerDelay(triggerEvent)) {
+      return false;
+    }
+    const entry = {
+      variantId: nudge.variantId,
+      triggerType: triggerEvent.trigger.type,
+      // Placeholder so the closure can reference the final entry.
+      timer: null
+    };
+    entry.timer = setTimeout(() => {
+      _.delayedTriggers.delete(entry);
+      forward();
+    }, delayMs);
+    _.delayedTriggers.add(entry);
+    return true;
+  };
+  var removeDelayedTriggers = (_) => {
+    if (!_.delayedTriggers) return;
+    for (const entry of _.delayedTriggers) {
+      clearTimeout(entry.timer);
+    }
+    _.delayedTriggers.clear();
+  };
+  var removeDelayedTriggerForNudge = (_, variantId) => {
+    if (!_.delayedTriggers) return;
+    for (const entry of _.delayedTriggers) {
+      if (entry.variantId === variantId) {
+        clearTimeout(entry.timer);
+        _.delayedTriggers.delete(entry);
+      }
+    }
+  };
+  var removeDelayedAfterTimeTriggers = (_) => {
+    if (!_.delayedTriggers) return;
+    for (const entry of _.delayedTriggers) {
+      if (entry.triggerType === "after_time") {
+        clearTimeout(entry.timer);
+        _.delayedTriggers.delete(entry);
+      }
+    }
+  };
+  var hasPendingAfterTimeTimer = (_, variantId) => {
+    if (!_.delayedTriggers) return false;
+    for (const entry of _.delayedTriggers) {
+      if (entry.triggerType === "after_time" && entry.variantId === variantId) return true;
+    }
+    return false;
+  };
+  var dispatchAfterTimeTriggers = (_, nudges) => {
+    const candidates = (nudges ?? getAllNudges(_)).filter(
+      (nudge) => nudge.triggerConfig.type === "after_time"
+    ).filter((nudge) => !hasPendingAfterTimeTimer(_, nudge.variantId)).sort((a, b) => compareNudgePriority(a, b));
+    for (const nudge of candidates) {
+      sendDirectedTrigger(_, nudge, {
+        trigger: { type: "after_time" },
         source: {
           type: "trigger",
           properties: {
@@ -23134,30 +23398,11 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           }
         }
       });
-    }, delay);
-    _.timedTriggers.set({ id: generateTriggerableEntityId(entity), entity }, timer);
-  };
-  var removeTimedTriggers = (_) => {
-    for (const [entity, timer] of _.timedTriggers) {
-      clearTimeout(timer);
-      _.timedTriggers.delete(entity);
     }
   };
-  var resetTimedTriggers = (_) => {
-    const entriesSnapshot = Array.from(_.timedTriggers.keys());
-    removeTimedTriggers(_);
-    for (const { entity } of entriesSnapshot) {
-      setEntityTimer(_, entity);
-    }
-  };
-  var setupTimedTriggers = (_, nudges) => {
-    removeTimedTriggers(_);
-    const delayedTriggerableEntities = nudges.filter(
-      (nudge) => nudge.triggerConfig.type === "after_time"
-    ).sort((b, a) => (a.priority ?? 0) - (b.priority ?? 0));
-    for (const entity of delayedTriggerableEntities) {
-      setEntityTimer(_, entity);
-    }
+  var restartAfterTimeTriggers = (_) => {
+    removeDelayedAfterTimeTriggers(_);
+    dispatchAfterTimeTriggers(_);
   };
   var execNavigationAction = (action, meta, actor) => {
     switch (action.type) {
@@ -23736,6 +23981,18 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       },
       plugin(options) {
         const initFunc = proxy2.init;
+        const tokenOption = options?.token;
+        const buildUser = (client, identityStore) => {
+          const identity2 = identityStore.getIdentity();
+          const token = typeof tokenOption === "function" ? tokenOption() : tokenOption;
+          return {
+            user_id: client.getUserId(),
+            device_id: client.getDeviceId(),
+            user_properties: identity2.userProperties,
+            getSessionId: client.getSessionId,
+            ...token ? { token } : {}
+          };
+        };
         return {
           name: "@amplitude/engagement-browser",
           type: "enrichment",
@@ -23757,15 +24014,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             ];
             await window.engagement.boot(
               {
-                user: () => {
-                  const identity2 = identityStore.getIdentity();
-                  return {
-                    user_id: client.getUserId(),
-                    device_id: client.getDeviceId(),
-                    user_properties: identity2.userProperties,
-                    getSessionId: client.getSessionId
-                  };
-                },
+                user: () => buildUser(client, identityStore),
                 integrations
               },
               // @ts-expect-error PLUGIN_CALLER is an internal-only arg not in the public signature
@@ -23780,15 +24029,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
                 window.engagement.shutdown(PLUGIN_CALLER);
                 window.engagement.boot(
                   {
-                    user: () => {
-                      const identity3 = identityStore.getIdentity();
-                      return {
-                        user_id: client.getUserId(),
-                        device_id: client.getDeviceId(),
-                        user_properties: identity3.userProperties,
-                        getSessionId: client.getSessionId
-                      };
-                    },
+                    user: () => buildUser(client, identityStore),
                     integrations
                   },
                   // @ts-expect-error PLUGIN_CALLER is an internal-only arg not in the public signature
@@ -23811,7 +24052,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       get: function(_, prop) {
         if (prop in sdk) return sdk[prop];
         if (prop === "then") return void 0;
-        if (prop === "gs" || prop === "rc") {
+        if (prop === "gs" || prop === "rc" || prop === "assistant") {
           return new Proxy(
             {},
             {
@@ -23946,13 +24187,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var setLocation = (_, location) => {
     _.messageBus.publish("dom_mutation");
     notifyLocationSubscribers(location);
-    getAllNudgeActors(_)?.forEach((actor) => {
-      const snapshot = actor.getSnapshot();
-      const nudge = snapshot.context.nudge;
-      if (snapshot.matches({ Step: "Render Loop" }) && shouldTemporarilyHide(_, nudge)) {
-        actor?.send({ type: "CLOSE" });
-      }
-    });
+    closeRenderingNudgesIfTemporarilyHidden(_);
     sendIndirectTrigger(_, {
       trigger: { type: "immediately" },
       source: { type: "trigger", properties: { triggerType: "immediately" } }
@@ -24904,7 +25139,17 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var previewContentItem = (_, contentItemId) => {
     _.services.setCurrentContentId(_, contentItemId);
   };
+  var initialPageRequestsEqual = (existing, next) => {
+    if (!existing?.item) return false;
+    const a = existing.item;
+    const b = next.item;
+    return a.page === b.page && JSON.stringify(a.params ?? {}) === JSON.stringify(b.params ?? {});
+  };
   var setInitialPage = (_, navigateTo) => {
+    const existing = _.resourceCenter.initialPage;
+    if (initialPageRequestsEqual(existing, navigateTo)) {
+      return;
+    }
     _.resourceCenter.initialPage = navigateTo;
   };
   var setResourceCenterFilter = (_, filter) => {
@@ -25072,16 +25317,20 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         this._isInstalledViaPlugin = true;
         const instanceName = config.instanceName ?? ANALYTICS_DEFAULT_INSTANCE_NAME;
         const identityStore = AnalyticsConnector.getInstance(instanceName).identityStore;
+        const tokenOption = _initOptions?.token;
+        const buildUser = () => {
+          const identity2 = identityStore.getIdentity();
+          const token = typeof tokenOption === "function" ? tokenOption() : tokenOption;
+          return {
+            user_id: client.getUserId(),
+            device_id: client.getDeviceId(),
+            user_properties: identity2.userProperties,
+            getSessionId: client.getSessionId,
+            ...token ? { token } : {}
+          };
+        };
         await this._bootImpl({
-          user: () => {
-            const identity2 = identityStore.getIdentity();
-            return {
-              user_id: client.getUserId(),
-              device_id: client.getDeviceId(),
-              user_properties: identity2.userProperties,
-              getSessionId: client.getSessionId
-            };
-          },
+          user: buildUser,
           integrations: [
             {
               track: (event) => {
@@ -25569,6 +25818,18 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       this.globalActions.addCallbacks({ [callbackKey]: callbackFn });
     }
     /**
+     * Register a named handler for a callback-type custom tool.
+     * When the AI assistant invokes a callback tool with the matching toolName,
+     * the handler is called with the tool's arguments and its return value is
+     * sent back to the assistant as the tool result.
+     *
+     * @param toolName The tool_name of the callback custom tool (must match exactly).
+     * @param handler Async function receiving the tool arguments and returning the result.
+     */
+    registerCallbackTool(toolName, handler) {
+      this._.callbackToolRegistry.set(toolName, handler);
+    }
+    /**
      * Set a session property to the SDK.
      * @param key The key to set the session property to.
      * @param value The value to set for the session property.
@@ -25654,7 +25915,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
       this.globalActions.setOrganization(organization);
       this.nudgeActions.initNudges(nudges || []);
-      this.nudgeActions.setupTimedTriggers([...nudges]);
     }
     _updateEditorPreviewDevice(device) {
       this._.editorPreviewDevice = device;
@@ -25707,7 +25967,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         return;
       }
       this._.user.user_properties = { ...this._.user.user_properties, ...properties };
-      this._.nudgesManager?.send({ type: "DECIDE_REQUESTED" });
       this._throttledDecide();
     }
     _shareConfig() {
@@ -27218,7 +27477,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     appReviewExecutable: (..._args) => {
       return;
     },
-    supportedBreakingFeatures: []
+    supportedBreakingFeatures: [],
+    matchesAnyElement: () => false
   };
   var DEFAULT_OPTIONS2 = {
     isEditorPreview: false,
@@ -27264,7 +27524,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       effectsSequencer: null,
       currentModalNudge: null,
       activeChecklist: null,
-      timedTriggers: /* @__PURE__ */ new Map(),
+      delayedTriggers: /* @__PURE__ */ new Set(),
       platform,
       trackedAppEvents: /* @__PURE__ */ new Set(),
       showWidgetTableau: false,
@@ -27276,6 +27536,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         visible: false,
         closeTabWhenToolbarClosed: false,
         bypassCustomThrottles: true,
+        // We default to bypassing targeting in preview mode so that previews keep
+        // their current "always show" behavior unless the user explicitly opts in.
+        bypassTargeting: true,
         position: "bottom",
         originalInitLocale: void 0
       },
@@ -27312,10 +27575,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         showRecsetHeroCards: false,
         showNegativeFeedbackDropdown: true,
         imageUploadEnabled: true,
+        defaultTab: "resource_center",
         isAdditionalResourcesExpanded: true,
         shouldPersistOnReload: true,
         filter: null
-      }
+      },
+      callbackToolRegistry: /* @__PURE__ */ new Map()
     };
   };
   var initValtioGlobalStore = (options) => {
@@ -27465,12 +27730,33 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       return DEFAULT_SUPPORTED_BREAKING_FEATURES;
     }
   };
+  var enrichUser = (user) => {
+    if (!user) return user;
+    let raw;
+    try {
+      raw = nudgeServicesBridge2.function("enrichUser").call();
+    } catch {
+      return user;
+    }
+    if (typeof raw !== "string" || raw.length === 0) {
+      return user;
+    }
+    try {
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        return user;
+      }
+      return { ...parsed, ...user };
+    } catch (error) {
+      logger.error("Error parsing enrichUser from native bridge:", error);
+      return user;
+    }
+  };
   var services = {
     ...NOOP_SERVICES,
     ...nudge_default,
     onLocationChange,
-    enrichUser: (user) => user,
-    // No-op for mobile - just return user as-is
+    enrichUser,
     linkExecutable: (_, action, forceNewTab) => nudgeServicesBridge2.function("linkExecutable").call(JSON.stringify(action), forceNewTab),
     getDefaultUIMode: () => nudgeServicesBridge2.function("getDefaultUIMode").call(),
     clickElement: (selector) => nudgeServicesBridge2.function("clickElement").call(selector),
