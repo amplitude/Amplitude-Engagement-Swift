@@ -1,4 +1,4 @@
-amplitude_engagement_version = "3.9.0" # Version is managed automatically by semantic-release, please don't change it manually
+amplitude_engagement_version = "3.10.0" # Version is managed automatically by semantic-release, please don't change it manually
 
 Pod::Spec.new do |s|
   s.name                   = "AmplitudeEngagementSwift"
