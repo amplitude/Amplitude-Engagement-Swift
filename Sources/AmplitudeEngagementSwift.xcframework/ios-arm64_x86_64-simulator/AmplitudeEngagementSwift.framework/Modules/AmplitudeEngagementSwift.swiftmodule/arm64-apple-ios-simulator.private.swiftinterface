@@ -134,6 +134,7 @@ public enum DebugStatus : Swift.String, Swift.CaseIterable {
   case warning
   case error
   case info
+  case pending
   public init?(rawValue: Swift.String)
   public typealias AllCases = [AmplitudeEngagementSwift.DebugStatus]
   public typealias RawValue = Swift.String
@@ -205,6 +206,7 @@ public protocol AmplitudeEngagementPlugin : AnyObject {
   func addCallback(_ key: Swift.String, _ function: @escaping () -> Swift.Void)
   func updateLanguage(_ locale: Swift.String)
   func resetSmartInteractions()
+  var isTestUser: Swift.Bool { get }
   func _setUserProperties(_ userProperties: [Swift.String : Any])
 }
 public protocol AmplitudeEngagement : AmplitudeEngagementSwift.AmplitudeEngagementPlugin {
@@ -244,6 +246,9 @@ public enum __ReactNative__AESDK_Factory {
   public var platform: AmplitudeEngagementSwift.DevelopmentPlatform {
     get
   }
+  public var isTestUser: Swift.Bool {
+    get
+  }
   public func getPlugin() -> any AmplitudeCore.UniversalPlugin
   public func boot(_ user_id: Swift.String, device_id: Swift.String? = nil, autoRefreshIntervalSeconds: Swift.Int = 0)
   public func boot(options: AmplitudeEngagementSwift.AmplitudeBootOptions)
@@ -275,6 +280,7 @@ final public class AmplitudeEngagementNoOpStub : AmplitudeEngagementSwift.Amplit
   final public var platform: AmplitudeEngagementSwift.DevelopmentPlatform {
     get
   }
+  final public var isTestUser: Swift.Bool
   public init(_ apiKey: Swift.String, _ options: AmplitudeEngagementSwift.AmplitudeInitOptions = AmplitudeInitOptions(), _ platform: AmplitudeEngagementSwift.DevelopmentPlatform)
   final public func getPlugin() -> any AmplitudeCore.UniversalPlugin
   final public func boot(_ user_id: Swift.String, device_id: Swift.String?, autoRefreshIntervalSeconds: Swift.Int)

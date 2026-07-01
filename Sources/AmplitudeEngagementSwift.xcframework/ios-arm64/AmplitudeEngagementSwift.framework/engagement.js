@@ -14260,6 +14260,26 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     }
     return true;
   };
+  var getPendingTriggerDelay = (_, nudge) => {
+    if (!_.delayedTriggers) return null;
+    let soonest = null;
+    for (const entry of _.delayedTriggers) {
+      if (entry.variantId !== nudge.variantId) continue;
+      if (entry.triggerType !== nudge.triggerConfig.type) continue;
+      if (!entry.triggerEvent.overrides?.triggerMatch && !passesTriggerMatch(_, nudge, { type: "TRIGGER", ...entry.triggerEvent })) {
+        continue;
+      }
+      const fireAt = entry.scheduledAt + entry.delayMs;
+      if (soonest === null || fireAt < soonest.scheduledAt + soonest.delayMs) {
+        soonest = { delayMs: entry.delayMs, scheduledAt: entry.scheduledAt };
+      }
+    }
+    if (!soonest) return null;
+    return {
+      ...soonest,
+      remainingMs: Math.max(0, soonest.scheduledAt + soonest.delayMs - Date.now())
+    };
+  };
   var shouldTemporarilyHide = (_, nudge) => {
     if (nudge.hideIfPageTargetingNotMet) {
       return !passesPageTargeting(_, nudge);
@@ -14334,6 +14354,20 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       _.user?.user_id ?? _.user?.device_id
     );
     return currentCount >= eventCount;
+  };
+  var getEventCountProgress = (_, nudge) => {
+    if (nudge.triggerConfig.type !== "analytics_event") return null;
+    const needed = nudge.triggerConfig.data?.event_count;
+    if (!needed || needed <= 1) return null;
+    const current = getEventCount(
+      _.apiKeyPrefix,
+      _.instanceName,
+      nudge.variantId,
+      nudge.triggerConfig.data.event,
+      getEffectiveSessionStart(_),
+      _.user?.user_id ?? _.user?.device_id
+    );
+    return { current: Math.min(current, needed), needed };
   };
   var isNudgeActive = (_, nudge) => canBeActive(nudge) && !!getNudgeDataFromUserStore(_, nudge.variantId)?.activelifeCycleUuid;
   var passesPinnedElement = async (_, nudge, stepIndex) => {
@@ -14543,13 +14577,27 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     }
     return "anonymous";
   };
-  var buildEvaluationContext = (_, event, conditions) => {
+  var getLegacySurveyResponseFallbackValue = (step, surveyResponsesMap) => {
+    if (!step) {
+      return Object.values(surveyResponsesMap)[0]?.value;
+    }
+    for (const block of step.content) {
+      if (!isSurveyBlock(block)) continue;
+      const response = surveyResponsesMap[block.uuid];
+      if (response?.value !== void 0) {
+        return response.value;
+      }
+    }
+    return void 0;
+  };
+  var buildEvaluationContext = (_, event, conditions, step) => {
     const surveyResponse = {};
     if (event.surveyResponses && conditions) {
       const surveyConditions = conditions.filter((c2) => c2.type === "survey_response");
-      const surveyResponses = Object.values(event.surveyResponses);
       for (const condition of surveyConditions) {
-        const value = event.surveyResponses[condition.field]?.value ?? surveyResponses[0]?.value;
+        const directValue = event.surveyResponses[condition.field]?.value;
+        const isLegacyField = !condition.field.includes("-");
+        const value = directValue ?? (isLegacyField ? getLegacySurveyResponseFallbackValue(step, event.surveyResponses) : void 0);
         if (value === void 0) continue;
         surveyResponse[condition.field] = typeof value === "number" ? String(value) : value;
       }
@@ -14563,9 +14611,9 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       result: {}
     };
   };
-  var evaluateCondition = (_, condition, event, options) => {
+  var evaluateCondition = (_, condition, event, options, step) => {
     if (condition.v2?.evaluationConditions) {
-      const evalContext = buildEvaluationContext(_, event, condition.v2.conditions);
+      const evalContext = buildEvaluationContext(_, event, condition.v2.conditions, step);
       const result = _.evalEngine.evaluateConditions(evalContext, condition.v2.evaluationConditions);
       return result;
     }
@@ -14613,7 +14661,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       const conditionalActions2 = surveyBlock.meta.conditionalActions;
       if (conditionalActions2) {
         for (const conditionalAction of conditionalActions2) {
-          if (evaluateCondition(_, conditionalAction, event, options)) {
+          if (evaluateCondition(_, conditionalAction, event, options, step)) {
             return resolveConditionalAction(conditionalAction);
           }
         }
@@ -14624,18 +14672,18 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     const conditionalActions = block?.meta.conditionalActions;
     if (conditionalActions) {
       for (const conditionalAction of conditionalActions) {
-        if (evaluateCondition(_, conditionalAction, event, options)) {
+        if (evaluateCondition(_, conditionalAction, event, options, step)) {
           return resolveConditionalAction(conditionalAction);
         }
       }
     }
     return block ? resolveDefaultAction(block.meta) : null;
   };
-  var getActionBasedOnButtonConditions = (_, buttonBlock, event) => {
+  var getActionBasedOnButtonConditions = (_, buttonBlock, event, step) => {
     const { conditionalActions } = buttonBlock.meta || {};
     if (conditionalActions) {
       for (const conditionalAction of conditionalActions) {
-        if (evaluateCondition(_, conditionalAction, event)) {
+        if (evaluateCondition(_, conditionalAction, event, void 0, step)) {
           return resolveConditionalAction(conditionalAction);
         }
       }
@@ -14656,7 +14704,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
           return block.meta?.buttonType === event.buttonMeta?.buttonType && block.meta?.label === event.buttonMeta?.label;
         });
         if (clickedButtonBlock && hasConditionalActionsBlock(clickedButtonBlock)) {
-          return getActionBasedOnButtonConditions(_, clickedButtonBlock, event);
+          return getActionBasedOnButtonConditions(_, clickedButtonBlock, event, step);
         }
       }
       return getActionBasedOnConditions(_, step, event, event.buttonMeta?.buttonType);
@@ -18649,6 +18697,7 @@ ${err.message}`);
     showStepMock: () => showStepMock,
     shutdownNudges: () => shutdownNudges,
     startDebugSession: () => startDebugSession,
+    startDebugSessionBrowse: () => startDebugSessionBrowse,
     stopDebugSession: () => stopDebugSession,
     updateNudgeStepForPreview: () => updateNudgeStepForPreview
   });
@@ -18662,7 +18711,8 @@ ${err.message}`);
 
   // ../shared/src/services/analytics/types.ts
   var guideSpecificEvents = {
-    tooltipMarkerViewed: "[Guides-Surveys] Guide Tooltip Icon Viewed"
+    tooltipMarkerViewed: "[Guides-Surveys] Guide Tooltip Icon Viewed",
+    checklistExpandedStateChanged: "[Guides-Surveys] Guide Checklist Expand State Changed"
   };
   var surveySpecificEvents = {
     surveySubmitted: "[Guides-Surveys] Survey Submitted",
@@ -18702,6 +18752,58 @@ ${err.message}`);
   };
   var ERROR_DEDUP_STORAGE_KEY = "error_dedup";
   var MAX_SANITIZE_DEPTH = 10;
+  var INIT_ARGS_WHITELIST = /* @__PURE__ */ new Set([
+    "serverZone",
+    "serverUrl",
+    "chatUrl",
+    "mediaUrl",
+    "locale",
+    "api",
+    "apiKey",
+    "instanceName",
+    "nonce",
+    "autoRefreshIntervalSeconds",
+    "options"
+  ]);
+  var INIT_OPTIONS_WHITELIST = /* @__PURE__ */ new Set([
+    "logger",
+    "logLevel",
+    "splitting",
+    "persistResourceCenter",
+    "headless",
+    "renderCssInDom",
+    "mountElementId"
+  ]);
+  var BOOT_ARGS_WHITELIST = /* @__PURE__ */ new Set(["user", "integrations", "autoRefreshIntervalSeconds"]);
+  var BOOT_USER_WHITELIST = /* @__PURE__ */ new Set(["user_id", "device_id"]);
+  var pickWhitelisted = (value, allowed) => {
+    if (value === null || typeof value !== "object" || Array.isArray(value)) return value;
+    const out = {};
+    for (const [k, v] of Object.entries(value)) {
+      if (allowed.has(k)) out[k] = v;
+    }
+    return out;
+  };
+  var pickInitArguments = (config) => {
+    const picked = pickWhitelisted(config, INIT_ARGS_WHITELIST);
+    if (picked && typeof picked === "object" && !Array.isArray(picked) && "options" in picked) {
+      picked.options = pickWhitelisted(
+        picked.options,
+        INIT_OPTIONS_WHITELIST
+      );
+    }
+    return picked;
+  };
+  var pickBootArguments = (bootArgs) => {
+    const picked = pickWhitelisted(bootArgs, BOOT_ARGS_WHITELIST);
+    if (picked && typeof picked === "object" && !Array.isArray(picked) && "user" in picked) {
+      picked.user = pickWhitelisted(
+        picked.user,
+        BOOT_USER_WHITELIST
+      );
+    }
+    return picked;
+  };
   var sanitizeAnalyticsValue = (value, seen = /* @__PURE__ */ new WeakSet(), depth = 0) => {
     try {
       if (depth > MAX_SANITIZE_DEPTH) {
@@ -18784,14 +18886,9 @@ ${err.message}`);
   var Track = {
     booted: (bootArgs, instanceName) => {
       const sdk = getSDK(instanceName);
-      const interactionProperties = Object.entries(sdk?._.endUserStore.data.nudgeInteractions ?? {}).reduce((properties, [variantId, interactionState]) => {
-        properties[`interactions-variant-${variantId}`] = interactionState;
-        return properties;
-      }, {});
-      getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Booted", {
-        initArguments: sanitizeAnalyticsValue(sdk?._configuration),
-        bootArguments: sanitizeAnalyticsValue(bootArgs),
-        ...interactionProperties
+      getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Engagement Booted", {
+        "[Guides-Surveys] initArguments": sanitizeAnalyticsValue(pickInitArguments(sdk?._configuration)),
+        "[Guides-Surveys] bootArguments": sanitizeAnalyticsValue(pickBootArguments(bootArgs))
       });
     },
     resourceCenter: {
@@ -19191,6 +19288,18 @@ ${err.message}`);
         getClient(instanceName)?.trackEvent?.(getEventNameCreator(nudge)("engaged"), {
           ...Track.nudge._getCommonProperties(nudge, stepIndex, context, instanceName),
           ["[Guides-Surveys] Engagement" /* Engagement */]: context.source
+        });
+      },
+      /**
+       * Fired whenever a checklist widget is expanded or collapsed by the user.
+       * @param nudge The checklist nudge.
+       * @param isExpanded Whether the checklist is now expanded (true) or collapsed (false).
+       * @param instanceName Optional SDK instance name.
+       */
+      checklistExpandedStateChanged: (nudge, isExpanded, instanceName) => {
+        getClient(instanceName)?.trackEvent?.(getEventNameCreator(nudge)("checklistExpandedStateChanged"), {
+          ...Track.nudge._getCommonProperties(nudge, 0, void 0, instanceName),
+          ["[Guides-Surveys] Checklist Expanded" /* ChecklistExpanded */]: isExpanded
         });
       },
       /**
@@ -19687,6 +19796,30 @@ ${err.message}`);
           ["[Guides-Surveys] Message ID" /* MessageId */]: messageId,
           ["[Guides-Surveys] Message Length" /* MessageLength */]: messageLength,
           ["[Guides-Surveys] Message Count" /* MessageCount */]: messageCount
+        });
+      },
+      callbackToolDispatched: (toolName, callbackName) => {
+        getClient()?.trackEvent?.("[Assistant] Chat Callback Tool Dispatched" /* ChatCallbackToolDispatched */, {
+          ["[Assistant] Tool Name" /* ToolName */]: toolName,
+          ["[Assistant] Callback Name" /* CallbackName */]: callbackName
+        });
+      },
+      callbackToolSucceeded: (toolName, durationMs) => {
+        getClient()?.trackEvent?.("[Assistant] Chat Callback Tool Succeeded" /* ChatCallbackToolSucceeded */, {
+          ["[Assistant] Tool Name" /* ToolName */]: toolName,
+          ["[Assistant] Duration Ms" /* DurationMs */]: durationMs
+        });
+      },
+      callbackToolFailed: (toolName, errorMessage) => {
+        getClient()?.trackEvent?.("[Assistant] Chat Callback Tool Failed" /* ChatCallbackToolFailed */, {
+          ["[Assistant] Tool Name" /* ToolName */]: toolName,
+          ["[Assistant] Error Message" /* ErrorMessage */]: errorMessage
+        });
+      },
+      callbackToolNoHandler: (toolName, callbackName) => {
+        getClient()?.trackEvent?.("[Assistant] Chat Callback Tool No Handler" /* ChatCallbackToolNoHandler */, {
+          ["[Assistant] Tool Name" /* ToolName */]: toolName,
+          ["[Assistant] Callback Name" /* CallbackName */]: callbackName
         });
       }
     }
@@ -20370,10 +20503,7 @@ ${err.message}`);
 
   // ../shared/src/products/nudges/store/smartActions.ts
   var triggerSmartNudge = (_, triggerEvent) => {
-    const debuggedNudge = getDebuggedNudge(_);
-    if (debuggedNudge) {
-      sendDirectedTrigger(_, debuggedNudge, triggerEvent);
-    } else if (!_.activeChecklist) {
+    if (getDebuggedNudge(_) || !_.activeChecklist) {
       sendIndirectTrigger(_, triggerEvent);
     }
   };
@@ -20585,7 +20715,8 @@ ${err.message}`);
     }),
     t15.partial({
       anchorElement: t15.union([t15.string, t15.null]),
-      iconSrc: t15.union([t15.string, t15.null])
+      iconSrc: t15.union([t15.string, t15.null]),
+      pageTargeting: t15.union([PageTargetingConfigV, t15.null, t15.undefined])
     })
   ]);
   var DefaultTabV = t15.union([t15.literal("resource_center"), t15.literal("assistant")]);
@@ -20977,7 +21108,7 @@ ${err.message}`);
         experience.locale,
         _.instanceName
       );
-      if (previewConfig?.nudges) {
+      if (previewConfig?.nudges?.length) {
         await sdk?._reloadNudges(previewConfig);
       }
       const updatedTheme = _.nudgeRecorderToolBar.experience?.theme;
@@ -22528,9 +22659,14 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
           originalNudge: params.nudge
         })
       }),
+      // Follows the debug toolbar to a new nudge only on user-initiated
+      // navigation within the preview (a CTA that force-triggers another nudge,
+      // which always uses a `direct` trigger). Ambient triggers (after_time,
+      // active, immediately, element_appeared, analytics_event) for unrelated
+      // nudges must NOT repoint the toolbar away from the previewed nudge.
       setDebuggingNudgeId: assign({
         debugMode: ({ context }, params) => {
-          if (context.debugMode.currentNudge && params.nudgeId) {
+          if (context.debugMode.currentNudge && params.nudgeId && params.triggerType === "direct") {
             return {
               ...context.debugMode,
               currentNudge: getNudgeById(globalStore, params.nudgeId) ?? context.debugMode.currentNudge
@@ -22556,6 +22692,26 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
           currentNudge: null,
           originalNudge: context.debugMode?.originalNudge
         })
+      }),
+      clearDebugMode: assign({
+        debugMode: () => ({
+          currentNudge: null,
+          originalNudge: null
+        })
+      }),
+      enterDebugMode: assign({
+        debugMode: ({ event }) => {
+          if (event.type !== "START_DEBUG" || !event.nudge) {
+            return {
+              currentNudge: null,
+              originalNudge: null
+            };
+          }
+          return {
+            currentNudge: event.nudge,
+            originalNudge: event.nudge
+          };
+        }
       }),
       setTriggerEvent: assign({ triggerEvent: (_, params) => params.triggerEvent }),
       unsetTriggerEvent: assign({
@@ -22676,7 +22832,7 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
                       { type: "setTriggerEvent", params: ({ event }) => ({ triggerEvent: event }) },
                       {
                         type: "setDebuggingNudgeId",
-                        params: ({ event }) => ({ eventType: event.type, nudgeId: event.nudgeId })
+                        params: ({ event }) => ({ nudgeId: event.nudgeId, triggerType: event.trigger?.type })
                       }
                     ]
                   }
@@ -22701,7 +22857,10 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
                       simulateMode: true
                     }
                   } : triggerEvent;
-                  const sortedMachines = Array.from(nudgeMachines.values()).sort((a, b) => {
+                  const allMachines = Array.from(nudgeMachines.values());
+                  const eligibleMachines = debugMode.currentNudge ? allMachines.filter(
+                    (machine) => machine.getSnapshot().context?.nudge?.variantId === debugMode.currentNudge?.variantId
+                  ) : allMachines.sort((a, b) => {
                     const nudgeA = a.getSnapshot()?.context?.nudge;
                     const nudgeB = b.getSnapshot()?.context?.nudge;
                     const userDataA = getNudgeDataFromUserStore(globalStore, nudgeA?.variantId);
@@ -22713,18 +22872,18 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
                       userDataB?.lastSeenTs
                     );
                   });
-                  if (!debugMode.currentNudge) {
-                    for (const machine of sortedMachines) {
-                      if (effectiveTriggerEvent.overrides?.closeBlockingNudges && effectiveTriggerEvent.nudgeId) {
-                        const nudgeToTrigger = getNudgeById(globalStore, effectiveTriggerEvent.nudgeId);
+                  if (!debugMode.currentNudge && effectiveTriggerEvent.overrides?.closeBlockingNudges && effectiveTriggerEvent.nudgeId) {
+                    const nudgeToTrigger = getNudgeById(globalStore, effectiveTriggerEvent.nudgeId);
+                    if (nudgeToTrigger) {
+                      for (const machine of eligibleMachines) {
                         const nudge = machine.getSnapshot().context?.nudge;
-                        if (nudge && nudgeToTrigger && isBlocked(nudgeToTrigger, [nudge])) {
+                        if (nudge && isBlocked(nudgeToTrigger, [nudge])) {
                           enqueue.sendTo(machine, { type: "CLOSE" });
                         }
                       }
                     }
                   }
-                  for (const machine of sortedMachines) {
+                  for (const machine of eligibleMachines) {
                     const nudge = machine.getSnapshot().context?.nudge;
                     if (nudge && dispatchTriggerWithDelay(
                       globalStore,
@@ -22837,12 +22996,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           }));
         })
       },
+      // With `nudge`: single-nudge simulate/preview. Without: browse mode (all nudge machines,
+      // toolbar visible, no simulate overrides on triggers).
       START_DEBUG: {
         target: ".Loaded User Store.Trigger Loop",
         actions: [
           { type: "clearTriggerQueue" },
-          { type: "setDebuggingNudge", params: ({ event }) => ({ nudge: event.nudge }) },
-          { type: "setOriginalDebuggingNudge", params: ({ event }) => ({ nudge: event.nudge }) },
+          { type: "enterDebugMode" },
           { type: "stopNudgeMachines" },
           { type: "initNudgeMachinesForDebug" },
           { type: "showDebugToolbar" }
@@ -22936,19 +23096,14 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     setupMessageBusNudgeTriggerSubscriptions(_);
   };
   var sendIndirectTrigger = (_, triggerEventPayload) => {
-    const simulatedNudge = getDebuggedNudge(_);
-    if (simulatedNudge) {
-      sendDirectedTrigger(_, simulatedNudge, triggerEventPayload);
-    } else {
-      if (getPendingPreviewVariantId(_) !== null) {
-        logger.debug("Skipping indirect trigger due to pending preview session");
-        return;
-      }
-      _.nudgesManager?.send({
-        type: "TRIGGER",
-        ...triggerEventPayload
-      });
+    if (getPendingPreviewVariantId(_) !== null) {
+      logger.debug("Skipping indirect trigger due to pending preview session");
+      return;
     }
+    _.nudgesManager?.send({
+      type: "TRIGGER",
+      ...triggerEventPayload
+    });
   };
   var forceTriggerSingleNudge = (_, nudge, triggerEventPayload) => {
     const pendingPreviewVariantId = getPendingPreviewVariantId(_);
@@ -23009,23 +23164,27 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     if (!sdk) return;
     _.decide = await decide(sdk[_configuration].apiKey, _.user, _.isEditorPreview);
   };
-  var startDebugSession = async (_, nudge, options = { refreshDecide: true }) => {
+  var loadDebugPreviewConfig = async (_, localeForConfig) => {
     const sdk = getSDKForStore(_);
     const configuration = sdk?.[_configuration];
-    const localeForConfig = options.locale ?? _.nudgeDebugToolBar.originalInitLocale;
     const previewConfig = await getPreviewConfig(
       configuration?.apiKey,
       _.isEditorPreview,
       localeForConfig,
       _.instanceName
     );
-    if (previewConfig?.nudges) {
+    return { sdk, previewConfig };
+  };
+  var startDebugSession = async (_, nudge, options = { refreshDecide: true }) => {
+    const localeForConfig = options.locale ?? _.nudgeDebugToolBar.originalInitLocale;
+    const { sdk, previewConfig } = await loadDebugPreviewConfig(_, localeForConfig);
+    if (previewConfig?.nudges?.length) {
       await sdk?._reloadNudges(previewConfig);
     }
-    if (previewConfig?.themes) {
+    if (previewConfig?.themes?.length) {
       await sdk?._reloadThemes({ themes: previewConfig.themes });
     }
-    const adminNudge = previewConfig?.nudges.find((n) => n.variantId === nudge.variantId);
+    const adminNudge = previewConfig?.nudges?.find((n) => n.variantId === nudge.variantId);
     if (!adminNudge) {
       _.services.postMessageToDashboard("FAILED_TO_LOAD_PREVIEW_NUDGE" /* FailedToLoadPreviewNudge */);
       return;
@@ -23063,6 +23222,16 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
     });
   };
+  var startDebugSessionBrowse = async (_, options = {}) => {
+    const localeForConfig = options.locale ?? _.nudgeDebugToolBar.originalInitLocale;
+    const { sdk, previewConfig } = await loadDebugPreviewConfig(_, localeForConfig);
+    if (previewConfig?.nudges?.length) {
+      await sdk?._reloadNudges(previewConfig);
+    }
+    if (previewConfig?.themes?.length) {
+      await sdk?._reloadThemes({ themes: previewConfig.themes });
+    }
+  };
   var restartDebugSession = async (_, options = {
     resetToOriginalDebugNudge: true
   }) => {
@@ -23080,8 +23249,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
   };
   var stopDebugSession = async (_, options = { refreshDecide: true }) => {
-    const debugNudge = getDebuggedNudge(_);
-    if (debugNudge) {
+    if (_.nudgeDebugToolBar.visible) {
       if (options.refreshDecide) {
         await refreshDecideResult(_);
       }
@@ -23254,6 +23422,20 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
     updateEndUserStore(_.endUserStore, allNudgeData);
   };
+  var getTriggerDiagnostics = (_, nudge) => {
+    const configuredDelayMs = getTriggerDelayMs(nudge);
+    const pendingDelay = getPendingTriggerDelay(_, nudge);
+    const eventCount = getEventCountProgress(_, nudge);
+    return {
+      triggerDelay: {
+        configuredMs: configuredDelayMs,
+        // Present only while a delay is actively counting down for this nudge.
+        pendingRemainingMs: pendingDelay?.remainingMs ?? null
+      },
+      // Present only for event triggers requiring more than one occurrence.
+      eventCount: eventCount ? { tracked: eventCount.current, required: eventCount.needed } : null
+    };
+  };
   var getDebugSnapshot = async (_, nudge, stepIndex) => {
     const nudgeActorContext = getNudgeActorSnapshot(_, nudge.variantId)?.context;
     const snapShot = {
@@ -23276,7 +23458,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         ])
       ),
       trigger: nudge.triggerConfig,
-      mostRecentTrigger: nudgeActorContext?.triggerEvent?.trigger
+      mostRecentTrigger: nudgeActorContext?.triggerEvent?.trigger,
+      ...getTriggerDiagnostics(_, nudge)
     };
   };
   var getDebugSnapshotForHeadless = (_, nudge, skipChecks = []) => {
@@ -23300,7 +23483,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         ])
       ),
       trigger: nudge.triggerConfig,
-      mostRecentTrigger: nudgeActorContext?.triggerEvent?.trigger
+      mostRecentTrigger: nudgeActorContext?.triggerEvent?.trigger,
+      ...getTriggerDiagnostics(_, nudge)
     };
   };
   var updateNudgeStepForPreview = (_, nudge, stepIndex, field, value) => {
@@ -23330,6 +23514,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     return delay;
   };
   var shouldBypassTriggerDelay = (triggerEvent) => {
+    if (triggerEvent.overrides?.triggerDelay) return true;
     const triggerType = triggerEvent.trigger.type;
     if (triggerType === "active" || triggerType === "direct") return true;
     return false;
@@ -23339,9 +23524,21 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     if (delayMs === 0 || !_.delayedTriggers || shouldBypassTriggerDelay(triggerEvent)) {
       return false;
     }
+    if (triggerEvent.trigger.type === "analytics_event") {
+      const progress = getEventCountProgress(_, nudge);
+      if (progress && progress.current + 1 < progress.needed) {
+        return false;
+      }
+    }
     const entry = {
       variantId: nudge.variantId,
       triggerType: triggerEvent.trigger.type,
+      delayMs,
+      scheduledAt: Date.now(),
+      // Recorded so debug tooling can re-check trigger matching: the manager
+      // schedules a timer for every broadcast trigger before matching runs, so
+      // an entry's mere existence doesn't mean the nudge's trigger fired.
+      triggerEvent,
       // Placeholder so the closure can reference the final entry.
       timer: null
     };
@@ -23500,6 +23697,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       execNudgeAction(window.engagement._, action, meta, 0 /* DEFAULT */, actor);
     }
   );
+  nudgeActionsBridge.function("startDebugSessionBrowse", () => {
+    return startDebugSessionBrowse(window.engagement._);
+  });
   nudgeActionsBridge.function("stopDebugSession", () => {
     stopDebugSession(window.engagement._, { refreshDecide: false });
   });
@@ -23899,6 +24099,15 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           console.log("Engagement SDK has already been initialized. Ignoring additional init call.");
           return;
         }
+        if (initOptions?.skip === true) {
+          console.log("Engagement SDK init skipped via `skip: true`. The SDK bundle will not be loaded.");
+          bundleFailedToLoad = true;
+          return;
+        }
+        if (bundleFailedToLoad) {
+          proxy2._q.length = 0;
+        }
+        bundleFailedToLoad = false;
         if (initOptions?.useEngagementDomain) {
           const isEU = (initOptions.serverZone ?? proxy2._configuration.serverZone) === "EU";
           const domain = "amplitudeengagement.com";
@@ -23982,12 +24191,14 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       plugin(options) {
         const initFunc = proxy2.init;
         const tokenOption = options?.token;
-        const buildUser = (client, identityStore) => {
+        const skipped = options?.skip === true;
+        const buildUser = (client, config, identityStore) => {
           const identity2 = identityStore.getIdentity();
           const token = typeof tokenOption === "function" ? tokenOption() : tokenOption;
           return {
             user_id: client.getUserId(),
             device_id: client.getDeviceId(),
+            version: config.appVersion,
             user_properties: identity2.userProperties,
             getSessionId: client.getSessionId,
             ...token ? { token } : {}
@@ -23997,6 +24208,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           name: "@amplitude/engagement-browser",
           type: "enrichment",
           async setup(config, client) {
+            if (skipped) {
+              initFunc(config.apiKey, { skip: true });
+              return;
+            }
             const instanceName = config.instanceName ?? ANALYTICS_DEFAULT_INSTANCE_NAME;
             const identityStore = AnalyticsConnector.getInstance(instanceName).identityStore;
             proxy2._configuration._installedViaPlugin = true;
@@ -24014,7 +24229,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             ];
             await window.engagement.boot(
               {
-                user: () => buildUser(client, identityStore),
+                user: () => buildUser(client, config, identityStore),
                 integrations
               },
               // @ts-expect-error PLUGIN_CALLER is an internal-only arg not in the public signature
@@ -24029,7 +24244,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
                 window.engagement.shutdown(PLUGIN_CALLER);
                 window.engagement.boot(
                   {
-                    user: () => buildUser(client, identityStore),
+                    user: () => buildUser(client, config, identityStore),
                     integrations
                   },
                   // @ts-expect-error PLUGIN_CALLER is an internal-only arg not in the public signature
@@ -24041,6 +24256,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             });
           },
           async execute(context) {
+            if (skipped) return context;
             window.engagement.forwardEvent(context);
             return context;
           }
@@ -25302,6 +25518,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         logger.warn("Engagement SDK has already been initialized. Ignoring additional init call.");
         return;
       }
+      if (initOptions?.skip === true) {
+        logger.debug("Engagement SDK init skipped via `skip: true`. SDK will not be initialized.");
+        return;
+      }
       this._configuration = {
         ...this._configuration,
         apiKey,
@@ -25313,7 +25533,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
     }
     plugin(_initOptions) {
+      const skipped = _initOptions?.skip === true;
       const setup2 = async (config, client) => {
+        if (skipped) {
+          logger.debug("Engagement SDK plugin setup skipped via `skip: true`. SDK will not be initialized.");
+          return;
+        }
         this._isInstalledViaPlugin = true;
         const instanceName = config.instanceName ?? ANALYTICS_DEFAULT_INSTANCE_NAME;
         const identityStore = AnalyticsConnector.getInstance(instanceName).identityStore;
@@ -25324,6 +25549,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           return {
             user_id: client.getUserId(),
             device_id: client.getDeviceId(),
+            version: config.appVersion,
             user_properties: identity2.userProperties,
             getSessionId: client.getSessionId,
             ...token ? { token } : {}
@@ -25344,6 +25570,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         });
       };
       const execute = async (context) => {
+        if (skipped) return context;
         this.forwardEvent(context);
         return context;
       };
@@ -25437,7 +25664,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         const sdk = getSDKForStore(this._);
         const configuration = sdk?.[_configuration];
         const previewConfig = await getPreviewConfig(configuration?.apiKey, void 0, void 0, this._.instanceName);
-        if (previewConfig?.nudges) {
+        if (previewConfig?.nudges?.length) {
           await sdk?._reloadNudges(previewConfig);
         }
         const nudge = this.gs.getAllGuidesAndSurveys({ variantIds: [variantId] }, ["userTargeting"])[0];
@@ -25569,12 +25796,18 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         if (cancelled) return;
         this._.decide = result;
         this._.nudgesManager?.send({ type: "DECIDE_LOADED" });
-        return this._.decide;
       } catch (e2) {
         if (cancelled) return;
         logger.error("Failed to fetch decide data", e2);
         this._.nudgesManager?.send({ type: "DECIDE_ERROR" });
+        return;
       }
+      try {
+        this._.services.onDecideLoaded?.();
+      } catch (e2) {
+        logger.error("Error in onDecideLoaded callback", e2);
+      }
+      return this._.decide;
     }
     enable() {
       if (!this._isDisabled) {
@@ -25767,6 +26000,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             this.setAutoRefreshInterval(autoRefreshInterval);
           }
           this._.nudgesManager?.send({ type: "END_USER_STORE_LOADED" });
+          Track.booted(options, this._.instanceName);
           logger.debug("End user state loaded successfully");
         }
       } catch (e2) {
@@ -25881,8 +26115,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           });
         }
         const snapshot = actor?.getSnapshot();
-        const storedSurveyResponse = snapshot?.context?.surveyResponses?.[currentStep.id];
-        const surveyResponses = storedSurveyResponse ?? action.surveyResponses;
+        const allStepResponses = Object.values(snapshot?.context?.surveyResponses ?? {}).reduce((acc, stepMap) => ({ ...acc, ...stepMap }), {});
+        const surveyResponses = { ...allStepResponses, ...action.surveyResponses ?? {} };
         const meta = buttonBlock?.meta ?? {
           buttonType: action.buttonType,
           action: { type: "no_action" },
@@ -25997,9 +26231,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       if (options?.resourceCenter && options?.quickLinks !== void 0) {
         this.resourceCenterActions.previewResourceCenter(options.resourceCenter, options.quickLinks);
       }
-      if (options?.autopilotKeywords !== void 0) {
-        this.resourceCenterActions.previewAutopilotKeywords(options.autopilotKeywords);
-      }
+      this.resourceCenterActions.previewAutopilotKeywords(options?.autopilotKeywords);
       if (options?.contentItemId !== void 0) {
         this.resourceCenterActions.previewContentItem(options.contentItemId);
       }
@@ -27766,7 +27998,23 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     // Mobile native has limited support for breaking features
     // Features are identified by four-digit numbers (e.g., '0001')
     // Fetched from native SDK, with fallback for older versions that don't expose this function
-    supportedBreakingFeatures: getSupportedBreakingFeatures()
+    supportedBreakingFeatures: getSupportedBreakingFeatures(),
+    onDecideLoaded: () => {
+      const decide2 = window.engagement?._?.decide;
+      const flagKey = Object.keys(decide2 ?? {}).find((k) => k.startsWith("guides-surveys-test-users-"));
+      if (!flagKey) {
+        logger.debug("[onDecideLoaded] skipped: no guides-surveys-test-users-[projectId] flag found in decide");
+        return;
+      }
+      const flagEntry = decide2?.[flagKey];
+      const variant = flagEntry?.key ?? flagEntry?.value;
+      const isTestUser = !!variant && variant !== "off";
+      logger.debug("[onDecideLoaded] onTestUserStateLoaded", { flagKey, variant, isTestUser });
+      try {
+        registerNativeBridge().function("onTestUserStateLoaded").call(isTestUser);
+      } catch {
+      }
+    }
   };
 
   // src/logger.ts
