@@ -11,7 +11,28 @@ jobs:
     name: Authorize
     runs-on: macos-latest
     steps:
+      - name: Checkout
+        if: github.event_name == 'push'
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
+        with:
+          fetch-depth: 0
+
+      - name: Verify tag points to main
+        if: github.event_name == 'push'
+        run: |
+          git fetch origin main
+          if ! git merge-base --is-ancestor "${GITHUB_SHA}" origin/main; then
+            echo "Tagged commit ${GITHUB_SHA} is not on main."
+            exit 1
+          fi
+
+      - name: ${{ github.actor }} trusted release bot check
+        if: ${{ github.actor == 'amplitude-gs[bot]' }}
+        run: |
+          echo "Authorized release bot: ${{ github.actor }}"
+
       - name: ${{ github.actor }} permission check to do a release
+        if: ${{ github.actor != 'amplitude-gs[bot]' }}
         uses: octokit/request-action@89697eb6635e52c6e1e5559f15b5c91ba5100cb0 # v2.1.9
         with:
           route: GET /repos/:repository/collaborators/${{ github.actor }}
