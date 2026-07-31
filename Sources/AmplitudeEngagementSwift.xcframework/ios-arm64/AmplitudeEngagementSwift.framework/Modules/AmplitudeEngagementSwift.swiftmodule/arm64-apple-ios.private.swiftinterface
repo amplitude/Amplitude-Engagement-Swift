@@ -42,8 +42,12 @@ public enum AmplitudeEngagementError : Swift.Error {
   @_spi(AmplitudeEngagementFlutterPlugin) public var isActive: Swift.Bool {
     get
   }
+  @_spi(AmplitudeEngagementFlutterPlugin) public var triggerTapHandler: ((Swift.String) -> Swift.Bool)?
+  @_spi(AmplitudeEngagementFlutterPlugin) public var onElementsUpdated: (() -> Swift.Void)?
   @_spi(AmplitudeEngagementFlutterPlugin) public func update(from viewElements: [[Swift.String : Any]])
   @_spi(AmplitudeEngagementFlutterPlugin) public func find(identifier: Swift.String) -> CoreFoundation.CGRect?
+  @_spi(AmplitudeEngagementFlutterPlugin) public func findElement(at point: CoreFoundation.CGPoint) -> Swift.String?
+  @_spi(AmplitudeEngagementFlutterPlugin) public func triggerTap(identifier: Swift.String) -> Swift.Bool
   @_spi(AmplitudeEngagementFlutterPlugin) public func clear()
   @_spi(AmplitudeEngagementFlutterPlugin) public func deactivate()
   @_spi(AmplitudeEngagementFlutterPlugin) @objc deinit
