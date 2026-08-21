@@ -18,7 +18,7 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		OQDWCaazHzekcogXRSBSxs0+eAI=
+		uHL5UabMJA7tEVvU3A22Gzd0aA4=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -34,11 +34,11 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		NXdNUSUNf9WdiOn128T4Xj272y4=
+		mnjrMzuARVp8VvFnA0I5oqqFWRI=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		OQDWCaazHzekcogXRSBSxs0+eAI=
+		uHL5UabMJA7tEVvU3A22Gzd0aA4=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -54,7 +54,7 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		IQsI8g2/CM5A4vZADZy1uDWpoI8=
+		0kNt2I1dlZnj4i2NWFI6GHqpLOs=
 		</data>
 		<key>Roboto[ital,wdth,wght].ttf</key>
 		<data>
@@ -62,7 +62,7 @@
 		</data>
 		<key>engagement.js</key>
 		<data>
-		huIo6FTJ7brSSbkJOGNWoMZG45g=
+		Ln2lwvWX4MNMmyXly3jL8VkE/Fc=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -85,7 +85,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			bWTNzGAEnKGc0Y03XIOFLjSrp+DSqt1VC4Ac0B/kzmg=
+			JU5S6rLnbh3kVhpigaETAHnDV0zPYWcQSyIDu8JR/Yg=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
@@ -113,14 +113,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			V/D/DtfA8ZmfqM9ZUaBR6LkXTlVUo8Y6LXHJALkMLas=
+			mwmmApHtbp37d20flGlS4WY23D1kXYPgA5wZ2MKbVbY=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			bWTNzGAEnKGc0Y03XIOFLjSrp+DSqt1VC4Ac0B/kzmg=
+			JU5S6rLnbh3kVhpigaETAHnDV0zPYWcQSyIDu8JR/Yg=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
@@ -148,7 +148,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			620/Be8eeawQEfONklI7+I/drRLcnX6JhfJrF6v+0IQ=
+			I5+3d9tKjCjtdwDfA7pF5GcdcZ94UlJT74QmphtZfxk=
 			</data>
 		</dict>
 		<key>Roboto[ital,wdth,wght].ttf</key>
@@ -162,7 +162,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			rQhXLafY9xF4GIaG+Bh8Cc2MwO2lVGwTbeJrSNiZBUo=
+			DG7HiePbBte4Y0EtDMrMq5wPcTMPbmlyYFt+bO1SyFk=
 			</data>
 		</dict>
 	</dict>

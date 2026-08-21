@@ -573,8 +573,8 @@
   var require_getMapData = __commonJS({
     "../shared/node_modules/lodash/_getMapData.js"(exports, module) {
       var isKeyable = require_isKeyable();
-      function getMapData(map2, key) {
-        var data = map2.__data__;
+      function getMapData(map, key) {
+        var data = map.__data__;
         return isKeyable(key) ? data[typeof key == "string" ? "string" : "hash"] : data.map;
       }
       module.exports = getMapData;
@@ -940,15 +940,15 @@
               return y2(x(a));
             };
           },
-          empty: identity2
+          empty: identity
         };
       };
       exports.getEndomorphismMonoid = getEndomorphismMonoid;
-      function identity2(a) {
+      function identity(a) {
         return a;
       }
-      exports.identity = identity2;
-      exports.unsafeCoerce = identity2;
+      exports.identity = identity;
+      exports.unsafeCoerce = identity;
       function not2(predicate) {
         return function(a) {
           return !predicate(a);
@@ -972,7 +972,7 @@
         };
       }
       exports.flip = flip2;
-      function flow2(ab, bc, cd, de, ef, fg, gh, hi, ij) {
+      function flow(ab, bc, cd, de, ef, fg, gh, hi, ij) {
         switch (arguments.length) {
           case 1:
             return ab;
@@ -1011,13 +1011,13 @@
         }
         return;
       }
-      exports.flow = flow2;
+      exports.flow = flow;
       function tuple() {
-        var t16 = [];
+        var t14 = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-          t16[_i] = arguments[_i];
+          t14[_i] = arguments[_i];
         }
-        return t16;
+        return t14;
       }
       exports.tuple = tuple;
       function increment(n) {
@@ -1048,7 +1048,7 @@
         };
       }
       exports.untupled = untupled;
-      function pipe3(a, ab, bc, cd, de, ef, fg, gh, hi, ij, jk, kl, lm, mn, no, op, pq, qr, rs, st) {
+      function pipe2(a, ab, bc, cd, de, ef, fg, gh, hi, ij, jk, kl, lm, mn, no, op, pq, qr, rs, st) {
         switch (arguments.length) {
           case 1:
             return a;
@@ -1093,7 +1093,7 @@
         }
         return;
       }
-      exports.pipe = pipe3;
+      exports.pipe = pipe2;
       exports.hole = absurd;
     }
   });
@@ -1322,7 +1322,7 @@
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.getFunctorComposition = exports.bindTo = exports.flap = exports.map = void 0;
       var function_1 = require_function();
-      function map2(F, G) {
+      function map(F, G) {
         return function(f) {
           return function(fa) {
             return F.map(fa, function(ga) {
@@ -1331,8 +1331,8 @@
           };
         };
       }
-      exports.map = map2;
-      function flap3(F) {
+      exports.map = map;
+      function flap(F) {
         return function(a) {
           return function(fab) {
             return F.map(fab, function(f) {
@@ -1341,8 +1341,8 @@
           };
         };
       }
-      exports.flap = flap3;
-      function bindTo2(F) {
+      exports.flap = flap;
+      function bindTo(F) {
         return function(name) {
           return function(fa) {
             return F.map(fa, function(a) {
@@ -1352,12 +1352,12 @@
           };
         };
       }
-      exports.bindTo = bindTo2;
+      exports.bindTo = bindTo;
       function getFunctorComposition(F, G) {
-        var _map2 = map2(F, G);
+        var _map = map(F, G);
         return {
           map: function(fga, f) {
-            return function_1.pipe(fga, _map2(f));
+            return function_1.pipe(fga, _map(f));
           }
         };
       }
@@ -1385,10 +1385,10 @@
       }
       exports.getApplicativeMonoid = getApplicativeMonoid;
       function getApplicativeComposition(F, G) {
-        var map2 = Functor_1.getFunctorComposition(F, G).map;
+        var map = Functor_1.getFunctorComposition(F, G).map;
         var _ap = Apply_1.ap(F, G);
         return {
-          map: map2,
+          map,
           of: function(a) {
             return F.of(G.of(a));
           },
@@ -1467,10 +1467,10 @@
         return fa._tag === "Some";
       };
       exports.isSome = isSome;
-      var isLeft3 = function(ma) {
+      var isLeft = function(ma) {
         return ma._tag === "Left";
       };
-      exports.isLeft = isLeft3;
+      exports.isLeft = isLeft;
       exports.has = Object.prototype.hasOwnProperty;
       var fromReadonlyNonEmptyArray = function(as) {
         return __spreadArray2([as[0]], as.slice(1));
@@ -1487,11 +1487,11 @@
       exports.right = exports.left = exports.flap = exports.Functor = exports.Bifunctor = exports.URI = exports.bimap = exports.mapLeft = exports.map = exports.separated = void 0;
       var function_1 = require_function();
       var Functor_1 = require_Functor();
-      var separated = function(left2, right3) {
-        return { left: left2, right: right3 };
+      var separated = function(left2, right2) {
+        return { left: left2, right: right2 };
       };
       exports.separated = separated;
-      var _map2 = function(fa, f) {
+      var _map = function(fa, f) {
         return function_1.pipe(fa, exports.map(f));
       };
       var _mapLeft = function(fa, f) {
@@ -1500,12 +1500,12 @@
       var _bimap = function(fa, g, f) {
         return function_1.pipe(fa, exports.bimap(g, f));
       };
-      var map2 = function(f) {
+      var map = function(f) {
         return function(fa) {
           return exports.separated(exports.left(fa), f(exports.right(fa)));
         };
       };
-      exports.map = map2;
+      exports.map = map;
       var mapLeft = function(f) {
         return function(fa) {
           return exports.separated(f(exports.left(fa)), exports.right(fa));
@@ -1526,7 +1526,7 @@
       };
       exports.Functor = {
         URI: exports.URI,
-        map: _map2
+        map: _map
       };
       exports.flap = /*#_PURE_*/
       Functor_1.flap(exports.Functor);
@@ -1534,10 +1534,10 @@
         return s2.left;
       };
       exports.left = left;
-      var right2 = function(s2) {
+      var right = function(s2) {
         return s2.right;
       };
-      exports.right = right2;
+      exports.right = right;
     }
   });
 
@@ -1588,10 +1588,10 @@
         return { _tag: "Left", left: e2 };
       };
       exports.left = left;
-      var right2 = function(a) {
+      var right = function(a) {
         return { _tag: "Right", right: a };
       };
-      exports.right = right2;
+      exports.right = right;
       var fromOption = function(onNone) {
         return function(ma) {
           return ma._tag === "None" ? exports.left(onNone()) : exports.right(ma.value);
@@ -1679,12 +1679,12 @@
         return exports.isLeft(ma) ? exports.right(ma.left) : exports.left(ma.right);
       }
       exports.swap = swap;
-      var orElseW2 = function(onLeft) {
+      var orElseW = function(onLeft) {
         return function(ma) {
           return exports.isLeft(ma) ? onLeft(ma.left) : ma;
         };
       };
-      exports.orElseW = orElseW2;
+      exports.orElseW = orElseW;
       exports.orElse = exports.orElseW;
       var filterOrElseW = function(predicate, onFalse) {
         return exports.chainW(function(a) {
@@ -1693,7 +1693,7 @@
       };
       exports.filterOrElseW = filterOrElseW;
       exports.filterOrElse = exports.filterOrElseW;
-      var _map2 = function(fa, f) {
+      var _map = function(fa, f) {
         return function_1.pipe(fa, exports.map(f));
       };
       var _ap = function(fab, fa) {
@@ -1737,12 +1737,12 @@
           return exports.isLeft(e2) ? exports.right(exports.left(e2.left)) : exports.isLeft(e2.right) ? exports.left(f(e2.right.left)) : exports.right(exports.right(e2.right.right));
         });
       };
-      var map2 = function(f) {
+      var map = function(f) {
         return function(fa) {
           return exports.isLeft(fa) ? fa : exports.right(f(fa.right));
         };
       };
-      exports.map = map2;
+      exports.map = map;
       var bimap = function(f, g) {
         return function(fa) {
           return exports.isLeft(fa) ? exports.left(f(fa.left)) : exports.right(g(fa.right));
@@ -1871,7 +1871,7 @@
         return {
           URI: exports.URI,
           _E: void 0,
-          map: _map2,
+          map: _map,
           compact,
           separate,
           filter,
@@ -1910,7 +1910,7 @@
         return {
           URI: exports.URI,
           _E: void 0,
-          map: _map2,
+          map: _map,
           compact: F_.compact,
           separate: F_.separate,
           filter: F_.filter,
@@ -1931,7 +1931,7 @@
         return {
           URI: exports.URI,
           _E: void 0,
-          map: _map2,
+          map: _map,
           ap: function(fab, fa) {
             return exports.isLeft(fab) ? exports.isLeft(fa) ? exports.left(SE.concat(fab.left, fa.left)) : fab : exports.isLeft(fa) ? fa : exports.right(fab.right(fa.right));
           },
@@ -1943,7 +1943,7 @@
         return {
           URI: exports.URI,
           _E: void 0,
-          map: _map2,
+          map: _map,
           alt: function(me, that) {
             if (exports.isRight(me)) {
               return me;
@@ -1956,7 +1956,7 @@
       exports.getAltValidation = getAltValidation;
       exports.Functor = {
         URI: exports.URI,
-        map: _map2
+        map: _map
       };
       exports.flap = /*#_PURE_*/
       Functor_1.flap(exports.Functor);
@@ -1966,26 +1966,26 @@
       };
       exports.Apply = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap
       };
       exports.apFirst = /* @__PURE__ */ Apply_1.apFirst(exports.Apply);
       exports.apSecond = /* @__PURE__ */ Apply_1.apSecond(exports.Apply);
       exports.Applicative = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of
       };
       exports.Chain = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         chain: _chain
       };
       exports.Monad = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of,
         chain: _chain
@@ -2000,7 +2000,7 @@
       };
       exports.Traversable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         reduce: _reduce,
         foldMap: _foldMap,
         reduceRight: _reduceRight,
@@ -2014,24 +2014,24 @@
       };
       exports.Alt = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         alt: _alt
       };
       exports.Extend = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         extend: _extend
       };
       exports.ChainRec = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         chain: _chain,
         chainRec: _chainRec
       };
       exports.MonadThrow = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of,
         chain: _chain,
@@ -2102,7 +2102,7 @@
       exports.stringifyJSON = stringifyJSON;
       exports.either = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         of: exports.of,
         ap: _ap,
         chain: _chain,
@@ -2134,7 +2134,7 @@
         return {
           URI: exports.URI,
           _E: void 0,
-          map: _map2,
+          map: _map,
           of: exports.of,
           chain: _chain,
           bimap: _bimap,
@@ -2179,13 +2179,13 @@
         };
       }();
       var __assign3 = exports && exports.__assign || function() {
-        __assign3 = Object.assign || function(t16) {
+        __assign3 = Object.assign || function(t14) {
           for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
             s2 = arguments[i2];
             for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p))
-              t16[p] = s2[p];
+              t14[p] = s2[p];
           }
-          return t16;
+          return t14;
         };
         return __assign3.apply(this, arguments);
       };
@@ -2246,10 +2246,10 @@
         }()
       );
       exports.Type = Type;
-      var identity2 = function(a) {
+      var identity = function(a) {
         return a;
       };
-      exports.identity = identity2;
+      exports.identity = identity;
       function getFunctionName(f) {
         return f.displayName || f.name || "<function".concat(f.length, ">");
       }
@@ -2913,7 +2913,7 @@
         enumerable: true,
         configurable: true
       });
-      function recursion(name, definition) {
+      function recursion2(name, definition) {
         var cache3;
         var runDefinition = function() {
           if (!cache3) {
@@ -2931,7 +2931,7 @@
         }, runDefinition);
         return Self;
       }
-      exports.recursion = recursion;
+      exports.recursion = recursion2;
       var ArrayType = (
         /** @class */
         function(_super) {
@@ -3539,12 +3539,12 @@
         };
       };
       exports.getValidationError = getValidationError;
-      var getDefaultContext2 = function(decoder) {
+      var getDefaultContext = function(decoder) {
         return [
           { key: "", type: decoder }
         ];
       };
-      exports.getDefaultContext = getDefaultContext2;
+      exports.getDefaultContext = getDefaultContext;
       exports.Dictionary = exports.UnknownRecord;
       var ObjectType = (
         /** @class */
@@ -3589,6 +3589,114 @@
         };
       }
       exports.alias = alias;
+    }
+  });
+
+  // ../shared/node_modules/io-ts-types/lib/clone.js
+  var require_clone = __commonJS({
+    "../shared/node_modules/io-ts-types/lib/clone.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      exports.clone = void 0;
+      function clone(t14) {
+        var r = Object.create(Object.getPrototypeOf(t14));
+        Object.assign(r, t14);
+        return r;
+      }
+      exports.clone = clone;
+    }
+  });
+
+  // ../shared/node_modules/io-ts-types/lib/withValidate.js
+  var require_withValidate = __commonJS({
+    "../shared/node_modules/io-ts-types/lib/withValidate.js"(exports) {
+      "use strict";
+      var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
+        if (k2 === void 0) k2 = k;
+        Object.defineProperty(o, k2, { enumerable: true, get: function() {
+          return m[k];
+        } });
+      } : function(o, m, k, k2) {
+        if (k2 === void 0) k2 = k;
+        o[k2] = m[k];
+      });
+      var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? function(o, v) {
+        Object.defineProperty(o, "default", { enumerable: true, value: v });
+      } : function(o, v) {
+        o["default"] = v;
+      });
+      var __importStar = exports && exports.__importStar || function(mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) {
+          for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        }
+        __setModuleDefault(result, mod);
+        return result;
+      };
+      Object.defineProperty(exports, "__esModule", { value: true });
+      exports.withValidate = void 0;
+      var t14 = __importStar(require_lib());
+      var clone_1 = require_clone();
+      function withValidate(codec, validate2, name) {
+        if (name === void 0) {
+          name = codec.name;
+        }
+        var r = clone_1.clone(codec);
+        r.validate = validate2;
+        r.decode = function(i2) {
+          return validate2(i2, t14.getDefaultContext(r));
+        };
+        r.name = name;
+        return r;
+      }
+      exports.withValidate = withValidate;
+    }
+  });
+
+  // ../shared/node_modules/io-ts-types/lib/withFallback.js
+  var require_withFallback = __commonJS({
+    "../shared/node_modules/io-ts-types/lib/withFallback.js"(exports) {
+      "use strict";
+      var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
+        if (k2 === void 0) k2 = k;
+        Object.defineProperty(o, k2, { enumerable: true, get: function() {
+          return m[k];
+        } });
+      } : function(o, m, k, k2) {
+        if (k2 === void 0) k2 = k;
+        o[k2] = m[k];
+      });
+      var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? function(o, v) {
+        Object.defineProperty(o, "default", { enumerable: true, value: v });
+      } : function(o, v) {
+        o["default"] = v;
+      });
+      var __importStar = exports && exports.__importStar || function(mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) {
+          for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        }
+        __setModuleDefault(result, mod);
+        return result;
+      };
+      Object.defineProperty(exports, "__esModule", { value: true });
+      exports.withFallback = void 0;
+      var t14 = __importStar(require_lib());
+      var withValidate_1 = require_withValidate();
+      var Either_1 = require_Either();
+      function withFallback3(codec, a, name) {
+        if (name === void 0) {
+          name = "withFallback(" + codec.name + ")";
+        }
+        return withValidate_1.withValidate(codec, function(u, c2) {
+          return Either_1.orElse(function() {
+            return t14.success(a);
+          })(codec.validate(u, c2));
+        }, name);
+      }
+      exports.withFallback = withFallback3;
     }
   });
 
@@ -3706,7 +3814,7 @@
       exports.chainNullableK = chainNullableK;
       exports.toNullable = /* @__PURE__ */ exports.match(function_1.constNull, function_1.identity);
       exports.toUndefined = /* @__PURE__ */ exports.match(function_1.constUndefined, function_1.identity);
-      var _map2 = function(fa, f) {
+      var _map = function(fa, f) {
         return function_1.pipe(fa, exports.map(f));
       };
       var _ap = function(fab, fa) {
@@ -3763,12 +3871,12 @@
           return function_1.pipe(fa, wiltF(f));
         };
       };
-      var map2 = function(f) {
+      var map = function(f) {
         return function(fa) {
           return exports.isNone(fa) ? exports.none : exports.some(f(fa.value));
         };
       };
-      exports.map = map2;
+      exports.map = map;
       var ap = function(fa) {
         return function(fab) {
           return exports.isNone(fab) ? exports.none : exports.isNone(fa) ? exports.none : exports.some(fab.value(fa.value));
@@ -3942,7 +4050,7 @@
       exports.getMonoid = getMonoid;
       exports.Functor = {
         URI: exports.URI,
-        map: _map2
+        map: _map
       };
       exports.flap = /* @__PURE__ */ Functor_1.flap(exports.Functor);
       exports.Pointed = {
@@ -3951,26 +4059,26 @@
       };
       exports.Apply = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap
       };
       exports.apFirst = /* @__PURE__ */ Apply_1.apFirst(exports.Apply);
       exports.apSecond = /* @__PURE__ */ Apply_1.apSecond(exports.Apply);
       exports.Applicative = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of
       };
       exports.Chain = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         chain: _chain
       };
       exports.Monad = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of,
         chain: _chain
@@ -3984,12 +4092,12 @@
       };
       exports.Alt = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         alt: _alt
       };
       exports.Alternative = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of,
         alt: _alt,
@@ -3997,7 +4105,7 @@
       };
       exports.Extend = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         extend: _extend
       };
       exports.Compactable = {
@@ -4007,7 +4115,7 @@
       };
       exports.Filterable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         compact: exports.compact,
         separate: exports.separate,
         filter: _filter,
@@ -4017,7 +4125,7 @@
       };
       exports.Traversable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         reduce: _reduce,
         foldMap: _foldMap,
         reduceRight: _reduceRight,
@@ -4026,7 +4134,7 @@
       };
       exports.Witherable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         reduce: _reduce,
         foldMap: _foldMap,
         reduceRight: _reduceRight,
@@ -4043,7 +4151,7 @@
       };
       exports.MonadThrow = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of,
         chain: _chain,
@@ -4095,7 +4203,7 @@
       exports.mapNullable = exports.chainNullableK;
       exports.option = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         of: exports.of,
         ap: _ap,
         chain: _chain,
@@ -4866,7 +4974,7 @@
         return exports.chop(exports.splitAt(n));
       };
       exports.chunksOf = chunksOf;
-      var _map2 = function(fa, f) {
+      var _map = function(fa, f) {
         return function_1.pipe(fa, exports.map(f));
       };
       var _mapWithIndex = function(fa, f) {
@@ -4957,12 +5065,12 @@
       exports.extend = extend;
       exports.duplicate = /* @__PURE__ */ exports.extend(function_1.identity);
       exports.flatten = /* @__PURE__ */ exports.chain(function_1.identity);
-      var map2 = function(f) {
+      var map = function(f) {
         return exports.mapWithIndex(function(_2, a) {
           return f(a);
         });
       };
-      exports.map = map2;
+      exports.map = map;
       var mapWithIndex = function(f) {
         return function(as) {
           var out = [f(0, exports.head(as))];
@@ -5081,7 +5189,7 @@
       exports.getEq = getEq;
       exports.Functor = {
         URI: exports.URI,
-        map: _map2
+        map: _map
       };
       exports.flap = /*#_PURE_*/
       Functor_1.flap(exports.Functor);
@@ -5091,32 +5199,32 @@
       };
       exports.FunctorWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex
       };
       exports.Apply = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap
       };
       exports.apFirst = /* @__PURE__ */ Apply_1.apFirst(exports.Apply);
       exports.apSecond = /* @__PURE__ */ Apply_1.apSecond(exports.Apply);
       exports.Applicative = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of
       };
       exports.Chain = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         chain: _chain
       };
       exports.chainFirst = /* @__PURE__ */ Chain_1.chainFirst(exports.Chain);
       exports.Monad = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of,
         chain: _chain
@@ -5138,7 +5246,7 @@
       };
       exports.Traversable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         reduce: _reduce,
         foldMap: _foldMap,
         reduceRight: _reduceRight,
@@ -5147,7 +5255,7 @@
       };
       exports.TraversableWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex,
         reduce: _reduce,
         foldMap: _foldMap,
@@ -5161,12 +5269,12 @@
       };
       exports.Alt = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         alt: _alt
       };
       exports.Comonad = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         extend: _extend,
         extract: exports.extract
       };
@@ -5242,7 +5350,7 @@
       exports.readonlyNonEmptyArray = {
         URI: exports.URI,
         of: exports.of,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex,
         ap: _ap,
         chain: _chain,
@@ -5584,7 +5692,7 @@
         return exports.chop(exports.splitAt(n));
       };
       exports.chunksOf = chunksOf;
-      var _map2 = function(fa, f) {
+      var _map = function(fa, f) {
         return function_1.pipe(fa, exports.map(f));
       };
       var _mapWithIndex = function(fa, f) {
@@ -5671,12 +5779,12 @@
       exports.extend = extend;
       exports.duplicate = /* @__PURE__ */ exports.extend(function_1.identity);
       exports.flatten = /* @__PURE__ */ exports.chain(function_1.identity);
-      var map2 = function(f) {
+      var map = function(f) {
         return exports.mapWithIndex(function(_2, a) {
           return f(a);
         });
       };
-      exports.map = map2;
+      exports.map = map;
       var mapWithIndex = function(f) {
         return function(as) {
           var out = [f(0, exports.head(as))];
@@ -5734,7 +5842,7 @@
       exports.getEq = RNEA.getEq;
       exports.Functor = {
         URI: exports.URI,
-        map: _map2
+        map: _map
       };
       exports.flap = /*#_PURE_*/
       Functor_1.flap(exports.Functor);
@@ -5744,32 +5852,32 @@
       };
       exports.FunctorWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex
       };
       exports.Apply = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap
       };
       exports.apFirst = /* @__PURE__ */ Apply_1.apFirst(exports.Apply);
       exports.apSecond = /* @__PURE__ */ Apply_1.apSecond(exports.Apply);
       exports.Applicative = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of
       };
       exports.Chain = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         chain: _chain
       };
       exports.chainFirst = /* @__PURE__ */ Chain_1.chainFirst(exports.Chain);
       exports.Monad = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of,
         chain: _chain
@@ -5791,7 +5899,7 @@
       };
       exports.Traversable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         reduce: _reduce,
         foldMap: _foldMap,
         reduceRight: _reduceRight,
@@ -5800,7 +5908,7 @@
       };
       exports.TraversableWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex,
         reduce: _reduce,
         foldMap: _foldMap,
@@ -5814,12 +5922,12 @@
       };
       exports.Alt = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         alt: _alt
       };
       exports.Comonad = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         extend: _extend,
         extract: exports.extract
       };
@@ -5874,7 +5982,7 @@
       exports.nonEmptyArray = {
         URI: exports.URI,
         of: exports.of,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex,
         ap: _ap,
         chain: _chain,
@@ -6013,8 +6121,8 @@
           shows[_i] = arguments[_i];
         }
         return {
-          show: function(t16) {
-            return "[" + t16.map(function(a, i2) {
+          show: function(t14) {
+            return "[" + t14.map(function(a, i2) {
               return shows[i2].show(a);
             }).join(", ") + "]";
           }
@@ -6703,7 +6811,7 @@
         };
       }
       exports.difference = difference;
-      var _map2 = function(fa, f) {
+      var _map = function(fa, f) {
         return function_1.pipe(fa, exports.map(f));
       };
       var _mapWithIndex = function(fa, f) {
@@ -6820,14 +6928,14 @@
       };
       exports.chain = chain;
       exports.flatten = /* @__PURE__ */ exports.chain(function_1.identity);
-      var map2 = function(f) {
+      var map = function(f) {
         return function(fa) {
           return fa.map(function(a) {
             return f(a);
           });
         };
       };
-      exports.map = map2;
+      exports.map = map;
       var mapWithIndex = function(f) {
         return function(fa) {
           return fa.map(function(a, i2) {
@@ -6838,16 +6946,16 @@
       exports.mapWithIndex = mapWithIndex;
       var separate = function(fa) {
         var left = [];
-        var right2 = [];
+        var right = [];
         for (var _i = 0, fa_1 = fa; _i < fa_1.length; _i++) {
           var e2 = fa_1[_i];
           if (e2._tag === "Left") {
             left.push(e2.left);
           } else {
-            right2.push(e2.right);
+            right.push(e2.right);
           }
         }
-        return Separated_1.separated(left, right2);
+        return Separated_1.separated(left, right);
       };
       exports.separate = separate;
       var filter = function(predicate) {
@@ -6885,16 +6993,16 @@
       var partitionWithIndex = function(predicateWithIndex) {
         return function(fa) {
           var left = [];
-          var right2 = [];
+          var right = [];
           for (var i2 = 0; i2 < fa.length; i2++) {
             var a = fa[i2];
             if (predicateWithIndex(i2, a)) {
-              right2.push(a);
+              right.push(a);
             } else {
               left.push(a);
             }
           }
-          return Separated_1.separated(left, right2);
+          return Separated_1.separated(left, right);
         };
       };
       exports.partitionWithIndex = partitionWithIndex;
@@ -6907,16 +7015,16 @@
       var partitionMapWithIndex = function(f) {
         return function(fa) {
           var left = [];
-          var right2 = [];
+          var right = [];
           for (var i2 = 0; i2 < fa.length; i2++) {
             var e2 = f(i2, fa[i2]);
             if (e2._tag === "Left") {
               left.push(e2.left);
             } else {
-              right2.push(e2.right);
+              right.push(e2.right);
             }
           }
-          return Separated_1.separated(left, right2);
+          return Separated_1.separated(left, right);
         };
       };
       exports.partitionMapWithIndex = partitionMapWithIndex;
@@ -7103,7 +7211,7 @@
       exports.getOrd = getOrd;
       exports.Functor = {
         URI: exports.URI,
-        map: _map2
+        map: _map
       };
       exports.flap = /*#_PURE_*/
       Functor_1.flap(exports.Functor);
@@ -7113,31 +7221,31 @@
       };
       exports.FunctorWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex
       };
       exports.Apply = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap
       };
       exports.apFirst = /* @__PURE__ */ Apply_1.apFirst(exports.Apply);
       exports.apSecond = /* @__PURE__ */ Apply_1.apSecond(exports.Apply);
       exports.Applicative = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of
       };
       exports.Chain = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         chain: _chain
       };
       exports.Monad = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of,
         chain: _chain
@@ -7149,12 +7257,12 @@
       };
       exports.Alt = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         alt: _alt
       };
       exports.Alternative = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of,
         alt: _alt,
@@ -7162,7 +7270,7 @@
       };
       exports.Extend = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         extend: _extend
       };
       exports.Compactable = {
@@ -7172,7 +7280,7 @@
       };
       exports.Filterable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         compact: exports.compact,
         separate: exports.separate,
         filter: _filter,
@@ -7182,7 +7290,7 @@
       };
       exports.FilterableWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex,
         compact: exports.compact,
         separate: exports.separate,
@@ -7212,7 +7320,7 @@
       };
       exports.Traversable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         reduce: _reduce,
         foldMap: _foldMap,
         reduceRight: _reduceRight,
@@ -7221,7 +7329,7 @@
       };
       exports.TraversableWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex,
         reduce: _reduce,
         foldMap: _foldMap,
@@ -7235,7 +7343,7 @@
       };
       exports.Witherable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         compact: exports.compact,
         separate: exports.separate,
         filter: _filter,
@@ -7293,7 +7401,7 @@
         URI: exports.URI,
         compact: exports.compact,
         separate: exports.separate,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of,
         chain: _chain,
@@ -7724,7 +7832,7 @@
         };
       }
       exports.difference = difference;
-      var _map2 = function(fa, f) {
+      var _map = function(fa, f) {
         return function_1.pipe(fa, exports.map(f));
       };
       var _mapWithIndex = function(fa, f) {
@@ -7819,14 +7927,14 @@
         return [];
       };
       exports.zero = zero;
-      var map2 = function(f) {
+      var map = function(f) {
         return function(fa) {
           return fa.map(function(a) {
             return f(a);
           });
         };
       };
-      exports.map = map2;
+      exports.map = map;
       var ap = function(fa) {
         return exports.chain(function(f) {
           return function_1.pipe(fa, exports.map(f));
@@ -7872,16 +7980,16 @@
       exports.compact = /* @__PURE__ */ exports.filterMap(function_1.identity);
       var separate = function(fa) {
         var left = [];
-        var right2 = [];
+        var right = [];
         for (var _i = 0, fa_1 = fa; _i < fa_1.length; _i++) {
           var e2 = fa_1[_i];
           if (e2._tag === "Left") {
             left.push(e2.left);
           } else {
-            right2.push(e2.right);
+            right.push(e2.right);
           }
         }
-        return Separated_1.separated(left, right2);
+        return Separated_1.separated(left, right);
       };
       exports.separate = separate;
       var filter = function(predicate) {
@@ -7899,16 +8007,16 @@
       var partitionWithIndex = function(predicateWithIndex) {
         return function(fa) {
           var left = [];
-          var right2 = [];
+          var right = [];
           for (var i2 = 0; i2 < fa.length; i2++) {
             var a = fa[i2];
             if (predicateWithIndex(i2, a)) {
-              right2.push(a);
+              right.push(a);
             } else {
               left.push(a);
             }
           }
-          return Separated_1.separated(left, right2);
+          return Separated_1.separated(left, right);
         };
       };
       exports.partitionWithIndex = partitionWithIndex;
@@ -7921,16 +8029,16 @@
       var partitionMapWithIndex = function(f) {
         return function(fa) {
           var left = [];
-          var right2 = [];
+          var right = [];
           for (var i2 = 0; i2 < fa.length; i2++) {
             var e2 = f(i2, fa[i2]);
             if (e2._tag === "Left") {
               left.push(e2.left);
             } else {
-              right2.push(e2.right);
+              right.push(e2.right);
             }
           }
-          return Separated_1.separated(left, right2);
+          return Separated_1.separated(left, right);
         };
       };
       exports.partitionMapWithIndex = partitionMapWithIndex;
@@ -8052,7 +8160,7 @@
       exports.getOrd = RA.getOrd;
       exports.Functor = {
         URI: exports.URI,
-        map: _map2
+        map: _map
       };
       exports.flap = /*#_PURE_*/
       Functor_1.flap(exports.Functor);
@@ -8062,32 +8170,32 @@
       };
       exports.FunctorWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex
       };
       exports.Apply = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap
       };
       exports.apFirst = /* @__PURE__ */ Apply_1.apFirst(exports.Apply);
       exports.apSecond = /* @__PURE__ */ Apply_1.apSecond(exports.Apply);
       exports.Applicative = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of
       };
       exports.Chain = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         chain: _chain
       };
       exports.chainFirst = /* @__PURE__ */ Chain_1.chainFirst(exports.Chain);
       exports.Monad = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of,
         chain: _chain
@@ -8098,12 +8206,12 @@
       };
       exports.Alt = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         alt: _alt
       };
       exports.Alternative = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of,
         alt: _alt,
@@ -8111,7 +8219,7 @@
       };
       exports.Extend = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         extend: _extend
       };
       exports.Compactable = {
@@ -8121,7 +8229,7 @@
       };
       exports.Filterable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         compact: exports.compact,
         separate: exports.separate,
         filter: _filter,
@@ -8131,7 +8239,7 @@
       };
       exports.FilterableWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex,
         compact: exports.compact,
         separate: exports.separate,
@@ -8161,7 +8269,7 @@
       };
       exports.Traversable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         reduce: _reduce,
         foldMap: _foldMap,
         reduceRight: _reduceRight,
@@ -8170,7 +8278,7 @@
       };
       exports.TraversableWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex,
         reduce: _reduce,
         foldMap: _foldMap,
@@ -8184,7 +8292,7 @@
       };
       exports.Witherable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         compact: exports.compact,
         separate: exports.separate,
         filter: _filter,
@@ -8229,7 +8337,7 @@
         URI: exports.URI,
         compact: exports.compact,
         separate: exports.separate,
-        map: _map2,
+        map: _map,
         ap: _ap,
         of: exports.of,
         chain: _chain,
@@ -8448,12 +8556,12 @@
         };
       }
       exports.mapWithIndex = mapWithIndex;
-      function map2(f) {
+      function map(f) {
         return mapWithIndex(function(_2, a) {
           return f(a);
         });
       }
-      exports.map = map2;
+      exports.map = map;
       function reduceWithIndex(b, f) {
         return function(fa) {
           var out = b;
@@ -8561,7 +8669,7 @@
       function partitionMapWithIndex(f) {
         return function(r) {
           var left = {};
-          var right2 = {};
+          var right = {};
           for (var k in r) {
             if (_.has.call(r, k)) {
               var e2 = f(k, r[k]);
@@ -8570,30 +8678,30 @@
                   left[k] = e2.left;
                   break;
                 case "Right":
-                  right2[k] = e2.right;
+                  right[k] = e2.right;
                   break;
               }
             }
           }
-          return Separated_1.separated(left, right2);
+          return Separated_1.separated(left, right);
         };
       }
       exports.partitionMapWithIndex = partitionMapWithIndex;
       function partitionWithIndex(predicateWithIndex) {
         return function(r) {
           var left = {};
-          var right2 = {};
+          var right = {};
           for (var k in r) {
             if (_.has.call(r, k)) {
               var a = r[k];
               if (predicateWithIndex(k, a)) {
-                right2[k] = a;
+                right[k] = a;
               } else {
                 left[k] = a;
               }
             }
           }
-          return Separated_1.separated(left, right2);
+          return Separated_1.separated(left, right);
         };
       }
       exports.partitionWithIndex = partitionWithIndex;
@@ -8686,8 +8794,8 @@
         };
       }
       exports.elem = elem;
-      var _map2 = function(fa, f) {
-        return function_1.pipe(fa, map2(f));
+      var _map = function(fa, f) {
+        return function_1.pipe(fa, map(f));
       };
       var _mapWithIndex = function(fa, f) {
         return function_1.pipe(fa, mapWithIndex(f));
@@ -8824,18 +8932,18 @@
       exports.compact = compact;
       var separate = function(r) {
         var left = {};
-        var right2 = {};
+        var right = {};
         for (var k in r) {
           if (_.has.call(r, k)) {
             var e2 = r[k];
             if (_.isLeft(e2)) {
               left[k] = e2.left;
             } else {
-              right2[k] = e2.right;
+              right[k] = e2.right;
             }
           }
         }
-        return Separated_1.separated(left, right2);
+        return Separated_1.separated(left, right);
       };
       exports.separate = separate;
       exports.URI = "ReadonlyRecord";
@@ -8880,13 +8988,13 @@
       exports.getMonoid = getMonoid;
       exports.Functor = {
         URI: exports.URI,
-        map: _map2
+        map: _map
       };
       exports.flap = /*#_PURE_*/
       Functor_1.flap(exports.Functor);
       exports.FunctorWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex
       };
       exports.Foldable = {
@@ -8911,7 +9019,7 @@
       };
       exports.Filterable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         compact: exports.compact,
         separate: exports.separate,
         filter: _filter,
@@ -8921,7 +9029,7 @@
       };
       exports.FilterableWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex,
         compact: exports.compact,
         separate: exports.separate,
@@ -8936,7 +9044,7 @@
       };
       exports.Traversable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         reduce: _reduce,
         foldMap: _foldMap,
         reduceRight: _reduceRight,
@@ -8945,7 +9053,7 @@
       };
       exports.TraversableWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex,
         reduce: _reduce,
         foldMap: _foldMap,
@@ -8959,7 +9067,7 @@
       };
       exports.Witherable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         reduce: _reduce,
         foldMap: _foldMap,
         reduceRight: _reduceRight,
@@ -8981,7 +9089,7 @@
       exports.hasOwnProperty = hasOwnProperty;
       exports.readonlyRecord = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         reduce: _reduce,
         foldMap: _foldMap,
         reduceRight: _reduceRight,
@@ -9167,7 +9275,7 @@
       exports.every = RR.every;
       exports.some = RR.some;
       exports.elem = RR.elem;
-      var _map2 = function(fa, f) {
+      var _map = function(fa, f) {
         return function_1.pipe(fa, exports.map(f));
       };
       var _mapWithIndex = function(fa, f) {
@@ -9260,13 +9368,13 @@
       exports.getMonoid = RR.getMonoid;
       exports.Functor = {
         URI: exports.URI,
-        map: _map2
+        map: _map
       };
       exports.flap = /*#_PURE_*/
       Functor_1.flap(exports.Functor);
       exports.FunctorWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex
       };
       exports.Foldable = {
@@ -9291,7 +9399,7 @@
       };
       exports.Filterable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         compact: exports.compact,
         separate: exports.separate,
         filter: _filter,
@@ -9301,7 +9409,7 @@
       };
       exports.FilterableWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex,
         compact: exports.compact,
         separate: exports.separate,
@@ -9316,7 +9424,7 @@
       };
       exports.Traversable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         reduce: _reduce,
         foldMap: _foldMap,
         reduceRight: _reduceRight,
@@ -9325,7 +9433,7 @@
       };
       exports.TraversableWithIndex = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         mapWithIndex: _mapWithIndex,
         reduce: _reduce,
         foldMap: _foldMap,
@@ -9339,7 +9447,7 @@
       };
       exports.Witherable = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         reduce: _reduce,
         foldMap: _foldMap,
         reduceRight: _reduceRight,
@@ -9359,7 +9467,7 @@
       exports.hasOwnProperty = RR.hasOwnProperty;
       exports.record = {
         URI: exports.URI,
-        map: _map2,
+        map: _map,
         reduce: _reduce,
         foldMap: _foldMap,
         reduceRight: _reduceRight,
@@ -9444,12 +9552,12 @@
       function pipeable(I) {
         var r = {};
         if (isFunctor(I)) {
-          var map2 = function(f) {
+          var map = function(f) {
             return function(fa) {
               return I.map(fa, f);
             };
           };
-          r.map = map2;
+          r.map = map;
         }
         if (isContravariant(I)) {
           var contramap = function(f) {
@@ -9735,11 +9843,11 @@
       var O = require_Option();
       var R = require_Record();
       var pipeable_1 = require_pipeable();
-      var t16 = require_lib();
+      var t14 = require_lib();
       var utils_1 = require_utils();
       var isUnionType = function(_a) {
         var type13 = _a.type;
-        return type13 instanceof t16.UnionType;
+        return type13 instanceof t14.UnionType;
       };
       var jsToString = function(value) {
         return value === void 0 ? "undefined" : JSON.stringify(value);
@@ -9957,59 +10065,59 @@
   // ../shared/node_modules/dayjs/dayjs.min.js
   var require_dayjs_min = __commonJS({
     "../shared/node_modules/dayjs/dayjs.min.js"(exports, module) {
-      !function(t16, e2) {
-        "object" == typeof exports && "undefined" != typeof module ? module.exports = e2() : "function" == typeof define && define.amd ? define(e2) : (t16 = "undefined" != typeof globalThis ? globalThis : t16 || self).dayjs = e2();
+      !function(t14, e2) {
+        "object" == typeof exports && "undefined" != typeof module ? module.exports = e2() : "function" == typeof define && define.amd ? define(e2) : (t14 = "undefined" != typeof globalThis ? globalThis : t14 || self).dayjs = e2();
       }(exports, function() {
         "use strict";
-        var t16 = 1e3, e2 = 6e4, n = 36e5, r = "millisecond", i2 = "second", s2 = "minute", u = "hour", a = "day", o = "week", f = "month", h2 = "quarter", c2 = "year", d = "date", $ = "Invalid Date", l2 = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y2 = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M = { name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_") }, m = function(t17, e3, n2) {
-          var r2 = String(t17);
-          return !r2 || r2.length >= e3 ? t17 : "" + Array(e3 + 1 - r2.length).join(n2) + t17;
-        }, g = { s: m, z: function(t17) {
-          var e3 = -t17.utcOffset(), n2 = Math.abs(e3), r2 = Math.floor(n2 / 60), i3 = n2 % 60;
+        var t14 = 1e3, e2 = 6e4, n = 36e5, r = "millisecond", i2 = "second", s2 = "minute", u = "hour", a = "day", o = "week", f = "month", h2 = "quarter", c2 = "year", d = "date", $ = "Invalid Date", l2 = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y2 = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M = { name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_") }, m = function(t15, e3, n2) {
+          var r2 = String(t15);
+          return !r2 || r2.length >= e3 ? t15 : "" + Array(e3 + 1 - r2.length).join(n2) + t15;
+        }, g = { s: m, z: function(t15) {
+          var e3 = -t15.utcOffset(), n2 = Math.abs(e3), r2 = Math.floor(n2 / 60), i3 = n2 % 60;
           return (e3 <= 0 ? "+" : "-") + m(r2, 2, "0") + ":" + m(i3, 2, "0");
-        }, m: function t17(e3, n2) {
-          if (e3.date() < n2.date()) return -t17(n2, e3);
+        }, m: function t15(e3, n2) {
+          if (e3.date() < n2.date()) return -t15(n2, e3);
           var r2 = 12 * (n2.year() - e3.year()) + (n2.month() - e3.month()), i3 = e3.clone().add(r2, f), s3 = n2 - i3 < 0, u2 = e3.clone().add(r2 + (s3 ? -1 : 1), f);
           return +(-(r2 + (n2 - i3) / (s3 ? i3 - u2 : u2 - i3)) || 0);
-        }, a: function(t17) {
-          return t17 < 0 ? Math.ceil(t17) || 0 : Math.floor(t17);
-        }, p: function(t17) {
-          return { M: f, y: c2, w: o, d: a, D: d, h: u, m: s2, s: i2, ms: r, Q: h2 }[t17] || String(t17 || "").toLowerCase().replace(/s$/, "");
-        }, u: function(t17) {
-          return void 0 === t17;
+        }, a: function(t15) {
+          return t15 < 0 ? Math.ceil(t15) || 0 : Math.floor(t15);
+        }, p: function(t15) {
+          return { M: f, y: c2, w: o, d: a, D: d, h: u, m: s2, s: i2, ms: r, Q: h2 }[t15] || String(t15 || "").toLowerCase().replace(/s$/, "");
+        }, u: function(t15) {
+          return void 0 === t15;
         } }, v = "en", D = {};
         D[v] = M;
-        var p = function(t17) {
-          return t17 instanceof _;
-        }, S = function t17(e3, n2, r2) {
+        var p = function(t15) {
+          return t15 instanceof _;
+        }, S = function t15(e3, n2, r2) {
           var i3;
           if (!e3) return v;
           if ("string" == typeof e3) {
             var s3 = e3.toLowerCase();
             D[s3] && (i3 = s3), n2 && (D[s3] = n2, i3 = s3);
             var u2 = e3.split("-");
-            if (!i3 && u2.length > 1) return t17(u2[0]);
+            if (!i3 && u2.length > 1) return t15(u2[0]);
           } else {
             var a2 = e3.name;
             D[a2] = e3, i3 = a2;
           }
           return !r2 && i3 && (v = i3), i3 || !r2 && v;
-        }, w = function(t17, e3) {
-          if (p(t17)) return t17.clone();
+        }, w = function(t15, e3) {
+          if (p(t15)) return t15.clone();
           var n2 = "object" == typeof e3 ? e3 : {};
-          return n2.date = t17, n2.args = arguments, new _(n2);
+          return n2.date = t15, n2.args = arguments, new _(n2);
         }, O = g;
-        O.l = S, O.i = p, O.w = function(t17, e3) {
-          return w(t17, { locale: e3.$L, utc: e3.$u, x: e3.$x, $offset: e3.$offset });
+        O.l = S, O.i = p, O.w = function(t15, e3) {
+          return w(t15, { locale: e3.$L, utc: e3.$u, x: e3.$x, $offset: e3.$offset });
         };
         var _ = function() {
-          function M2(t17) {
-            this.$L = S(t17.locale, null, true), this.parse(t17);
+          function M2(t15) {
+            this.$L = S(t15.locale, null, true), this.parse(t15);
           }
           var m2 = M2.prototype;
-          return m2.parse = function(t17) {
-            this.$d = function(t18) {
-              var e3 = t18.date, n2 = t18.utc;
+          return m2.parse = function(t15) {
+            this.$d = function(t16) {
+              var e3 = t16.date, n2 = t16.utc;
               if (null === e3) return /* @__PURE__ */ new Date(NaN);
               if (O.u(e3)) return /* @__PURE__ */ new Date();
               if (e3 instanceof Date) return new Date(e3);
@@ -10021,33 +10129,33 @@
                 }
               }
               return new Date(e3);
-            }(t17), this.$x = t17.x || {}, this.init();
+            }(t15), this.$x = t15.x || {}, this.init();
           }, m2.init = function() {
-            var t17 = this.$d;
-            this.$y = t17.getFullYear(), this.$M = t17.getMonth(), this.$D = t17.getDate(), this.$W = t17.getDay(), this.$H = t17.getHours(), this.$m = t17.getMinutes(), this.$s = t17.getSeconds(), this.$ms = t17.getMilliseconds();
+            var t15 = this.$d;
+            this.$y = t15.getFullYear(), this.$M = t15.getMonth(), this.$D = t15.getDate(), this.$W = t15.getDay(), this.$H = t15.getHours(), this.$m = t15.getMinutes(), this.$s = t15.getSeconds(), this.$ms = t15.getMilliseconds();
           }, m2.$utils = function() {
             return O;
           }, m2.isValid = function() {
             return !(this.$d.toString() === $);
-          }, m2.isSame = function(t17, e3) {
-            var n2 = w(t17);
+          }, m2.isSame = function(t15, e3) {
+            var n2 = w(t15);
             return this.startOf(e3) <= n2 && n2 <= this.endOf(e3);
-          }, m2.isAfter = function(t17, e3) {
-            return w(t17) < this.startOf(e3);
-          }, m2.isBefore = function(t17, e3) {
-            return this.endOf(e3) < w(t17);
-          }, m2.$g = function(t17, e3, n2) {
-            return O.u(t17) ? this[e3] : this.set(n2, t17);
+          }, m2.isAfter = function(t15, e3) {
+            return w(t15) < this.startOf(e3);
+          }, m2.isBefore = function(t15, e3) {
+            return this.endOf(e3) < w(t15);
+          }, m2.$g = function(t15, e3, n2) {
+            return O.u(t15) ? this[e3] : this.set(n2, t15);
           }, m2.unix = function() {
             return Math.floor(this.valueOf() / 1e3);
           }, m2.valueOf = function() {
             return this.$d.getTime();
-          }, m2.startOf = function(t17, e3) {
-            var n2 = this, r2 = !!O.u(e3) || e3, h3 = O.p(t17), $2 = function(t18, e4) {
-              var i3 = O.w(n2.$u ? Date.UTC(n2.$y, e4, t18) : new Date(n2.$y, e4, t18), n2);
+          }, m2.startOf = function(t15, e3) {
+            var n2 = this, r2 = !!O.u(e3) || e3, h3 = O.p(t15), $2 = function(t16, e4) {
+              var i3 = O.w(n2.$u ? Date.UTC(n2.$y, e4, t16) : new Date(n2.$y, e4, t16), n2);
               return r2 ? i3 : i3.endOf(a);
-            }, l3 = function(t18, e4) {
-              return O.w(n2.toDate()[t18].apply(n2.toDate("s"), (r2 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e4)), n2);
+            }, l3 = function(t16, e4) {
+              return O.w(n2.toDate()[t16].apply(n2.toDate("s"), (r2 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e4)), n2);
             }, y3 = this.$W, M3 = this.$M, m3 = this.$D, g2 = "set" + (this.$u ? "UTC" : "");
             switch (h3) {
               case c2:
@@ -10069,60 +10177,60 @@
               default:
                 return this.clone();
             }
-          }, m2.endOf = function(t17) {
-            return this.startOf(t17, false);
-          }, m2.$set = function(t17, e3) {
-            var n2, o2 = O.p(t17), h3 = "set" + (this.$u ? "UTC" : ""), $2 = (n2 = {}, n2[a] = h3 + "Date", n2[d] = h3 + "Date", n2[f] = h3 + "Month", n2[c2] = h3 + "FullYear", n2[u] = h3 + "Hours", n2[s2] = h3 + "Minutes", n2[i2] = h3 + "Seconds", n2[r] = h3 + "Milliseconds", n2)[o2], l3 = o2 === a ? this.$D + (e3 - this.$W) : e3;
+          }, m2.endOf = function(t15) {
+            return this.startOf(t15, false);
+          }, m2.$set = function(t15, e3) {
+            var n2, o2 = O.p(t15), h3 = "set" + (this.$u ? "UTC" : ""), $2 = (n2 = {}, n2[a] = h3 + "Date", n2[d] = h3 + "Date", n2[f] = h3 + "Month", n2[c2] = h3 + "FullYear", n2[u] = h3 + "Hours", n2[s2] = h3 + "Minutes", n2[i2] = h3 + "Seconds", n2[r] = h3 + "Milliseconds", n2)[o2], l3 = o2 === a ? this.$D + (e3 - this.$W) : e3;
             if (o2 === f || o2 === c2) {
               var y3 = this.clone().set(d, 1);
               y3.$d[$2](l3), y3.init(), this.$d = y3.set(d, Math.min(this.$D, y3.daysInMonth())).$d;
             } else $2 && this.$d[$2](l3);
             return this.init(), this;
-          }, m2.set = function(t17, e3) {
-            return this.clone().$set(t17, e3);
-          }, m2.get = function(t17) {
-            return this[O.p(t17)]();
+          }, m2.set = function(t15, e3) {
+            return this.clone().$set(t15, e3);
+          }, m2.get = function(t15) {
+            return this[O.p(t15)]();
           }, m2.add = function(r2, h3) {
             var d2, $2 = this;
             r2 = Number(r2);
-            var l3 = O.p(h3), y3 = function(t17) {
+            var l3 = O.p(h3), y3 = function(t15) {
               var e3 = w($2);
-              return O.w(e3.date(e3.date() + Math.round(t17 * r2)), $2);
+              return O.w(e3.date(e3.date() + Math.round(t15 * r2)), $2);
             };
             if (l3 === f) return this.set(f, this.$M + r2);
             if (l3 === c2) return this.set(c2, this.$y + r2);
             if (l3 === a) return y3(1);
             if (l3 === o) return y3(7);
-            var M3 = (d2 = {}, d2[s2] = e2, d2[u] = n, d2[i2] = t16, d2)[l3] || 1, m3 = this.$d.getTime() + r2 * M3;
+            var M3 = (d2 = {}, d2[s2] = e2, d2[u] = n, d2[i2] = t14, d2)[l3] || 1, m3 = this.$d.getTime() + r2 * M3;
             return O.w(m3, this);
-          }, m2.subtract = function(t17, e3) {
-            return this.add(-1 * t17, e3);
-          }, m2.format = function(t17) {
+          }, m2.subtract = function(t15, e3) {
+            return this.add(-1 * t15, e3);
+          }, m2.format = function(t15) {
             var e3 = this, n2 = this.$locale();
             if (!this.isValid()) return n2.invalidDate || $;
-            var r2 = t17 || "YYYY-MM-DDTHH:mm:ssZ", i3 = O.z(this), s3 = this.$H, u2 = this.$m, a2 = this.$M, o2 = n2.weekdays, f2 = n2.months, h3 = function(t18, n3, i4, s4) {
-              return t18 && (t18[n3] || t18(e3, r2)) || i4[n3].slice(0, s4);
-            }, c3 = function(t18) {
-              return O.s(s3 % 12 || 12, t18, "0");
-            }, d2 = n2.meridiem || function(t18, e4, n3) {
-              var r3 = t18 < 12 ? "AM" : "PM";
+            var r2 = t15 || "YYYY-MM-DDTHH:mm:ssZ", i3 = O.z(this), s3 = this.$H, u2 = this.$m, a2 = this.$M, o2 = n2.weekdays, f2 = n2.months, h3 = function(t16, n3, i4, s4) {
+              return t16 && (t16[n3] || t16(e3, r2)) || i4[n3].slice(0, s4);
+            }, c3 = function(t16) {
+              return O.s(s3 % 12 || 12, t16, "0");
+            }, d2 = n2.meridiem || function(t16, e4, n3) {
+              var r3 = t16 < 12 ? "AM" : "PM";
               return n3 ? r3.toLowerCase() : r3;
             }, l3 = { YY: String(this.$y).slice(-2), YYYY: this.$y, M: a2 + 1, MM: O.s(a2 + 1, 2, "0"), MMM: h3(n2.monthsShort, a2, f2, 3), MMMM: h3(f2, a2), D: this.$D, DD: O.s(this.$D, 2, "0"), d: String(this.$W), dd: h3(n2.weekdaysMin, this.$W, o2, 2), ddd: h3(n2.weekdaysShort, this.$W, o2, 3), dddd: o2[this.$W], H: String(s3), HH: O.s(s3, 2, "0"), h: c3(1), hh: c3(2), a: d2(s3, u2, true), A: d2(s3, u2, false), m: String(u2), mm: O.s(u2, 2, "0"), s: String(this.$s), ss: O.s(this.$s, 2, "0"), SSS: O.s(this.$ms, 3, "0"), Z: i3 };
-            return r2.replace(y2, function(t18, e4) {
-              return e4 || l3[t18] || i3.replace(":", "");
+            return r2.replace(y2, function(t16, e4) {
+              return e4 || l3[t16] || i3.replace(":", "");
             });
           }, m2.utcOffset = function() {
             return 15 * -Math.round(this.$d.getTimezoneOffset() / 15);
           }, m2.diff = function(r2, d2, $2) {
             var l3, y3 = O.p(d2), M3 = w(r2), m3 = (M3.utcOffset() - this.utcOffset()) * e2, g2 = this - M3, v2 = O.m(this, M3);
-            return v2 = (l3 = {}, l3[c2] = v2 / 12, l3[f] = v2, l3[h2] = v2 / 3, l3[o] = (g2 - m3) / 6048e5, l3[a] = (g2 - m3) / 864e5, l3[u] = g2 / n, l3[s2] = g2 / e2, l3[i2] = g2 / t16, l3)[y3] || g2, $2 ? v2 : O.a(v2);
+            return v2 = (l3 = {}, l3[c2] = v2 / 12, l3[f] = v2, l3[h2] = v2 / 3, l3[o] = (g2 - m3) / 6048e5, l3[a] = (g2 - m3) / 864e5, l3[u] = g2 / n, l3[s2] = g2 / e2, l3[i2] = g2 / t14, l3)[y3] || g2, $2 ? v2 : O.a(v2);
           }, m2.daysInMonth = function() {
             return this.endOf(f).$D;
           }, m2.$locale = function() {
             return D[this.$L];
-          }, m2.locale = function(t17, e3) {
-            if (!t17) return this.$L;
-            var n2 = this.clone(), r2 = S(t17, e3, true);
+          }, m2.locale = function(t15, e3) {
+            if (!t15) return this.$L;
+            var n2 = this.clone(), r2 = S(t15, e3, true);
             return r2 && (n2.$L = r2), n2;
           }, m2.clone = function() {
             return O.w(this.$d, this);
@@ -10136,14 +10244,14 @@
             return this.$d.toUTCString();
           }, M2;
         }(), T = _.prototype;
-        return w.prototype = T, [["$ms", r], ["$s", i2], ["$m", s2], ["$H", u], ["$W", a], ["$M", f], ["$y", c2], ["$D", d]].forEach(function(t17) {
-          T[t17[1]] = function(e3) {
-            return this.$g(e3, t17[0], t17[1]);
+        return w.prototype = T, [["$ms", r], ["$s", i2], ["$m", s2], ["$H", u], ["$W", a], ["$M", f], ["$y", c2], ["$D", d]].forEach(function(t15) {
+          T[t15[1]] = function(e3) {
+            return this.$g(e3, t15[0], t15[1]);
           };
-        }), w.extend = function(t17, e3) {
-          return t17.$i || (t17(e3, _, w), t17.$i = true), w;
-        }, w.locale = S, w.isDayjs = p, w.unix = function(t17) {
-          return w(1e3 * t17);
+        }), w.extend = function(t15, e3) {
+          return t15.$i || (t15(e3, _, w), t15.$i = true), w;
+        }, w.locale = S, w.isDayjs = p, w.unix = function(t15) {
+          return w(1e3 * t15);
         }, w.en = D[v], w.Ls = D, w.p = {}, w;
       });
     }
@@ -11040,10 +11148,10 @@
   // ../shared/node_modules/lodash/identity.js
   var require_identity = __commonJS({
     "../shared/node_modules/lodash/identity.js"(exports, module) {
-      function identity2(value) {
+      function identity(value) {
         return value;
       }
-      module.exports = identity2;
+      module.exports = identity;
     }
   });
 
@@ -11109,8 +11217,8 @@
     "../shared/node_modules/lodash/_baseSetToString.js"(exports, module) {
       var constant = require_constant();
       var defineProperty = require_defineProperty();
-      var identity2 = require_identity();
-      var baseSetToString = !defineProperty ? identity2 : function(func, string13) {
+      var identity = require_identity();
+      var baseSetToString = !defineProperty ? identity : function(func, string13) {
         return defineProperty(func, "toString", {
           "configurable": true,
           "enumerable": false,
@@ -11160,11 +11268,11 @@
   // ../shared/node_modules/lodash/_baseRest.js
   var require_baseRest = __commonJS({
     "../shared/node_modules/lodash/_baseRest.js"(exports, module) {
-      var identity2 = require_identity();
+      var identity = require_identity();
       var overRest = require_overRest();
       var setToString = require_setToString();
       function baseRest(func, start) {
-        return setToString(overRest(func, start, identity2), func + "");
+        return setToString(overRest(func, start, identity), func + "");
       }
       module.exports = baseRest;
     }
@@ -11355,9 +11463,9 @@
   // ../shared/node_modules/lodash/_mapToArray.js
   var require_mapToArray = __commonJS({
     "../shared/node_modules/lodash/_mapToArray.js"(exports, module) {
-      function mapToArray(map2) {
-        var index = -1, result = Array(map2.size);
-        map2.forEach(function(value, key) {
+      function mapToArray(map) {
+        var index = -1, result = Array(map.size);
+        map.forEach(function(value, key) {
           result[++index] = [key, value];
         });
         return result;
@@ -11933,19 +12041,15 @@
       console.log(`${PREFIX2}[Debug]:`, ...args);
     }
   };
+  var noop = () => {
+  };
   var proxyLogger = {
-    disable: () => {
-    },
-    enable: () => {
-    },
-    log: () => {
-    },
-    warn: () => {
-    },
-    error: () => {
-    },
-    debug: () => {
-    }
+    disable: noop,
+    enable: noop,
+    log: noop,
+    warn: noop,
+    error: noop,
+    debug: noop
   };
   var logger = new Proxy(proxyLogger, {
     get(_target, prop) {
@@ -12309,146 +12413,18 @@
   var import_get = __toESM(require_get());
 
   // ../shared/src/internal/middleware/nudge.ts
-  var t8 = __toESM(require_lib());
-
-  // ../shared/node_modules/fp-ts/es6/function.js
-  function pipe(a, ab, bc, cd, de, ef, fg, gh, hi, ij, jk, kl, lm, mn, no, op, pq, qr, rs, st) {
-    switch (arguments.length) {
-      case 1:
-        return a;
-      case 2:
-        return ab(a);
-      case 3:
-        return bc(ab(a));
-      case 4:
-        return cd(bc(ab(a)));
-      case 5:
-        return de(cd(bc(ab(a))));
-      case 6:
-        return ef(de(cd(bc(ab(a)))));
-      case 7:
-        return fg(ef(de(cd(bc(ab(a))))));
-      case 8:
-        return gh(fg(ef(de(cd(bc(ab(a)))))));
-      case 9:
-        return hi(gh(fg(ef(de(cd(bc(ab(a))))))));
-      case 10:
-        return ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))));
-      case 11:
-        return jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))));
-      case 12:
-        return kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))));
-      case 13:
-        return lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))));
-      case 14:
-        return mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))));
-      case 15:
-        return no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))));
-      case 16:
-        return op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))));
-      case 17:
-        return pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))))));
-      case 18:
-        return qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))))));
-      case 19:
-        return rs(qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))))))));
-      case 20:
-        return st(rs(qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))))))));
-    }
-    return;
-  }
-
-  // ../shared/node_modules/fp-ts/es6/Functor.js
-  function flap(F) {
-    return function(a) {
-      return function(fab) {
-        return F.map(fab, function(f) {
-          return f(a);
-        });
-      };
-    };
-  }
-
-  // ../shared/node_modules/fp-ts/es6/internal.js
-  var isLeft = function(ma) {
-    return ma._tag === "Left";
-  };
-
-  // ../shared/node_modules/fp-ts/es6/Either.js
-  var isLeft2 = isLeft;
-  var right = function(a) {
-    return { _tag: "Right", right: a };
-  };
-  var orElseW = function(onLeft) {
-    return function(ma) {
-      return isLeft2(ma) ? onLeft(ma.left) : ma;
-    };
-  };
-  var orElse = orElseW;
-  var _map = function(fa, f) {
-    return pipe(fa, map(f));
-  };
-  var map = function(f) {
-    return function(fa) {
-      return isLeft2(fa) ? fa : right(f(fa.right));
-    };
-  };
-  var URI = "Either";
-  var Functor = {
-    URI,
-    map: _map
-  };
-  var flap2 = (
-    /*#_PURE_*/
-    flap(Functor)
-  );
-
-  // ../shared/node_modules/io-ts-types/es6/clone.js
-  function clone(t16) {
-    var r = Object.create(Object.getPrototypeOf(t16));
-    Object.assign(r, t16);
-    return r;
-  }
-
-  // ../shared/node_modules/io-ts-types/es6/withFallback.js
-  var t2 = __toESM(require_lib());
-
-  // ../shared/node_modules/io-ts-types/es6/withValidate.js
-  var t = __toESM(require_lib());
-  function withValidate(codec, validate2, name) {
-    if (name === void 0) {
-      name = codec.name;
-    }
-    var r = clone(codec);
-    r.validate = validate2;
-    r.decode = function(i2) {
-      return validate2(i2, t.getDefaultContext(r));
-    };
-    r.name = name;
-    return r;
-  }
-
-  // ../shared/node_modules/io-ts-types/es6/withFallback.js
-  function withFallback(codec, a, name) {
-    if (name === void 0) {
-      name = "withFallback(" + codec.name + ")";
-    }
-    return withValidate(codec, function(u, c2) {
-      return orElse(function() {
-        return t2.success(a);
-      })(codec.validate(u, c2));
-    }, name);
-  }
+  var t6 = __toESM(require_lib());
+  var import_withFallback = __toESM(require_withFallback());
 
   // ../shared/src/internal/middleware/generics.ts
   var import_io_ts_reporters = __toESM(require_src());
-  var import_function2 = __toESM(require_function());
-  var import_Either2 = __toESM(require_Either());
+  var import_function = __toESM(require_function());
+  var import_Either = __toESM(require_Either());
   function decodeThrowing(validator, input) {
     const result = validator.decode(input);
-    return (0, import_function2.pipe)(
+    return (0, import_function.pipe)(
       result,
-      (0, import_Either2.fold)(
+      (0, import_Either.fold)(
         (_errors) => {
           const messages = import_io_ts_reporters.default.report(result);
           const errorMessage = `${messages.join("\n")}
@@ -12462,128 +12438,131 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   }
 
   // ../shared/src/types/entities/nudge/actions.ts
-  var t3 = __toESM(require_lib());
-  var AdminAction = t3.type({
-    type: t3.literal("admin"),
-    value: t3.string
+  var t = __toESM(require_lib());
+  var AdminAction = t.type({
+    type: t.literal("admin"),
+    value: t.string
   });
-  var CallbackAction = t3.type({
-    type: t3.literal("callback"),
-    value: t3.string
+  var CallbackAction = t.type({
+    type: t.literal("callback"),
+    value: t.string
   });
-  var AppReviewAction = t3.intersection([
-    t3.type({
-      type: t3.literal("app_review")
+  var AppReviewAction = t.intersection([
+    t.type({
+      type: t.literal("app_review")
     }),
-    t3.partial({
-      appStoreId: t3.string,
-      playStorePackageName: t3.string
+    t.partial({
+      appStoreId: t.string,
+      playStorePackageName: t.string
     })
   ]);
-  var LinkAction = t3.intersection([
-    t3.type({
-      type: t3.literal("link"),
-      value: t3.string
+  var LinkAction = t.intersection([
+    t.type({
+      type: t.literal("link"),
+      value: t.string
     }),
-    t3.partial({
-      operation: t3.union([t3.literal("router"), t3.literal("self"), t3.literal("blank"), t3.undefined]),
-      meta: t3.type({
-        command: t3.string
+    t.partial({
+      operation: t.union([t.literal("router"), t.literal("self"), t.literal("blank"), t.undefined]),
+      meta: t.type({
+        command: t.string
       })
     })
   ]);
-  var OpenChatActionTypeV = t3.union([
-    t3.literal("intercom"),
-    t3.literal("helpscout"),
-    t3.literal("freshdesk"),
-    t3.literal("freshchat"),
-    t3.literal("crisp"),
-    t3.literal("zendesk"),
-    t3.literal("liveChat"),
-    t3.literal("gist"),
-    t3.literal("olark"),
-    t3.literal("hubspot"),
-    t3.literal("drift"),
-    t3.literal("pylon"),
-    t3.literal("talkdesk_v2"),
-    t3.literal("zendesk_handoff"),
-    t3.string
+  var OpenChatActionTypeV = t.union([
+    t.literal("intercom"),
+    t.literal("helpscout"),
+    t.literal("freshdesk"),
+    t.literal("freshchat"),
+    t.literal("crisp"),
+    t.literal("zendesk"),
+    t.literal("liveChat"),
+    t.literal("gist"),
+    t.literal("olark"),
+    t.literal("hubspot"),
+    t.literal("drift"),
+    t.literal("pylon"),
+    t.literal("talkdesk_v2"),
+    t.literal("zendesk_handoff"),
+    t.string
   ]);
-  var OpenChatActionV = t3.type({
-    type: t3.literal("open_chat"),
-    meta: t3.type({
+  var OpenChatActionV = t.type({
+    type: t.literal("open_chat"),
+    meta: t.type({
       type: OpenChatActionTypeV
     })
   });
-  var DismissAction = t3.type({
-    type: t3.literal("dismiss")
+  var DismissAction = t.type({
+    type: t.literal("dismiss")
   });
-  var CompleteAction = t3.type({
-    type: t3.literal("complete")
+  var CompleteAction = t.type({
+    type: t.literal("complete")
   });
-  var StepBackAction = t3.type({
-    type: t3.literal("step_back")
+  var StepBackAction = t.type({
+    type: t.literal("step_back")
   });
-  var StepForwardAction = t3.type({
-    type: t3.literal("step_forward")
+  var StepForwardAction = t.type({
+    type: t.literal("step_forward")
   });
-  var StayOnStepAction = t3.type({
-    type: t3.literal("stay_on_step")
+  var StayOnStepAction = t.type({
+    type: t.literal("stay_on_step")
   });
-  var SnoozeInterval = t3.union([t3.literal("hour"), t3.literal("day"), t3.literal("week")]);
-  var SnoozeValue = t3.number;
-  var SnoozeAction = t3.intersection([
-    t3.type({
-      type: t3.literal("snooze")
+  var SnoozeInterval = t.union([t.literal("hour"), t.literal("day"), t.literal("week")]);
+  var SnoozeValue = t.number;
+  var SnoozeAction = t.intersection([
+    t.type({
+      type: t.literal("snooze")
     }),
-    t3.partial({
+    t.partial({
       interval: SnoozeInterval,
       value: SnoozeValue
     })
   ]);
-  var BuiltInAction = t3.type({
-    type: t3.literal("builtin"),
-    value: t3.string
+  var BuiltInAction = t.type({
+    type: t.literal("builtin"),
+    value: t.string
   });
-  var ScriptAction = t3.type({
-    type: t3.literal("script"),
-    value: t3.string
+  var ScriptAction = t.type({
+    type: t.literal("script"),
+    value: t.string
   });
-  var VideoAction = t3.type({
-    type: t3.literal("video"),
-    value: t3.string
+  var VideoAction = t.type({
+    type: t.literal("video"),
+    value: t.string
   });
-  var NoAction = t3.type({ type: t3.literal("no_action") });
-  var ClickAction = t3.type({
-    type: t3.literal("click"),
-    value: t3.string
+  var NoAction = t.type({ type: t.literal("no_action") });
+  var ClickAction = t.type({
+    type: t.literal("click"),
+    value: t.string
   });
-  var NudgeActionV = t3.type({
-    type: t3.literal("nudge"),
-    value: t3.number
+  var NudgeActionV = t.type({
+    type: t.literal("nudge"),
+    value: t.number
   });
-  var GoToNudgeStepActionV = t3.type({
-    type: t3.literal("go_to_step"),
-    value: t3.number
+  var GoToNudgeStepActionV = t.type({
+    type: t.literal("go_to_step"),
+    value: t.number
   });
-  var UseConditionalLogicAction = t3.type({
-    type: t3.literal("use_conditional_logic")
+  var UseConditionalLogicAction = t.type({
+    type: t.literal("use_conditional_logic")
   });
-  var ShowVideoAction = t3.type({
-    type: t3.literal("video"),
-    value: t3.number
+  var ShowVideoAction = t.type({
+    type: t.literal("video"),
+    value: t.number
   });
-  var ShowDocumentAction = t3.type({
-    type: t3.literal("document"),
-    value: t3.number
+  var ShowDocumentAction = t.type({
+    type: t.literal("document"),
+    value: t.number
   });
-  var OpenResourceCenterAction = t3.type({
-    type: t3.literal("open_resource_center")
+  var OpenResourceCenterAction = t.type({
+    type: t.literal("open_resource_center")
   });
-  var OpenAIAssistantAction = t3.type({
-    type: t3.literal("open_ai_assistant")
+  var OpenAIAssistantAction = t.type({
+    type: t.literal("open_ai_assistant")
   });
-  var ActionV = t3.union([
+  var ActionExtrasV = t.partial({
+    closeWidgetOnClick: t.union([t.boolean, t.null])
+  });
+  var ActionUnionV = t.union([
     NoAction,
     ClickAction,
     LinkAction,
@@ -12604,139 +12583,144 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     OpenResourceCenterAction,
     OpenAIAssistantAction
   ]);
-  var LabeledActionV = t3.type({
-    cta: t3.string,
+  var ActionV = t.intersection([ActionUnionV, ActionExtrasV]);
+  var LabeledActionV = t.type({
+    cta: t.string,
     action: ActionV
   });
-  var TriggerAction = t3.type({
-    type: t3.literal("trigger"),
+  var TriggerAction = t.type({
+    type: t.literal("trigger"),
     value: ActionV
   });
 
   // ../shared/src/internal/middleware/helpers/goals.ts
-  var t5 = __toESM(require_lib());
+  var t3 = __toESM(require_lib());
 
   // ../shared/src/internal/middleware/evaluation.ts
-  var t4 = __toESM(require_lib());
-  var EvaluationConditionV = t4.type({
-    selector: t4.array(t4.string),
-    op: t4.string,
-    values: t4.array(t4.string)
+  var t2 = __toESM(require_lib());
+  var EvaluationConditionV = t2.type({
+    selector: t2.array(t2.string),
+    op: t2.string,
+    values: t2.array(t2.string)
   });
 
   // ../shared/src/internal/middleware/helpers/goals.ts
-  var PageVisitedGoal = t5.type({
-    type: t5.literal("page_visited"),
-    value: t5.string
+  var PageVisitedGoal = t3.type({
+    type: t3.literal("page_visited"),
+    value: t3.string
   });
-  var ElementClickedGoal = t5.type({
-    type: t5.literal("element_clicked"),
-    value: t5.string
+  var ElementClickedGoal = t3.type({
+    type: t3.literal("element_clicked"),
+    value: t3.string
   });
-  var CTAClickedGoal = t5.type({
-    type: t5.literal("cta_clicked")
+  var CTAClickedGoal = t3.type({
+    type: t3.literal("cta_clicked")
   });
-  var EventTrackedGoal = t5.intersection([
-    t5.type({
-      type: t5.literal("event_tracked"),
-      event: t5.string
+  var EventTrackedGoal = t3.intersection([
+    t3.type({
+      type: t3.literal("event_tracked"),
+      event: t3.string
     }),
-    t5.partial({
-      conditions: t5.array(t5.array(EvaluationConditionV))
+    t3.partial({
+      conditions: t3.array(t3.array(EvaluationConditionV))
     })
   ]);
 
   // ../shared/src/internal/middleware/page-targeting.ts
-  var t6 = __toESM(require_lib());
+  var t4 = __toESM(require_lib());
   var UrlMatchTypeLiteralsV = [
-    t6.literal("contains"),
-    t6.literal("endsWith"),
-    t6.literal("exact"),
-    t6.literal("pattern"),
-    t6.literal("regex"),
-    t6.literal("simple"),
-    t6.literal("startsWith")
+    t4.literal("contains"),
+    t4.literal("endsWith"),
+    t4.literal("exact"),
+    t4.literal("pattern"),
+    t4.literal("regex"),
+    t4.literal("simple"),
+    t4.literal("startsWith")
   ];
-  var PageTargetingItemPartialV = t6.partial({
-    operator: t6.union([t6.literal("and"), t6.literal("or"), t6.null]),
-    value: t6.union([t6.string, t6.null])
+  var PageTargetingItemPartialV = t4.partial({
+    operator: t4.union([t4.literal("and"), t4.literal("or"), t4.null]),
+    value: t4.union([t4.string, t4.null])
   });
-  var PageTargetingConfigItemV = t6.intersection([
-    t6.type({
-      isExclude: t6.boolean,
-      matchType: t6.union([
+  var PageTargetingConfigItemV = t4.intersection([
+    t4.type({
+      isExclude: t4.boolean,
+      matchType: t4.union([
         ...UrlMatchTypeLiteralsV,
-        t6.literal("domId"),
-        t6.literal("domClassname"),
-        t6.literal("domSelector")
+        t4.literal("domId"),
+        t4.literal("domClassname"),
+        t4.literal("domSelector")
       ]),
-      url: t6.string
+      url: t4.string
     }),
     PageTargetingItemPartialV
   ]);
-  var PageTargetingConfigV = t6.type({
-    conditions: t6.array(t6.array(EvaluationConditionV)),
-    configs: t6.array(PageTargetingConfigItemV)
+  var PageTargetingConfigV = t4.type({
+    conditions: t4.array(t4.array(EvaluationConditionV)),
+    configs: t4.array(PageTargetingConfigItemV)
   });
-  var NudgePageTargetingConfigItemV = t6.intersection([
-    t6.type({
-      isExclude: t6.boolean,
-      matchType: t6.union([...UrlMatchTypeLiteralsV, t6.literal("domSelector")]),
-      url: t6.string
+  var NudgePageTargetingConfigItemV = t4.intersection([
+    t4.type({
+      isExclude: t4.boolean,
+      matchType: t4.union([...UrlMatchTypeLiteralsV, t4.literal("domSelector")]),
+      url: t4.string
     }),
     PageTargetingItemPartialV
   ]);
-  var NudgePageTargetingConfigV = t6.type({
-    conditions: t6.array(t6.array(EvaluationConditionV)),
-    configs: t6.array(NudgePageTargetingConfigItemV)
+  var NudgePageTargetingConfigV = t4.type({
+    conditions: t4.array(t4.array(EvaluationConditionV)),
+    configs: t4.array(NudgePageTargetingConfigItemV)
   });
 
   // ../shared/src/internal/middleware/organization.ts
-  var t7 = __toESM(require_lib());
-  var ThrottleV = t7.intersection([
-    t7.type({
-      max: t7.number,
-      period: t7.string
+  var t5 = __toESM(require_lib());
+  var ThrottleV = t5.intersection([
+    t5.type({
+      max: t5.number,
+      period: t5.string
     }),
-    t7.partial({
-      tagIds: t7.array(t7.number),
+    t5.partial({
+      tagIds: t5.array(t5.number),
       // if it's a tag throttle, this will be set, otherwise the throttle is for all nudge interactions
-      periodCount: t7.union([t7.number, t7.undefined]),
-      type: t7.union([t7.literal("time-between"), t7.literal("basic")])
+      periodCount: t5.union([t5.number, t5.undefined]),
+      type: t5.union([t5.literal("time-between"), t5.literal("basic")])
     })
   ]);
-  var CustomThrottleV = t7.intersection([
-    t7.type({
-      limits: t7.array(ThrottleV),
-      conditions: t7.array(t7.array(EvaluationConditionV))
+  var CustomThrottleV = t5.intersection([
+    t5.type({
+      limits: t5.array(ThrottleV),
+      conditions: t5.array(t5.array(EvaluationConditionV))
     }),
-    t7.partial({
-      enabled: t7.boolean,
+    t5.partial({
+      enabled: t5.boolean,
       limit: ThrottleV
     })
   ]);
-  var TranslationBehaviorV = t7.keyof({
+  var TranslationBehaviorV = t5.keyof({
     showDefault: null,
     showOutOfDate: null,
     dontShow: null
   });
-  var LocalizationV = t7.type({
-    enabled: t7.boolean,
-    defaultLocale: t7.string,
-    addedLocales: t7.array(t7.string),
+  var LocalizationV = t5.type({
+    enabled: t5.boolean,
+    defaultLocale: t5.string,
+    addedLocales: t5.array(t5.string),
     translationUnavailable: TranslationBehaviorV,
     translationOutdated: TranslationBehaviorV
   });
-  var OrganizationV = t7.intersection([
-    t7.type({
-      branding: t7.string,
-      shareLinkParam: t7.string,
+  var OrganizationV = t5.intersection([
+    t5.type({
+      branding: t5.string,
+      shareLinkParam: t5.string,
       guideThrottle: CustomThrottleV,
       surveyThrottle: CustomThrottleV
     }),
-    t7.partial({
+    t5.partial({
       localization: LocalizationV,
-      nudgesMutualExclusionGroups: t7.array(t7.type({ variantIds: t7.array(t7.number) }))
+      nudgesMutualExclusionGroups: t5.array(t5.type({ variantIds: t5.array(t5.number) })),
+      // Project-wide page exclusions set by admins: pages on which no guide or
+      // survey may show. Optional so older SDKs (incl. bundled mobile) simply
+      // ignore it — graceful degradation, no breakingFeatures code needed.
+      defaultPageExclusions: t5.union([NudgePageTargetingConfigV, t5.null, t5.undefined])
     })
   ]);
   var defaults = {
@@ -12770,69 +12754,103 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   };
 
   // ../shared/src/internal/middleware/nudge.ts
-  var ModalPositionV = t8.union([
-    t8.literal("top-left"),
-    t8.literal("top-center"),
-    t8.literal("top-right"),
-    t8.literal("bottom-left"),
-    t8.literal("bottom-center"),
-    t8.literal("bottom-right"),
-    t8.literal("left-center"),
-    t8.literal("right-center"),
-    t8.literal("center")
+  var ModalPositionV = t6.union([
+    t6.literal("top-left"),
+    t6.literal("top-center"),
+    t6.literal("top-right"),
+    t6.literal("bottom-left"),
+    t6.literal("bottom-center"),
+    t6.literal("bottom-right"),
+    t6.literal("left-center"),
+    t6.literal("right-center"),
+    t6.literal("center")
   ]);
   var PopoverPositionV = ModalPositionV;
-  var BannerPositionV = t8.union([t8.literal("top"), t8.literal("bottom")]);
-  var PinPositionV = t8.union([
-    t8.literal("auto"),
-    t8.literal("top"),
-    t8.literal("bottom"),
-    t8.literal("left"),
-    t8.literal("right")
+  var BannerPositionV = t6.union([t6.literal("top"), t6.literal("bottom")]);
+  var PinPositionV = t6.union([
+    t6.literal("auto"),
+    t6.literal("top"),
+    t6.literal("bottom"),
+    t6.literal("left"),
+    t6.literal("right")
   ]);
-  var CardPositionV = t8.union([
-    t8.literal("prepend"),
-    t8.literal("append"),
-    t8.literal("replace"),
-    t8.literal("before"),
-    t8.literal("after")
+  var CardPositionV = t6.union([
+    t6.literal("prepend"),
+    t6.literal("append"),
+    t6.literal("replace"),
+    t6.literal("before"),
+    t6.literal("after")
   ]);
-  var NudgeContentMarkdownBlockV = t8.type({
-    type: t8.literal("markdown"),
-    meta: t8.type({ value: t8.string })
+  var NudgeContentTitleBlockV = t6.type({
+    type: t6.literal("title"),
+    meta: t6.intersection([
+      t6.type({ value: t6.string }),
+      t6.partial({
+        alignment: t6.union([t6.literal("start"), t6.literal("center"), t6.literal("end")]),
+        textAnimation: t6.literal("typewriter")
+      })
+    ])
   });
-  var NudgeContentImageBlockV = t8.type({
-    type: t8.literal("image"),
-    meta: t8.intersection([
-      t8.type({ src: t8.string, filename: t8.string, size: t8.string }),
-      t8.partial({
-        altText: t8.string,
-        style: t8.partial({
-          scale: t8.string
+  var NudgeContentStepCounterBlockV = t6.type({
+    type: t6.literal("step_counter"),
+    meta: t6.partial({
+      format: t6.union([t6.literal("numeric"), t6.literal("verbose")])
+    })
+  });
+  var NudgeContentMarkdownBlockV = t6.type({
+    type: t6.literal("markdown"),
+    meta: t6.intersection([
+      t6.type({ value: t6.string }),
+      t6.partial({
+        alignment: t6.union([t6.literal("start"), t6.literal("center"), t6.literal("end")]),
+        textAnimation: t6.literal("typewriter")
+      })
+    ])
+  });
+  var NudgeContentImageBlockV = t6.type({
+    type: t6.literal("image"),
+    meta: t6.intersection([
+      t6.type({ src: t6.string, filename: t6.string, size: t6.string }),
+      t6.partial({
+        altText: t6.string,
+        style: t6.partial({
+          scale: t6.string,
+          radius: t6.string,
+          fit: t6.union([t6.literal("cover"), t6.literal("contain")]),
+          height: t6.string
+        }),
+        // Optional link opened when the image is clicked.
+        action: LinkAction
+      })
+    ])
+  });
+  var NudgeContentVideoBlockV = t6.type({
+    type: t6.literal("video"),
+    meta: t6.intersection([
+      t6.type({ type: t6.literal("url"), src: t6.string }),
+      t6.partial({
+        style: t6.partial({
+          radius: t6.string
         })
       })
     ])
   });
-  var NudgeContentVideoBlockV = t8.type({
-    type: t8.literal("video"),
-    meta: t8.type({ type: t8.literal("url"), src: t8.string })
-  });
-  var Required = t8.union([
-    t8.type({
-      value: t8.literal(true),
-      message: t8.string
+  var Required = t6.union([
+    t6.type({
+      value: t6.literal(true),
+      message: t6.string
     }),
-    t8.type({
-      value: t8.literal(false),
-      message: t8.union([t8.null, t8.undefined, t8.string])
+    t6.type({
+      value: t6.literal(false),
+      message: t6.union([t6.null, t6.undefined, t6.string])
     })
   ]);
-  var SurveyValidation = t8.partial({
-    validation: t8.partial({
+  var SurveyValidation = t6.partial({
+    validation: t6.partial({
       required: Required
     })
   });
-  var EffectfulActionV = t8.union([
+  var EffectfulActionV = t6.union([
     AppReviewAction,
     CallbackAction,
     ClickAction,
@@ -12844,7 +12862,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     ShowDocumentAction,
     ShowVideoAction
   ]);
-  var NavigationActionV = t8.union([
+  var NavigationActionV = t6.union([
     CompleteAction,
     DismissAction,
     GoToNudgeStepActionV,
@@ -12853,150 +12871,152 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     StepForwardAction,
     StayOnStepAction
   ]);
-  var ConcreteAction = t8.union([EffectfulActionV, NavigationActionV]);
-  var NudgeButtonActionV = t8.union([NoAction, UseConditionalLogicAction, ConcreteAction]);
-  var ActionSequenceV = t8.type({
-    type: withFallback(t8.literal("action_sequence"), "action_sequence"),
+  var ConcreteAction = t6.union([EffectfulActionV, NavigationActionV]);
+  var NudgeButtonActionV = t6.union([NoAction, UseConditionalLogicAction, ConcreteAction]);
+  var ActionSequenceV = t6.type({
+    type: (0, import_withFallback.withFallback)(t6.literal("action_sequence"), "action_sequence"),
     navigation: NavigationActionV,
-    effects: t8.array(EffectfulActionV)
+    effects: t6.array(EffectfulActionV)
   });
   var isActionSequence = (action) => ActionSequenceV.is(action);
-  var NudgeConditionalActionConditionV = t8.type({
-    field: t8.string,
-    operator: t8.union([
-      t8.literal("eq"),
-      t8.literal("neq"),
-      t8.literal("gt"),
-      t8.literal("lt"),
-      t8.literal("gte"),
-      t8.literal("lte"),
-      t8.literal("contains"),
-      t8.literal("does_not_contain")
+  var NudgeConditionalActionConditionV = t6.type({
+    field: t6.string,
+    operator: t6.union([
+      t6.literal("eq"),
+      t6.literal("neq"),
+      t6.literal("gt"),
+      t6.literal("lt"),
+      t6.literal("gte"),
+      t6.literal("lte"),
+      t6.literal("contains"),
+      t6.literal("does_not_contain")
     ]),
-    operand: t8.union([t8.string, t8.number, t8.array(t8.union([t8.string, t8.number]))]),
-    type: t8.union([t8.literal("survey_response"), t8.literal("user_property")])
+    operand: t6.union([t6.string, t6.number, t6.array(t6.union([t6.string, t6.number]))]),
+    type: t6.union([t6.literal("survey_response"), t6.literal("user_property")])
   });
-  var NudgeConditionalActionV = t8.intersection([
-    t8.type({
-      operator: t8.union([t8.literal("eq"), t8.literal("neq"), t8.literal("gt"), t8.literal("lt")]),
-      operand: t8.union([t8.string, t8.number]),
+  var NudgeConditionalActionV = t6.intersection([
+    t6.type({
+      operator: t6.union([t6.literal("eq"), t6.literal("neq"), t6.literal("gt"), t6.literal("lt")]),
+      operand: t6.union([t6.string, t6.number]),
       action: NudgeButtonActionV
     }),
-    t8.partial({
-      v2: t8.intersection([
-        t8.type({
-          conditions: t8.array(NudgeConditionalActionConditionV),
+    t6.partial({
+      v2: t6.intersection([
+        t6.type({
+          conditions: t6.array(NudgeConditionalActionConditionV),
           action: NudgeButtonActionV,
-          logic: withFallback(t8.union([t8.literal("and"), t8.literal("or")]), "and")
+          logic: (0, import_withFallback.withFallback)(t6.union([t6.literal("and"), t6.literal("or")]), "and")
         }),
-        t8.partial({
+        t6.partial({
           actions: ActionSequenceV,
-          evaluationConditions: t8.array(t8.array(EvaluationConditionV))
+          evaluationConditions: t6.array(t6.array(EvaluationConditionV))
         })
       ])
     })
   ]);
-  var NudgeContentButtonBlockV = t8.type({
-    type: t8.literal("button"),
-    meta: t8.union([
-      t8.partial({
-        label: t8.string,
+  var NudgeContentButtonBlockV = t6.type({
+    type: t6.literal("button"),
+    meta: t6.union([
+      t6.partial({
+        label: t6.string,
         action: NudgeButtonActionV,
         actions: ActionSequenceV,
-        buttonType: t8.union([t8.literal("primary"), t8.literal("secondary"), t8.literal("snooze")], void 0),
-        conditionalActions: t8.array(NudgeConditionalActionV),
+        buttonType: t6.union([t6.literal("primary"), t6.literal("secondary"), t6.literal("snooze")], void 0),
+        conditionalActions: t6.array(NudgeConditionalActionV),
         defaultAction: NudgeButtonActionV,
-        defaultActions: ActionSequenceV
+        defaultActions: ActionSequenceV,
+        grow: t6.boolean,
+        width: t6.string
       }),
-      t8.null
+      t6.null
     ])
   });
-  var NudgeContentSurveyTextBlockV = t8.type({
-    uuid: t8.string,
-    type: t8.literal("survey_text"),
-    meta: t8.intersection([
-      t8.type({ prompt: t8.string }),
+  var NudgeContentSurveyTextBlockV = t6.type({
+    uuid: t6.string,
+    type: t6.literal("survey_text"),
+    meta: t6.intersection([
+      t6.type({ prompt: t6.string }),
       SurveyValidation,
-      t8.partial({ label: t8.string, ariaLabel: t8.string })
+      t6.partial({ label: t6.string, ariaLabel: t6.string })
     ])
   });
-  var NudgeStepContentSurveyTextShortBlockTypeV = t8.type({
-    uuid: t8.string,
-    type: t8.literal("survey_text_short"),
-    meta: t8.intersection([
-      t8.intersection([
-        t8.type({ prompt: t8.string }),
-        t8.partial({ prefill: t8.type({ enabled: t8.boolean, userProperty: t8.string }) })
+  var NudgeStepContentSurveyTextShortBlockTypeV = t6.type({
+    uuid: t6.string,
+    type: t6.literal("survey_text_short"),
+    meta: t6.intersection([
+      t6.intersection([
+        t6.type({ prompt: t6.string }),
+        t6.partial({ prefill: t6.type({ enabled: t6.boolean, userProperty: t6.string }) })
       ]),
       SurveyValidation,
-      t8.partial({ label: t8.string, ariaLabel: t8.string })
+      t6.partial({ label: t6.string, ariaLabel: t6.string })
     ])
   });
-  var NudgeContentListBlockV = t8.type({
-    uuid: t8.string,
-    type: t8.literal("survey_list"),
-    meta: t8.intersection([
-      t8.type({
-        options: t8.array(t8.string),
-        listType: t8.union([t8.literal("single"), t8.literal("multiple")]),
-        displayType: t8.union([t8.literal("dropdown"), t8.literal("list"), t8.literal("grid")])
+  var NudgeContentListBlockV = t6.type({
+    uuid: t6.string,
+    type: t6.literal("survey_list"),
+    meta: t6.intersection([
+      t6.type({
+        options: t6.array(t6.string),
+        listType: t6.union([t6.literal("single"), t6.literal("multiple")]),
+        displayType: t6.union([t6.literal("dropdown"), t6.literal("list"), t6.literal("grid")])
       }),
       SurveyValidation,
-      t8.partial({
-        conditionalActions: t8.array(NudgeConditionalActionV),
+      t6.partial({
+        conditionalActions: t6.array(NudgeConditionalActionV),
         defaultAction: NudgeButtonActionV,
-        isOrderRandom: t8.boolean,
-        otherOption: t8.type({
-          enabled: t8.boolean,
-          label: t8.string,
-          placeholderLabel: t8.string
+        isOrderRandom: t6.boolean,
+        otherOption: t6.type({
+          enabled: t6.boolean,
+          label: t6.string,
+          placeholderLabel: t6.string
         }),
-        label: t8.string,
-        ariaLabel: t8.string
+        label: t6.string,
+        ariaLabel: t6.string
       })
     ])
   });
-  var NudgeContentSurveyRatingBlockV = t8.type({
-    uuid: t8.string,
-    type: t8.literal("survey_rating"),
-    meta: t8.intersection([
-      t8.union([
-        t8.type({
-          type: t8.literal("emojis"),
-          lowerLabel: t8.string,
-          upperLabel: t8.string,
-          options: t8.number,
-          emojis: t8.array(t8.string)
+  var NudgeContentSurveyRatingBlockV = t6.type({
+    uuid: t6.string,
+    type: t6.literal("survey_rating"),
+    meta: t6.intersection([
+      t6.union([
+        t6.type({
+          type: t6.literal("emojis"),
+          lowerLabel: t6.string,
+          upperLabel: t6.string,
+          options: t6.number,
+          emojis: t6.array(t6.string)
         }),
-        t8.type({
-          type: t8.literal("numbers"),
-          lowerLabel: t8.string,
-          upperLabel: t8.string,
-          options: t8.number
+        t6.type({
+          type: t6.literal("numbers"),
+          lowerLabel: t6.string,
+          upperLabel: t6.string,
+          options: t6.number
         }),
-        t8.type({
-          type: t8.literal("stars"),
-          lowerLabel: t8.string,
-          upperLabel: t8.string,
-          options: t8.number
+        t6.type({
+          type: t6.literal("stars"),
+          lowerLabel: t6.string,
+          upperLabel: t6.string,
+          options: t6.number
         }),
-        t8.type({
-          type: t8.literal("nps"),
-          lowerLabel: t8.string,
-          upperLabel: t8.string,
-          options: t8.number
+        t6.type({
+          type: t6.literal("nps"),
+          lowerLabel: t6.string,
+          upperLabel: t6.string,
+          options: t6.number
         })
       ]),
       SurveyValidation,
-      t8.partial({
-        conditionalActions: t8.array(NudgeConditionalActionV),
+      t6.partial({
+        conditionalActions: t6.array(NudgeConditionalActionV),
         defaultAction: NudgeButtonActionV,
-        label: t8.string,
-        ariaLabel: t8.string
+        label: t6.string,
+        ariaLabel: t6.string
       })
     ])
   });
-  var NudgeContentBlockV = t8.union([
+  var NudgeContentBlockV = t6.union([
     NudgeContentMarkdownBlockV,
     NudgeContentImageBlockV,
     NudgeContentVideoBlockV,
@@ -13006,204 +13026,254 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     NudgeContentSurveyRatingBlockV,
     NudgeContentListBlockV
   ]);
-  var NudgeStepBaseV = t8.type({
-    id: t8.number,
-    title: t8.string,
-    content: t8.array(NudgeContentBlockV)
+  var NudgeStepBaseV = t6.type({
+    id: t6.number,
+    title: t6.string,
+    content: t6.array(NudgeContentBlockV)
   });
-  var MediaPositionV = t8.union([t8.literal("left"), t8.literal("right")]);
-  var NudgeStepFooterLayoutConfigV = t8.partial({
-    footerLayout: t8.union([t8.literal("classic"), t8.literal("split"), t8.literal("centered"), t8.literal("stacked")])
+  var MediaPositionV = t6.union([t6.literal("left"), t6.literal("right")]);
+  var NudgeStepFooterLayoutConfigV = t6.partial({
+    footerLayout: t6.union([t6.literal("classic"), t6.literal("split"), t6.literal("centered"), t6.literal("stacked")])
   });
-  var NudgeStepLayoutConfigV = t8.intersection([
-    t8.union([
-      t8.partial({
-        layout: t8.union([t8.literal("classic"), t8.literal("vertical"), t8.literal("showcase")])
+  var NudgeStepLayoutConfigV = t6.intersection([
+    t6.union([
+      t6.partial({
+        layout: t6.union([t6.literal("classic"), t6.literal("vertical"), t6.literal("showcase")])
       }),
-      t8.partial({
-        layout: t8.literal("horizontal"),
+      t6.partial({
+        layout: t6.literal("horizontal"),
         mediaPosition: MediaPositionV
       })
     ]),
-    t8.partial({
-      titleAlignment: t8.union([t8.literal("start"), t8.literal("center"), t8.literal("end")]),
-      contentAlignment: t8.union([t8.literal("start"), t8.literal("center"), t8.literal("end")])
+    t6.partial({
+      titleAlignment: t6.union([t6.literal("start"), t6.literal("center"), t6.literal("end")]),
+      contentAlignment: t6.union([t6.literal("start"), t6.literal("center"), t6.literal("end")])
     })
   ]);
-  var ElementSelectorV = t8.intersection([
-    t8.type({
-      selector: t8.string,
-      text: t8.string,
-      tag: t8.string,
-      attributes: t8.record(t8.string, t8.string)
+  var ElementSelectorV = t6.intersection([
+    t6.type({
+      selector: t6.string,
+      text: t6.string,
+      tag: t6.string,
+      attributes: t6.record(t6.string, t6.string)
     }),
-    t8.partial({
-      strategy: withFallback(
-        t8.union([t8.literal("strict"), t8.literal("fallback"), t8.literal("selector_only")]),
+    t6.partial({
+      strategy: (0, import_withFallback.withFallback)(
+        t6.union([t6.literal("strict"), t6.literal("fallback"), t6.literal("selector_only")]),
         "fallback"
       )
     })
   ]);
-  var NudgeStepAdditionalV = t8.intersection(
+  var ContentV2BlockV = t6.union([
+    NudgeContentTitleBlockV,
+    NudgeContentStepCounterBlockV,
+    NudgeContentMarkdownBlockV,
+    NudgeContentImageBlockV,
+    NudgeContentVideoBlockV,
+    NudgeContentButtonBlockV,
+    NudgeContentSurveyTextBlockV,
+    NudgeStepContentSurveyTextShortBlockTypeV,
+    NudgeContentSurveyRatingBlockV,
+    NudgeContentListBlockV
+  ]);
+  var ContentV2JustifySettingV = t6.union([
+    t6.literal("start"),
+    t6.literal("center"),
+    t6.literal("end"),
+    t6.literal("space-between"),
+    t6.literal("space-around")
+  ]);
+  var ContentV2AlignSettingV = t6.union([t6.literal("start"), t6.literal("center"), t6.literal("end")]);
+  var ContentV2DirectionV = t6.union([t6.literal("row"), t6.literal("column")]);
+  var ContentV2OverflowV = t6.union([t6.literal("auto"), t6.literal("hidden")]);
+  var ContentV2ContainerConfigV = t6.partial({
+    direction: ContentV2DirectionV,
+    justify: ContentV2JustifySettingV,
+    align: ContentV2AlignSettingV,
+    padding: t6.string,
+    margin: t6.string,
+    gap: t6.string,
+    pinned: t6.boolean,
+    wrap: t6.boolean,
+    overflow: ContentV2OverflowV,
+    minHeight: t6.string,
+    width: t6.string
+  });
+  var ContentV2NodeV = t6.recursion(
+    "ContentV2Node",
+    () => t6.union([ContentV2BlockV, ContentV2ContainerV])
+  );
+  var ContentV2ContainerV = t6.recursion(
+    "ContentV2Container",
+    () => t6.intersection([
+      t6.type({
+        type: t6.literal("layout"),
+        children: t6.array(ContentV2NodeV)
+      }),
+      ContentV2ContainerConfigV
+    ])
+  );
+  var NudgeStepAdditionalV = t6.intersection(
     [
-      t8.type({
-        formFactor: t8.union([
-          t8.intersection([
-            t8.type({
-              type: t8.literal("modal")
+      t6.type({
+        formFactor: t6.union([
+          t6.intersection([
+            t6.type({
+              type: t6.literal("modal")
             }),
-            t8.partial({
+            t6.partial({
               position: ModalPositionV,
-              textAnimation: t8.literal("typewriter"),
-              canClickOutsideToClose: t8.boolean
+              textAnimation: t6.literal("typewriter"),
+              canClickOutsideToClose: t6.boolean
             }),
             NudgeStepLayoutConfigV,
             NudgeStepFooterLayoutConfigV
           ]),
-          t8.intersection([
-            t8.type({
-              type: t8.literal("checklist")
+          t6.intersection([
+            t6.type({
+              type: t6.literal("checklist")
             }),
-            t8.partial({
-              zIndexOverride: t8.union([t8.undefined, t8.null, t8.number])
+            t6.partial({
+              zIndexOverride: t6.union([t6.undefined, t6.null, t6.number])
             })
           ]),
-          t8.intersection([
-            t8.type({
-              type: t8.literal("popover"),
+          t6.intersection([
+            t6.type({
+              type: t6.literal("popover"),
               position: PopoverPositionV
             }),
-            t8.partial({
-              textAnimation: t8.literal("typewriter"),
-              zIndexOverride: t8.union([t8.undefined, t8.null, t8.number])
+            t6.partial({
+              textAnimation: t6.literal("typewriter"),
+              zIndexOverride: t6.union([t6.undefined, t6.null, t6.number])
             }),
             NudgeStepLayoutConfigV,
             NudgeStepFooterLayoutConfigV
           ]),
-          t8.intersection([
-            t8.type({
-              type: t8.literal("banner"),
+          t6.intersection([
+            t6.type({
+              type: t6.literal("banner"),
               position: BannerPositionV,
-              placement: t8.union([t8.literal("default"), t8.literal("overlay")]),
-              sticky: t8.boolean
+              placement: t6.union([t6.literal("default"), t6.literal("overlay")]),
+              sticky: t6.boolean
             }),
-            t8.partial({
-              textAnimation: t8.literal("typewriter"),
-              zIndexOverride: t8.union([t8.undefined, t8.null, t8.number])
+            t6.partial({
+              textAnimation: t6.literal("typewriter"),
+              zIndexOverride: t6.union([t6.undefined, t6.null, t6.number])
             }),
             NudgeStepLayoutConfigV,
             NudgeStepFooterLayoutConfigV
           ]),
-          t8.intersection([
-            t8.type({
-              type: t8.literal("pin"),
-              anchor: t8.string
+          t6.intersection([
+            t6.type({
+              type: t6.literal("pin"),
+              anchor: t6.string
             }),
-            t8.partial({
+            t6.partial({
               anchorSelector: ElementSelectorV,
-              isOpenByDefault: t8.boolean,
-              openOnHover: t8.boolean,
-              isShowingMask: t8.boolean,
-              advanceTrigger: t8.string,
-              disableAutoAdvanceOnClick: t8.boolean,
-              offset: t8.type({
-                x: t8.string,
-                y: t8.string
+              isOpenByDefault: t6.boolean,
+              openOnHover: t6.boolean,
+              isShowingMask: t6.boolean,
+              advanceTrigger: t6.string,
+              disableAutoAdvanceOnClick: t6.boolean,
+              offset: t6.type({
+                x: t6.string,
+                y: t6.string
               }),
               position: PinPositionV,
-              alignment: t8.union([
-                t8.literal("center"),
-                t8.literal("top"),
-                t8.literal("bottom"),
-                t8.literal("left"),
-                t8.literal("right")
+              alignment: t6.union([
+                t6.literal("center"),
+                t6.literal("top"),
+                t6.literal("bottom"),
+                t6.literal("left"),
+                t6.literal("right")
               ]),
-              textAnimation: t8.literal("typewriter"),
-              zIndexOverride: t8.union([t8.undefined, t8.null, t8.number]),
-              pointer: t8.type({ type: t8.union([t8.literal("beacon"), t8.literal("arrow")]) }),
-              skipIfNotFound: t8.boolean
+              textAnimation: t6.literal("typewriter"),
+              zIndexOverride: t6.union([t6.undefined, t6.null, t6.number]),
+              pointer: t6.type({ type: t6.union([t6.literal("beacon"), t6.literal("arrow")]) }),
+              skipIfNotFound: t6.boolean
             }),
             NudgeStepLayoutConfigV,
             NudgeStepFooterLayoutConfigV
           ]),
-          t8.intersection([
-            t8.type({
-              type: t8.literal("tooltip"),
-              anchor: t8.string,
-              showOn: t8.union([t8.literal("hover"), t8.literal("click")]),
-              marker: t8.intersection([
-                t8.union([
-                  t8.type({
-                    type: t8.literal("beacon")
+          t6.intersection([
+            t6.type({
+              type: t6.literal("tooltip"),
+              anchor: t6.string,
+              showOn: t6.union([t6.literal("hover"), t6.literal("click")]),
+              marker: t6.intersection([
+                t6.union([
+                  t6.type({
+                    type: t6.literal("beacon")
                   }),
-                  t8.type({
-                    type: t8.literal("icon"),
-                    icon: t8.union([
-                      t8.literal("helpCircle"),
-                      t8.literal("helpSquare"),
-                      t8.literal("infoCircle"),
-                      t8.literal("bookClosed"),
-                      t8.literal("lightBulb"),
-                      t8.literal("lightning")
+                  t6.type({
+                    type: t6.literal("icon"),
+                    icon: t6.union([
+                      t6.literal("helpCircle"),
+                      t6.literal("helpSquare"),
+                      t6.literal("infoCircle"),
+                      t6.literal("bookClosed"),
+                      t6.literal("lightBulb"),
+                      t6.literal("lightning")
                     ])
                   }),
-                  t8.type({
-                    type: t8.literal("image"),
-                    source: t8.string
+                  t6.type({
+                    type: t6.literal("image"),
+                    source: t6.string
                   })
                 ]),
-                t8.type({
-                  positioning: t8.type({
-                    position: t8.union([
-                      t8.literal("left"),
-                      t8.literal("right"),
-                      t8.literal("inline_left"),
-                      t8.literal("inline_right")
+                t6.type({
+                  positioning: t6.type({
+                    position: t6.union([
+                      t6.literal("left"),
+                      t6.literal("right"),
+                      t6.literal("inline_left"),
+                      t6.literal("inline_right")
                     ]),
-                    offset: t8.type({
-                      x: t8.string,
-                      y: t8.string
+                    offset: t6.type({
+                      x: t6.string,
+                      y: t6.string
                     })
                   })
                 }),
-                t8.partial({
-                  width: t8.number
+                t6.partial({
+                  width: t6.number,
+                  elementIsMarker: t6.boolean
                 })
               ])
             }),
-            t8.partial({
+            t6.partial({
               anchorSelector: ElementSelectorV,
-              textAnimation: t8.literal("typewriter"),
-              zIndexOverride: t8.union([t8.undefined, t8.null, t8.number]),
-              pointer: t8.type({ type: t8.union([t8.literal("none"), t8.literal("arrow")]) })
+              textAnimation: t6.literal("typewriter"),
+              zIndexOverride: t6.union([t6.undefined, t6.null, t6.number]),
+              pointer: t6.type({ type: t6.union([t6.literal("none"), t6.literal("arrow")]) })
             }),
             NudgeStepLayoutConfigV,
             NudgeStepFooterLayoutConfigV
           ]),
-          t8.intersection([
-            t8.type({
-              type: t8.literal("card"),
-              anchor: t8.string,
+          t6.intersection([
+            t6.type({
+              type: t6.literal("card"),
+              anchor: t6.string,
               position: CardPositionV
             }),
-            t8.partial({
+            t6.partial({
               anchorSelector: ElementSelectorV,
-              textAnimation: t8.literal("typewriter"),
-              zIndexOverride: t8.union([t8.undefined, t8.null, t8.number]),
-              alignment: t8.union([t8.literal("start"), t8.literal("center"), t8.literal("end")]),
-              cardWidth: t8.type({
-                type: t8.union([t8.literal("auto"), t8.literal("fixed"), t8.literal("full")]),
-                value: t8.union([t8.number, t8.undefined])
+              textAnimation: t6.literal("typewriter"),
+              zIndexOverride: t6.union([t6.undefined, t6.null, t6.number]),
+              alignment: t6.union([t6.literal("start"), t6.literal("center"), t6.literal("end")]),
+              cardWidth: t6.type({
+                type: t6.union([t6.literal("auto"), t6.literal("fixed"), t6.literal("full")]),
+                value: t6.union([t6.number, t6.undefined])
               }),
-              cardHeight: t8.type({
-                type: t8.union([t8.literal("auto"), t8.literal("fixed"), t8.literal("full")]),
-                value: t8.union([t8.number, t8.undefined])
+              cardHeight: t6.type({
+                type: t6.union([t6.literal("auto"), t6.literal("fixed"), t6.literal("full")]),
+                value: t6.union([t6.number, t6.undefined])
               }),
-              cardMargin: t8.type({
-                top: t8.number,
-                right: t8.number,
-                bottom: t8.number,
-                left: t8.number
+              cardMargin: t6.type({
+                top: t6.number,
+                right: t6.number,
+                bottom: t6.number,
+                left: t6.number
               })
             }),
             NudgeStepLayoutConfigV,
@@ -13211,8 +13281,9 @@ when parsing ${JSON.stringify(input, null, 2)}`;
           ])
         ])
       }),
-      t8.partial({
-        goal: t8.union([PageVisitedGoal, ElementClickedGoal, CTAClickedGoal, EventTrackedGoal, t8.null])
+      t6.partial({
+        goal: t6.union([PageVisitedGoal, ElementClickedGoal, CTAClickedGoal, EventTrackedGoal, t6.null]),
+        contentV2: t6.union([ContentV2ContainerV, t6.null])
       })
     ],
     "NudgeStepAdditional"
@@ -13223,144 +13294,146 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       position: "top-right"
     }
   };
-  var NudgeStepV = t8.intersection([NudgeStepBaseV, NudgeStepAdditionalV], "Nudge");
-  var SimpleNudgeTriggerType = t8.union([
-    t8.literal("immediately"),
-    t8.literal("smart_delay"),
-    t8.literal("rage_click"),
-    t8.literal("user_confusion"),
-    t8.literal("exit_intent"),
-    t8.literal("none")
+  var NudgeStepV = t6.intersection([NudgeStepBaseV, NudgeStepAdditionalV], "Nudge");
+  var SimpleNudgeTriggerType = t6.union([
+    t6.literal("immediately"),
+    t6.literal("smart_delay"),
+    t6.literal("rage_click"),
+    t6.literal("user_confusion"),
+    t6.literal("exit_intent"),
+    t6.literal("none")
   ]);
-  var TriggerDelayV = t8.partial({ delay: t8.number });
-  var ElementAppearedTriggerConfigV = t8.type({
-    type: t8.literal("element_appeared"),
-    data: t8.intersection([t8.type({ selector: t8.string }), TriggerDelayV]),
-    conditions: t8.array(t8.array(EvaluationConditionV))
+  var TriggerDelayV = t6.partial({ delay: t6.number });
+  var ElementAppearedTriggerConfigV = t6.type({
+    type: t6.literal("element_appeared"),
+    data: t6.intersection([t6.type({ selector: t6.string }), TriggerDelayV]),
+    conditions: t6.array(t6.array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
   });
-  var ElementClickedTriggerConfigV = t8.type({
-    type: t8.literal("element_clicked"),
-    data: t8.intersection([t8.type({ selector: t8.string }), TriggerDelayV]),
-    conditions: t8.array(t8.array(EvaluationConditionV))
+  var ElementClickedTriggerConfigV = t6.type({
+    type: t6.literal("element_clicked"),
+    data: t6.intersection([t6.type({ selector: t6.string }), TriggerDelayV]),
+    conditions: t6.array(t6.array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
   });
-  var EventTriggerConfigV = t8.type({
-    type: t8.literal("analytics_event"),
-    data: t8.intersection([t8.type({ event: t8.string }), t8.partial({ event_count: t8.number }), TriggerDelayV]),
-    conditions: t8.array(t8.array(EvaluationConditionV))
+  var EventTriggerConfigV = t6.type({
+    type: t6.literal("analytics_event"),
+    data: t6.intersection([t6.type({ event: t6.string }), t6.partial({ event_count: t6.number }), TriggerDelayV]),
+    conditions: t6.array(t6.array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
   });
-  var AfterTimeTriggerConfigV = t8.type({
-    type: t8.literal("after_time"),
-    data: t8.type({ unit: t8.union([t8.literal("minute"), t8.literal("second")]), value: t8.number }),
-    conditions: t8.array(t8.array(EvaluationConditionV))
+  var AfterTimeTriggerConfigV = t6.type({
+    type: t6.literal("after_time"),
+    data: t6.type({ unit: t6.union([t6.literal("minute"), t6.literal("second")]), value: t6.number }),
+    conditions: t6.array(t6.array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
   });
-  var NudgeTriggerConfigV = t8.union([
-    t8.type({
+  var NudgeTriggerConfigV = t6.union([
+    t6.type({
       type: SimpleNudgeTriggerType,
-      conditions: t8.array(t8.array(EvaluationConditionV)),
-      data: t8.union([t8.null, t8.undefined, t8.intersection([t8.record(t8.string, t8.any), TriggerDelayV])])
+      conditions: t6.array(t6.array(EvaluationConditionV)),
+      data: t6.union([t6.null, t6.undefined, t6.intersection([t6.record(t6.string, t6.any), TriggerDelayV])])
     }),
     ElementAppearedTriggerConfigV,
     ElementClickedTriggerConfigV,
     EventTriggerConfigV,
     AfterTimeTriggerConfigV
   ]);
-  var NudgeCooldownPeriodV = t8.union([
-    t8.literal("day"),
-    t8.literal("week"),
-    t8.literal("month"),
-    t8.literal("year"),
-    t8.literal("session"),
-    t8.string
+  var NudgeCooldownPeriodV = t6.union([
+    t6.literal("day"),
+    t6.literal("week"),
+    t6.literal("month"),
+    t6.literal("year"),
+    t6.literal("session"),
+    t6.string
     // keep for forward compatibility
   ]);
-  var NudgeLifecycleConfigV = t8.type({
-    stopShowingIfCompleted: t8.boolean,
-    stopShowingIfDismissed: t8.boolean,
-    cooldownLimits: t8.array(ThrottleV),
-    conditions: t8.array(t8.array(EvaluationConditionV))
+  var NudgeLifecycleConfigV = t6.type({
+    stopShowingIfCompleted: t6.boolean,
+    stopShowingIfDismissed: t6.boolean,
+    cooldownLimits: t6.array(ThrottleV),
+    conditions: t6.array(t6.array(EvaluationConditionV))
     // serialized from API (not in assistance-ui)
   });
-  var TagV = t8.type({
-    id: t8.number,
-    name: t8.string
+  var TagV = t6.type({
+    id: t6.number,
+    name: t6.string
   });
-  var NudgeBaseV = t8.intersection(
+  var NudgeBaseV = t6.intersection(
     [
-      t8.type({
-        title: t8.string,
+      t6.type({
+        title: t6.string,
         // TODO: can be removed, not needed in the SDK
-        variantId: t8.number,
-        steps: t8.array(NudgeStepV),
-        triggerConfig: NudgeTriggerConfigV,
+        variantId: t6.number,
+        steps: t6.array(NudgeStepV),
+        triggerConfig: t6.union([NudgeTriggerConfigV, t6.array(NudgeTriggerConfigV)]),
         lifecycleConfig: NudgeLifecycleConfigV,
-        flagKey: t8.string
+        flagKey: t6.string
       }),
-      t8.partial({
-        archived: t8.boolean,
-        displayTitle: t8.string,
-        displayDescription: t8.string,
-        position: t8.union([t8.literal("bottomRight"), t8.literal("bottomLeft")]),
-        priority: t8.number,
-        subPriority: t8.union([t8.number, t8.null]),
-        dir: t8.union([t8.literal("ltr"), t8.literal("rtl")]),
-        stepCounterFormat: t8.union([t8.literal("numeric"), t8.literal("verbose")]),
-        tags: t8.array(TagV),
-        version: t8.number,
-        latestVersion: t8.number
+      t6.partial({
+        archived: t6.boolean,
+        displayTitle: t6.string,
+        displayDescription: t6.string,
+        position: t6.union([t6.literal("bottomRight"), t6.literal("bottomLeft")]),
+        priority: t6.number,
+        subPriority: t6.union([t6.number, t6.null]),
+        dir: t6.union([t6.literal("ltr"), t6.literal("rtl")]),
+        stepCounterFormat: t6.union([t6.literal("numeric"), t6.literal("verbose")]),
+        tags: t6.array(TagV),
+        version: t6.number,
+        latestVersion: t6.number
       })
     ],
     "NudgeBase"
   );
-  var NudgeTypeV = t8.union([
-    t8.literal("survey"),
-    t8.literal("tour"),
-    t8.literal("banner"),
-    t8.literal("tooltip"),
-    t8.literal("checklist"),
-    t8.string
+  var NudgeTypeV = t6.union([
+    t6.literal("survey"),
+    t6.literal("tour"),
+    t6.literal("banner"),
+    t6.literal("tooltip"),
+    t6.literal("checklist"),
+    t6.string
   ]);
-  var TranslationStatusV = t8.type({
-    translated: t8.boolean,
-    status: t8.union([t8.literal("missing"), t8.literal("outdated"), t8.literal("up-to-date"), t8.null, t8.undefined]),
-    resolvedLocale: t8.union([t8.string, t8.null, t8.undefined])
+  var TranslationStatusV = t6.type({
+    translated: t6.boolean,
+    status: t6.union([t6.literal("missing"), t6.literal("outdated"), t6.literal("up-to-date"), t6.null, t6.undefined]),
+    resolvedLocale: t6.union([t6.string, t6.null, t6.undefined])
   });
-  var NudgeAdditionalV = t8.type(
+  var NudgeAdditionalV = t6.type(
     {
-      platform: withFallback(
-        t8.union([
-          t8.literal("web"),
-          t8.literal("android"),
-          t8.literal("ios"),
-          t8.literal("react-native"),
-          t8.literal("flutter")
+      platform: (0, import_withFallback.withFallback)(
+        t6.union([
+          t6.literal("web"),
+          t6.literal("android"),
+          t6.literal("ios"),
+          t6.literal("react-native"),
+          t6.literal("flutter")
         ]),
         "web"
       ),
-      showStepCounter: t8.boolean,
-      isCarousel: t8.union([t8.boolean, t8.undefined]),
-      isDismissible: t8.boolean,
-      isSnoozable: t8.boolean,
-      isSnoozableOnAllSteps: t8.boolean,
-      assistantIntro: t8.boolean,
-      snoozeLabel: t8.string,
-      doneLabel: t8.string,
-      snoozeDuration: t8.type({
+      showStepCounter: t6.boolean,
+      isCarousel: t6.union([t6.boolean, t6.undefined]),
+      isDismissible: t6.boolean,
+      isSnoozable: t6.boolean,
+      isSnoozableOnAllSteps: t6.boolean,
+      assistantIntro: t6.boolean,
+      snoozeLabel: t6.string,
+      doneLabel: t6.string,
+      snoozeDuration: t6.type({
         interval: SnoozeInterval,
         value: SnoozeValue
       }),
       type: NudgeTypeV,
-      previewUrl: t8.union([t8.string, t8.null, t8.undefined]),
-      customThemeId: t8.union([t8.number, t8.null, t8.undefined]),
-      variant: t8.string,
+      previewUrl: t6.union([t6.string, t6.null, t6.undefined]),
+      customThemeId: t6.union([t6.number, t6.null, t6.undefined]),
+      variant: t6.string,
       pageTargeting: NudgePageTargetingConfigV,
-      hideIfPageTargetingNotMet: t8.boolean,
+      hideIfPageTargetingNotMet: t6.boolean,
       temporarilyHideTargeting: NudgePageTargetingConfigV,
-      translationStatus: t8.union([TranslationStatusV, t8.null, t8.undefined]),
-      breakingFeatures: t8.union([t8.string, t8.null, t8.undefined])
+      translationStatus: t6.union([TranslationStatusV, t6.null, t6.undefined]),
+      breakingFeatures: t6.union([t6.string, t6.null, t6.undefined]),
+      // null/undefined means enabled (default behavior for nudges created before this field existed)
+      enableActiveState: t6.union([t6.boolean, t6.null, t6.undefined])
     },
     "NudgeAdditional"
   );
@@ -13392,9 +13465,10 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       conditions: [[]],
       configs: []
     },
-    breakingFeatures: null
+    breakingFeatures: null,
+    enableActiveState: null
   };
-  var NudgeV = t8.intersection([NudgeBaseV, NudgeAdditionalV], "Nudge");
+  var NudgeV = t6.intersection([NudgeBaseV, NudgeAdditionalV], "Nudge");
   var createUnsupportedFeatureNudge = (data) => {
     return {
       title: data?.title || "Unsupported Feature",
@@ -13470,6 +13544,14 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     return !!(block.meta.conditionalActions && block.meta.conditionalActions.length > 0 || block.meta.defaultAction && block.meta.defaultAction.type !== "no_action");
   };
 
+  // ../shared/src/products/nudges/store/contentBlocks.ts
+  var getStepContentBlocks = (step) => (
+    // TODO: Prefer flattenContentV2(step.contentV2) once the browser renderer consumes contentV2.
+    // Until then, return V1 content so callers stay compatible with V1 type guards.
+    step.content
+  );
+  var getStepButtonBlocks = (step) => getStepContentBlocks(step).filter((block) => block.type === "button");
+
   // ../shared/src/products/nudges/store/rules.ts
   var RAGE_CLOSE_THRESHOLD = 2e3;
   var RULES = {
@@ -13528,7 +13610,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   var isIncludedInCustomThrottles = (nudge) => {
     return RULES[getApplicableNudgeType(nudge)].includedInCustomThrottles;
   };
-  var canBeActive = (nudge) => {
+  var canBeActivated = (nudge) => {
     return RULES[getApplicableNudgeType(nudge)].canBeActive;
   };
   var typeIsIncludedInCustomThrottles = (formFactor) => {
@@ -13595,10 +13677,11 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     };
   };
   var requiresManualAdvancement = (step) => {
-    const surveyBlocks = step.content.filter(isSurveyBlock);
+    const blocks = getStepContentBlocks(step);
+    const surveyBlocks = blocks.filter(isSurveyBlock);
     const firstSurveyBlock = surveyBlocks[0];
     const hasOnlyOneFiniteInput = surveyBlocks.length === 1 && firstSurveyBlock !== void 0 && isFiniteInputBlock(firstSurveyBlock);
-    const hasButton = step.content.some((block) => block.type === "button");
+    const hasButton = blocks.some((block) => block.type === "button");
     return !hasOnlyOneFiniteInput || hasButton;
   };
   var compareNudgePriority = (nudgeA, nudgeB, lastSeenTsA, lastSeenTsB) => {
@@ -13610,6 +13693,18 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     if (subPriorityA !== subPriorityB) return subPriorityA - subPriorityB;
     if (lastSeenTsA !== void 0 && lastSeenTsB !== void 0) return lastSeenTsB - lastSeenTsA;
     return 0;
+  };
+
+  // ../shared/src/util/locale.ts
+  var getRootLanguage = (locale) => locale.split("-")[0]?.toLowerCase() ?? locale.toLowerCase();
+  var matchesDefaultLocale = (userLocale, defaultLocale) => {
+    if (!userLocale || !defaultLocale) {
+      return false;
+    }
+    if (userLocale === defaultLocale) {
+      return true;
+    }
+    return getRootLanguage(userLocale) === defaultLocale.toLowerCase();
   };
 
   // ../shared/src/products/nudges/store/utils.ts
@@ -13762,7 +13857,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   };
 
   // ../shared/src/products/nudges/store/eventCountTracker.ts
-  var t9 = __toESM(require_lib());
+  var t7 = __toESM(require_lib());
 
   // ../shared/src/internal/util/SessionStorage.ts
   var PREFIX3 = "amplitude.engagement";
@@ -13808,11 +13903,11 @@ when parsing ${JSON.stringify(input, null, 2)}`;
 
   // ../shared/src/products/nudges/store/eventCountTracker.ts
   var STORAGE_KEY = "eventCounts";
-  var PersistedEventCountsV = t9.type({
-    sessionId: t9.number,
-    userId: t9.union([t9.string, t9.undefined]),
+  var PersistedEventCountsV = t7.type({
+    sessionId: t7.number,
+    userId: t7.union([t7.string, t7.undefined]),
     // user_id or device_id — cleared on identity change
-    counts: t9.record(t9.string, t9.number)
+    counts: t7.record(t7.string, t7.number)
     // "{variantId}:{eventName}" → count
   });
   var memoryCache = /* @__PURE__ */ new Map();
@@ -14241,31 +14336,42 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     const snoozedUntilTs = getNudgeDataFromUserStore(_, nudge.variantId)?.snoozedUntilTs;
     return !(snoozedUntilTs && snoozedUntilTs > Date.now());
   };
-  var passesPageTargeting = (_, nudge) => {
-    return evaluatePageTargeting(_, nudge.pageTargeting.configs, nudge.pageTargeting.conditions);
+  var passesDefaultPageExclusions = (_) => {
+    const exclusions = _.organization?.defaultPageExclusions;
+    if (!exclusions) return true;
+    return evaluatePageTargeting(_, exclusions.configs, exclusions.conditions, true);
   };
-  var passesClickedElement = (_, nudge, triggerEvent) => {
-    if (triggerEvent?.trigger.type === "element_clicked" && nudge.triggerConfig.type === "element_clicked") {
-      return triggerEvent.trigger.match(nudge.triggerConfig.data.selector);
-    }
-    return true;
+  var passesPageTargeting = (_, nudge) => {
+    return passesDefaultPageExclusions(_) && evaluatePageTargeting(_, nudge.pageTargeting.configs, nudge.pageTargeting.conditions);
+  };
+  var passesClickedElement = (nudge, triggerEvent) => {
+    if (triggerEvent?.trigger.type !== "element_clicked") return true;
+    const clickedTriggers = getAllTriggers(nudge).filter((trigger) => trigger.type === "element_clicked");
+    if (clickedTriggers.length === 0) return true;
+    const clickMatches = triggerEvent.trigger.match;
+    return clickedTriggers.some((trigger) => clickMatches(trigger.data.selector));
   };
   var passesTriggerElement = async (_, nudge, triggerEvent, nudgeSeenThisSessionTs) => {
-    if (triggerEvent?.trigger.type == "element_appeared" && nudge.triggerConfig.type == "element_appeared") {
-      if (nudgeSeenThisSessionTs.length > 0) {
-        return false;
-      }
-      const elementToAppearIsVisible = await _.services.isElementVisible(nudge.triggerConfig.data.selector);
-      if (!elementToAppearIsVisible) return false;
+    if (triggerEvent?.trigger.type !== "element_appeared") return true;
+    const appearedTriggers = getAllTriggers(nudge).filter((trigger) => trigger.type === "element_appeared");
+    if (appearedTriggers.length === 0) return true;
+    if (nudgeSeenThisSessionTs.length > 0) {
+      return false;
     }
-    return true;
+    for (const trigger of appearedTriggers) {
+      if (await _.services.isElementVisible(trigger.data.selector)) {
+        return true;
+      }
+    }
+    return false;
   };
   var getPendingTriggerDelay = (_, nudge) => {
     if (!_.delayedTriggers) return null;
+    const nudgeTriggerTypes = new Set(getAllTriggers(nudge).map((trigger) => trigger.type));
     let soonest = null;
     for (const entry of _.delayedTriggers) {
       if (entry.variantId !== nudge.variantId) continue;
-      if (entry.triggerType !== nudge.triggerConfig.type) continue;
+      if (!nudgeTriggerTypes.has(entry.triggerType)) continue;
       if (!entry.triggerEvent.overrides?.triggerMatch && !passesTriggerMatch(_, nudge, { type: "TRIGGER", ...entry.triggerEvent })) {
         continue;
       }
@@ -14309,6 +14415,32 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     };
     return _.evalEngine.evaluateConditions(sessionPropertyEvalTarget, sessionPropertyConditions);
   };
+  var getAllTriggers = (nudge) => Array.isArray(nudge.triggerConfig) ? nudge.triggerConfig : [nudge.triggerConfig];
+  var getPrimaryTrigger = (nudge) => (
+    // A lone object wraps to one group of one, and the array form is validated
+    // non-empty upstream, so there is always at least one trigger.
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    getAllTriggers(nudge)[0]
+  );
+  var getSessionPropertyConditionsByTrigger = (nudge) => getAllTriggers(nudge).map((trigger) => getSessionPropertyConditions(trigger.conditions));
+  var getFiredAnalyticsEventName = (_, nudge) => {
+    const trigger = getNudgeActorSnapshot(_, nudge.variantId)?.context.triggerEvent?.trigger;
+    return trigger?.type === "analytics_event" ? trigger.data.event : void 0;
+  };
+  var getFiringTrigger = (nudge, triggerEvent) => {
+    const fired = triggerEvent?.trigger;
+    if (!fired) return getPrimaryTrigger(nudge);
+    const triggers = getAllTriggers(nudge);
+    const match = triggers.find((trigger) => {
+      if (trigger.type !== fired.type) return false;
+      if (fired.type === "analytics_event")
+        return trigger.type === "analytics_event" && trigger.data.event === fired.data.event;
+      if (fired.type === "element_clicked")
+        return trigger.type === "element_clicked" && fired.match(trigger.data.selector);
+      return true;
+    });
+    return match ?? getPrimaryTrigger(nudge);
+  };
   var passesTriggerMatch = (_, nudge, triggerEvent) => {
     if (!triggerEvent) return false;
     if (triggerEvent.overrides?.excludeNudgeIds?.includes(nudge.variantId)) {
@@ -14328,53 +14460,65 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         },
         result: {}
       };
-      let conditionsToEvaluate = nudge.triggerConfig.conditions;
-      const firstInnerConditions = conditionsToEvaluate?.[0];
-      const firstCondition = firstInnerConditions?.[0];
+      const triggerConditionSets = getAllTriggers(nudge).map((trigger) => trigger.conditions);
+      const firstCondition = triggerConditionSets?.[0]?.[0]?.[0];
       if (triggerEvent?.overrides?.triggerFilters && firstCondition !== void 0) {
-        conditionsToEvaluate = [[firstCondition]];
+        return _.evalEngine.evaluateConditions(evalTarget, [[firstCondition]]);
       }
-      if (!_.evalEngine.evaluateConditions(evalTarget, conditionsToEvaluate)) {
-        return false;
-      }
-      return true;
+      return triggerConditionSets.some((conditions) => _.evalEngine.evaluateConditions(evalTarget, conditions));
     }
     return false;
   };
-  var passesEventCount = (_, nudge) => {
-    if (nudge.triggerConfig.type !== "analytics_event") return true;
-    const eventCount = nudge.triggerConfig.data?.event_count;
+  var getAnalyticsEventTrigger = (nudge, eventName) => {
+    const eventTriggers = getAllTriggers(nudge).filter(
+      (trigger) => trigger.type === "analytics_event"
+    );
+    if (eventName != null) {
+      const matched = eventTriggers.find((trigger) => trigger.data.event === eventName);
+      if (matched) return matched;
+    }
+    return eventTriggers[0];
+  };
+  var passesEventCount = (_, nudge, eventName) => {
+    const trigger = getAnalyticsEventTrigger(nudge, eventName);
+    if (!trigger) return true;
+    const eventCount = trigger.data?.event_count;
     if (!eventCount) return true;
     const currentCount = getEventCount(
       _.apiKeyPrefix,
       _.instanceName,
       nudge.variantId,
-      nudge.triggerConfig.data.event,
+      trigger.data.event,
       getEffectiveSessionStart(_),
       _.user?.user_id ?? _.user?.device_id
     );
     return currentCount >= eventCount;
   };
-  var getEventCountProgress = (_, nudge) => {
-    if (nudge.triggerConfig.type !== "analytics_event") return null;
-    const needed = nudge.triggerConfig.data?.event_count;
+  var getEventCountProgress = (_, nudge, eventName) => {
+    const trigger = getAnalyticsEventTrigger(nudge, eventName);
+    if (!trigger) return null;
+    const needed = trigger.data?.event_count;
     if (!needed || needed <= 1) return null;
     const current = getEventCount(
       _.apiKeyPrefix,
       _.instanceName,
       nudge.variantId,
-      nudge.triggerConfig.data.event,
+      trigger.data.event,
       getEffectiveSessionStart(_),
       _.user?.user_id ?? _.user?.device_id
     );
     return { current: Math.min(current, needed), needed };
   };
-  var isNudgeActive = (_, nudge) => canBeActive(nudge) && !!getNudgeDataFromUserStore(_, nudge.variantId)?.activelifeCycleUuid;
+  var isNudgeActive = (_, nudge) => canBeActivated(nudge) && nudge.enableActiveState !== false && !!getNudgeDataFromUserStore(_, nudge.variantId)?.activelifeCycleUuid;
   var passesPinnedElement = async (_, nudge, stepIndex) => {
     const step = getNudgeStep(nudge, stepIndex);
     if (!step) return false;
     if (isAnchorableStep(step)) {
-      return _.services.isElementVisible(step.formFactor.anchorSelector || step.formFactor.anchor);
+      const anchor = step.formFactor.anchorSelector || step.formFactor.anchor;
+      if (isPinStep(step)) {
+        return _.services.isPinTargetAvailable(anchor);
+      }
+      return _.services.isElementVisible(anchor);
     }
     return true;
   };
@@ -14387,7 +14531,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     if (!requiresManualAdvancement(step)) {
       return false;
     }
-    return !step.content.some((block) => NudgeContentButtonBlockV.is(block));
+    return getStepButtonBlocks(step).length === 0;
   };
   var shouldBypassCustomThrottles = (_, nudge) => nudge.priority === 4 /* Urgent */ || !isIncludedInCustomThrottles(nudge) || _.nudgeDebugToolBar.visible && _.nudgeDebugToolBar.bypassCustomThrottles || isTestNudge(_, nudge);
   var checkBuiltInThrottle = (_, nudge) => {
@@ -14424,13 +14568,81 @@ when parsing ${JSON.stringify(input, null, 2)}`;
         detail: {
           throttles: type13 === "survey" ? _.organization?.surveyThrottle : _.organization?.guideThrottle
         }
+      },
+      defaultPageExclusions: {
+        result: passesDefaultPageExclusions(_),
+        explanation: "This page is excluded for all guides and surveys by a project-wide default.",
+        detail: {
+          configs: _.organization?.defaultPageExclusions?.configs
+        }
       }
     };
     return globalChecks;
   };
+  var getSessionPropertiesCheck = (_, nudge) => {
+    const conditionsByTrigger = getSessionPropertyConditionsByTrigger(nudge);
+    const passingIndex = conditionsByTrigger.findIndex((conditions) => passesSessionProperties(_, conditions));
+    return {
+      result: passingIndex !== -1,
+      explanation: "Session properties do not match the conditions.",
+      detail: {
+        // The branch whose filters were satisfied, so the caller can see why this
+        // passed; trigger #1's when none were, which is the shape a
+        // single-trigger nudge has always reported.
+        conditions: conditionsByTrigger[passingIndex] ?? conditionsByTrigger[0] ?? [],
+        // Spell out every branch that was considered, so a multi-trigger failure
+        // isn't mistaken for a single set of unmet filters.
+        ...conditionsByTrigger.length > 1 ? { conditionsByTrigger } : {},
+        sessionProperties: _.sessionProperties
+      }
+    };
+  };
+  var getEventCountCheck = (_, nudge) => {
+    const triggers = getAllTriggers(nudge);
+    const thresholdedTriggers = triggers.filter(
+      (trigger) => trigger.type === "analytics_event" && !!trigger.data?.event_count
+    );
+    if (thresholdedTriggers.length === 0) return {};
+    const byTrigger = thresholdedTriggers.map((trigger) => {
+      const currentCount = getEventCount(
+        _.apiKeyPrefix,
+        _.instanceName,
+        nudge.variantId,
+        trigger.data.event,
+        getEffectiveSessionStart(_),
+        _.user?.user_id ?? _.user?.device_id
+      );
+      const requiredCount = trigger.data.event_count;
+      return {
+        event: trigger.data.event,
+        currentCount,
+        requiredCount,
+        // Project the count after the next trigger's entry action increments it.
+        result: currentCount + 1 >= requiredCount
+      };
+    });
+    const hasTriggerWithoutEventCount = triggers.some(
+      (trigger) => trigger.type !== "analytics_event" || !trigger.data?.event_count
+    );
+    const firedEvent = getFiredAnalyticsEventName(_, nudge);
+    const reported = byTrigger.find(({ event }) => event === firedEvent) ?? byTrigger[0];
+    if (!reported) return {};
+    return {
+      eventCount: {
+        result: hasTriggerWithoutEventCount || byTrigger.some(({ result }) => result),
+        explanation: `Event has not been tracked enough times in this session.`,
+        detail: {
+          currentCount: reported.currentCount,
+          requiredCount: reported.requiredCount,
+          // Per-branch progress, so a multi-trigger nudge shows every threshold
+          // that was considered rather than only the reported one.
+          ...triggers.length > 1 ? { hasTriggerWithoutEventCount, byTrigger } : {}
+        }
+      }
+    };
+  };
   var getNudgeChecks = (_, nudge, skipChecks = []) => {
     const { name } = getProductMeta(nudge);
-    const sessionPropertyConditions = getSessionPropertyConditions(nudge.triggerConfig.conditions);
     const nudgeChecks = {
       ...skipChecks.includes("limits") ? {} : {
         limits: {
@@ -14470,16 +14682,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
           }
         }
       },
-      ...skipChecks.includes("sessionProperties") ? {} : {
-        sessionProperties: {
-          result: passesSessionProperties(_, sessionPropertyConditions),
-          explanation: "Session properties do not match the conditions.",
-          detail: {
-            conditions: sessionPropertyConditions,
-            sessionProperties: _.sessionProperties
-          }
-        }
-      },
+      ...skipChecks.includes("sessionProperties") ? {} : { sessionProperties: getSessionPropertiesCheck(_, nudge) },
       mutualExclusion: {
         result: passesMutualExclusion(_, nudge),
         explanation: `${name} is blocked because a mutually exclusive nudge has already been seen.`,
@@ -14487,28 +14690,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
           groups: _.organization?.nudgesMutualExclusionGroups
         }
       },
-      ...nudge.triggerConfig.type === "analytics_event" && nudge.triggerConfig.data?.event_count ? (() => {
-        const currentCount = getEventCount(
-          _.apiKeyPrefix,
-          _.instanceName,
-          nudge.variantId,
-          nudge.triggerConfig.data.event,
-          getEffectiveSessionStart(_),
-          _.user?.user_id ?? _.user?.device_id
-        );
-        const requiredCount = nudge.triggerConfig.data.event_count;
-        const countAfterNextTrigger = currentCount + 1;
-        return {
-          eventCount: {
-            result: countAfterNextTrigger >= requiredCount,
-            explanation: `Event has not been tracked enough times in this session.`,
-            detail: {
-              currentCount,
-              requiredCount
-            }
-          }
-        };
-      })() : {}
+      ...getEventCountCheck(_, nudge)
     };
     return nudgeChecks;
   };
@@ -14557,10 +14739,11 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     return nudgesInRenderLoop;
   };
   var getSmartNudges = (nudges) => {
+    const hasTriggerType = (nudge, type13) => getAllTriggers(nudge).some((trigger) => trigger.type === type13);
     return {
-      rageClick: nudges.filter((nudge) => nudge.triggerConfig.type === "rage_click"),
-      smartDelay: nudges.filter((nudge) => nudge.triggerConfig.type === "smart_delay"),
-      userConfusion: nudges.filter((nudge) => nudge.triggerConfig.type === "user_confusion")
+      rageClick: nudges.filter((nudge) => hasTriggerType(nudge, "rage_click")),
+      smartDelay: nudges.filter((nudge) => hasTriggerType(nudge, "smart_delay")),
+      userConfusion: nudges.filter((nudge) => hasTriggerType(nudge, "user_confusion"))
     };
   };
   var getNudgeStep = (nudge, stepIndex) => (0, import_get.default)(nudge.steps, stepIndex, void 0);
@@ -14581,7 +14764,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     if (!step) {
       return Object.values(surveyResponsesMap)[0]?.value;
     }
-    for (const block of step.content) {
+    for (const block of getStepContentBlocks(step)) {
       if (!isSurveyBlock(block)) continue;
       const response = surveyResponsesMap[block.uuid];
       if (response?.value !== void 0) {
@@ -14654,8 +14837,9 @@ when parsing ${JSON.stringify(input, null, 2)}`;
   };
   var resolveDefaultAction = (block) => block.defaultActions ?? block.defaultAction ?? null;
   var getActionBasedOnConditions = (_, step, event, buttonType) => {
-    const options = step.content.find(isListBlock)?.meta.options;
-    const surveyBlocks = step.content.filter(hasConditionalActionsBlock).filter((block2) => block2.type === "survey_rating" || block2.type === "survey_list");
+    const blocks = getStepContentBlocks(step);
+    const options = blocks.find(isListBlock)?.meta.options;
+    const surveyBlocks = blocks.filter(hasConditionalActionsBlock).filter((block2) => block2.type === "survey_rating" || block2.type === "survey_list");
     const surveyBlock = surveyBlocks[0];
     if (buttonType && surveyBlock) {
       const conditionalActions2 = surveyBlock.meta.conditionalActions;
@@ -14668,7 +14852,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       }
       return resolveDefaultAction(surveyBlock.meta);
     }
-    const block = step.content.find(hasConditionalActionsBlock);
+    const block = blocks.find(hasConditionalActionsBlock);
     const conditionalActions = block?.meta.conditionalActions;
     if (conditionalActions) {
       for (const conditionalAction of conditionalActions) {
@@ -14697,9 +14881,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     const immediateAction = getImmediateAction(event.buttonMeta);
     if (event.buttonMeta?.action?.type === "use_conditional_logic") {
       if (event.buttonMeta?.buttonType !== "snooze") {
-        const buttonBlocks = step.content.filter(
-          (block) => block.type === "button"
-        );
+        const buttonBlocks = getStepButtonBlocks(step);
         const clickedButtonBlock = buttonBlocks.find((block) => {
           return block.meta?.buttonType === event.buttonMeta?.buttonType && block.meta?.label === event.buttonMeta?.label;
         });
@@ -14710,7 +14892,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       return getActionBasedOnConditions(_, step, event, event.buttonMeta?.buttonType);
     }
     if (event.buttonMeta?.action?.type === "no_action") {
-      const surveyBlockWithConditions = step.content.find(
+      const surveyBlockWithConditions = getStepContentBlocks(step).find(
         (block) => (block.type === "survey_rating" || block.type === "survey_list") && hasConditionalActionsBlock(block)
       );
       if (surveyBlockWithConditions) {
@@ -14740,7 +14922,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
     }
     switch (translationStatus.status) {
       case "missing":
-        if (currentLocale === localizationSettings.defaultLocale) {
+        if (matchesDefaultLocale(currentLocale, localizationSettings.defaultLocale)) {
           return true;
         }
         return localizationSettings.translationUnavailable === "showDefault";
@@ -16052,7 +16234,7 @@ when parsing ${JSON.stringify(input, null, 2)}`;
       toJSON: () => ({
         ...transition,
         source: `#${stateNode.id}`,
-        target: target ? target.map((t16) => `#${t16.id}`) : void 0
+        target: target ? target.map((t14) => `#${t14.id}`) : void 0
       })
     };
     return transition;
@@ -16065,25 +16247,25 @@ when parsing ${JSON.stringify(input, null, 2)}`;
           throw new Error('Null events ("") cannot be specified as a transition key. Use `always: { ... }` instead.');
         }
         const transitionsConfig = stateNode.config.on[descriptor];
-        transitions.set(descriptor, toTransitionConfigArray(transitionsConfig).map((t16) => formatTransition(stateNode, descriptor, t16)));
+        transitions.set(descriptor, toTransitionConfigArray(transitionsConfig).map((t14) => formatTransition(stateNode, descriptor, t14)));
       }
     }
     if (stateNode.config.onDone) {
       const descriptor = `xstate.done.state.${stateNode.id}`;
-      transitions.set(descriptor, toTransitionConfigArray(stateNode.config.onDone).map((t16) => formatTransition(stateNode, descriptor, t16)));
+      transitions.set(descriptor, toTransitionConfigArray(stateNode.config.onDone).map((t14) => formatTransition(stateNode, descriptor, t14)));
     }
     for (const invokeDef of stateNode.invoke) {
       if (invokeDef.onDone) {
         const descriptor = `xstate.done.actor.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onDone).map((t16) => formatTransition(stateNode, descriptor, t16)));
+        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onDone).map((t14) => formatTransition(stateNode, descriptor, t14)));
       }
       if (invokeDef.onError) {
         const descriptor = `xstate.error.actor.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onError).map((t16) => formatTransition(stateNode, descriptor, t16)));
+        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onError).map((t14) => formatTransition(stateNode, descriptor, t14)));
       }
       if (invokeDef.onSnapshot) {
         const descriptor = `xstate.snapshot.${invokeDef.id}`;
-        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onSnapshot).map((t16) => formatTransition(stateNode, descriptor, t16)));
+        transitions.set(descriptor, toTransitionConfigArray(invokeDef.onSnapshot).map((t14) => formatTransition(stateNode, descriptor, t14)));
       }
     }
     for (const delayedTransition of stateNode.after) {
@@ -16153,7 +16335,7 @@ ${err.message}`);
       return stateNode.parent.initial;
     }
     return {
-      target: normalizedTarget.map((t16) => typeof t16 === "string" ? getStateNodeByPath(stateNode.parent, t16) : t16)
+      target: normalizedTarget.map((t14) => typeof t14 === "string" ? getStateNodeByPath(stateNode.parent, t14) : t14)
     };
   }
   function isHistoryNode(stateNode) {
@@ -16378,10 +16560,10 @@ ${err.message}`);
   }
   function computeExitSet(transitions, stateNodeSet, historyValue) {
     const statesToExit = /* @__PURE__ */ new Set();
-    for (const t16 of transitions) {
-      if (t16.target?.length) {
-        const domain = getTransitionDomain(t16, historyValue);
-        if (t16.reenter && t16.source === domain) {
+    for (const t14 of transitions) {
+      if (t14.target?.length) {
+        const domain = getTransitionDomain(t14, historyValue);
+        if (t14.reenter && t14.source === domain) {
           statesToExit.add(domain);
         }
         for (const stateNode of stateNodeSet) {
@@ -16415,7 +16597,7 @@ ${err.message}`);
     if (!isInitial) {
       [nextState, historyValue] = exitStates(nextState, event, actorScope, filteredTransitions, mutStateNodeSet, historyValue, internalQueue, actorScope.actionExecutor);
     }
-    nextState = resolveActionsAndContext(nextState, event, actorScope, filteredTransitions.flatMap((t16) => t16.actions), internalQueue, void 0);
+    nextState = resolveActionsAndContext(nextState, event, actorScope, filteredTransitions.flatMap((t14) => t14.actions), internalQueue, void 0);
     nextState = enterStates(nextState, event, actorScope, filteredTransitions, mutStateNodeSet, internalQueue, historyValue, isInitial);
     const nextStateNodes = [...mutStateNodeSet];
     if (nextState.status === "done") {
@@ -16489,26 +16671,26 @@ ${err.message}`);
     return nextSnapshot;
   }
   function computeEntrySet(transitions, historyValue, statesForDefaultEntry, statesToEnter) {
-    for (const t16 of transitions) {
-      const domain = getTransitionDomain(t16, historyValue);
-      for (const s2 of t16.target || []) {
+    for (const t14 of transitions) {
+      const domain = getTransitionDomain(t14, historyValue);
+      for (const s2 of t14.target || []) {
         if (!isHistoryNode(s2) && // if the target is different than the source then it will *definitely* be entered
-        (t16.source !== s2 || // we know that the domain can't lie within the source
+        (t14.source !== s2 || // we know that the domain can't lie within the source
         // if it's different than the source then it's outside of it and it means that the target has to be entered as well
-        t16.source !== domain || // reentering transitions always enter the target, even if it's the source itself
-        t16.reenter)) {
+        t14.source !== domain || // reentering transitions always enter the target, even if it's the source itself
+        t14.reenter)) {
           statesToEnter.add(s2);
           statesForDefaultEntry.add(s2);
         }
         addDescendantStatesToEnter(s2, historyValue, statesForDefaultEntry, statesToEnter);
       }
-      const targetStates = getEffectiveTargetStates(t16, historyValue);
+      const targetStates = getEffectiveTargetStates(t14, historyValue);
       for (const s2 of targetStates) {
         const ancestors = getProperAncestors(s2, domain);
         if (domain?.type === "parallel") {
           ancestors.push(domain);
         }
-        addAncestorStatesToEnter(statesToEnter, historyValue, statesForDefaultEntry, ancestors, !t16.source.parent && t16.reenter ? void 0 : domain);
+        addAncestorStatesToEnter(statesToEnter, historyValue, statesForDefaultEntry, ancestors, !t14.source.parent && t14.reenter ? void 0 : domain);
       }
     }
   }
@@ -16792,7 +16974,7 @@ ${err.message}`);
   var machineSnapshotCan = function can(event) {
     const transitionData = this.machine.getTransitionData(this, event);
     return !!transitionData?.length && // Check that at least one transition is not forbidden
-    transitionData.some((t16) => t16.target !== void 0 || t16.actions.length);
+    transitionData.some((t14) => t14.target !== void 0 || t14.actions.length);
   };
   var machineSnapshotToJSON = function toJSON() {
     const {
@@ -17477,7 +17659,7 @@ ${err.message}`);
     _initialize() {
       this.transitions = formatTransitions(this);
       if (this.config.always) {
-        this.always = toTransitionConfigArray(this.config.always).map((t16) => formatTransition(this, NULL_EVENT, t16));
+        this.always = toTransitionConfigArray(this.config.always).map((t14) => formatTransition(this, NULL_EVENT, t14));
       }
       Object.keys(this.states).forEach((key) => {
         this.states[key]._initialize();
@@ -17497,7 +17679,7 @@ ${err.message}`);
           eventType: null,
           reenter: false,
           toJSON: () => ({
-            target: this.initial.target.map((t16) => `#${t16.id}`),
+            target: this.initial.target.map((t14) => `#${t14.id}`),
             source: `#${this.id}`,
             actions: this.initial.actions.map(toSerializableAction),
             eventType: null
@@ -17508,9 +17690,9 @@ ${err.message}`);
           return state.definition;
         }),
         on: this.on,
-        transitions: [...this.transitions.values()].flat().map((t16) => ({
-          ...t16,
-          actions: t16.actions.map(toSerializableAction)
+        transitions: [...this.transitions.values()].flat().map((t14) => ({
+          ...t14,
+          actions: t14.actions.map(toSerializableAction)
         })),
         entry: this.entry.map(toSerializableAction),
         exit: this.exit.map(toSerializableAction),
@@ -17560,10 +17742,10 @@ ${err.message}`);
     get on() {
       return memo(this, "on", () => {
         const transitions = this.transitions;
-        return [...transitions].flatMap(([descriptor, t16]) => t16.map((t17) => [descriptor, t17])).reduce((map2, [descriptor, transition]) => {
-          map2[descriptor] = map2[descriptor] || [];
-          map2[descriptor].push(transition);
-          return map2;
+        return [...transitions].flatMap(([descriptor, t14]) => t14.map((t15) => [descriptor, t15])).reduce((map, [descriptor, transition]) => {
+          map[descriptor] = map[descriptor] || [];
+          map[descriptor].push(transition);
+          return map;
         }, {});
       });
     }
@@ -17888,13 +18070,13 @@ ${err.message}`);
 
   // ../shared/node_modules/proxy-compare/dist/index.modern.js
   var e = Symbol();
-  var t10 = Symbol();
+  var t8 = Symbol();
   var s = Object.getPrototypeOf;
   var c = /* @__PURE__ */ new WeakMap();
   var l = (e2) => e2 && (c.has(e2) ? c.get(e2) : s(e2) === Object.prototype || s(e2) === Array.prototype);
-  var y = (e2) => l(e2) && e2[t10] || null;
-  var h = (e2, t16 = true) => {
-    c.set(e2, t16);
+  var y = (e2) => l(e2) && e2[t8] || null;
+  var h = (e2, t14 = true) => {
+    c.set(e2, t14);
   };
 
   // ../shared/node_modules/valtio/esm/vanilla.mjs
@@ -18214,73 +18396,124 @@ ${err.message}`);
   var v4_default = v4;
 
   // ../shared/src/types/entities/endUser.ts
-  var t11 = __toESM(require_lib());
-  var NudgeInteractionStateV = t11.type({
-    type: t11.union([
-      t11.literal("survey"),
-      t11.literal("tour"),
-      t11.literal("banner"),
-      t11.literal("tooltip"),
-      t11.literal("checklist"),
-      t11.string
+  var t9 = __toESM(require_lib());
+  var import_withFallback2 = __toESM(require_withFallback());
+  var NudgeInteractionStateV = t9.type({
+    type: t9.union([
+      t9.literal("survey"),
+      t9.literal("tour"),
+      t9.literal("banner"),
+      t9.literal("tooltip"),
+      t9.literal("checklist"),
+      t9.string
     ]),
-    formFactor: withFallback(
-      t11.union([
-        t11.literal("modal"),
-        t11.literal("checklist"),
-        t11.literal("popover"),
-        t11.literal("banner"),
-        t11.literal("pin"),
-        t11.literal("tooltip"),
-        t11.literal("card"),
-        t11.literal("")
+    formFactor: (0, import_withFallback2.withFallback)(
+      t9.union([
+        t9.literal("modal"),
+        t9.literal("checklist"),
+        t9.literal("popover"),
+        t9.literal("banner"),
+        t9.literal("pin"),
+        t9.literal("tooltip"),
+        t9.literal("card"),
+        t9.literal("")
       ]),
       ""
     ),
-    activelifeCycleUuid: t11.union([t11.string, t11.literal("")]),
-    activatedTs: t11.array(t11.number),
-    dismissedTs: t11.array(t11.number),
-    isDismissed: t11.boolean,
-    completedTs: t11.array(t11.number),
-    isCompleted: t11.boolean,
-    lastSeenTs: t11.union([t11.number, t11.literal(-1)]),
-    lastSeenSessionId: withFallback(t11.number, -1),
-    lastSeenDeviceId: withFallback(t11.string, ""),
-    snoozedUntilTs: t11.union([t11.number, t11.literal(-1)]),
-    stepIndexStack: t11.array(t11.number),
-    currentStep: t11.number,
-    isChecklistExpanded: t11.boolean,
-    steps: t11.record(
-      t11.string,
-      t11.type({
-        completedTs: t11.union([t11.number, t11.literal(-1)])
+    activelifeCycleUuid: t9.union([t9.string, t9.literal("")]),
+    activatedTs: t9.array(t9.number),
+    dismissedTs: t9.array(t9.number),
+    isDismissed: t9.boolean,
+    completedTs: t9.array(t9.number),
+    isCompleted: t9.boolean,
+    lastSeenTs: t9.union([t9.number, t9.literal(-1)]),
+    lastSeenSessionId: (0, import_withFallback2.withFallback)(t9.number, -1),
+    lastSeenDeviceId: (0, import_withFallback2.withFallback)(t9.string, ""),
+    snoozedUntilTs: t9.union([t9.number, t9.literal(-1)]),
+    stepIndexStack: t9.array(t9.number),
+    currentStep: t9.number,
+    isChecklistExpanded: t9.boolean,
+    steps: t9.record(
+      t9.string,
+      t9.type({
+        completedTs: t9.union([t9.number, t9.literal(-1)])
         // only used for checklists
       })
     ),
-    tagIds: withFallback(t11.array(t11.number), []),
+    tagIds: (0, import_withFallback2.withFallback)(t9.array(t9.number), []),
     // Tag IDs associated with this nudge
-    lastUpdatedTs: withFallback(t11.number, -1)
+    lastUpdatedTs: (0, import_withFallback2.withFallback)(t9.number, -1)
   });
-  var NudgeInteractionsV = t11.record(t11.string, NudgeInteractionStateV);
-  var EndUserStoreDataV = t11.type({
+  var NudgeInteractionsV = t9.record(t9.string, NudgeInteractionStateV);
+  var EndUserStoreDataV = t9.type({
     nudgeInteractions: NudgeInteractionsV
   });
+
+  // ../shared/src/sdk/endpoints.ts
+  var SERVER_URLS = {
+    prodUs: "https://gs.amplitude.com",
+    prodEu: "https://gs.eu.amplitude.com",
+    staging: "https://gs.stag2.amplitude.com",
+    local: "http://localhost:10001"
+  };
+  var CHAT_URLS = {
+    prodUs: "https://houston-chat.prod.us-west-2.amplitude.com",
+    prodEu: "https://houston-chat.prod.eu-central-1.amplitude.com",
+    staging: "https://houston-chat.stag2.amplitude.com",
+    local: "http://localhost:11001"
+  };
+  var CDN_URLS = {
+    prodUs: "https://cdn.amplitude.com",
+    prodEu: "https://cdn.eu.amplitude.com"
+  };
+  var resolveServerUrl = (serverZone) => {
+    switch (serverZone) {
+      case "local":
+        return SERVER_URLS.local;
+      case "EU":
+        return SERVER_URLS.prodEu;
+      default:
+        return SERVER_URLS.prodUs;
+    }
+  };
+  var ENGAGEMENT_DOMAIN = "amplitudeengagement.com";
+  var resolveEngagementDomainUrls = (isEU) => ({
+    serverUrl: isEU ? `https://gs.eu.${ENGAGEMENT_DOMAIN}` : `https://gs.${ENGAGEMENT_DOMAIN}`,
+    chatUrl: isEU ? `https://houston-chat.eu.${ENGAGEMENT_DOMAIN}` : `https://houston-chat.${ENGAGEMENT_DOMAIN}`,
+    mediaUrl: isEU ? `https://engagement-static.eu.${ENGAGEMENT_DOMAIN}` : `https://engagement-static.${ENGAGEMENT_DOMAIN}`,
+    cdnUrl: isEU ? `https://cdn.eu.${ENGAGEMENT_DOMAIN}` : `https://cdn.${ENGAGEMENT_DOMAIN}`
+  });
+  var AMPLITUDE_MEDIA_HOSTS = [
+    "engagement-static.amplitude.com",
+    "engagement-static.eu.amplitude.com",
+    "engagement-static.amplitudeengagement.com",
+    "engagement-static.eu.amplitudeengagement.com"
+  ];
+  var resolveBundleUrl = (cdnBaseUrl, channel, splitting) => splitting ? `${cdnBaseUrl}/engagement-browser/${channel}/split/index.js` : `${cdnBaseUrl}/engagement-browser/${channel}/index.min.js.gz`;
 
   // ../shared/src/internal/middleware/getBaseURL.ts
   var getServerUrl = (instanceName) => {
     const sdk = getSDK(instanceName);
     const apiEndpoint = sdk?.[_configuration]?.serverUrl;
-    if (apiEndpoint) {
-      return apiEndpoint;
-    } else {
-      if (sdk?.[_configuration].serverZone === "EU") {
-        return "https://gs.eu.amplitude.com";
-      } else {
-        return "https://gs.amplitude.com";
-      }
-    }
+    return apiEndpoint || resolveServerUrl(sdk?.[_configuration].serverZone);
   };
   var getBaseURL_default = getServerUrl;
+
+  // ../shared/src/internal/middleware/transportHeaders.ts
+  var resolveTransportHeaders = (instanceName) => {
+    const headersOption = getSDK(instanceName)?.[_configuration]?.transport?.headers;
+    if (!headersOption) return {};
+    if (typeof headersOption !== "function") return headersOption;
+    try {
+      return headersOption() ?? {};
+    } catch (e2) {
+      logger.warn("Failed to resolve custom transport headers; sending request without them.", e2);
+      return {};
+    }
+  };
+
+  // ../shared/src/internal/middleware/transportHandler.ts
+  var resolveTransportHandler = (instanceName) => getSDK(instanceName)?.[_configuration]?.transport?.handleHttpRequest;
 
   // ../shared/src/internal/middleware/network.ts
   var MAX_WAIT_TIME_MS = 3e4;
@@ -18305,15 +18538,35 @@ ${err.message}`);
     }
     let n = 0;
     do {
-      response = await simpleFetch(_baseURL + "/" + path, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          accept: "application/json",
-          ...options.headers
-        },
-        body: dataString
-      });
+      const headers = {
+        "Content-Type": "application/json",
+        accept: "application/json",
+        ...options.headers,
+        ...resolveTransportHeaders()
+      };
+      const url = _baseURL + "/" + path;
+      const customHandler = resolveTransportHandler();
+      if (customHandler) {
+        const res = await customHandler({
+          url,
+          method,
+          headers,
+          body: dataString === "" ? void 0 : dataString
+        });
+        response = {
+          status: res.status,
+          statusText: res.statusText,
+          headers: Object.fromEntries(res.headers.entries()),
+          data: await res.text(),
+          ok: res.ok
+        };
+      } else {
+        response = await simpleFetch(url, {
+          method,
+          headers,
+          body: dataString
+        });
+      }
       let shouldRetry = false;
       if (!response.ok) {
         if (isRetryable({ method, path, status: response.status })) {
@@ -18703,11 +18956,11 @@ ${err.message}`);
   });
 
   // ../shared/src/products/nudges/store/effectsSequencer.ts
-  var t13 = __toESM(require_lib());
+  var t11 = __toESM(require_lib());
 
   // ../shared/src/services/analytics/track.ts
   var import_dayjs = __toESM(require_dayjs_min());
-  var t12 = __toESM(require_lib());
+  var t10 = __toESM(require_lib());
 
   // ../shared/src/services/analytics/types.ts
   var guideSpecificEvents = {
@@ -18839,9 +19092,9 @@ ${err.message}`);
       return "[Error]";
     }
   };
-  var ErrorDedupStateV = t12.type({
-    sessionId: t12.union([t12.number, t12.undefined]),
-    keys: t12.array(t12.string)
+  var ErrorDedupStateV = t10.type({
+    sessionId: t10.union([t10.number, t10.undefined]),
+    keys: t10.array(t10.string)
   });
   var loadErrorDedupState = (currentSession, apiKeyPrefix) => {
     const raw = SessionStorage_default.get(ERROR_DEDUP_STORAGE_KEY, "", apiKeyPrefix);
@@ -19122,11 +19375,10 @@ ${err.message}`);
        * @param title The title of the clicked result
        * @param excerpt The excerpt of the clicked result
        * @param type The type of the clicked result (e.g., 'document', 'video', 'resource', 'nudge')
-       * @param id The ID of the clicked result
        * @param sourceKey The source key of the clicked result (if available)
        * @param position The position of the clicked result in the list
        */
-      resultClicked: (title, excerpt, type13, id, sourceKey, position2, instanceName) => {
+      resultClicked: (title, excerpt, type13, sourceKey, position2, instanceName) => {
         getClient(instanceName)?.trackEvent?.("[Guides-Surveys] Resource Center Result Clicked", {
           ["[Guides-Surveys] Title" /* Title */]: title,
           ["[Guides-Surveys] Excerpt" /* Excerpt */]: excerpt,
@@ -19920,8 +20172,8 @@ ${err.message}`);
   // ../shared/src/store/executables/executable-actions.ts
   var clickExecutable = (_, action) => {
     const value = interpolateUserProperties(action.value, _, true);
-    const success2 = _.services.clickElement(value);
-    if (!success2) {
+    const success = _.services.clickElement(value);
+    if (!success) {
       throw new InternalError(`Cannot find element to click: [${value}]`);
     }
   };
@@ -19952,13 +20204,13 @@ ${err.message}`);
           }
           editorCallback(upperCase);
         } else {
-          _.services.openChatExecutable(_, action);
+          _.services.openChatExecutable(action);
         }
         break;
       case "nudge": {
         const nudge = getNudgeById(_, action.value);
         if (!nudge) {
-          break;
+          throw new InternalError("Nudge not loaded");
         }
         const x = e2?.clientX;
         const y2 = e2?.clientY;
@@ -20034,18 +20286,18 @@ ${err.message}`);
   var RETRY_TIMEOUT = 5e3;
   var SEQUENCE_EXPIRATION_TIME = 6e4;
   var SEQUENCE_STORAGE_KEY = "effects_sequencer_sequence";
-  var PersistedActionSequenceV = t13.type({
-    effects: t13.array(EffectfulActionV),
-    source: t13.intersection([
-      t13.type({ variantId: t13.number }),
-      t13.partial({
-        stepIndex: t13.number,
-        commonProperties: t13.record(t13.string, t13.unknown),
-        actionIndexOffset: t13.number
+  var PersistedActionSequenceV = t11.type({
+    effects: t11.array(EffectfulActionV),
+    source: t11.intersection([
+      t11.type({ variantId: t11.number }),
+      t11.partial({
+        stepIndex: t11.number,
+        commonProperties: t11.record(t11.string, t11.unknown),
+        actionIndexOffset: t11.number
       })
     ]),
-    expiresAt: t13.number,
-    sessionKey: t13.string
+    expiresAt: t11.number,
+    sessionKey: t11.string
   });
   var mapEffectTypeToErrorCategory = (effect, store) => {
     switch (effect?.type) {
@@ -20082,7 +20334,10 @@ ${err.message}`);
     };
     const shouldPersist = (args) => getLinkSequenceStrategy(args) === "persist";
     const shouldTerminateSequence = (args) => getLinkSequenceStrategy(args) === "terminate";
-    const isRetryable2 = ({ context }) => context.effects.at(context.currentEffectIndex)?.type === "click";
+    const isRetryable2 = ({ context }) => {
+      const actionType = context.effects.at(context.currentEffectIndex)?.type;
+      return actionType === "click" || actionType === "nudge";
+    };
     const saveSequence = ({ context }) => {
       if (!context.source) {
         return;
@@ -20387,7 +20642,7 @@ ${err.message}`);
   };
 
   // ../shared/src/services/end-users/decide.ts
-  var decide = async (apiKey, user, isEditorPreview) => {
+  var decide = async (apiKey, user, isEditorPreview, bypassCache = false) => {
     if (isEditorPreview) {
       return {};
     }
@@ -20395,7 +20650,15 @@ ${err.message}`);
     const result = await get4(`/sdk/v1/decide`, {
       headers: {
         Authorization: `Api-Key ${apiKey}`,
-        "X-Amp-User": userJsonBase64
+        "X-Amp-User": userJsonBase64,
+        // The CDN caches /decide on a fixed TTL. A user-initiated refresh (or a
+        // debug session) wants the freshest evaluation, so it signals the edge to
+        // skip the cache via a private header the cache rule keys on. We deliberately
+        // avoid Cache-Control here: the edge zone bypasses on any request Cache-Control
+        // value, so using it would let plain browser reloads drag every request onto the
+        // uncached path. Boot and the periodic auto-refresh omit this and are served from
+        // cache to keep origin load down.
+        ...bypassCache ? { "X-Amp-Cache-Bypass": "1" } : {}
       }
     });
     return result.data;
@@ -20411,7 +20674,7 @@ ${err.message}`);
   };
   var hasSetOp = hasOp.bind(null, "set");
   var hasMatchingOp = (dependencies, ops) => dependencies === "*" || ops.some(
-    ([_, updatePath]) => dependencies.some((dep) => {
+    ([_op, updatePath]) => dependencies.some((dep) => {
       const len = Math.min(dep.length, updatePath.length);
       for (let i2 = 0; i2 < len; i2++) {
         if (dep[i2] !== "*" && dep[i2] !== updatePath[i2]) {
@@ -20600,7 +20863,8 @@ ${err.message}`);
 
   // ../shared/src/store/resource-center-storage-manager.ts
   var STORAGE_KEY2 = "resourceCenter";
-  var PERSISTED_FIELDS = ["visible", "minimized", "scrollPosition", "query", "isAdditionalResourcesExpanded"];
+  var PERSISTED_FIELDS = ["visible", "minimized", "query", "isAdditionalResourcesExpanded"];
+  var RESOURCE_CENTER_LATEST_ENTRY_STORAGE_KEY = "resourceCenter_latestEntry";
   var retrieveStoredResourceCenterState = () => {
     const obj = {};
     const storage = new CustomStorageStore();
@@ -20619,73 +20883,210 @@ ${err.message}`);
     }
     return obj;
   };
-  var storeResourceCenterStateDebounced = (_, debounceDelay = 300) => {
+  var storeResourceCenterState = (_) => {
     const storage = new CustomStorageStore();
-    let debounceTimeout = null;
-    const saveToStorage = () => {
-      try {
-        const fieldsToPersist = PERSISTED_FIELDS;
-        const objectToStore = Object.fromEntries(fieldsToPersist.map((k) => [k, _.resourceCenter[k]]));
-        storage.set(STORAGE_KEY2, JSON.stringify(objectToStore));
-      } catch (e2) {
-        console.error(`Error serializing and storing data for ${STORAGE_KEY2}:`, e2);
-      }
-    };
-    if (debounceTimeout) {
-      clearTimeout(debounceTimeout);
+    try {
+      const fieldsToPersist = PERSISTED_FIELDS;
+      const objectToStore = Object.fromEntries(fieldsToPersist.map((k) => [k, _.resourceCenter[k]]));
+      storage.set(STORAGE_KEY2, JSON.stringify(objectToStore));
+    } catch (e2) {
+      console.error(`Error serializing and storing data for ${STORAGE_KEY2}:`, e2);
     }
-    debounceTimeout = setTimeout(saveToStorage, debounceDelay);
+  };
+  var clearStoredResourceCenterState = () => {
+    const storage = new CustomStorageStore();
+    storage.remove(STORAGE_KEY2);
+    storage.remove(RESOURCE_CENTER_LATEST_ENTRY_STORAGE_KEY);
+  };
+
+  // ../shared/src/products/resource-center/store/navigation.ts
+  var ResourceCenterPages = {
+    /** Sentinel entry meaning "the default page" — resolved at read time via `getEffectiveHistory`. */
+    Home: "home",
+    HelpHub: "help-hub",
+    Docs: "docs",
+    Assistant: "assistant",
+    Error: "error"
+  };
+  var areHistoryEntriesEqual = (entry1, entry2) => {
+    return entry1.page === entry2.page && JSON.stringify(entry1.params ?? {}) === JSON.stringify(entry2.params ?? {});
+  };
+  var HOME_ENTRY = { page: ResourceCenterPages.Home, params: {} };
+  var emptyNavigationState = () => ({
+    history: [{ ...HOME_ENTRY, id: 0 }],
+    nextId: 1
+  });
+  var retrieveStoredNavigationEntry = () => {
+    try {
+      const stored = new CustomStorageStore().get(RESOURCE_CENTER_LATEST_ENTRY_STORAGE_KEY, "");
+      if (!stored) return null;
+      const parsed = JSON.parse(stored);
+      if (typeof parsed.page !== "string" || parsed.page === ResourceCenterPages.Home) return null;
+      return { page: parsed.page, params: parsed.params ?? {} };
+    } catch {
+      return null;
+    }
+  };
+  var initialNavigationState = (restoreFromStorage) => {
+    const stored = restoreFromStorage ? retrieveStoredNavigationEntry() : null;
+    if (!stored) return emptyNavigationState();
+    return {
+      history: [
+        { ...stored, id: 1 },
+        { ...HOME_ENTRY, id: 0 }
+      ],
+      nextId: 2
+    };
+  };
+  var getEffectiveTabVisibility = (_) => {
+    const { isEditorPreview, isAssistantPreview } = _;
+    const chatEnabled = !!_.resourceCenter.chatEnabled;
+    const resourceCenterEnabled = !!_.resourceCenter.resourceCenterEnabled;
+    if (!isEditorPreview) {
+      return {
+        showAssistantTab: chatEnabled,
+        showResourceCenterTab: resourceCenterEnabled
+      };
+    }
+    if (isAssistantPreview) {
+      if (chatEnabled && resourceCenterEnabled) {
+        return { showAssistantTab: true, showResourceCenterTab: true };
+      } else if (!chatEnabled && !resourceCenterEnabled) {
+        return { showAssistantTab: true, showResourceCenterTab: false };
+      } else if (chatEnabled) {
+        return { showAssistantTab: true, showResourceCenterTab: false };
+      } else {
+        return { showAssistantTab: false, showResourceCenterTab: true };
+      }
+    } else {
+      if (chatEnabled && resourceCenterEnabled) {
+        return { showAssistantTab: true, showResourceCenterTab: true };
+      } else if (!chatEnabled && !resourceCenterEnabled) {
+        return { showAssistantTab: false, showResourceCenterTab: true };
+      } else if (resourceCenterEnabled) {
+        return { showAssistantTab: false, showResourceCenterTab: true };
+      } else {
+        return { showAssistantTab: true, showResourceCenterTab: true };
+      }
+    }
+  };
+  var getDefaultResourceCenterPage = (_) => {
+    const { showAssistantTab, showResourceCenterTab } = getEffectiveTabVisibility(_);
+    if (showAssistantTab && !showResourceCenterTab) return ResourceCenterPages.Assistant;
+    if (!showAssistantTab && showResourceCenterTab) return ResourceCenterPages.HelpHub;
+    if (showAssistantTab && showResourceCenterTab && _.resourceCenter.defaultTab === "assistant") {
+      return ResourceCenterPages.Assistant;
+    }
+    return ResourceCenterPages.HelpHub;
+  };
+  var isPageAllowed = (_, page) => {
+    if (_.isEditorPreview) return true;
+    const { showAssistantTab, showResourceCenterTab } = getEffectiveTabVisibility(_);
+    if (page === ResourceCenterPages.Assistant) return showAssistantTab;
+    if (page === ResourceCenterPages.HelpHub) return showResourceCenterTab;
+    return true;
+  };
+  var getEffectiveHistory = (_) => {
+    const history = _.resourceCenter.navigation.history;
+    const needsResolution = (entry, isTop) => entry.page === ResourceCenterPages.Home || isTop && !isPageAllowed(_, entry.page);
+    if (!history.some((entry, idx) => needsResolution(entry, idx === 0))) {
+      return history;
+    }
+    const defaultPage = getDefaultResourceCenterPage(_);
+    const resolved = history.map(
+      (entry, idx) => needsResolution(entry, idx === 0) ? { ...entry, page: defaultPage } : entry
+    );
+    return resolved.filter((entry, idx) => {
+      const previous = resolved[idx - 1];
+      return previous === void 0 || !areHistoryEntriesEqual(entry, previous);
+    });
+  };
+  var navigate = (_, item, options) => {
+    const nav = _.resourceCenter.navigation;
+    const entry = { page: item.page, params: item.params ?? {}, id: nav.nextId };
+    if (options?.replace) {
+      nav.history.splice(0, 1, entry);
+      nav.nextId += 1;
+      return;
+    }
+    const effectiveTop = getEffectiveHistory(_)[0];
+    if (effectiveTop && areHistoryEntriesEqual(effectiveTop, entry)) {
+      return;
+    }
+    nav.history.unshift(entry);
+    nav.nextId += 1;
+  };
+  var back = (_) => {
+    const nav = _.resourceCenter.navigation;
+    if (nav.history.length > 1) {
+      nav.history.shift();
+    }
+  };
+  var setParams = (_, params) => {
+    const top = _.resourceCenter.navigation.history[0];
+    if (top) {
+      top.params = params;
+    }
+  };
+  var persistLatestNavigationEntry = (_) => {
+    if (!_.resourceCenter.shouldPersistOnReload) return;
+    const top = getEffectiveHistory(_)[0];
+    if (!top || top.page === ResourceCenterPages.Home) return;
+    new CustomStorageStore().set(
+      RESOURCE_CENTER_LATEST_ENTRY_STORAGE_KEY,
+      JSON.stringify({ page: top.page, params: top.params })
+    );
   };
 
   // ../shared/src/internal/middleware/theme.ts
-  var t14 = __toESM(require_lib());
-  var ThemeModeV = t14.intersection([
-    t14.type({
-      varDefaults: t14.record(t14.string, t14.union([t14.string, t14.number])),
-      varOverrides: t14.record(t14.string, t14.union([t14.string, t14.number])),
-      componentOverrides: t14.record(t14.string, t14.any),
-      mobileOverrides: t14.record(t14.string, t14.any)
+  var t12 = __toESM(require_lib());
+  var ThemeModeV = t12.intersection([
+    t12.type({
+      varDefaults: t12.record(t12.string, t12.union([t12.string, t12.number])),
+      varOverrides: t12.record(t12.string, t12.union([t12.string, t12.number])),
+      componentOverrides: t12.record(t12.string, t12.any),
+      mobileOverrides: t12.record(t12.string, t12.any)
     }),
-    t14.partial({
-      customCss: t14.string
+    t12.partial({
+      customCss: t12.string
     })
   ]);
-  var ThemeV = t14.union([
-    t14.type({
+  var ThemeV = t12.union([
+    t12.type({
       lightMode: ThemeModeV,
       darkMode: ThemeModeV
     }),
-    t14.null,
-    t14.undefined
+    t12.null,
+    t12.undefined
   ]);
-  var ThemeObjectBaseV = t14.type(
+  var ThemeObjectBaseV = t12.type(
     {
-      id: t14.number,
-      name: t14.string,
-      isDefault: t14.boolean,
+      id: t12.number,
+      name: t12.string,
+      isDefault: t12.boolean,
       theme: ThemeV
     },
     "ThemeBase"
   );
-  var ProductV = t14.union([t14.literal("guides-surveys"), t14.literal("assistant")]);
-  var PlatformV = t14.type({
-    type: t14.union([
-      t14.literal("web"),
-      t14.literal("ios"),
-      t14.literal("android"),
-      t14.literal("react-native"),
-      t14.literal("flutter"),
-      t14.string
+  var ProductV = t12.union([t12.literal("guides-surveys"), t12.literal("assistant")]);
+  var PlatformV = t12.type({
+    type: t12.union([
+      t12.literal("web"),
+      t12.literal("ios"),
+      t12.literal("android"),
+      t12.literal("react-native"),
+      t12.literal("flutter"),
+      t12.string
     ])
   });
-  var ThemeObjectAdditionalV = t14.partial(
+  var ThemeObjectAdditionalV = t12.partial(
     {
       platform: PlatformV,
       product: ProductV
     },
     "ThemeAdditional"
   );
-  var ThemeObjectV = t14.intersection([ThemeObjectBaseV, ThemeObjectAdditionalV], "Nudge");
+  var ThemeObjectV = t12.intersection([ThemeObjectBaseV, ThemeObjectAdditionalV], "Nudge");
   var defaults3 = {};
   var decode2 = (data) => {
     try {
@@ -20698,47 +21099,42 @@ ${err.message}`);
     }
   };
 
-  // ../shared/src/types/flags.ts
-  var defaultFlags = {
-    "enable-when-element-appears-trigger": true
-  };
-
   // ../shared/src/types/api/resource-center.ts
-  var t15 = __toESM(require_lib());
-  var LauncherV = t15.intersection([
-    t15.type({
-      type: t15.string,
-      position: t15.string,
-      offsetX: t15.number,
-      offsetY: t15.number,
-      zIndex: t15.number
+  var t13 = __toESM(require_lib());
+  var LauncherV = t13.intersection([
+    t13.type({
+      type: t13.string,
+      position: t13.string,
+      offsetX: t13.number,
+      offsetY: t13.number,
+      zIndex: t13.number
     }),
-    t15.partial({
-      anchorElement: t15.union([t15.string, t15.null]),
-      iconSrc: t15.union([t15.string, t15.null]),
-      pageTargeting: t15.union([PageTargetingConfigV, t15.null, t15.undefined])
+    t13.partial({
+      anchorElement: t13.union([t13.string, t13.null]),
+      iconSrc: t13.union([t13.string, t13.null]),
+      pageTargeting: t13.union([PageTargetingConfigV, t13.null, t13.undefined])
     })
   ]);
-  var DefaultTabV = t15.union([t15.literal("resource_center"), t15.literal("assistant")]);
-  var ResourceCenterV = t15.intersection([
-    t15.type({
-      isAutopilotEnabled: t15.boolean,
-      textStrings: t15.record(t15.string, t15.string),
-      showQuickLinks: t15.boolean
+  var DefaultTabV = t13.union([t13.literal("resource_center"), t13.literal("assistant")]);
+  var ResourceCenterV = t13.intersection([
+    t13.type({
+      isAutopilotEnabled: t13.boolean,
+      textStrings: t13.record(t13.string, t13.string),
+      showQuickLinks: t13.boolean
     }),
-    t15.partial({
-      key: t15.union([t15.string, t15.null, t15.undefined]),
-      mobileLauncher: t15.union([LauncherV, t15.null]),
-      desktopLauncher: t15.union([LauncherV, t15.null]),
-      windowPosition: t15.union([t15.string, t15.null]),
-      customTheme: t15.union([t15.number, t15.null]),
-      chatEnabled: t15.boolean,
-      resourceCenterEnabled: t15.boolean,
-      showBranding: t15.boolean,
-      showRecsetHeroCards: t15.boolean,
-      showNegativeFeedbackDropdown: t15.boolean,
-      imageUploadEnabled: t15.boolean,
-      defaultTab: t15.union([DefaultTabV, t15.null, t15.undefined])
+    t13.partial({
+      key: t13.union([t13.string, t13.null, t13.undefined]),
+      mobileLauncher: t13.union([LauncherV, t13.null]),
+      desktopLauncher: t13.union([LauncherV, t13.null]),
+      windowPosition: t13.union([t13.string, t13.null]),
+      customTheme: t13.union([t13.number, t13.null]),
+      chatEnabled: t13.boolean,
+      resourceCenterEnabled: t13.boolean,
+      showBranding: t13.boolean,
+      showRecsetHeroCards: t13.boolean,
+      showNegativeFeedbackDropdown: t13.boolean,
+      imageUploadEnabled: t13.boolean,
+      defaultTab: t13.union([DefaultTabV, t13.null, t13.undefined])
     })
   ]);
   var ResourceCenter = class {
@@ -20845,21 +21241,18 @@ ${err.message}`);
       return {
         organization: defaults,
         nudges: [],
-        flags: defaultFlags,
         themes: [],
         resourceCenters: []
       };
     }
-    const [data, resourceCenterData, flags] = await Promise.all([
+    const [data, resourceCenterData] = await Promise.all([
       fetchConfig(apiKey, isEditorPreview, isAdmin, locale).catch((error) => {
         if (error instanceof Error) {
           logger.error("Error fetching config. Continuing with empty data.", error.message);
         }
         return {};
       }),
-      fetchResourceCenters(apiKey, isEditorPreview),
-      // XXX(pjhul): using mocked data for now!
-      defaultFlags
+      fetchResourceCenters(apiKey, isEditorPreview)
     ]);
     if (!data || Object.keys(data).length === 0) {
       logger.error("Error decoding config response. It is empty.");
@@ -20915,7 +21308,6 @@ ${err.message}`);
       nudges: (decodedNudges ?? []).flatMap(
         (nudge) => guard({ apiKey, field: `nudges[id=${nudge?.variantId}]` }, () => [nudge], [])
       ),
-      flags,
       themes: (decodedThemes ?? []).flatMap(
         (theme) => guard({ apiKey, field: `themes[id=${theme?.id}]` }, () => [theme], [])
       ),
@@ -20929,8 +21321,14 @@ ${err.message}`);
     const previewLocale = locale ?? getSDK(instanceName)?.[_configuration].locale;
     return getConfig(apiKey, true, previewLocale, isEditorPreview, instanceName);
   }
-  async function getEndUserConfig(apiKey, isEditorPreview = false, instanceName) {
-    return getConfig(apiKey, false, getSDK(instanceName)?.[_configuration].locale, isEditorPreview, instanceName);
+  async function getEndUserConfig(apiKey, isEditorPreview = false, instanceName, locale) {
+    return getConfig(
+      apiKey,
+      false,
+      locale ?? getSDK(instanceName)?.[_configuration].locale,
+      isEditorPreview,
+      instanceName
+    );
   }
 
   // ../shared/src/store/global-subscriptions.ts
@@ -20966,7 +21364,7 @@ ${err.message}`);
   };
   var initValtioGlobalStoreSubs = (_) => [
     // debugging tool to log all changes in the global store
-    sub(_, LocalStorage_default.get("logChanges", false) ? (_2, ops) => logChanges(ops) : () => null, "*"),
+    sub(_, LocalStorage_default.get("logChanges", false) ? (_globalStore, ops) => logChanges(ops) : () => null, "*"),
     // detect location changes and set _.location, initialized once
     locationSub(_),
     // used to trigger share link nudges
@@ -20980,9 +21378,11 @@ ${err.message}`);
     sub(_, (_2) => restartAfterTimeTriggers(_2), [["location"]]),
     sub(
       _,
-      (_2) => storeResourceCenterStateDebounced(_2),
+      (_2) => storeResourceCenterState(_2),
       PERSISTED_FIELDS.map((field) => ["resourceCenter", field])
-    )
+    ),
+    // Persist the current resource center page so the widget reopens to the same view.
+    sub(_, (_2) => persistLatestNavigationEntry(_2), [["resourceCenter", "navigation"]])
   ];
   var setupMessageBusNudgeTriggerSubscriptions = (_) => {
     _.messageBus.subscribe("rage_click", () => {
@@ -21293,7 +21693,14 @@ ${err.message}`);
       passesNudgeMatch: ({ context }) => !context.triggerEvent?.nudgeId || context.nudge.variantId === context.triggerEvent.nudgeId,
       passesBuiltInThrottles: ({ context }) => context.triggerEvent?.overrides?.builtInThrottles || passesBuiltInThrottles(globalStore, context.nudge),
       passesTriggerMatch: ({ context }) => context.triggerEvent?.overrides?.triggerMatch || passesTriggerMatch(globalStore, context.nudge, context.triggerEvent),
-      passesEventCount: ({ context }) => context.triggerEvent?.overrides?.eventCount || context.triggerEvent?.trigger.type === "active" || passesEventCount(globalStore, context.nudge),
+      passesEventCount: ({ context }) => context.triggerEvent?.overrides?.eventCount || // Event-count thresholds only apply to the analytics_event branch of a
+      // trigger set. A nudge OR-ing e.g. "event fired N times" with a click
+      // trigger must let the click through on its own -- falling back to
+      // checking the analytics_event trigger's threshold here would block
+      // the click branch until an unrelated count is met.
+      context.triggerEvent?.trigger.type !== "analytics_event" || // Pass the fired event so a multi-trigger nudge checks the threshold of
+      // the analytics_event trigger that actually matched, not just trigger #1.
+      passesEventCount(globalStore, context.nudge, context.triggerEvent.trigger.data.event),
       passesCooldown: ({ context }) => context.triggerEvent?.overrides?.cooldown || isTooltipNudge(context.nudge) || passesCooldown(globalStore, context.nudge),
       passesAudience: ({ context }) => {
         if (context.triggerEvent?.overrides?.audience) return true;
@@ -21309,7 +21716,7 @@ ${err.message}`);
         const passesRegularPageTargeting = context.triggerEvent?.overrides?.page || passesPageTargeting(globalStore, context.nudge);
         return !shouldTemporarilyHide(globalStore, context.nudge) && passesRegularPageTargeting;
       },
-      passesClicked: ({ context }) => passesClickedElement(globalStore, context.nudge, context.triggerEvent),
+      passesClicked: ({ context }) => passesClickedElement(context.nudge, context.triggerEvent),
       passesCustomThrottles: ({ context }) => shouldBypassCustomThrottles(globalStore, context.nudge) || context.triggerEvent?.overrides?.customThrottles || passesCustomThrottles(globalStore, context.nudge),
       passesLocalization: ({ context }) => context.triggerEvent?.overrides?.localization || passesLocalization(globalStore, context.nudge, getSDKForStore(globalStore)?.[_configuration].locale),
       passesMutualExclusion: ({ context }) => context.triggerEvent?.overrides?.mutualExclusion || passesMutualExclusion(globalStore, context.nudge),
@@ -21325,15 +21732,15 @@ ${err.message}`);
       // step specific
       remainingSteps: ({ context }) => hasRemainingSteps(context.nudge)(context),
       advanceToSpecificStep: ({ context }, params) => params.step !== void 0 && params.step >= 0 && params.step < context.nudge.steps.length,
-      stepChecksFailed: (_, params) => params.passed,
+      stepChecksFailed: (_args, params) => params.passed,
       canStepBack: ({ context }) => usesNavigationStack(context.nudge) ? context.stepIndexStack.length > 0 : context.stepIndex > 0,
       isTooltipNudge: ({ context }) => !!isTooltipNudge(context.nudge),
       isPinStep: ({ context }) => !!isPinStep(getNudgeStep(context.nudge, context.stepIndex)),
       isCardStep: ({ context }) => !!isCardStep(getNudgeStep(context.nudge, context.stepIndex)),
       isWebPlatform: ({ context }) => context.nudge.platform === "web",
-      hasSurveyResponse: (_, params) => "surveyResponse" in params.event,
+      hasSurveyResponse: (_args, params) => "surveyResponse" in params.event,
       hasSequentialSteps: ({ context }) => hasSequentialSteps(context.nudge),
-      isDismissal: (_, params) => params.isDismissAction,
+      isDismissal: (_args, params) => params.isDismissAction,
       isDeadEndStep: ({ context }) => isDeadEndStep(context.nudge)(context),
       shouldSkipStep: ({ context }, params) => {
         if (!params.stepChecksFailed) {
@@ -21348,24 +21755,28 @@ ${err.message}`);
         if (context.triggerEvent?.trigger.type !== "analytics_event") {
           return;
         }
-        if (context.nudge.triggerConfig.type !== "analytics_event" || !context.nudge.triggerConfig.data?.event_count || !context.nudge.triggerConfig.data?.event) {
+        const firedEvent = context.triggerEvent.trigger.data.event;
+        const eventTrigger = getAllTriggers(context.nudge).find(
+          (trigger) => trigger.type === "analytics_event" && trigger.data.event === firedEvent
+        );
+        if (eventTrigger?.type !== "analytics_event" || !eventTrigger.data?.event_count || !eventTrigger.data?.event) {
           return;
         }
         incrementEventCount(
           globalStore.apiKeyPrefix,
           globalStore.instanceName,
           context.nudge.variantId,
-          context.nudge.triggerConfig.data.event,
+          eventTrigger.data.event,
           getEffectiveSessionStart(globalStore),
           globalStore.user?.user_id ?? globalStore.user?.device_id
         );
       },
       setPinGraceUntil: assign({
-        pinGraceUntil: (_, params) => params.until,
-        pinGraceStepIndex: (_, params) => params.stepIndex
+        pinGraceUntil: (_args, params) => params.until,
+        pinGraceStepIndex: (_args, params) => params.stepIndex
       }),
       setTriggerEvent: assign({
-        triggerEvent: (_, params) => params.triggerEvent
+        triggerEvent: (_args, params) => params.triggerEvent
       }),
       setPassedConditions: assign({
         prevPassedConditions: () => true
@@ -21642,7 +22053,7 @@ ${err.message}`);
           stepIndex: context.stepIndex,
           stepIndexStack: context.stepIndexStack,
           markSeen: true,
-          activate: context.triggerEvent?.trigger.type !== "active" && canBeActive(context.nudge)
+          activate: context.triggerEvent?.trigger.type !== "active" && canBeActivated(context.nudge)
         });
       },
       saveInteraction: ({ context }, params) => {
@@ -21765,10 +22176,10 @@ ${err.message}`);
         saveProgressToEndUserStore(globalStore, { nudge: nudge2, stepIndex, stepIndexStack });
       },
       refreshNudge: assign({
-        nudge: (_, params) => params.nudge
+        nudge: (_args, params) => params.nudge
       }),
       assignPopoverActor: assign({
-        popoverActor: (_, params) => params.actor
+        popoverActor: (_args, params) => params.actor
       }),
       closePopover: ({ context }) => {
         context.popoverActor?.send({ type: "CLOSE" });
@@ -22536,7 +22947,12 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
       // @ts-expect-error HACK: specifying the id is legal but makes this type error
       spawnNudgeMachines: assign(({ context, spawn, self: self2 }) => ({
         ...context,
-        nudgeMachines: new Map(
+        // Keep any actors already spawned by a REFRESH_FROM_CONFIG that ran
+        // before the user store loaded (e.g. `updateLanguage` called during
+        // boot). Re-spawning here rebuilds from the `nudges` closure captured
+        // at manager creation — the boot-time locale — which would clobber the
+        // refreshed locale and make the nudge render in the wrong language.
+        nudgeMachines: context.nudgeMachines.size > 0 ? context.nudgeMachines : new Map(
           nudges.map((nudge) => [
             nudge.variantId.toString(),
             // @ts-expect-error HACK: specifying the id is legal but makes this type error
@@ -22570,7 +22986,7 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
         }
       },
       refreshSimulatedNudge: assign({
-        debugMode: (_, params) => ({
+        debugMode: (_args, params) => ({
           originalNudge: params.nudge,
           currentNudge: params.nudge
         })
@@ -22649,7 +23065,7 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
       cleanupDelayedTriggers: () => {
         removeDelayedTriggers(globalStore);
       },
-      cancelDelayedTriggerForNudge: (_, params) => {
+      cancelDelayedTriggerForNudge: (_args, params) => {
         removeDelayedTriggerForNudge(globalStore, params.variantId);
       },
       // this gets set when simulate mode is engaged
@@ -22713,17 +23129,17 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
           };
         }
       }),
-      setTriggerEvent: assign({ triggerEvent: (_, params) => params.triggerEvent }),
+      setTriggerEvent: assign({ triggerEvent: (_args, params) => params.triggerEvent }),
       unsetTriggerEvent: assign({
         triggerEvent: () => null
       }),
       setActiveNudge: assign({
-        activeNudge: (_, params) => params.nudge
+        activeNudge: (_args, params) => params.nudge
       }),
       clearActiveNudge: assign({
         activeNudge: null
       }),
-      handleShareLink: (_, params) => {
+      handleShareLink: (_args, params) => {
         const nudge = nudges.find((nudge2) => nudge2.flagKey === params.flagKey);
         if (!nudge) return;
         activatePushExperience(globalStore, nudge, { type: "share_link" });
@@ -23162,7 +23578,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       throw new Error("User must be provided to refresh the result from decide");
     }
     if (!sdk) return;
-    _.decide = await decide(sdk[_configuration].apiKey, _.user, _.isEditorPreview);
+    _.decide = await decide(sdk[_configuration].apiKey, _.user, _.isEditorPreview, true);
   };
   var loadDebugPreviewConfig = async (_, localeForConfig) => {
     const sdk = getSDKForStore(_);
@@ -23190,6 +23606,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       return;
     }
     _.nudgesManager?.send({ type: "START_DEBUG", nudge: adminNudge });
+    clearPreviewRestorationRetry(_);
     savePreviewSession(
       {
         variantId: adminNudge.variantId,
@@ -23267,15 +23684,33 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
     }
   };
-  var restorePreviewSession = async (_) => {
+  var MAX_PREVIEW_RESTORATION_ATTEMPTS = 1;
+  var clearPreviewRestorationRetry = (_) => {
+    if (_.previewRestorationRetryTimer != null) {
+      clearTimeout(_.previewRestorationRetryTimer);
+      _.previewRestorationRetryTimer = null;
+    }
+  };
+  var restorePreviewSession = async (_, attempt = 0) => {
+    if (attempt > MAX_PREVIEW_RESTORATION_ATTEMPTS) {
+      return;
+    }
     if (getDebuggedNudge(_)) {
       logger.debug("Skipping session storage restoration - already in debug mode");
       return;
     }
     const storedSession = getStoredPreviewSession(_.apiKeyPrefix);
     if (!storedSession) {
+      if (attempt < MAX_PREVIEW_RESTORATION_ATTEMPTS && _.previewRestorationRetryTimer == null) {
+        _.previewRestorationRetryTimer = setTimeout(() => {
+          _.previewRestorationRetryTimer = null;
+          logger.debug("No saved session found. Retrying preview session restoration in 1s.");
+          restorePreviewSession(_, attempt + 1);
+        }, 1e3);
+      }
       return;
     }
+    clearPreviewRestorationRetry(_);
     if (storedSession.bypassCustomThrottles !== void 0) {
       _.nudgeDebugToolBar.bypassCustomThrottles = storedSession.bypassCustomThrottles;
     }
@@ -23294,6 +23729,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     );
   };
   var showStepMock = (_, nudge, stepIndex, options) => {
+    _.lastMockNudge = { nudge, stepIndex: stepIndex ?? 0 };
     _.services.renderNudge(_, nudge, stepIndex ?? 0, {
       renderMode: 1 /* MOCK */,
       forceOpen: options?.forceOpen,
@@ -23423,9 +23859,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     updateEndUserStore(_.endUserStore, allNudgeData);
   };
   var getTriggerDiagnostics = (_, nudge) => {
-    const configuredDelayMs = getTriggerDelayMs(nudge);
+    const triggerEvent = getNudgeActorSnapshot(_, nudge.variantId)?.context.triggerEvent;
+    const configuredDelayMs = getTriggerDelayMs(nudge, triggerEvent ?? void 0);
     const pendingDelay = getPendingTriggerDelay(_, nudge);
-    const eventCount = getEventCountProgress(_, nudge);
+    const eventCount = getEventCountProgress(_, nudge, getFiredAnalyticsEventName(_, nudge));
     return {
       triggerDelay: {
         configuredMs: configuredDelayMs,
@@ -23458,6 +23895,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         ])
       ),
       trigger: nudge.triggerConfig,
+      // Full trigger set for multi-trigger nudges; single-trigger nudges report a
+      // one-element list equal to [trigger] above.
+      triggers: getAllTriggers(nudge),
       mostRecentTrigger: nudgeActorContext?.triggerEvent?.trigger,
       ...getTriggerDiagnostics(_, nudge)
     };
@@ -23483,6 +23923,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         ])
       ),
       trigger: nudge.triggerConfig,
+      // Full trigger set for multi-trigger nudges; single-trigger nudges report a
+      // one-element list equal to [trigger] above.
+      triggers: getAllTriggers(nudge),
       mostRecentTrigger: nudgeActorContext?.triggerEvent?.trigger,
       ...getTriggerDiagnostics(_, nudge)
     };
@@ -23502,13 +23945,14 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var setRecorderToolBarVisibility = (_, visible) => {
     _.nudgeRecorderToolBar.visible = visible;
   };
-  var getTriggerDelayMs = (nudge) => {
-    if (nudge.triggerConfig.type === "after_time") {
-      const { unit, value } = nudge.triggerConfig.data;
+  var getTriggerDelayMs = (nudge, triggerEvent) => {
+    const trigger = getFiringTrigger(nudge, triggerEvent ? { type: "TRIGGER", ...triggerEvent } : null);
+    if (trigger.type === "after_time") {
+      const { unit, value } = trigger.data;
       if (typeof value !== "number" || value <= 0 || !Number.isFinite(value)) return 0;
       return unit === "minute" ? value * 60 * 1e3 : value * 1e3;
     }
-    const data = nudge.triggerConfig.data;
+    const data = trigger.data;
     const delay = data?.delay;
     if (typeof delay !== "number" || delay <= 0 || !Number.isFinite(delay)) return 0;
     return delay;
@@ -23520,12 +23964,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     return false;
   };
   var dispatchTriggerWithDelay = (_, nudge, forward, triggerEvent) => {
-    const delayMs = getTriggerDelayMs(nudge);
+    const delayMs = getTriggerDelayMs(nudge, triggerEvent);
     if (delayMs === 0 || !_.delayedTriggers || shouldBypassTriggerDelay(triggerEvent)) {
       return false;
     }
     if (triggerEvent.trigger.type === "analytics_event") {
-      const progress = getEventCountProgress(_, nudge);
+      const progress = getEventCountProgress(_, nudge, triggerEvent.trigger.data.event);
       if (progress && progress.current + 1 < progress.needed) {
         return false;
       }
@@ -23582,9 +24026,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     return false;
   };
   var dispatchAfterTimeTriggers = (_, nudges) => {
-    const candidates = (nudges ?? getAllNudges(_)).filter(
-      (nudge) => nudge.triggerConfig.type === "after_time"
-    ).filter((nudge) => !hasPendingAfterTimeTimer(_, nudge.variantId)).sort((a, b) => compareNudgePriority(a, b));
+    const candidates = (nudges ?? getAllNudges(_)).filter((nudge) => getAllTriggers(nudge).some((trigger) => trigger.type === "after_time")).filter((nudge) => !hasPendingAfterTimeTimer(_, nudge.variantId)).sort((a, b) => compareNudgePriority(a, b));
     for (const nudge of candidates) {
       sendDirectedTrigger(_, nudge, {
         trigger: { type: "after_time" },
@@ -23681,6 +24123,18 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
 
   // src/actions/nudge.ts
   var nudgeActionsBridge = registerJSBridge("nudgeActions");
+  var isSingleSurveyResponse = (value) => {
+    if (!value || typeof value !== "object") return false;
+    const candidate = value;
+    return typeof candidate.blockId === "string" && typeof candidate.type === "string";
+  };
+  var normalizeSurveyResponses = (value) => {
+    if (!value) return void 0;
+    if (isSingleSurveyResponse(value)) {
+      return { [value.blockId]: value };
+    }
+    return value;
+  };
   nudgeActionsBridge.function("dismissNudge", (nudge) => {
     dismissNudge(window.engagement._, nudge, 0 /* DEFAULT */);
   });
@@ -23717,10 +24171,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   });
   nudgeActionsBridge.function(
     "determineAction",
-    (step, buttonMeta, surveyResponse) => {
+    (step, buttonMeta, surveyResponses) => {
       return determineAction(window.engagement._, step, {
         buttonMeta,
-        surveyResponses: surveyResponse ? { [surveyResponse.blockId]: surveyResponse } : void 0
+        surveyResponses: normalizeSurveyResponses(surveyResponses)
       });
     }
   );
@@ -23728,9 +24182,21 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     "updateSurveyResponse",
     (variantId, surveyResponse) => {
       const actor = getNudgeActor(window.engagement._, variantId);
-      actor?.send({
+      if (!actor) return;
+      const incoming = normalizeSurveyResponses(surveyResponse);
+      if (!incoming) {
+        actor.send({
+          type: "UPDATE_SURVEY_RESPONSE",
+          surveyResponse: void 0
+        });
+        return;
+      }
+      const context = actor.getSnapshot().context;
+      const step = getNudgeStep(context.nudge, context.stepIndex);
+      const existing = step && context.surveyResponses[step.id] || {};
+      actor.send({
         type: "UPDATE_SURVEY_RESPONSE",
-        surveyResponse: surveyResponse ? { [surveyResponse.blockId]: surveyResponse } : void 0
+        surveyResponse: { ...existing, ...incoming }
       });
     }
   );
@@ -23818,12 +24284,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }()
   );
   var __assign = function() {
-    __assign = Object.assign || function __assign3(t16) {
+    __assign = Object.assign || function __assign3(t14) {
       for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
         s2 = arguments[i2];
-        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t16[p] = s2[p];
+        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t14[p] = s2[p];
       }
-      return t16;
+      return t14;
     };
     return __assign.apply(this, arguments);
   };
@@ -24026,12 +24492,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       IdentityStoreImpl2.prototype.getIdentity = function() {
         return __assign({}, this.identity);
       };
-      IdentityStoreImpl2.prototype.setIdentity = function(identity2) {
+      IdentityStoreImpl2.prototype.setIdentity = function(identity) {
         var originalIdentity = __assign({}, this.identity);
-        this.identity = __assign({}, identity2);
+        this.identity = __assign({}, identity);
         if (!isEqual4(originalIdentity, this.identity)) {
           this.listeners.forEach(function(listener) {
-            listener(identity2);
+            listener(identity);
           });
         }
       };
@@ -24083,6 +24549,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         mediaUrl: existingProxy?._configuration?.mediaUrl,
         serverZone: existingProxy?._configuration?.serverZone ?? "US",
         autoRefreshIntervalSeconds: existingProxy?._configuration?.autoRefreshIntervalSeconds,
+        integrations: existingProxy?._configuration?.integrations,
         options: {
           ...existingProxy?._configuration?.options
         }
@@ -24110,19 +24577,11 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         bundleFailedToLoad = false;
         if (initOptions?.useEngagementDomain) {
           const isEU = (initOptions.serverZone ?? proxy2._configuration.serverZone) === "EU";
-          const domain = "amplitudeengagement.com";
-          if (!initOptions.serverUrl) {
-            initOptions.serverUrl = isEU ? `https://gs.eu.${domain}` : `https://gs.${domain}`;
-          }
-          if (!initOptions.chatUrl) {
-            initOptions.chatUrl = isEU ? `https://houston-chat.eu.${domain}` : `https://houston-chat.${domain}`;
-          }
-          if (!initOptions.mediaUrl) {
-            initOptions.mediaUrl = isEU ? `https://engagement-static.eu.${domain}` : `https://engagement-static.${domain}`;
-          }
-          if (!initOptions.cdnUrl) {
-            initOptions.cdnUrl = isEU ? `https://cdn.eu.${domain}` : `https://cdn.${domain}`;
-          }
+          const engagementDomainUrls = resolveEngagementDomainUrls(isEU);
+          initOptions.serverUrl = initOptions.serverUrl ?? engagementDomainUrls.serverUrl;
+          initOptions.chatUrl = initOptions.chatUrl ?? engagementDomainUrls.chatUrl;
+          initOptions.mediaUrl = initOptions.mediaUrl ?? engagementDomainUrls.mediaUrl;
+          initOptions.cdnUrl = initOptions.cdnUrl ?? engagementDomainUrls.cdnUrl;
         }
         proxy2._configuration = {
           ...proxy2._configuration,
@@ -24133,21 +24592,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         if (proxy2._configuration?.options?.logger) {
           proxy2._configuration.options.logger.enable(proxy2._configuration.options.logLevel ?? 2);
         }
-        let bundleURL = void 0;
-        if (initOptions?.cdnUrl) {
-          if (proxy2._configuration.options.splitting) {
-            bundleURL = `${initOptions.cdnUrl}/engagement-browser/prod/split/index.js`;
-          } else {
-            bundleURL = initOptions.cdnUrl + "/engagement-browser/prod/index.min.js.gz";
-          }
-        } else {
-          const cdnBaseUrl = proxy2._configuration.serverZone === "EU" ? "https://cdn.eu.amplitude.com" : "https://cdn.amplitude.com";
-          if (proxy2._configuration.options.splitting) {
-            bundleURL = `${cdnBaseUrl}/engagement-browser/prod/split/index.js`;
-          } else {
-            bundleURL = `${cdnBaseUrl}/engagement-browser/prod/index.min.js.gz`;
-          }
-        }
+        const cdnBaseUrl = initOptions?.cdnUrl ?? (proxy2._configuration.serverZone === "EU" ? CDN_URLS.prodEu : CDN_URLS.prodUs);
+        const bundleURL = resolveBundleUrl(cdnBaseUrl, "prod", proxy2._configuration.options.splitting ?? false);
         let timeoutId = null;
         const clearQueueAndCleanup = () => {
           bundleFailedToLoad = true;
@@ -24193,13 +24639,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         const tokenOption = options?.token;
         const skipped = options?.skip === true;
         const buildUser = (client, config, identityStore) => {
-          const identity2 = identityStore.getIdentity();
+          const identity = identityStore.getIdentity();
           const token = typeof tokenOption === "function" ? tokenOption() : tokenOption;
           return {
             user_id: client.getUserId(),
             device_id: client.getDeviceId(),
             version: config.appVersion,
-            user_properties: identity2.userProperties,
+            user_properties: identity.userProperties,
             getSessionId: client.getSessionId,
             ...token ? { token } : {}
           };
@@ -24235,12 +24681,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
               // @ts-expect-error PLUGIN_CALLER is an internal-only arg not in the public signature
               PLUGIN_CALLER
             );
-            identityStore.addIdentityListener((identity2) => {
+            identityStore.addIdentityListener((identity) => {
               if (!window.engagement?._.user || !window.engagement?._analytics.hasBooted) {
                 console.warn(`Engagement SDK not booted. Ignoring identity change.`);
                 return;
               }
-              if (window.engagement?._.user?.user_id !== identity2.userId) {
+              if (window.engagement?._.user?.user_id !== identity.userId) {
                 window.engagement.shutdown(PLUGIN_CALLER);
                 window.engagement.boot(
                   {
@@ -24251,7 +24697,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
                   PLUGIN_CALLER
                 );
               } else {
-                window.engagement._setUserProperties(identity2.userProperties);
+                window.engagement._setUserProperties(identity.userProperties);
               }
             });
           },
@@ -24265,14 +24711,14 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     };
     const sdk = proxy2;
     return new Proxy(proxy2, {
-      get: function(_, prop) {
+      get: function(_proxySDK, prop) {
         if (prop in sdk) return sdk[prop];
         if (prop === "then") return void 0;
         if (prop === "gs" || prop === "rc" || prop === "assistant") {
           return new Proxy(
             {},
             {
-              get: function(_2, nestedProp) {
+              get: function(_target, nestedProp) {
                 return function() {
                   const args = Array.from(arguments);
                   const methodPath = `${prop}.${nestedProp}`;
@@ -24445,18 +24891,19 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           }
           const hasOverride = context.triggerEvent?.overrides?.triggerMatch;
           const baseTriggerConditionMet = passesTriggerMatch(_, simulatedNudge, context.triggerEvent);
+          const firedTriggerType = context.triggerEvent?.trigger.type;
           if (hasOverride) {
             updateTriggerMatched(true);
             return true;
           }
-          if (baseTriggerConditionMet && simulatedNudge.triggerConfig.type === "element_clicked") {
-            const clickedElementMatch = passesClickedElement(_, simulatedNudge, context.triggerEvent);
+          if (baseTriggerConditionMet && firedTriggerType === "element_clicked") {
+            const clickedElementMatch = passesClickedElement(simulatedNudge, context.triggerEvent);
             if (clickedElementMatch) {
               updateTriggerMatched(true);
             }
             return clickedElementMatch;
           }
-          if (baseTriggerConditionMet && simulatedNudge.triggerConfig.type === "element_appeared") {
+          if (baseTriggerConditionMet && firedTriggerType === "element_appeared") {
             const triggerElementMatch = await passesTriggerElement(_, simulatedNudge, context.triggerEvent, []);
             if (triggerElementMatch) {
               updateTriggerMatched(true);
@@ -24468,7 +24915,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           }
           return baseTriggerConditionMet;
         })() : false,
-        passesClickedElement: simulatedNudge && context?.triggerEvent ? passesClickedElement(_, simulatedNudge, context.triggerEvent) : false,
+        passesClickedElement: simulatedNudge && context?.triggerEvent ? passesClickedElement(simulatedNudge, context.triggerEvent) : false,
         isAnchorableStep: simulatedNudge && isAnchorableStep(simulatedNudge.steps[currentStepIndex]) ? !!simulatedNudge.steps[currentStepIndex] : false,
         // user context
         endUser: _.user,
@@ -25330,18 +25777,20 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   // ../shared/src/products/resource-center/service-actions.ts
   var service_actions_exports2 = {};
   __export(service_actions_exports2, {
+    back: () => back,
+    navigate: () => navigate,
     previewAutopilotKeywords: () => previewAutopilotKeywords,
     previewContentItem: () => previewContentItem,
     previewRecSet: () => previewRecSet,
     previewResourceCenter: () => previewResourceCenter,
-    setInitialPage: () => setInitialPage,
+    setParams: () => setParams,
     setResourceCenterFilter: () => setResourceCenterFilter,
     showResourceCenter: () => showResourceCenter
   });
 
   // ../shared/src/products/resource-center/store/actions.ts
-  var showResourceCenter = (_, show) => {
-    _.services.showResourceCenter(_, show);
+  var showResourceCenter = (_, show, options) => {
+    _.services.showResourceCenter(_, show, options);
   };
   var previewRecSet = (_, recSet) => {
     _.services.previewRecSet(_, recSet);
@@ -25354,19 +25803,6 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   };
   var previewContentItem = (_, contentItemId) => {
     _.services.setCurrentContentId(_, contentItemId);
-  };
-  var initialPageRequestsEqual = (existing, next) => {
-    if (!existing?.item) return false;
-    const a = existing.item;
-    const b = next.item;
-    return a.page === b.page && JSON.stringify(a.params ?? {}) === JSON.stringify(b.params ?? {});
-  };
-  var setInitialPage = (_, navigateTo) => {
-    const existing = _.resourceCenter.initialPage;
-    if (initialPageRequestsEqual(existing, navigateTo)) {
-      return;
-    }
-    _.resourceCenter.initialPage = navigateTo;
   };
   var setResourceCenterFilter = (_, filter) => {
     _.resourceCenter.filter = filter;
@@ -25480,13 +25916,16 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     };
     _initStarted = false;
     _isProxy = false;
-    _fingerprint;
     _throttledDecide;
     _autoRefreshTimer = null;
     _isDisabled = false;
     _lastUsedBootOptions;
     _cancelDecide = null;
     _cancelBoot = null;
+    // Tracks an in-flight `updateLanguage` so a language switch triggered during
+    // boot is applied before nudges are dispatched (otherwise the boot trigger
+    // loop can render a nudge in the previous locale). See `updateLanguage`.
+    _pendingLanguageUpdate = null;
     _isInstalledViaPlugin = false;
     constructor(_, sdkConfig) {
       this._ = _;
@@ -25544,13 +25983,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         const identityStore = AnalyticsConnector.getInstance(instanceName).identityStore;
         const tokenOption = _initOptions?.token;
         const buildUser = () => {
-          const identity2 = identityStore.getIdentity();
+          const identity = identityStore.getIdentity();
           const token = typeof tokenOption === "function" ? tokenOption() : tokenOption;
           return {
             user_id: client.getUserId(),
             device_id: client.getDeviceId(),
             version: config.appVersion,
-            user_properties: identity2.userProperties,
+            user_properties: identity.userProperties,
             getSessionId: client.getSessionId,
             ...token ? { token } : {}
           };
@@ -25565,8 +26004,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             }
           ]
         });
-        identityStore.addIdentityListener((identity2) => {
-          this._setUserProperties(identity2.userProperties);
+        identityStore.addIdentityListener((identity) => {
+          this._setUserProperties(identity.userProperties);
         });
       };
       const execute = async (context) => {
@@ -25634,7 +26073,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           const nudge = actor.getSnapshot().context.nudge;
           const eustoreSnapshot = getNudgeDataFromUserStore(this._, nudge.variantId);
           const rendering = actor.getSnapshot().matches({ Step: "Render Loop" });
-          const active = !!eustoreSnapshot?.activelifeCycleUuid;
+          const active = isNudgeActive(this._, nudge);
           const debugSnapshot = getDebugSnapshotForHeadless(this._, nudge, skipChecks);
           const lifeCycleState = {
             activelifeCycleUuid: eustoreSnapshot?.activelifeCycleUuid || "",
@@ -25694,7 +26133,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
           const nudge = actor.getSnapshot().context.nudge;
           const eustoreSnapshot = getNudgeDataFromUserStore(this._, nudge.variantId);
           const rendering = actor.getSnapshot().matches({ Step: "Render Loop" });
-          const active = !!eustoreSnapshot?.activelifeCycleUuid;
+          const active = isNudgeActive(this._, nudge);
           if (!active && !rendering) continue;
           retval.push({
             id: nudge.variantId,
@@ -25731,9 +26170,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     rc = {
       /**
        * Opens the Resource Center widget.
+       *
+       * @param options Optional. Pass `url` to open directly on the article
+       * (content item) with that URL.
        */
-      open: () => {
-        this.resourceCenterActions.showResourceCenter(true);
+      open: (options) => {
+        this.resourceCenterActions.showResourceCenter(true, options);
       },
       /**
        * Closes the Resource Center widget.
@@ -25746,6 +26188,15 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
        */
       toggle: () => {
         this.resourceCenterActions.showResourceCenter(!this._.resourceCenter.visible);
+      },
+      /**
+       * Clears the Resource Center's persisted state from local storage: the saved
+       * open/minimized state, scroll position, search query, and last-viewed page.
+       * Takes effect on the next load (intended to be called during logout/teardown),
+       * so the Resource Center starts fresh on the next login.
+       */
+      clearState: () => {
+        clearStoredResourceCenterState();
       }
     };
     /**
@@ -25766,16 +26217,17 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       if (this._configuration) {
         this._configuration.locale = locale;
       }
-      const updatedConfig = await getEndUserConfig(this._configuration.apiKey, void 0, this._.instanceName);
-      const refreshedNudges = updatedConfig.nudges;
-      getAllNudgeActors(this._)?.forEach((actor) => {
-        const nudge = refreshedNudges.find((nudge2) => nudge2.variantId === actor.getSnapshot().context.nudge.variantId);
-        if (nudge) {
-          actor?.send({ type: "REFRESH_NUDGE", nudge });
+      const update = this._reloadNudges();
+      this._pendingLanguageUpdate = update;
+      try {
+        await update;
+      } finally {
+        if (this._pendingLanguageUpdate === update) {
+          this._pendingLanguageUpdate = null;
         }
-      });
+      }
     }
-    async decide() {
+    async decide(bypassCache = false) {
       this._cancelDecide?.();
       let cancelled = false;
       this._cancelDecide = () => {
@@ -25792,7 +26244,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
       try {
         this._.nudgesManager?.send({ type: "DECIDE_REQUESTED" });
-        const result = await decide_default.decide(this._configuration.apiKey, user, this._.isEditorPreview);
+        const result = await decide_default.decide(this._configuration.apiKey, user, this._.isEditorPreview, bypassCache);
         if (cancelled) return;
         this._.decide = result;
         this._.nudgesManager?.send({ type: "DECIDE_LOADED" });
@@ -25875,7 +26327,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         const scheduleRefresh = () => {
           this._autoRefreshTimer = setTimeout(async () => {
             logger.log("Auto-refreshing due to timeout");
-            await this.refresh();
+            await this.refresh(false);
             scheduleRefresh();
           }, autoRefreshIntervalMs);
         };
@@ -25891,7 +26343,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         this._autoRefreshTimer = null;
       }
     }
-    async refresh() {
+    /**
+     * @param bypassCache When true (the default for a user-initiated refresh), the
+     * /decide request bypasses the CDN cache for the freshest evaluation. The periodic
+     * auto-refresh passes false so it stays on the cached path.
+     */
+    async refresh(bypassCache = true) {
       const visibleNudges = this.gs.list().filter((nudge) => nudge.status === "visible");
       if (visibleNudges.length > 0) {
         logger.debug("Skipping refresh because guides or surveys are currently visible and we don't want to close them", {
@@ -25899,7 +26356,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         });
         return;
       }
-      await this.decide();
+      await this.decide(bypassCache);
       await this._.endUserStore.fetchData();
       await this._reload();
       this.nudgeActions.sendConstantTriggers();
@@ -25970,15 +26427,16 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       if (!this._.effectsSequencer) {
         this.globalActions.initEffectsSequencer();
       }
-      if (options.integrations != void 0) {
+      const integrations = options.integrations ?? this._configuration.integrations;
+      if (integrations != void 0) {
         this._.integrations = [];
-        options.integrations?.forEach((integration) => {
+        integrations.forEach((integration) => {
           this.addIntegration(integration);
         });
       }
       if (this._.integrations.length === 0) {
         logger.warn(
-          "No integrations provided. Guide insights, survey insights, and survey responses will not be tracked. Pass at least one integration to boot(), or use { track: () => {} } as a noop."
+          "No integrations provided. Guide insights, survey insights, and survey responses will not be tracked. Pass at least one integration to boot(), or use { track: () => {} } as a noop to opt out explicitly."
         );
       }
       try {
@@ -26000,7 +26458,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             this.setAutoRefreshInterval(autoRefreshInterval);
           }
           this._.nudgesManager?.send({ type: "END_USER_STORE_LOADED" });
-          Track.booted(options, this._.instanceName);
+          Track.booted({ ...options, user }, this._.instanceName);
           logger.debug("End user state loaded successfully");
         }
       } catch (e2) {
@@ -26008,6 +26466,15 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         logger.error("Failed to fetch end user state", e2);
       }
       if (bootCancelled) return;
+      let pendingLanguageUpdate = this._pendingLanguageUpdate;
+      while (pendingLanguageUpdate) {
+        try {
+          await pendingLanguageUpdate;
+        } catch {
+        }
+        if (bootCancelled) return;
+        pendingLanguageUpdate = this._pendingLanguageUpdate !== pendingLanguageUpdate ? this._pendingLanguageUpdate : null;
+      }
       this.nudgeActions.sendConstantTriggers();
     }
     /**
@@ -26131,13 +26598,23 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
     }
     /** Internal SDK methods **/
-    async _configUser() {
-      const { organization, nudges, flags, themes, resourceCenters } = await getEndUserConfig(
+    /**
+     * Fetches the end-user config using this instance's own settings. The locale
+     * must be passed explicitly: during boot (and boot-time proxy queue replay)
+     * the default instance isn't resolvable via `getSDK()` yet — it's still the
+     * proxy object — so `getEndUserConfig`'s global locale lookup would ignore
+     * `init({ locale })` and fetch the default-locale (English) config.
+     */
+    _fetchEndUserConfig() {
+      return getEndUserConfig(
         this._configuration.apiKey,
         this._.isEditorPreview,
-        this._.instanceName
+        this._.instanceName,
+        this._configuration.locale
       );
-      this._.flags = flags;
+    }
+    async _configUser() {
+      const { organization, nudges, themes, resourceCenters } = await this._fetchEndUserConfig();
       this._.themes = themes;
       const [resourceCenter] = resourceCenters;
       if (resourceCenter) {
@@ -26157,7 +26634,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       return this._.editorPreviewDevice;
     }
     async _reload(reloadTargets = _reloadTargets) {
-      const config = await getEndUserConfig(this._configuration.apiKey, this._.isEditorPreview, this._.instanceName);
+      const config = await this._fetchEndUserConfig();
       for (const method of reloadTargets) {
         const symbol = method;
         const fn = this[symbol];
@@ -26167,15 +26644,15 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }
     }
     async _reloadOrganization(preLoadedConfig) {
-      const { organization } = preLoadedConfig || await getEndUserConfig(this._configuration.apiKey, this._.isEditorPreview, this._.instanceName);
+      const { organization } = preLoadedConfig || await this._fetchEndUserConfig();
       this.globalActions.setOrganization(organization);
     }
     async _reloadNudges(preLoadedConfig) {
-      const { nudges } = preLoadedConfig || await getEndUserConfig(this._configuration.apiKey, this._.isEditorPreview, this._.instanceName);
+      const { nudges } = preLoadedConfig || await this._fetchEndUserConfig();
       this.nudgeActions.initNudges(nudges || []);
     }
     async _reloadThemes(preLoadedConfig) {
-      const { themes } = preLoadedConfig || await getEndUserConfig(this._configuration.apiKey, this._.isEditorPreview, this._.instanceName);
+      const { themes } = preLoadedConfig || await this._fetchEndUserConfig();
       this._.themes = themes;
     }
     _startNudgeDebug(data) {
@@ -26222,7 +26699,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
     _showResourceCenter(show, options) {
       if (show && options?.initialPage) {
-        this.resourceCenterActions.setInitialPage({ item: { page: options.initialPage, params: {} } });
+        this.resourceCenterActions.navigate({ page: options.initialPage, params: {} });
       }
       this.resourceCenterActions.showResourceCenter(show);
       if (options?.recSet !== void 0) {
@@ -26244,7 +26721,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       this.resourceCenterActions.setResourceCenterFilter(filter);
     }
     _startChat(sessionId, messages) {
-      this.resourceCenterActions.setInitialPage({ item: { page: "assistant", params: {} } });
+      this.resourceCenterActions.navigate({ page: "assistant", params: {} });
       this.resourceCenterActions.showResourceCenter(true);
       if (window.engagement?.assistant?._startChat) {
         window.engagement.assistant._startChat(sessionId, messages);
@@ -26433,12 +26910,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   }
   var __assign2 = function() {
-    __assign2 = Object.assign || function __assign3(t16) {
+    __assign2 = Object.assign || function __assign3(t14) {
       for (var s2, i2 = 1, n = arguments.length; i2 < n; i2++) {
         s2 = arguments[i2];
-        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t16[p] = s2[p];
+        for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p)) t14[p] = s2[p];
       }
-      return t16;
+      return t14;
     };
     return __assign2.apply(this, arguments);
   };
@@ -26473,12 +26950,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     var _ = {
       label: 0,
       sent: function() {
-        if (t16[0] & 1) throw t16[1];
-        return t16[1];
+        if (t14[0] & 1) throw t14[1];
+        return t14[1];
       },
       trys: [],
       ops: []
-    }, f, y2, t16, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    }, f, y2, t14, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
     return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() {
       return this;
     }), g;
@@ -26490,12 +26967,12 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     function step(op) {
       if (f) throw new TypeError("Generator is already executing.");
       while (g && (g = 0, op[0] && (_ = 0)), _) try {
-        if (f = 1, y2 && (t16 = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t16 = y2["return"]) && t16.call(y2), 0) : y2.next) && !(t16 = t16.call(y2, op[1])).done) return t16;
-        if (y2 = 0, t16) op = [op[0] & 2, t16.value];
+        if (f = 1, y2 && (t14 = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t14 = y2["return"]) && t14.call(y2), 0) : y2.next) && !(t14 = t14.call(y2, op[1])).done) return t14;
+        if (y2 = 0, t14) op = [op[0] & 2, t14.value];
         switch (op[0]) {
           case 0:
           case 1:
-            t16 = op;
+            t14 = op;
             break;
           case 4:
             _.label++;
@@ -26513,25 +26990,25 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
             _.trys.pop();
             continue;
           default:
-            if (!(t16 = _.trys, t16 = t16.length > 0 && t16[t16.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+            if (!(t14 = _.trys, t14 = t14.length > 0 && t14[t14.length - 1]) && (op[0] === 6 || op[0] === 2)) {
               _ = 0;
               continue;
             }
-            if (op[0] === 3 && (!t16 || op[1] > t16[0] && op[1] < t16[3])) {
+            if (op[0] === 3 && (!t14 || op[1] > t14[0] && op[1] < t14[3])) {
               _.label = op[1];
               break;
             }
-            if (op[0] === 6 && _.label < t16[1]) {
-              _.label = t16[1];
-              t16 = op;
+            if (op[0] === 6 && _.label < t14[1]) {
+              _.label = t14[1];
+              t14 = op;
               break;
             }
-            if (t16 && _.label < t16[2]) {
-              _.label = t16[2];
+            if (t14 && _.label < t14[2]) {
+              _.label = t14[2];
               _.ops.push(op);
               break;
             }
-            if (t16[2]) _.ops.pop();
+            if (t14[2]) _.ops.pop();
             _.trys.pop();
             continue;
         }
@@ -26540,7 +27017,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
         op = [6, e2];
         y2 = 0;
       } finally {
-        f = t16 = 0;
+        f = t14 = 0;
       }
       if (op[0] & 5) throw op[1];
       return {
@@ -27556,9 +28033,9 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
                   throw Error("Flags error response: status=".concat(response.status));
                 }
                 flagsArray = JSON.parse(response.body);
-                return [2, flagsArray.reduce(function(map2, flag) {
-                  map2[flag.key] = flag;
-                  return map2;
+                return [2, flagsArray.reduce(function(map, flag) {
+                  map[flag.key] = flag;
+                  return map;
                 }, {})];
             }
           });
@@ -27687,6 +28164,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     },
     getDefaultUIMode: () => "lightMode",
     isElementVisible: async () => false,
+    isPinTargetAvailable: async () => false,
     matchesSelector: () => false,
     showResourceCenter: (..._args) => {
       return;
@@ -27751,12 +28229,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       evalEngine: new EvaluationEngine(),
       callbacks: {},
       sessionProperties: {},
-      flags: null,
       nudgesManager: null,
       effectsSequencer: null,
       currentModalNudge: null,
+      lastMockNudge: null,
       activeChecklist: null,
       delayedTriggers: /* @__PURE__ */ new Set(),
+      previewRestorationRetryTimer: null,
       platform,
       trackedAppEvents: /* @__PURE__ */ new Set(),
       showWidgetTableau: false,
@@ -27785,22 +28264,15 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       sessionStart: getOrCreateSessionStart(apiKeyPrefix),
       integrations: [],
       resourceCenter: {
-        renderKey: 0,
         visible: false,
         minimized: false,
         loading: true,
-        scrollPosition: 0,
         query: null,
-        searchResults: [],
-        experienceSearchResults: [],
-        currentContentItemId: null,
-        currentDocHeading: null,
         recommendationSets: null,
         previewedRecommendationSet: null,
         additionalResources: null,
         previewedAdditionalResources: null,
-        parsingUrlParams: false,
-        initialPage: null,
+        navigation: emptyNavigationState(),
         isAutopilotEnabled: false,
         textStrings: {},
         showQuickLinks: false,
@@ -27824,7 +28296,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       resourceCenter: {
         ...baseStore.resourceCenter,
         shouldPersistOnReload: persistResourceCenter,
-        ...persistResourceCenter ? resourceCenterFromStorage : {}
+        ...persistResourceCenter ? resourceCenterFromStorage : {},
+        navigation: initialNavigationState(persistResourceCenter)
       }
     });
   };
@@ -27833,16 +28306,50 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     return () => unsubs.forEach((unsub) => unsub());
   };
 
+  // ../shared/src/sdk/launchCodes.ts
+  var SERVER_URL_BY_LAUNCH_CODE = {
+    local: SERVER_URLS.local,
+    staging: SERVER_URLS.staging,
+    stag: SERVER_URLS.staging,
+    stag2: SERVER_URLS.staging,
+    prod: SERVER_URLS.prodUs,
+    prodUs: SERVER_URLS.prodUs,
+    prodEu: SERVER_URLS.prodEu
+  };
+  var CHAT_URL_BY_LAUNCH_CODE = {
+    local: CHAT_URLS.local,
+    staging: CHAT_URLS.staging,
+    stag: CHAT_URLS.staging,
+    stag2: CHAT_URLS.staging,
+    rc: CHAT_URLS.staging,
+    // TODO: change to rc.amplitude.com
+    prod: CHAT_URLS.prodUs,
+    prodUs: CHAT_URLS.prodUs,
+    prodEu: CHAT_URLS.prodEu
+  };
+  var SDK_BUNDLE_URL_BY_LAUNCH_CODE = {
+    local: "http://localhost:10002/index.js",
+    staging: resolveBundleUrl(CDN_URLS.prodUs, "staging", false),
+    stag: resolveBundleUrl(CDN_URLS.prodUs, "staging", false),
+    stag2: resolveBundleUrl(CDN_URLS.prodUs, "staging", false),
+    rc: resolveBundleUrl(CDN_URLS.prodUs, "rc", false),
+    prod: resolveBundleUrl(CDN_URLS.prodUs, "prod", false),
+    prodEu: resolveBundleUrl(CDN_URLS.prodUs, "prod-eu", false)
+  };
+  var SDK_SPLIT_BUNDLE_URL_BY_LAUNCH_CODE = {
+    local: "http://localhost:10002/split/index.js",
+    staging: resolveBundleUrl(CDN_URLS.prodUs, "staging", true),
+    stag: resolveBundleUrl(CDN_URLS.prodUs, "staging", true),
+    stag2: resolveBundleUrl(CDN_URLS.prodUs, "staging", true),
+    rc: resolveBundleUrl(CDN_URLS.prodUs, "rc", true),
+    prod: resolveBundleUrl(CDN_URLS.prodUs, "prod", true),
+    prodEu: resolveBundleUrl(CDN_URLS.prodUs, "prod-eu", true)
+  };
+
   // ../shared/src/internal/util/proxyMediaUrl.ts
-  var AMPLITUDE_IMAGE_DOMAINS = [
-    "engagement-static.amplitude.com",
-    "engagement-static.eu.amplitude.com",
-    "engagement-static.amplitudeengagement.com",
-    "engagement-static.eu.amplitudeengagement.com"
-  ];
   var stripAmplitudeImageDomain = (url) => {
     try {
-      for (const domain of AMPLITUDE_IMAGE_DOMAINS) {
+      for (const domain of AMPLITUDE_MEDIA_HOSTS) {
         const domainWithScheme = `https://${domain}/`;
         if (url.startsWith(domainWithScheme)) {
           return url.slice(domainWithScheme.length - 1);
@@ -27889,7 +28396,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     },
     closeAllNudgeMocks: () => {
     },
-    closeStep: (_, nudge, stepIndex) => nudgeServicesBridge.function("closeStep").call(JSON.stringify(nudge), stepIndex),
+    closeStep: (_globalStore, nudge, stepIndex) => nudgeServicesBridge.function("closeStep").call(JSON.stringify(nudge), stepIndex),
     renderNudge(_, nudge, stepIndex, options) {
       nudge = interpolateUserPropertiesDeep(nudge, _);
       nudge = {
@@ -27914,7 +28421,7 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       const themeMode = _.themeMode === "auto" ? _.services.getDefaultUIMode() : _.themeMode;
       if (nudge?.customThemeId !== void 0 && nudge.customThemeId !== null) {
         theme = {
-          theme: _.themes.find((t16) => t16.id === nudge.customThemeId)?.theme,
+          theme: _.themes.find((t14) => t14.id === nudge.customThemeId)?.theme,
           mode: themeMode
         };
       }
@@ -27989,12 +28496,13 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     ...nudge_default,
     onLocationChange,
     enrichUser,
-    linkExecutable: (_, action, forceNewTab) => nudgeServicesBridge2.function("linkExecutable").call(JSON.stringify(action), forceNewTab),
+    linkExecutable: (_globalStore, action, forceNewTab) => nudgeServicesBridge2.function("linkExecutable").call(JSON.stringify(action), forceNewTab),
     getDefaultUIMode: () => nudgeServicesBridge2.function("getDefaultUIMode").call(),
     clickElement: (selector) => nudgeServicesBridge2.function("clickElement").call(selector),
     isElementVisible: async (selector) => nudgeServicesBridge2.function("isElementVisible").promise({ selector: typeof selector === "string" ? selector : selector.selector || selector.text }),
+    isPinTargetAvailable: async (selector) => nudgeServicesBridge2.function("isElementVisible").promise({ selector: typeof selector === "string" ? selector : selector.selector || selector.text }),
     matchesSelector,
-    appReviewExecutable: (_, action) => nudgeServicesBridge2.function("appReviewExecutable").call(JSON.stringify(action)),
+    appReviewExecutable: (_globalStore, action) => nudgeServicesBridge2.function("appReviewExecutable").call(JSON.stringify(action)),
     // Mobile native has limited support for breaking features
     // Features are identified by four-digit numbers (e.g., '0001')
     // Fetched from native SDK, with fallback for older versions that don't expose this function
@@ -28038,22 +28546,14 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   var getApiEndpoint = (serverZone) => {
     switch (serverZone) {
       case "US":
-        return "https://gs.amplitude.com";
+        return SERVER_URLS.prodUs;
       case "EU":
-        return "https://gs.eu.amplitude.com";
+        return SERVER_URLS.prodEu;
       default:
-        return "http://localhost:10001";
+        return SERVER_URLS.local;
     }
   };
-  var SERVER_LAUNCH_CODE_MAPPING = {
-    local: "http://localhost:10001",
-    staging: "https://gs.stag2.amplitude.com",
-    stag: "https://gs.stag2.amplitude.com",
-    stag2: "https://gs.stag2.amplitude.com",
-    prod: "https://gs.amplitude.com",
-    prodUs: "https://gs.amplitude.com",
-    prodEu: "https://gs.eu.amplitude.com"
-  };
+  var SERVER_LAUNCH_CODE_MAPPING = SERVER_URL_BY_LAUNCH_CODE;
   var invokeImmediately = async () => {
     if (window.engagement?._initStarted === true) {
       return;
