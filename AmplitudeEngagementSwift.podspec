@@ -1,4 +1,4 @@
-amplitude_engagement_version = "3.13.0" # Version is managed automatically by semantic-release, please don't change it manually
+amplitude_engagement_version = "3.14.0" # Version is managed automatically by semantic-release, please don't change it manually
 
 Pod::Spec.new do |s|
   s.name                   = "AmplitudeEngagementSwift"
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
     'Sources/CQuickJS.xcframework',
   ]
 
-  s.dependency 'AmplitudeCore', '>=1.0.12', '<2.0.0'
+  s.dependency 'AmplitudeCore', '>=1.5.0', '<2.0.0'
 
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
 end

@@ -12060,6 +12060,10 @@
 
   // ../shared/src/sdk/instanceRegistry.ts
   var DEFAULT_INSTANCE_NAME = "$default";
+  var instanceRegistryListeners = /* @__PURE__ */ new Set();
+  var notifyInstanceRegistryListeners = () => {
+    instanceRegistryListeners.forEach((listener) => listener());
+  };
   function getInstanceRegistry() {
     if (typeof window === "undefined" || !window.engagement) {
       return /* @__PURE__ */ new Map();
@@ -12081,7 +12085,11 @@
       logger.warn("Cannot unregister the default instance");
       return false;
     }
-    return getInstanceRegistry().delete(instanceName);
+    const removed = getInstanceRegistry().delete(instanceName);
+    if (removed) {
+      notifyInstanceRegistryListeners();
+    }
+    return removed;
   }
   function getInstanceNames() {
     const names = Array.from(getInstanceRegistry().keys());
@@ -20322,18 +20330,24 @@ ${err.message}`);
     const clearSavedSequence = () => {
       SessionStorage_default.remove(SEQUENCE_STORAGE_KEY, globalStore.apiKeyPrefix);
     };
-    const hasEffects = ({ event }) => event.effects.length > 0;
-    const hasEffectToExecute = ({ context }) => !!context.effects.at(context.currentEffectIndex);
-    const getLinkSequenceStrategy = ({ context }) => {
+    const hasEffects = ({ event }) => event.type === "RUN" && event.effects.length > 0;
+    const hasEffectToExecute = ({ context }) => context.currentEffectIndex < context.effects.length;
+    const shouldExecuteEffect = ({ context }) => {
+      const effect = context.effects.at(context.currentEffectIndex);
+      return context.source?.variantId != null && effect != null;
+    };
+    const shouldPersistSequence = ({ context }) => {
       const effect = context.effects.at(context.currentEffectIndex);
       const hasRemainingEffects = context.currentEffectIndex < context.effects.length - 1;
-      if (!hasRemainingEffects || effect?.type !== "link") return "continue";
-      if (__GS_PLATFORM__ === "web" && effect.operation === "self") return "persist";
-      if (__GS_PLATFORM__ !== "web" && effect.operation !== "router") return "terminate";
-      return "continue";
+      if (!hasRemainingEffects || effect?.type !== "link") return false;
+      return __GS_PLATFORM__ === "web" && effect.operation === "self";
     };
-    const shouldPersist = (args) => getLinkSequenceStrategy(args) === "persist";
-    const shouldTerminateSequence = (args) => getLinkSequenceStrategy(args) === "terminate";
+    const shouldTerminateOnLink = ({ context }) => {
+      const effect = context.effects.at(context.currentEffectIndex);
+      const hasRemainingEffects = context.currentEffectIndex < context.effects.length - 1;
+      if (!hasRemainingEffects || effect?.type !== "link") return false;
+      return __GS_PLATFORM__ !== "web" && effect.operation !== "router";
+    };
     const isRetryable2 = ({ context }) => {
       const actionType = context.effects.at(context.currentEffectIndex)?.type;
       return actionType === "click" || actionType === "nudge";
@@ -20384,6 +20398,7 @@ ${err.message}`);
             clearSavedSequence();
             return;
           }
+          clearSavedSequence();
           enqueue.raise({
             type: "RUN",
             ...parsedSequence.right
@@ -20392,47 +20407,47 @@ ${err.message}`);
         clearSavedSequence,
         saveSequence,
         assignSequence: assign({
-          effects: ({ event }) => event.effects,
-          source: ({ event }) => event.source,
+          effects: ({ event }) => event.type === "RUN" ? event.effects : [],
+          source: ({ event }) => event.type === "RUN" ? event.source : null,
           currentEffectIndex: 0
-        }),
-        advanceEffect: assign({
-          currentEffectIndex: ({ context }) => context.currentEffectIndex + 1
         }),
         clearSequence: assign({
           effects: [],
           currentEffectIndex: 0,
           source: null
         }),
-        trackActionError: ({ context }) => {
+        failCurrentEffectAndAdvance: enqueueActions(({ enqueue, context }) => {
+          const effectIndex = context.currentEffectIndex;
           const variantId = context.source?.variantId;
-          if (variantId == null) return;
-          const effect = context.effects.at(context.currentEffectIndex);
-          const errorType = mapEffectTypeToErrorCategory(effect, globalStore);
-          const stepIndex = context.source?.stepIndex;
-          const originalActionIndex = (context.source?.actionIndexOffset ?? 0) + context.currentEffectIndex;
-          const sourceNudge = getNudgeById(globalStore, variantId);
-          if (sourceNudge) {
-            Track.nudge.error(
-              sourceNudge,
-              stepIndex,
-              errorType,
-              { actionIndex: originalActionIndex },
-              globalStore.instanceName
-            );
-          } else if (context.source?.commonProperties) {
-            Track.nudge.errorFromProperties(
-              context.source.commonProperties,
-              errorType,
-              originalActionIndex,
-              globalStore.instanceName
-            );
+          if (variantId != null) {
+            const effect = context.effects.at(effectIndex);
+            const errorType = mapEffectTypeToErrorCategory(effect, globalStore);
+            const stepIndex = context.source?.stepIndex;
+            const originalActionIndex = (context.source?.actionIndexOffset ?? 0) + effectIndex;
+            const sourceNudge = getNudgeById(globalStore, variantId);
+            if (sourceNudge) {
+              Track.nudge.error(
+                sourceNudge,
+                stepIndex,
+                errorType,
+                { actionIndex: originalActionIndex },
+                globalStore.instanceName
+              );
+            } else if (context.source?.commonProperties) {
+              Track.nudge.errorFromProperties(
+                context.source.commonProperties,
+                errorType,
+                originalActionIndex,
+                globalStore.instanceName
+              );
+            }
           }
-        }
+          enqueue.assign({ currentEffectIndex: effectIndex + 1 });
+        })
       },
       actors: {
         executeEffect: fromPromise(async ({ input }) => {
-          if (!input.source) {
+          if (input.source?.variantId == null) {
             throw new Error("No execution event source");
           }
           if (!input.effect) {
@@ -20441,12 +20456,20 @@ ${err.message}`);
           executeAction(globalStore, input.effect, input.source.variantId);
         })
       },
-      guards: { hasEffects, hasEffectToExecute, shouldPersist, shouldTerminateSequence, isRetryable: isRetryable2 },
+      guards: {
+        hasEffects,
+        hasEffectToExecute,
+        shouldExecuteEffect,
+        shouldPersistSequence,
+        shouldTerminateOnLink,
+        isRetryable: isRetryable2
+      },
       delays: { RETRY_INTERVAL, RETRY_TIMEOUT }
     }).createMachine({
       /** @xstate-layout N4IgpgJg5mDOIC5QFEBmqwGMAusDKYAjgK5gB2mYATgHQCSEANmAMQBKAqgHIDaADAF1EoAA4B7WAEtsksWWEgAHogC0ANgAcGmgCYALAFYNAdh0BGDWYNq1xgDQgAnoisBOGmeN81Ovq7Wueq4AzJ4AvmEOaBg4+ESkFNQ0BCTkmJJkUOzc-EJIIOJSMnIKyggqesF6NMFqVmp+da4G-g7OCME62nx6JgZ6enyeFgMRUehYuCkJlLTTaRlQNADCABZYANaL0ZMsuQqF0rLy+WVmVsE0lq7GwTdm+l16bS6+NHzBxiGufBr9Gq5AmMQDtYvNEnN4gtMit1pgtplQdg9mY8qIJEcSqcXLU+B5jACgsYGgYLDoXggzJV3lTep5SV0qsFgUi4qkIckoRRFjRkIosMQZJkWIpYNgAIbYMA0cWoKVUAAUbGQABU2ABNAD6KroAFlkAB5DgqgCULFZ4NmnPZ6RhfIFQqg+3yh2KJ1AZQGeM8Nj4vzUelp3gpDTxpJ+IV6AVqzMiIImYK5VstPPtmEFPIAgtgpQBbESOlgQOTSjIANzEG2lFqTSRTdv56cdNGzeYLiwQ5bEmElx1yzvRRWOpUQRjMNFMOjuQQM1hawQpxnOV28GmCGnMZiqNxZCamtchNtTjYzMNbYHzheoVDEtBEjElqFvud5e7ZMzrSePDqzOYv7cyTsyArHs3X7QQDgxN0R0pP0DBoWcNDUAw-B0JdDFcClXC3XQBh+Dc+B0AxggMXcYn3G1PyPBsfzPP9L0WFhr1vGh70fZ9X3I980iomZvybX820dICQN7OR+1RSChyxD0XD9bQDAJKwrB0H4lzUCkzD4YxqgMHQ1E6PhiOsLc1DIyZuI5esljTU8lgAdXFI5MhVMQ2DAbAqEcEUxUlaVZXlJVVQ1TU6C4FVkDYAA1TMABkzRrSjDz4miBJhRznKgVz3M8xwBwKKDh2xSlKnguo-g3foqkDDSnEQJc8Q0Vc9FMO5ASCczEyS60UqWTMIDLcVuWFfLXSK2SED4Ck+E6iiP2S6E+oGobbSyHhJJdQqZKURAprqybZss5Mv1SuyADEMnFRgkSLEsaC7KtOIsy1eMW3kT0dC6yCupERO7MSyHAtECuk90doQb4JyGTQUNcLofA0TS9B0XQAxaxTiSnKNDpehbhpsj7Fi+n69yYqgbzvB9sCfKgX0S+aere2zPsu669z+0C+0EUatrBsoum0KkA3MIw0P0hd9q6YwaBCWoBjMBoNF6YwIjjMgxAgOAFHpniqCkzE+dULR3D8EjglqLdjYl9oKj9GggkBb5ZyM-ocYPegmDAfXoOKlQlfHU3iIt9cAWt1QA10FC-R8KP12Rt3uus73xvBipEf2lQfXeP0hk+NDFNGOMdask6ljWTZtj3ZPtrOX4FKDj5zDuRTMIzgZs79c4Hk+bDjFIou31xxn8fe2ioGrw2IYVq4ugeIx-FMJWKVJeuAh6Ho4ZQjQE4Z6zR7Svr6IA8fNtBmD-GqDdLCIgFbCeEMvHeawledgkMJ33Xh9W-e7JoDLHWyh5LyE8YKmTDLUawQwtC2GRhSLQ2gghBCpDcHoekdAfxLtRJag18YgOKtPHwiCFY6SnIEGwmlCKXEIgZIYVJ9K-D0Bg46WCf4s2+mzcieCJoEgUsSZC64hhzlqu0IieJfREThqbCwZgmGvRHpmAA7k5R0XBxRlkkFAAGXDwadGlr4Mw-gWg6H0BYAwWETa0iXA8cW65XCqzCEAA */
       id: EFFECTS_SEQUENCER_ID,
       exit: ["clearSavedSequence"],
+      entry: ["loadSequence"],
       description: "Executes a sequence of CTA button effects (clicks, links, nudge opens) one at a time. On web, persists remaining effects to sessionStorage when a same-page navigation is about to occur and resumes on the next page load. On mobile, terminates the sequence when a non-router link navigates out of the app context.",
       context: {
         effects: [],
@@ -20456,8 +20479,8 @@ ${err.message}`);
       initial: "Idle",
       states: {
         Idle: {
-          description: "Waiting for a RUN event. On entry, attempts to restore a persisted sequence from sessionStorage (e.g. after a same-page navigation).",
-          entry: ["loadSequence", "clearSequence"],
+          description: "Waiting for a RUN event. Persisted sequences are restored once on machine start (see root entry).",
+          entry: ["clearSequence"],
           on: {
             RUN: {
               target: "Sequencing",
@@ -20484,29 +20507,37 @@ ${err.message}`);
               always: [
                 {
                   target: "ExecutingFinalEffect",
-                  guard: "shouldPersist",
+                  guard: "shouldPersistSequence",
                   actions: ["saveSequence"]
                 },
                 {
                   target: "ExecutingFinalEffect",
-                  guard: "shouldTerminateSequence"
+                  guard: "shouldTerminateOnLink"
                 },
-                "Executing"
+                {
+                  target: "Executing",
+                  guard: "shouldExecuteEffect"
+                },
+                {
+                  target: "#EffectsSequencer.Idle",
+                  actions: ["clearSavedSequence"],
+                  reenter: true
+                }
               ]
             },
             Executing: {
-              description: "Runs the current effect with retry support for click-type effects. A global RETRY_TIMEOUT caps total retry duration before advancing.",
+              description: "Runs the current effect with retry support for click and nudge effects. A global RETRY_TIMEOUT caps total retry duration before advancing.",
               initial: "Attempting",
               after: {
                 RETRY_TIMEOUT: {
                   description: "Safety net: if retries exceed the timeout, skip this effect and advance.",
                   target: "Advancing",
-                  actions: ["trackActionError"]
+                  actions: ["failCurrentEffectAndAdvance"]
                 }
               },
               states: {
                 Attempting: {
-                  description: "Invokes a single execution attempt of the current effect.",
+                  description: "Invokes executeEffect for the current effect. Completion is actor-scheduled so external RUN can interrupt between effects.",
                   invoke: {
                     src: "executeEffect",
                     input: ({ context }) => ({
@@ -20514,7 +20545,10 @@ ${err.message}`);
                       source: context.source ? { variantId: context.source.variantId } : void 0
                     }),
                     onDone: {
-                      target: "#Advancing"
+                      target: "#Advancing",
+                      actions: assign({
+                        currentEffectIndex: ({ context }) => context.currentEffectIndex + 1
+                      })
                     },
                     onError: [
                       {
@@ -20523,13 +20557,13 @@ ${err.message}`);
                       },
                       {
                         target: "#Advancing",
-                        actions: ["trackActionError"]
+                        actions: ["failCurrentEffectAndAdvance"]
                       }
                     ]
                   }
                 },
                 WaitingToRetry: {
-                  description: "Pauses before re-attempting a failed click effect.",
+                  description: "Pauses before re-attempting a failed click or nudge effect.",
                   after: {
                     RETRY_INTERVAL: {
                       target: "Attempting",
@@ -20540,9 +20574,8 @@ ${err.message}`);
               }
             },
             Advancing: {
-              description: "Increments the effect index. If more effects remain, loops back to CheckingEffect; otherwise returns to Idle and clears state.",
+              description: "Routes after an effect completes or fails. Index is already advanced on success or by failCurrentEffectAndAdvance.",
               id: "Advancing",
-              entry: ["advanceEffect"],
               always: [
                 {
                   target: "CheckingEffect",
@@ -20550,7 +20583,7 @@ ${err.message}`);
                 },
                 {
                   target: "#EffectsSequencer.Idle",
-                  actions: ["clearSequence", "clearSavedSequence"],
+                  actions: ["clearSavedSequence"],
                   reenter: true
                 }
               ]
@@ -20566,7 +20599,7 @@ ${err.message}`);
                 onDone: "AwaitingNavigation",
                 onError: {
                   target: "#Advancing",
-                  actions: ["trackActionError", "clearSavedSequence"]
+                  actions: ["failCurrentEffectAndAdvance", "clearSavedSequence"]
                 }
               }
             },
@@ -21229,7 +21262,7 @@ ${err.message}`);
     }
     return sanitized;
   }
-  async function getConfig(apiKey, isAdmin = false, locale = void 0, isEditorPreview = false, instanceName) {
+  async function getConfig(apiKey, isAdmin = false, locale = void 0, isEditorPreview = false, instanceName, supportedBreakingFeaturesOverride) {
     if (locale) {
       locale = sanitizeLocale(locale);
       const sdk2 = getSDK(instanceName);
@@ -21259,7 +21292,7 @@ ${err.message}`);
     }
     const { organization, nudges, themes } = data || {};
     const sdk = getSDK(instanceName);
-    const supportedBreakingFeatures = sdk?._?.services?.supportedBreakingFeatures;
+    const supportedBreakingFeatures = supportedBreakingFeaturesOverride ?? sdk?._?.services?.supportedBreakingFeatures;
     const decodedNudges = nudges?.flatMap((nudge) => {
       try {
         return [Nudge.decode(nudge, supportedBreakingFeatures)];
@@ -21321,13 +21354,14 @@ ${err.message}`);
     const previewLocale = locale ?? getSDK(instanceName)?.[_configuration].locale;
     return getConfig(apiKey, true, previewLocale, isEditorPreview, instanceName);
   }
-  async function getEndUserConfig(apiKey, isEditorPreview = false, instanceName, locale) {
+  async function getEndUserConfig(apiKey, isEditorPreview = false, instanceName, locale, supportedBreakingFeatures) {
     return getConfig(
       apiKey,
       false,
       locale ?? getSDK(instanceName)?.[_configuration].locale,
       isEditorPreview,
-      instanceName
+      instanceName,
+      supportedBreakingFeatures
     );
   }
 
@@ -21458,7 +21492,7 @@ ${err.message}`);
         sendIndirectTrigger(_, {
           trigger: {
             type: "element_clicked",
-            match: (selector) => _.services.matchesSelector(event.target, selector)
+            match: (selector) => _.services.matchesSelector(event.target, selector, event.deepTarget)
           },
           source: { type: "trigger", properties: { triggerType: "element_clicked" } }
         });
@@ -22232,7 +22266,7 @@ ${err.message}`);
           "Checking Audience": {
             always: [
               {
-                target: "Checking Custom Throttles",
+                target: "Checking Page",
                 guard: "passesAudience",
                 actions: [
                   { type: "captureEvaluationId" },
@@ -22267,7 +22301,7 @@ ${err.message}`);
           "Checking Page": {
             always: [
               {
-                target: "Checking Audience",
+                target: "Checking Custom Throttles",
                 guard: "passesPage",
                 actions: [{ type: "logCondition", params: { conditionName: "page", conditionResult: "PASS" } }]
               },
@@ -22387,7 +22421,7 @@ ${err.message}`);
             entry: [{ type: "incrementEventCount" }],
             always: [
               {
-                target: "Checking Page",
+                target: "Checking Audience",
                 guard: "passesEventCount",
                 actions: [{ type: "logCondition", params: { conditionName: "eventCount", conditionResult: "PASS" } }]
               },
@@ -22967,9 +23001,14 @@ The nudge manager will keep track of how many nudges are in a render loop. If we
       })),
       stopNudgeMachines: ({ context }) => {
         const nudgeActors = context.nudgeMachines.values();
+        const debugVariantId = context.debugMode.currentNudge?.variantId ?? null;
         for (const actor of nudgeActors) {
-          if (!shouldStopOnSimulateStart(actor.getSnapshot().context.nudge)) {
-            return;
+          const nudge = actor.getSnapshot().context.nudge;
+          if (!shouldStopOnSimulateStart(nudge)) {
+            if (debugVariantId !== null && nudge.variantId !== debugVariantId) {
+              actor.send({ type: "CLOSE" });
+            }
+            continue;
           }
           if (actor) {
             actor.send({ type: "STOP" });
@@ -23512,7 +23551,8 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     setupMessageBusNudgeTriggerSubscriptions(_);
   };
   var sendIndirectTrigger = (_, triggerEventPayload) => {
-    if (getPendingPreviewVariantId(_) !== null) {
+    const pendingPreviewVariantId = getPendingPreviewVariantId(_);
+    if (pendingPreviewVariantId !== null) {
       logger.debug("Skipping indirect trigger due to pending preview session");
       return;
     }
@@ -23654,7 +23694,16 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   }) => {
     const debugNudge = getDebuggedNudge(_, { getOriginal: !!options.resetToOriginalDebugNudge });
     if (debugNudge) {
-      await stopDebugSession(_, { refreshDecide: false });
+      savePreviewSession(
+        {
+          variantId: debugNudge.variantId,
+          locale: options.locale ?? getSDKForStore(_)?.[_configuration].locale,
+          bypassCustomThrottles: _.nudgeDebugToolBar.bypassCustomThrottles,
+          bypassTargeting: _.nudgeDebugToolBar.bypassTargeting
+        },
+        _.apiKeyPrefix
+      );
+      await stopDebugSession(_, { refreshDecide: false, clearSession: false });
       resetNudge(_, debugNudge.variantId);
       setTimeout(() => {
         startDebugSession(_, debugNudge, {
@@ -23665,12 +23714,17 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
       }, 50);
     }
   };
-  var stopDebugSession = async (_, options = { refreshDecide: true }) => {
+  var stopDebugSession = async (_, options = {
+    refreshDecide: true,
+    clearSession: true
+  }) => {
     if (_.nudgeDebugToolBar.visible) {
       if (options.refreshDecide) {
         await refreshDecideResult(_);
       }
-      clearPreviewSession(_.apiKeyPrefix);
+      if (options.clearSession !== false) {
+        clearPreviewSession(_.apiKeyPrefix);
+      }
       resetAllEventCounts(_.apiKeyPrefix, _.instanceName);
       _.nudgesManager?.send({ type: "STOP_DEBUG" });
       if (options.restoreTriggers) {
@@ -24135,6 +24189,10 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
     }
     return value;
   };
+  var flattenStoredSurveyResponses = (stored) => {
+    if (!stored) return {};
+    return Object.values(stored).reduce((acc, stepResponses) => ({ ...acc, ...stepResponses }), {});
+  };
   nudgeActionsBridge.function("dismissNudge", (nudge) => {
     dismissNudge(window.engagement._, nudge, 0 /* DEFAULT */);
   });
@@ -24171,10 +24229,19 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
   });
   nudgeActionsBridge.function(
     "determineAction",
-    (step, buttonMeta, surveyResponses) => {
+    (step, buttonMeta, surveyResponses, variantId) => {
+      const currentResponses = normalizeSurveyResponses(surveyResponses);
+      let mergedResponses = currentResponses;
+      if (variantId !== void 0) {
+        const actor = getNudgeActor(window.engagement._, variantId);
+        mergedResponses = {
+          ...flattenStoredSurveyResponses(actor?.getSnapshot().context.surveyResponses),
+          ...currentResponses ?? {}
+        };
+      }
       return determineAction(window.engagement._, step, {
         buttonMeta,
-        surveyResponses: normalizeSurveyResponses(surveyResponses)
+        surveyResponses: mergedResponses
       });
     }
   );
@@ -26604,13 +26671,15 @@ This can be bypassed by setting the debug or admin overrride on a trigger.`
      * the default instance isn't resolvable via `getSDK()` yet — it's still the
      * proxy object — so `getEndUserConfig`'s global locale lookup would ignore
      * `init({ locale })` and fetch the default-locale (English) config.
+     * `supportedBreakingFeatures` is passed for the same reason (otherwise the gate fails open).
      */
     _fetchEndUserConfig() {
       return getEndUserConfig(
         this._configuration.apiKey,
         this._.isEditorPreview,
         this._.instanceName,
-        this._configuration.locale
+        this._configuration.locale,
+        this._.services.supportedBreakingFeatures
       );
     }
     async _configUser() {
