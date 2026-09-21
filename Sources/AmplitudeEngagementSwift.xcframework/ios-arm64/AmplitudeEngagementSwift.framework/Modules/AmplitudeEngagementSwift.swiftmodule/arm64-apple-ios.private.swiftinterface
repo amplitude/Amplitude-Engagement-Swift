@@ -37,6 +37,7 @@ public enum AmplitudeEngagementError : Swift.Error {
   case jsonSerializationError(Swift.String)
   case unknown(Swift.String)
 }
+@_spi(AmplitudeEngagementFlutterPlugin) @_Concurrency.MainActor public func makeFlutterCardEmbedView(tag: Swift.String, onCardChanged: @escaping (_ heightPoints: CoreFoundation.CGFloat, _ position: Swift.String?) -> Swift.Void) -> UIKit.UIView
 @_spi(AmplitudeEngagementFlutterPlugin) @_hasMissingDesignatedInitializers public class FlutterElementStore {
   @_spi(AmplitudeEngagementFlutterPlugin) public static let shared: AmplitudeEngagementSwift.FlutterElementStore
   @_spi(AmplitudeEngagementFlutterPlugin) public var isActive: Swift.Bool {
