@@ -19906,8 +19906,8 @@
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Constants.swift",
       "kind": "StringLiteral",
       "offset": 421,
-      "length": 8,
-      "value": "\"3.14.0\""
+      "length": 7,
+      "value": "\"4.0.0\""
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/EngagementWindowManager.swift",
