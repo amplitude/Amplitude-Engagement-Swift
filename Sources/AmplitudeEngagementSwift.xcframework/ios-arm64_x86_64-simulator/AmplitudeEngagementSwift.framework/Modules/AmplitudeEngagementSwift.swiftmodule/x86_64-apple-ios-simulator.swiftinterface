@@ -134,10 +134,20 @@ public enum DebugStatus : Swift.String, Swift.CaseIterable {
     get
   }
 }
+
+
+
 extension SwiftUICore.View {
   @_Concurrency.MainActor @preconcurrency public func amplitudeView(_ identifier: Swift.String, onTrigger: (() -> Swift.Void)? = nil) -> some SwiftUICore.View
   
 }
+
+
+
+
+
+
+
 
 
 public enum SDKType : Swift.String {
