@@ -5719,6 +5719,13 @@
       },
       {
         "kind": "Import",
+        "name": "SafariServices",
+        "printedName": "SafariServices",
+        "declKind": "Import",
+        "moduleName": "AmplitudeEngagementSwift"
+      },
+      {
+        "kind": "Import",
         "name": "SwiftUI",
         "printedName": "SwiftUI",
         "declKind": "Import",
@@ -15448,7 +15455,7 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Bridge\/NudgeServices.swift",
       "kind": "Array",
-      "offset": 108,
+      "offset": 109,
       "length": 305,
       "value": "[\"0001\", \"0002\", \"0003\", \"0004\", \"0006\", \"0007\", \"0009\"]"
     },
@@ -19074,7 +19081,7 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/ElementSelector\/ElementSelectorService.swift",
       "kind": "Array",
-      "offset": 15873,
+      "offset": 15877,
       "length": 2,
       "value": "[]"
     },
@@ -19142,30 +19149,44 @@
       "value": "\"preview-key\""
     },
     {
+      "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/FormFactors\/ContentBlocks\/VideoBlockView.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1271,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/FormFactors\/Layouts\/LayoutComponents.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5184,
+      "length": 1,
+      "value": "4"
+    },
+    {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/FormFactors\/Layouts\/LayoutComponents.swift",
       "kind": "BooleanLiteral",
-      "offset": 5926,
+      "offset": 8732,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/FormFactors\/Layouts\/LayoutComponents.swift",
       "kind": "BooleanLiteral",
-      "offset": 9835,
+      "offset": 12641,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/FormFactors\/Layouts\/LayoutComponents.swift",
       "kind": "BooleanLiteral",
-      "offset": 9877,
+      "offset": 12683,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/Views\/FormFactors\/Layouts\/LayoutComponents.swift",
       "kind": "BooleanLiteral",
-      "offset": 10231,
+      "offset": 13037,
       "length": 5,
       "value": "false"
     },
@@ -20110,42 +20131,42 @@
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
       "kind": "IntegerLiteral",
-      "offset": 19176,
+      "offset": 19467,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
       "kind": "IntegerLiteral",
-      "offset": 24530,
+      "offset": 24821,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
       "kind": "IntegerLiteral",
-      "offset": 26970,
+      "offset": 27261,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
       "kind": "BooleanLiteral",
-      "offset": 42484,
+      "offset": 42775,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
       "kind": "BooleanLiteral",
-      "offset": 44021,
+      "offset": 44312,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/AmplitudeEngagement.swift",
       "kind": "BooleanLiteral",
-      "offset": 48819,
+      "offset": 49158,
       "length": 5,
       "value": "false"
     },
@@ -20210,7 +20231,7 @@
       "kind": "StringLiteral",
       "offset": 421,
       "length": 7,
-      "value": "\"4.0.1\""
+      "value": "\"4.1.0\""
     },
     {
       "filePath": "\/Users\/runner\/work\/amplitude-gs-mobile-sdk\/amplitude-gs-mobile-sdk\/ios\/AmplitudeEngagement\/EngagementWindowManager.swift",

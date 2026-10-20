@@ -18,7 +18,7 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		MQoR2esrC4Ov3gFFr0ZiFyiaqCQ=
+		8RfQco6VIAkUr/+Gv9Sbss73jS0=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -34,11 +34,11 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		BUwfPHjiPE40CZPhLvVOeNKqllU=
+		fB6lqhDvt9DRvRQl+y+0lO9ovN4=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		MQoR2esrC4Ov3gFFr0ZiFyiaqCQ=
+		8RfQco6VIAkUr/+Gv9Sbss73jS0=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -54,7 +54,7 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		+rVztHL3oPpYQfzuq59I7xmxhfg=
+		D8moUFB7BubQ0IxoVMAElN0uNJM=
 		</data>
 		<key>engagement.js</key>
 		<data>
@@ -81,7 +81,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			5bz8UNvDs4+VPUwd581LVKwjrHX7O5WyVG9jTu9bYIo=
+			dIVrtmsvCvPYcwAJfJj/Qm+mJ2gnKVJDfU3B4ts3IF0=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
@@ -109,14 +109,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			D4ioeOLevcfM1BNL76mZAqHLOVL759lFZp1afre1dqE=
+			JVexxlYdtde1xuGhp9ArZlWmFyYMRLmzIVGLkE5qdHs=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			5bz8UNvDs4+VPUwd581LVKwjrHX7O5WyVG9jTu9bYIo=
+			dIVrtmsvCvPYcwAJfJj/Qm+mJ2gnKVJDfU3B4ts3IF0=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
@@ -144,7 +144,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			lq2O+5NEh38CX1OVkkNBrecT49UD1SW1g2we4BFzyuI=
+			VK23yx8G490GopnbyplBl/rD/NlMdGeOKJBI4kVDnSk=
 			</data>
 		</dict>
 		<key>engagement.js</key>
