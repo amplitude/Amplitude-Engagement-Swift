@@ -220,6 +220,7 @@ public protocol AmplitudeEngagementPlugin : AnyObject {
   func closeAll()
   func forwardEvent(_ eventProperties: [Swift.String : Any])
   func addCallback(_ key: Swift.String, _ function: @escaping () -> Swift.Void)
+  func setSessionProperty(key: Swift.String, value: Any)
   func updateLanguage(_ locale: Swift.String)
   func resetSmartInteractions()
   var isTestUser: Swift.Bool { get }
@@ -279,6 +280,7 @@ public enum __ReactNative__AESDK_Factory {
   public func closeAll()
   public func forwardEvent(_ eventProperties: [Swift.String : Any])
   public func addCallback(_ key: Swift.String, _ function: @escaping () -> Swift.Void)
+  public func setSessionProperty(key: Swift.String, value: Any)
   public func refresh()
   public func setAutoRefreshInterval(seconds: Swift.Int)
   public func handleUrl(_ url: Foundation.URL) -> Swift.Bool
@@ -313,6 +315,7 @@ final public class AmplitudeEngagementNoOpStub : AmplitudeEngagementSwift.Amplit
   final public func updateLanguage(_ locale: Swift.String)
   final public func forwardEvent(_ eventProperties: [Swift.String : Any])
   final public func addCallback(_ key: Swift.String, _ function: @escaping () -> Swift.Void)
+  final public func setSessionProperty(key: Swift.String, value: Any)
   final public func setRouter(_ router: @escaping (Swift.String) -> Swift.Void)
   final public func unsetRouter()
   final public func handleUrl(_ url: Foundation.URL) -> Swift.Bool
