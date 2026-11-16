@@ -18,7 +18,7 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		hBqKqt40LbCdGAX2xphWSGcC9tk=
+		ismedOsA9gcFIDl9Tnz5WsrQqo8=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -34,11 +34,11 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		feyncRh0MoclbWGzMSDVj2r+APw=
+		C/g4X8rjk4gRTOsGsB8pf+WZZMg=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		hBqKqt40LbCdGAX2xphWSGcC9tk=
+		ismedOsA9gcFIDl9Tnz5WsrQqo8=
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -54,11 +54,11 @@
 		</data>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		QRmjWxaAOYknasiBXwrQEJVGag8=
+		/p9mjDRQbMj0gk/RxVORpvbX5aQ=
 		</data>
 		<key>engagement.js</key>
 		<data>
-		49ghAoqOBdNHOHWzQXO8rAiW9j0=
+		UX8f15yNien+HFGaFo60UjLau3U=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -81,7 +81,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			7o8KqVzNIBDbt2/6uQpa2fVSLA0rwctgWPBNWXziHnU=
+			fB/dRe6ACP+dnX+z0g75+62JJ1UDFdEojfUaDsySosc=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
@@ -109,14 +109,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			+9vdtvO3VCISFQ21jU0WktSHtCjdi0u7Dyr0SGWXNPY=
+			w4aNEO34Hy9ezcWShqGRWvxL1b+rCi77hN341nNn4/A=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			7o8KqVzNIBDbt2/6uQpa2fVSLA0rwctgWPBNWXziHnU=
+			fB/dRe6ACP+dnX+z0g75+62JJ1UDFdEojfUaDsySosc=
 			</data>
 		</dict>
 		<key>Modules/AmplitudeEngagementSwift.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
@@ -144,14 +144,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			C2uQgFYm2RQjX9GrSw8Mz6cr39dpjGT5Wei0SbsZwuU=
+			Pt5BYM7zWDudBN97oyyNPlfwWpxIsC7NOUUZdVp24Eg=
 			</data>
 		</dict>
 		<key>engagement.js</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			JwRSfjyYW9896qVNy+LnylKbEKkxTKzDUpQdUhMs+44=
+			YeXcwS/2M8EZ3SvssTK173GNl8fli4meZOr2b3lF5yw=
 			</data>
 		</dict>
 	</dict>
